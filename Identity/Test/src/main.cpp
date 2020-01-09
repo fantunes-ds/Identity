@@ -1,14 +1,25 @@
-#include <TestDependencies.h>
+#include <Window.h>
 
-int main()
+int CALLBACK WinMain(
+    HINSTANCE hInstance,
+    HINSTANCE hPrevInstance,
+    LPSTR     lpCmdLine,
+    int       nCmdShow)
 {
-    Test test;
-    test.TestGPM();
-    test.TestIrrKlang();
+    Renderer::Window wnd(800, 600, "FirstWindow");
 
-    while (true)
+    MSG msg;
+    BOOL gResult;
+    while ((gResult = GetMessage(&msg, nullptr, 0, 0)) > 0)
     {
-
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
     }
-    return 0;
+
+    if (gResult == -1)
+    {
+        return -1;
+    }
+
+    return msg.wParam;
 }
