@@ -185,9 +185,12 @@ xcopy $(SolutionDir)Dependencies\irrKlang\ikpMp3.dll $(OutDir) /y
     <ClInclude Include="include\Export.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\TestDependencies.h" />
+    <ClInclude Include="include\Window.h" />
+    <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\TestDependencies.cpp" />
+    <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
