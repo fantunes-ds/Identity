@@ -1,4 +1,5 @@
-#include <Window.h>
+// #include <Window.h>
+#include <System.h>
 
 int CALLBACK WinMain(
     HINSTANCE hInstance,
@@ -6,20 +7,7 @@ int CALLBACK WinMain(
     LPSTR     lpCmdLine,
     int       nCmdShow)
 {
-    Renderer::Window wnd(800, 600, "FirstWindow");
-
-    MSG msg;
-    BOOL gResult;
-    while ((gResult = GetMessage(&msg, nullptr, 0, 0)) > 0)
-    {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
-
-    if (gResult == -1)
-    {
-        return -1;
-    }
-
-    return msg.wParam;
+    Engine::System sys(1920, 1080, "Test Window");
+    sys.Run();
+    return sys.Exit();
 }
