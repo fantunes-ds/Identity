@@ -8,4 +8,5 @@ public:
 
     void TestIrrKlang();
     void TestGPM();
+	void TestAssimp();
 };

@@ -70,24 +70,24 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include;$(SolutionDir)Dependencies\irrKlang\irrKlang-1.6.0\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
-    <LibraryPath>$(SolutionDir)Dependencies\irrKlang\irrKlang-1.6.0\lib\Win32-visualStudio;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include;$(SolutionDir)Dependencies\irrKlang\irrKlang-1.6.0\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
-    <LibraryPath>$(SolutionDir)Dependencies\irrKlang\irrKlang-1.6.0\lib\Win32-visualStudio;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include;$(SolutionDir)Dependencies\irrKlang\irrKlang-1.6.0\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
-    <LibraryPath>$(SolutionDir)Dependencies\irrKlang\irrKlang-1.6.0\lib\Win32-visualStudio;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include;$(SolutionDir)Dependencies\irrKlang\irrKlang-1.6.0\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
-    <LibraryPath>$(SolutionDir)Dependencies\irrKlang\irrKlang-1.6.0\lib\Win32-visualStudio;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,13 +101,13 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>GPM.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\irrKlang.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang\ikpFlac.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang\ikpMp3.dll $(OutDir) /y
-</Command>
+      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\irrKlang.dll $(OutDir) /y
+xcopy $(SolutionDir)Dependencies\irrKlang$(Platform)\bin\$(Platform)\ikpFlac.dll $(OutDir) /y
+xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\ikpMp3.dll $(OutDir) /y
+xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -122,13 +122,13 @@ xcopy $(SolutionDir)Dependencies\irrKlang\ikpMp3.dll $(OutDir) /y
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>GPM.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\irrKlang.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang\ikpFlac.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang\ikpMp3.dll $(OutDir) /y
-</Command>
+      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\irrKlang.dll $(OutDir) /y
+xcopy $(SolutionDir)Dependencies\irrKlang$(Platform)\bin\$(Platform)\ikpFlac.dll $(OutDir) /y
+xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\ikpMp3.dll $(OutDir) /y
+xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -147,13 +147,13 @@ xcopy $(SolutionDir)Dependencies\irrKlang\ikpMp3.dll $(OutDir) /y
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>GPM.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\irrKlang.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang\ikpFlac.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang\ikpMp3.dll $(OutDir) /y
-</Command>
+      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\irrKlang.dll $(OutDir) /y
+xcopy $(SolutionDir)Dependencies\irrKlang$(Platform)\bin\$(Platform)\ikpFlac.dll $(OutDir) /y
+xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\ikpMp3.dll $(OutDir) /y
+xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -172,23 +172,25 @@ xcopy $(SolutionDir)Dependencies\irrKlang\ikpMp3.dll $(OutDir) /y
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>GPM.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\irrKlang.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang\ikpFlac.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang\ikpMp3.dll $(OutDir) /y
-</Command>
+      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\irrKlang.dll $(OutDir) /y
+xcopy $(SolutionDir)Dependencies\irrKlang$(Platform)\bin\$(Platform)\ikpFlac.dll $(OutDir) /y
+xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\ikpMp3.dll $(OutDir) /y
+xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Export.h" />
     <ClInclude Include="include\stdafx.h" />
+    <ClInclude Include="include\System.h" />
     <ClInclude Include="include\TestDependencies.h" />
     <ClInclude Include="include\Window.h" />
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\System.cpp" />
     <ClCompile Include="src\TestDependencies.cpp" />
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
