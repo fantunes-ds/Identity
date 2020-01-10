@@ -1,5 +1,8 @@
 #pragma once
 
+
+//TODO check for flags if they all are needed and if more can be added
+
 #ifndef FULL_WINTARD
 #define WIN32_LEAN_AND_MEAN
 #define NOGDICAPMASKS

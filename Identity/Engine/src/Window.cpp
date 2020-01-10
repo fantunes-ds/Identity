@@ -1,7 +1,7 @@
 #include <stdafx.h>
 #include <Window.h>
 
-using namespace Renderer;
+using namespace Engine::Renderer;
 
 Window::WindowClass Window::WindowClass::m_windowClass;
 
