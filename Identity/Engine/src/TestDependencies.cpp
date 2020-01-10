@@ -27,6 +27,6 @@ void Test::TestAssimp()
 	if (!scene)
 		std::cout << "Assimp error loading file: " << importer.GetErrorString() << std::endl;
 	else
-		std::cout << "Assimp successfully loaded " << "\n";
+		std::cout << "Assimp successfully loaded file " << "\n";
 	
 }

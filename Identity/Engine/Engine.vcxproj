@@ -104,9 +104,7 @@
       <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\irrKlang.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang$(Platform)\bin\$(Platform)\ikpFlac.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\ikpMp3.dll $(OutDir) /y
+      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) /y
 xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -125,9 +123,7 @@ xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc14
       <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\irrKlang.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang$(Platform)\bin\$(Platform)\ikpFlac.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\ikpMp3.dll $(OutDir) /y
+      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) /y
 xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -150,9 +146,7 @@ xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc14
       <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\irrKlang.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang$(Platform)\bin\$(Platform)\ikpFlac.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\ikpMp3.dll $(OutDir) /y
+      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) /y
 xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -175,9 +169,7 @@ xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc14
       <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\irrKlang.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang$(Platform)\bin\$(Platform)\ikpFlac.dll $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\bin\$(Platform)\ikpMp3.dll $(OutDir) /y
+      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) /y
 xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
