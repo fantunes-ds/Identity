@@ -73,21 +73,27 @@
     <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
     <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
     <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
     <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
     <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -104,9 +110,16 @@
       <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) /y</Command>
+      <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources
+copy /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
+
+copy /y $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) 
+copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -123,9 +136,16 @@ xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc14
       <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) /y</Command>
+      <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources
+copy /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
+
+copy /y $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) 
+copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -146,9 +166,16 @@ xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc14
       <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) /y</Command>
+      <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources
+copy /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
+
+copy /y $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) 
+copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -169,9 +196,16 @@ xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc14
       <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) /y
-xcopy $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) /y</Command>
+      <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources
+copy /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
+
+copy /y $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) 
+copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Export.h" />
