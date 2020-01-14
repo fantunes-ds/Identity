@@ -8,7 +8,7 @@ namespace Engine
     {
     public:
         System();
-        ~System();
+        ~System() = default;
         System(int p_width, int p_height, const char* p_name);
 
         void Run();

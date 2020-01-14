@@ -1,6 +1,7 @@
 #pragma once
 #include <Export.h>
 #include <WinSetup.h>
+#include <Keyboard.h>
 
 namespace Engine
 {
@@ -35,7 +36,9 @@ namespace Engine
             static LRESULT CALLBACK HandleMsgSetup(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
             static LRESULT CALLBACK HandleMsgThunk(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
             LRESULT HandleMsg(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
-
+        public:
+            Input::Keyboard m_keyboard;
+        private:
             int m_width;
             int m_height;
             HWND m_hwnd;
