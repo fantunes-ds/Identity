@@ -218,7 +218,6 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Graphics.cpp" />
-    <ClCompile Include="src\System.cpp" />
     <ClCompile Include="src\Core\System.cpp" />
     <ClCompile Include="src\Rendering\Window.cpp" />
     <ClCompile Include="src\TestDependencies.cpp" />
