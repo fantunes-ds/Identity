@@ -6,9 +6,9 @@ using namespace Engine::Input;
 bool Keyboard::IsKeyDown(unsigned char p_keycode) noexcept
 {
     if (!(m_inputBuffer.find(p_keycode) == m_inputBuffer.end()))
-        if (m_inputBuffer.find(p_keycode)->second == Event::Type::PRESSED)
+        if (m_inputBuffer.find(p_keycode)->second == PRESSED)
         {
-            m_inputBuffer.at(p_keycode) = Event::Type::INVALID;
+            m_inputBuffer.at(p_keycode) = INVALID;
             return true;
         }
     return false;
@@ -17,9 +17,9 @@ bool Keyboard::IsKeyDown(unsigned char p_keycode) noexcept
 bool Keyboard::IsKeyUp(unsigned char p_keycode) noexcept
 {
     if (!(m_inputBuffer.find(p_keycode) == m_inputBuffer.end()))
-        if (m_inputBuffer.find(p_keycode)->second == Event::Type::RELEASED)
+        if (m_inputBuffer.find(p_keycode)->second == RELEASED)
         {
-            m_inputBuffer.at(p_keycode) = Event::Type::INVALID;
+            m_inputBuffer.at(p_keycode) = INVALID;
             return true;
         }
     return false;
@@ -28,7 +28,7 @@ bool Keyboard::IsKeyUp(unsigned char p_keycode) noexcept
 bool Keyboard::IsKeyHeld(unsigned char p_keycode) noexcept
 {
     if (!(m_inputBuffer.find(p_keycode) == m_inputBuffer.end()))
-        if (m_inputBuffer.find(p_keycode)->second == Event::Type::PRESSED)
+        if (m_inputBuffer.find(p_keycode)->second == PRESSED)
             return true;
     return false;
 }
@@ -71,12 +71,12 @@ bool Keyboard::IsAutoRepeatEnabled() const noexcept
 
 void Keyboard::OnKeyPressed(const unsigned char p_keycode) noexcept
 {
-    m_inputBuffer.insert_or_assign(p_keycode,Event::Type::PRESSED);
+    m_inputBuffer.insert_or_assign(p_keycode, PRESSED);
 }
 
 void Keyboard::OnKeyReleased(const unsigned char p_keycode) noexcept
 {
-    m_inputBuffer.insert_or_assign(p_keycode,Event::Type::RELEASED);
+    m_inputBuffer.insert_or_assign(p_keycode, RELEASED);
 }
 
 void Keyboard::OnChar(const unsigned char p_char) noexcept
@@ -87,6 +87,6 @@ void Keyboard::OnChar(const unsigned char p_char) noexcept
 void Keyboard::ClearStates() noexcept
 {
     for (auto& key : m_inputBuffer)
-        key.second = Event::Type::INVALID;
+        key.second = INVALID;
 }
 
