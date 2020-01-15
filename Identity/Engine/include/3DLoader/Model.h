@@ -10,7 +10,7 @@ namespace Engine
 		Model() = default;
 		~Model() = default;
 
-		void AddMesh(const Mesh& p_mesh);
+		void AddMesh(std::shared_ptr<Mesh> p_mesh);
 		
 		std::vector<std::shared_ptr<Mesh>> m_meshes;
 	};
