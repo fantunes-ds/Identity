@@ -53,11 +53,19 @@ Window::Window(int p_width, int p_height, const char* p_name)
         wr.right - wr.left, wr.bottom - wr.top, nullptr, nullptr, WindowClass::GetInstance(), this);
 
     ShowWindow(m_hwnd, SW_SHOWDEFAULT);
+
+    //create graphic object
+    m_graphics = std::make_unique<Graphics>(m_hwnd);
 }
 
 Window::~Window()
 {
     DestroyWindow(m_hwnd);
+}
+
+Graphics& Window::GetGraphics() const
+{
+    return *m_graphics;
 }
 
 LRESULT Window::HandleMsgSetup(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)

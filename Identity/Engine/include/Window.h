@@ -1,6 +1,8 @@
 #pragma once
 #include <Export.h>
 #include <WinSetup.h>
+#include <Graphics.h>
+#include <memory>
 
 namespace Engine
 {
@@ -31,6 +33,8 @@ namespace Engine
             ~Window();
             Window() = delete;
 
+            Graphics& GetGraphics() const;
+
         private:
             static LRESULT CALLBACK HandleMsgSetup(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
             static LRESULT CALLBACK HandleMsgThunk(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
@@ -39,6 +43,8 @@ namespace Engine
             int m_width;
             int m_height;
             HWND m_hwnd;
+
+            std::unique_ptr<Graphics> m_graphics;
         };
     }
 }

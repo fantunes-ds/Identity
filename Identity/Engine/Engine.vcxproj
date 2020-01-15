@@ -133,7 +133,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources
@@ -209,6 +209,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Export.h" />
+    <ClInclude Include="include\Graphics.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\System.h" />
     <ClInclude Include="include\TestDependencies.h" />
@@ -216,6 +217,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\System.cpp" />
     <ClCompile Include="src\TestDependencies.cpp" />
     <ClCompile Include="src\Window.cpp" />
