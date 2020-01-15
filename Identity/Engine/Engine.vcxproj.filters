@@ -24,13 +24,13 @@
     <ClInclude Include="include\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\WinSetup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\System.h">
+    <ClInclude Include="include\Core\System.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Rendering\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,10 +38,10 @@
     <ClCompile Include="src\TestDependencies.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Window.cpp">
+    <ClCompile Include="src\Core\System.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\System.cpp">
+    <ClCompile Include="src\Rendering\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

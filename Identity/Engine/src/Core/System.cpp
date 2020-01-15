@@ -1,7 +1,7 @@
 #include <stdafx.h>
-#include <System.h>
+#include <Core/System.h>
 
-using namespace Engine;
+using namespace Engine::Core;
 
 System::System() : m_window(800, 600, "Engine Window")
 {

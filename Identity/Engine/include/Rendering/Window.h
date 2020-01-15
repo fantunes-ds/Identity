@@ -4,7 +4,7 @@
 
 namespace Engine
 {
-    namespace Renderer
+    namespace Rendering
     {
         class API_ENGINE Window
         {

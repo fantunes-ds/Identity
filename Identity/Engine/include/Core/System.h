@@ -1,8 +1,8 @@
 #pragma once
 #include <Export.h>
-#include <Window.h>
+#include <Rendering/Window.h>
 
-namespace Engine
+namespace Engine::Core
 {
     class API_ENGINE System
     {
@@ -16,7 +16,7 @@ namespace Engine
         int Exit() const;
 
     private:
-        Renderer::Window m_window;
+        Rendering::Window m_window;
         MSG m_msg;
         BOOL m_gResult;
 
