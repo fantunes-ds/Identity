@@ -1,5 +1,4 @@
-// #include <Window.h>
-#include <Core/System.h>
+#include <System.h>
 
 int CALLBACK WinMain(
     HINSTANCE hInstance,
@@ -7,7 +6,5 @@ int CALLBACK WinMain(
     LPSTR     lpCmdLine,
     int       nCmdShow)
 {
-    Engine::Core::System sys(1024, 680, "Test Window");
-    sys.Run();
-    return sys.Exit();
+    return Engine::System{}.Run();
 }
