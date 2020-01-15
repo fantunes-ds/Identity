@@ -49,7 +49,7 @@ Window::Window(int p_width, int p_height, const char* p_name)
     AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
 
     //create the window and get the window handle
-    m_hwnd = CreateWindow(WindowClass::GetName(), p_name, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, CW_USEDEFAULT, CW_USEDEFAULT, 
+    m_hwnd = CreateWindow(WindowClass::GetName(), p_name, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 
         wr.right - wr.left, wr.bottom - wr.top, nullptr, nullptr, WindowClass::GetInstance(), this);
 
     ShowWindow(m_hwnd, SW_SHOWDEFAULT);
