@@ -11,6 +11,9 @@ void Test::TestIrrKlang()
 void Test::TestGPM()
 {
     GPM::Matrix3F m;
+	GPM::Vector2D e(1, 5);
+	GPM::Vector2D a = e;
+	
     std::cout << m.identity;
 }
 
