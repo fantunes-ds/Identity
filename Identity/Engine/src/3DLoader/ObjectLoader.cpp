@@ -5,7 +5,7 @@ std::shared_ptr<Engine::Model> Engine::ObjectLoader::LoadModel(const std::string
 {	
 	Engine::Model model;
 
-	Assimp::Importer& importer = Engine::ObjectLoader::GetInstance()->m_importer;
+	Assimp::Importer& importer = GetInstance()->m_importer;
 	
 	const aiScene* m_scene = importer.ReadFile(p_file,
 		aiProcess_CalcTangentSpace
@@ -55,7 +55,7 @@ std::shared_ptr<Engine::Mesh> Engine::ObjectLoader::LoadMesh(aiMesh* p_assimpMes
 		vertex.m_position = GPM::Vector3D(vert.x, vert.y, vert.z);
 		vertex.m_normal = GPM::Vector3D(norm.x, norm.y, norm.z);
 
-		vertices.push_back(vertex);
+		vertices.emplace_back(vertex);
 	}
 	
 	//Load Indices
@@ -71,10 +71,6 @@ std::shared_ptr<Engine::Mesh> Engine::ObjectLoader::LoadMesh(aiMesh* p_assimpMes
 	offset += p_assimpMesh->mNumVertices;
 
 	return std::make_shared<Mesh>(vertices, indices );
-}
-
-Engine::ObjectLoader::ObjectLoader()
-{
 }
 
 Engine::ObjectLoader::~ObjectLoader()

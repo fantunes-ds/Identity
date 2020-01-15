@@ -21,7 +21,7 @@ namespace Engine
 		static std::shared_ptr<Engine::Mesh> LoadMesh(aiMesh* p_assimpMesh);
 		
 	private:
-		ObjectLoader();
+		ObjectLoader() = default;
 
 		inline static ObjectLoader* m_instance = nullptr;
 		Assimp::Importer m_importer;
