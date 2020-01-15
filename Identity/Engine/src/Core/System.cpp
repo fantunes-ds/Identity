@@ -15,13 +15,15 @@ System::System(int p_width, int p_height, const char* p_name) : m_window(p_width
 {
 }
 
-void System::Run()
+int System::Run()
 {
     while ((m_gResult = GetMessage(&m_msg, nullptr, 0, 0)) > 0)
     {
         TranslateMessage(&m_msg);
         DispatchMessage(&m_msg);
+        DoFrame();
     }
+    return Exit();
 }
 
 int System::Exit() const
@@ -32,4 +34,10 @@ int System::Exit() const
     }
 
     return m_msg.wParam;
+}
+
+void System::DoFrame() const
+{
+    m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
+    m_window.GetGraphics().EndFrame();
 }
