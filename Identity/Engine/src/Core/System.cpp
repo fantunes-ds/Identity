@@ -33,7 +33,7 @@ int System::Exit() const
         return -1;
     }
 
-    return m_msg.wParam;
+    return static_cast<int>(m_msg.wParam);
 }
 
 void System::DoFrame() const
