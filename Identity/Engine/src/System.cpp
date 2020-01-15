@@ -17,6 +17,14 @@ void System::Run()
     {
         TranslateMessage(&m_msg);
         DispatchMessage(&m_msg);
+
+        if (m_window.m_keyboard.IsKeyDown('D'))
+            OutputDebugString("D was pressed\n");
+        if (m_window.m_keyboard.IsKeyUp('U'))
+            OutputDebugString("U was pressed\n");
+        if (m_window.m_keyboard.IsKeyHeld('H'))
+            OutputDebugString("H was pressed\n");
+
     }
 
 }

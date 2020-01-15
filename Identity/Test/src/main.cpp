@@ -7,7 +7,7 @@ int CALLBACK WinMain(
     LPSTR     lpCmdLine,
     int       nCmdShow)
 {
-    Engine::System sys(1920, 1080, "Test Window");
+    Engine::System sys(1024, 680, "Test Window");
     sys.Run();
     return sys.Exit();
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include <Export.h>
 #include <queue>
-#include <bitset>
+#include <unordered_map>
 
 namespace Engine::Renderer
 {
@@ -17,7 +17,7 @@ namespace Engine::Input
         class API_ENGINE Event
         {
         public:
-            enum class Type
+            enum Type
             {
                 PRESSED = 0,
                 RELEASED = 1,
@@ -29,7 +29,7 @@ namespace Engine::Input
         public:
             Event() noexcept
                 :
-                m_type(Type::INVALID),
+                m_type(INVALID),
                 m_code(0u)
             {}
 
@@ -41,17 +41,17 @@ namespace Engine::Input
 
             [[nodiscard]] bool IsPressed() const noexcept
             {
-                return m_type == Type::PRESSED;
+                return m_type == PRESSED;
             }
 
             [[nodiscard]] bool IsReleased() const noexcept
             {
-                return m_type == Type::RELEASED;
+                return m_type == RELEASED;
             }
 
             [[nodiscard]] bool IsValid() const noexcept
             {
-                return m_type != Type::INVALID;
+                return m_type != INVALID;
             }
 
             [[nodiscard]] unsigned char GetCode() const noexcept
@@ -65,18 +65,16 @@ namespace Engine::Input
         Keyboard() = default;
         ~Keyboard() = default;
 
-        Keyboard(const Keyboard&) = delete;
+    Keyboard(const Keyboard&) = delete;
         Keyboard(const Keyboard&&) = delete;
 
         Keyboard& operator=(const Keyboard&) = delete;
         Keyboard& operator=(const Keyboard&&) = delete;
 
-        void Flush() noexcept;
         // key events
-        [[nodiscard]] bool IsKeyDown(unsigned char p_keycode) const noexcept;
-        Event ReadKey() noexcept;
-        [[nodiscard]] bool IsKeyEmpty() const noexcept;
-        void FlushKey() noexcept;
+        [[nodiscard]] bool IsKeyDown(unsigned char p_keycode) noexcept;
+        [[nodiscard]] bool IsKeyUp(unsigned char p_keycode) noexcept;
+        [[nodiscard]] bool IsKeyHeld(unsigned char p_keycode) noexcept;
 
         // char events
         char ReadChar() noexcept;
@@ -94,14 +92,8 @@ namespace Engine::Input
 
         void ClearStates() noexcept;
 
-        template<typename T>
-        static void TrimBuffer(std::queue<T>& p_buffer) noexcept;
-
-        static constexpr unsigned int nbOfKeys = 256u;
-        static constexpr unsigned int bufferSize = 16u;
         bool m_autoRepeat = false;
-        std::bitset<256> m_keyStates;
-        std::queue<Event> m_keyBuffer;
+        std::unordered_map<int, int> m_inputBuffer;
         std::queue<char> m_charBuffer;
     };
 }
