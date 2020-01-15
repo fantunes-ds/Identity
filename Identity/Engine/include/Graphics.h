@@ -12,9 +12,12 @@ public:
     Graphics& operator=(const Graphics&) = delete;
     ~Graphics();
 
+    void EndFrame();
+    void ClearBuffer(float p_red, float p_green, float p_blue);
+
 private:
     ID3D11Device* m_pDevice = nullptr;
     IDXGISwapChain* m_pSwapChain = nullptr;
     ID3D11DeviceContext* m_pContext = nullptr;
-
+    ID3D11RenderTargetView* m_pTarget = nullptr;
 };

@@ -12,6 +12,7 @@ namespace Engine
         System(int p_width, int p_height, const char* p_name);
 
         void Run();
+        void DoFrame();
 
         int Exit() const;
 

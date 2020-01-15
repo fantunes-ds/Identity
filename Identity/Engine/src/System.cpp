@@ -5,6 +5,7 @@ using namespace Engine;
 
 System::System() : m_window(800, 600, "Engine Window")
 {
+    Run();
 }
 
 System::~System()
@@ -13,6 +14,7 @@ System::~System()
 
 System::System(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name)
 {
+    Run();
 }
 
 void System::Run()
@@ -21,6 +23,7 @@ void System::Run()
     {
         TranslateMessage(&m_msg);
         DispatchMessage(&m_msg);
+        DoFrame();
     }
 }
 
@@ -32,4 +35,10 @@ int System::Exit() const
     }
 
     return m_msg.wParam;
+}
+
+void System::DoFrame()
+{
+    m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
+    m_window.GetGraphics().EndFrame();
 }
