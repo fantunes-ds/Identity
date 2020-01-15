@@ -11,10 +11,11 @@ namespace Engine
         ~System();
         System(int p_width, int p_height, const char* p_name);
 
-        void Run();
-        void DoFrame();
+        int Run();
 
-        int Exit() const;
+    private:
+        void DoFrame() const;
+        [[nodiscard]] int Exit() const;
 
     private:
         Renderer::Window m_window;
