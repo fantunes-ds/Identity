@@ -1,8 +1,8 @@
 #pragma once
 #include <Export.h>
-#include <Window.h>
+#include <Rendering/Window.h>
 
-namespace Engine
+namespace Engine::Core
 {
     class API_ENGINE System
     {
@@ -11,12 +11,14 @@ namespace Engine
         ~System() = default;
         System(int p_width, int p_height, const char* p_name);
 
-        void Run();
-
-        int Exit() const;
+        int Run();
 
     private:
-        Renderer::Window m_window;
+        void DoFrame();
+        [[nodiscard]] int Exit() const;
+
+    private:
+        Rendering::Window m_window;
         MSG m_msg;
         BOOL m_gResult;
 

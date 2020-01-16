@@ -65,6 +65,15 @@ inline constexpr GPM::Vector2<T>& GPM::Vector2<T>::operator=(const Vector2<U>& p
 	return *this;
 }
 
+template<typename T>
+inline constexpr GPM::Vector2<T>& GPM::Vector2<T>::operator=(const Vector2<T>& p_other)
+{
+	x = p_other.x;
+	y = p_other.y;
+	
+	return *this;
+}
+
 #pragma endregion
 
 #pragma region Vector Operations
