@@ -37,4 +37,11 @@ void App::DoFrame()
         m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
 
     m_window.GetGraphics().EndFrame();
+
+    if (m_window.m_keyboard.IsKeyDown(Input::Keyboard::D))
+        OutputDebugString("D was pressed\n");
+    else if (m_window.m_keyboard.IsKeyUp(Input::Keyboard::U))
+        OutputDebugString("U was released\n");
+    else if (m_window.m_keyboard.IsKeyHeld(Input::Keyboard::H))
+        OutputDebugString("H was held\n");
 }
