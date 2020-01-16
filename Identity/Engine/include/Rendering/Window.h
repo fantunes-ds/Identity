@@ -3,6 +3,7 @@
 #include <WinSetup.h>
 #include <Rendering/Graphics.h>
 #include <memory>
+#include <Input/Keyboard.h>
 
 namespace Engine::Rendering
 {
@@ -32,6 +33,7 @@ namespace Engine::Rendering
         Window() = delete;
 
         Graphics& GetGraphics() const;
+        Input::Keyboard m_keyboard;
 
     private:
         static LRESULT CALLBACK HandleMsgSetup(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);

@@ -14,7 +14,7 @@ namespace Engine::Core
         int Run();
 
     private:
-        void DoFrame() const;
+        void DoFrame();
         [[nodiscard]] int Exit() const;
 
     private:

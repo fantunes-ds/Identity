@@ -7,10 +7,6 @@ System::System() : m_window(800, 600, "Engine Window")
 {
 }
 
-System::~System()
-{
-}
-
 System::System(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name)
 {
 }
@@ -36,8 +32,12 @@ int System::Exit() const
     return static_cast<int>(m_msg.wParam);
 }
 
-void System::DoFrame() const
+void System::DoFrame()
 {
+    if (m_window.m_keyboard.IsKeyDown('g'))
+        MessageBeep(2);
+
     m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
     m_window.GetGraphics().EndFrame();
+
 }

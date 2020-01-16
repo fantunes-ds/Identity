@@ -3,7 +3,7 @@
 #include <queue>
 #include <unordered_map>
 
-namespace Engine::Renderer
+namespace Engine::Rendering
 {
     class Window;
 }
@@ -12,7 +12,7 @@ namespace Engine::Input
 {
     class API_ENGINE Keyboard
     {
-    friend class Renderer::Window;
+    friend class Rendering::Window;
 
     public:
         enum KeyState
