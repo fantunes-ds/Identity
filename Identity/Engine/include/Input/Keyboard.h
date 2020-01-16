@@ -4,18 +4,29 @@
 #include <unordered_map>
 #include <WinSetup.h>
 
+// Forward declaration for friending the class later-on
+
 namespace Engine::Rendering
 {
     class Window;
 }
 
+/**
+ * This namespace is responsible for any types of input
+ */
 namespace Engine::Input
 {
+    /**
+     * @brief The class responsible for Keyboard actions
+     */
     class API_ENGINE Keyboard
     {
     friend class Rendering::Window;
 
     public:
+        /**
+         * @brief The different states the Keys can have
+         */
         enum KeyState
         {
             PRESSED = 0,
@@ -25,7 +36,10 @@ namespace Engine::Input
 
         // We exceptionally don't use CAPS for KeyCode, as it has codes that
         // already exist in Windows and would cause compatibility issues.
-        
+
+        /**
+         * @brief The map to the physical Key on the keyboard
+         */
         enum KeyCode
         {
             Invalid = -1, //not assigned to our keyboard (shouldn't be sent as return of a key)
@@ -139,28 +153,82 @@ namespace Engine::Input
         Keyboard& operator=(const Keyboard&) = delete;
         Keyboard& operator=(const Keyboard&&) = delete;
 
-        // key events
+        /**
+         * @brief Detects if a key has been pressed at a certain frame
+         * @return true once next frame if key is down.
+         * @param p_charInCapital : The character you want to check the status of.
+         * It NEEDS to be in capital letter, as lowcase will not be checked/detected.
+         * @warning Only works in an update loop. You need to be able to detect at every frame
+         */
         [[nodiscard]] bool IsKeyDown(unsigned char p_charInCapital) noexcept;
+        /**
+         * @brief Detects if a key has been pressed at a certain frame
+         * @return true once next frame if key is down.
+         * @param p_keyCode : The KeyCode enum parameter you want to check.
+         * @warning Only works in an update loop. You need to be able to detect at every frame
+         */
         [[nodiscard]] bool IsKeyDown(KeyCode p_keyCode) noexcept;
+        /**
+         * @brief Detects if a key has been released at a certain frame
+         * @return true once next frame if key is released.
+         * @param p_charInCapital : The character you want to check the status of.
+         * It NEEDS to be in capital letter, as lowcase will not be checked/detected.
+         * @warning Only works in an update loop. You need to be able to detect at every frame
+         */
         [[nodiscard]] bool IsKeyUp(unsigned char p_charInCapital) noexcept;
+        /**
+         * @brief Detects if a key has been released at a certain frame
+         * @return true once next frame if key is released.
+         * @param p_keyCode : The KeyCode enum parameter you want to check.
+         * @warning Only works in an update loop. You need to be able to detect at every frame
+         */
         [[nodiscard]] bool IsKeyUp(KeyCode p_keyCode) noexcept;
+        /**
+         * @brief Detects if a key is being pressed
+         * @return true next frames as long as key is pressed.
+         * @param p_charInCapital : The character you want to check the status of.
+         * It NEEDS to be in capital letter, as lowcase will not be checked/detected.
+         * @warning Only works in an update loop. You need to be able to detect at every frame
+         */
         [[nodiscard]] bool IsKeyHeld(unsigned char p_charInCapital) noexcept;
+        /**
+         * @brief Detects if a key is being pressed
+         * @return true next frames as long as key is pressed.
+         * @param p_keyCode : The KeyCode enum parameter you want to check.
+         * @warning Only works in an update loop. You need to be able to detect at every frame
+         */
         [[nodiscard]] bool IsKeyHeld(KeyCode p_keyCode) noexcept;
 
-        // char events
+        // char events, will be used to retrieve text input
         char ReadChar() noexcept;
         [[nodiscard]] bool IsCharEmpty() const noexcept;
         void FlushChar() noexcept;
 
-        // auto-repeat control
+        // windows auto-repeat control
         void EnableAutoRepeat() noexcept;
         void DisableAutoRepeat() noexcept;
         [[nodiscard]] bool IsAutoRepeatEnabled() const noexcept;
     private:
+        /**
+         * @brief Event to be triggered when a key is pressed
+         * @param p_keycode : The key that was pressed
+         */
         void OnKeyPressed(unsigned char p_keycode) noexcept;
+        /**
+         * @brief Event to be triggered when a key is released
+         * @param p_keycode : The key that was released
+         */
         void OnKeyReleased(unsigned char p_keycode) noexcept;
+        /**
+         * @brief Event to be triggered when a key is pressed if you want
+         * to have the name of the key pressed, and not just update it's state.
+         * @param p_char : The key that was pressed
+         */
         void OnChar(char unsigned p_char) noexcept;
 
+        /**
+         * @brief This function resets default Invalid state for all keys in the map
+         */
         void ClearStates() noexcept;
 
         bool m_autoRepeat = false;
