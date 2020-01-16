@@ -3,32 +3,62 @@
 
 using namespace Engine::Input;
 
-bool Keyboard::IsKeyDown(unsigned char p_keycode) noexcept
+bool Keyboard::IsKeyDown(unsigned char p_charInCapital) noexcept
 {
-    if (!(m_inputBuffer.find(p_keycode) == m_inputBuffer.end()))
-        if (m_inputBuffer.find(p_keycode)->second == PRESSED)
+    if (!(m_inputBuffer.find(p_charInCapital) == m_inputBuffer.end()))
+        if (m_inputBuffer.find(p_charInCapital)->second == PRESSED)
         {
-            m_inputBuffer.at(p_keycode) = INVALID;
+            m_inputBuffer.at(p_charInCapital) = INVALID;
             return true;
         }
     return false;
 }
 
-bool Keyboard::IsKeyUp(unsigned char p_keycode) noexcept
+bool Keyboard::IsKeyDown(KeyCode p_keyCode) noexcept
 {
-    if (!(m_inputBuffer.find(p_keycode) == m_inputBuffer.end()))
-        if (m_inputBuffer.find(p_keycode)->second == RELEASED)
+    if (!(m_inputBuffer.find(p_keyCode) == m_inputBuffer.end()))
+        if (m_inputBuffer.find(p_keyCode)->second == PRESSED)
         {
-            m_inputBuffer.at(p_keycode) = INVALID;
+            m_inputBuffer.at(p_keyCode) = INVALID;
             return true;
         }
     return false;
 }
 
-bool Keyboard::IsKeyHeld(unsigned char p_keycode) noexcept
+bool Keyboard::IsKeyUp(unsigned char p_charInCapital) noexcept
 {
-    if (!(m_inputBuffer.find(p_keycode) == m_inputBuffer.end()))
-        if (m_inputBuffer.find(p_keycode)->second == PRESSED)
+    if (!(m_inputBuffer.find(p_charInCapital) == m_inputBuffer.end()))
+        if (m_inputBuffer.find(p_charInCapital)->second == RELEASED)
+        {
+            m_inputBuffer.at(p_charInCapital) = INVALID;
+            return true;
+        }
+    return false;
+}
+
+bool Keyboard::IsKeyUp(KeyCode p_keyCode) noexcept
+{
+    if (!(m_inputBuffer.find(p_keyCode) == m_inputBuffer.end()))
+        if (m_inputBuffer.find(p_keyCode)->second == RELEASED)
+        {
+            m_inputBuffer.at(p_keyCode) = INVALID;
+            return true;
+        }
+    return false;
+}
+
+bool Keyboard::IsKeyHeld(unsigned char p_charInCapital) noexcept
+{
+    if (!(m_inputBuffer.find(p_charInCapital) == m_inputBuffer.end()))
+        if (m_inputBuffer.find(p_charInCapital)->second == PRESSED)
+            return true;
+    return false;
+}
+
+bool Keyboard::IsKeyHeld(KeyCode p_keyCode) noexcept
+{
+    if (!(m_inputBuffer.find(p_keyCode) == m_inputBuffer.end()))
+        if (m_inputBuffer.find(p_keyCode)->second == PRESSED)
             return true;
     return false;
 }
