@@ -216,6 +216,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Rendering\Graphics.h" />
     <ClInclude Include="include\Rendering\Window.h" />
     <ClInclude Include="include\Geometry\Vertex.h" />
+    <ClInclude Include="include\Keyboard.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\TestDependencies.h" />
     <ClInclude Include="include\WinSetup.h" />
@@ -227,6 +228,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Rendering\Graphics.cpp" />
     <ClCompile Include="src\Core\System.cpp" />
     <ClCompile Include="src\Rendering\Window.cpp" />
+    <ClCompile Include="src\Keyboard.cpp" />
     <ClCompile Include="src\TestDependencies.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
