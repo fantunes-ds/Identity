@@ -87,6 +87,8 @@ namespace GPM
 		template <typename U>
 		constexpr Vector2<T>& operator=(const Vector2<U>& p_other);
 
+		constexpr Vector2<T>& operator=(const Vector2<T>& p_other);
+		
 #pragma endregion
 
 #pragma region Vector Operations
