@@ -6,6 +6,9 @@
 
 namespace Engine::Rendering
 {
+    /*
+     @brief Contains the DirectX API
+     */
     class API_ENGINE Graphics
     {
     public:
@@ -14,7 +17,13 @@ namespace Engine::Rendering
         Graphics& operator=(const Graphics&) = delete;
         ~Graphics();
 
+        /*
+         @brief Switch the front buffer with the back buffer
+         */
         void EndFrame();
+        /*
+         @brief Reset the base colour of the back buffer
+         */
         void ClearBuffer(float p_red, float p_green, float p_blue);
 
     private:

@@ -33,7 +33,15 @@ namespace Engine::Rendering
         ~Window();
         Window() = delete;
 
+        /*
+         @brief Return the DirectX context of the window
+         */
         Graphics& GetGraphics() const;
+        /*
+         @brief Check if there is a message in the queue
+         If there is no message, the method will return an empty optional and continue
+         If there is a message, the method will return the message
+         */
         static std::optional<int> ProcessMessage();
 
         Input::Keyboard m_keyboard;
