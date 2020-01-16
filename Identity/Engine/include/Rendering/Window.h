@@ -4,6 +4,7 @@
 #include <Rendering/Graphics.h>
 #include <memory>
 #include <Input/Keyboard.h>
+#include <optional>
 
 namespace Engine::Rendering
 {
@@ -33,6 +34,8 @@ namespace Engine::Rendering
         Window() = delete;
 
         Graphics& GetGraphics() const;
+        static std::optional<int> ProcessMessage();
+
         Input::Keyboard m_keyboard;
 
     private:

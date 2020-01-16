@@ -68,6 +68,25 @@ Graphics& Window::GetGraphics() const
     return *m_graphics;
 }
 
+
+std::optional<int> Window::ProcessMessage()
+{
+    MSG msg;
+
+    while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+    {
+        if (msg.message == WM_QUIT)
+        {
+            return msg.wParam;
+        }
+
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    return {};
+}
+
 LRESULT Window::HandleMsgSetup(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)
 {
     if (p_msg == WM_NCCREATE)
