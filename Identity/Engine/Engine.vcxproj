@@ -208,7 +208,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\Core\System.h" />
+    <ClInclude Include="include\Core\App.h" />
     <ClInclude Include="include\3DLoader\Mesh.h" />
     <ClInclude Include="include\3DLoader\Model.h" />
     <ClInclude Include="include\3DLoader\ObjectLoader.h" />
@@ -226,7 +226,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\3DLoader\Mesh.cpp" />
     <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
     <ClCompile Include="src\Rendering\Graphics.cpp" />
-    <ClCompile Include="src\Core\System.cpp" />
+    <ClCompile Include="src\Core\App.cpp" />
     <ClCompile Include="src\Rendering\Window.cpp" />
     <ClCompile Include="src\Input\Keyboard.cpp" />
     <ClCompile Include="src\TestDependencies.cpp" />

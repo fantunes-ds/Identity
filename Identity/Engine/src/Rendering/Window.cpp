@@ -40,7 +40,7 @@ Window::WindowClass::~WindowClass()
 
 Window::Window(int p_width, int p_height, const char* p_name)
 {
-    // adjust window so that the resolution is for the user view not the entire window
+    //adjust the size ot he window so the coosen resolution is for the user view and not for the entire window
     RECT wr;
     wr.left = 100;
     wr.right = p_width + wr.left;
@@ -48,13 +48,11 @@ Window::Window(int p_width, int p_height, const char* p_name)
     wr.bottom = p_height + wr.top;
     AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
 
-    //create the window and get the window handle
     m_hwnd = CreateWindow(WindowClass::GetName(), p_name, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 
         wr.right - wr.left, wr.bottom - wr.top, nullptr, nullptr, WindowClass::GetInstance(), this);
 
     ShowWindow(m_hwnd, SW_SHOWDEFAULT);
 
-    //create graphic object
     m_graphics = std::make_unique<Graphics>(m_hwnd);
 }
 

@@ -1,4 +1,4 @@
-#include <Core/System.h>
+#include <Core/App.h>
 
 int CALLBACK WinMain(
     HINSTANCE hInstance,
@@ -6,5 +6,5 @@ int CALLBACK WinMain(
     LPSTR     lpCmdLine,
     int       nCmdShow)
 {
-    return Engine::Core::System{}.Run();
+    return Engine::Core::App{}.Run();
 }
