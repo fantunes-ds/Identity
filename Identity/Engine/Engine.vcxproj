@@ -107,7 +107,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;d3d11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources
@@ -133,11 +133,12 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;d3d11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources
+      <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders
 copy /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
+copy /y $(SolutionDir)Engine\Resources\Shaders $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders\
 
 copy /y $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) 
 copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc142-mtd.dll $(OutDir) </Command>
@@ -163,7 +164,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;d3d11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources
@@ -193,7 +194,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GPM.lib;irrKlang.lib;assimp-vc142-mtd.lib;d3d11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources
@@ -230,6 +231,26 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Rendering\Window.cpp" />
     <ClCompile Include="src\Input\Keyboard.cpp" />
     <ClCompile Include="src\TestDependencies.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\Shaders\PixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\VertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Shaders\PShader.ps" />
+    <None Include="Resources\Shaders\VShader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

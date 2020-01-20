@@ -3,6 +3,7 @@
 
 #include <WinSetup.h>
 #include <d3d11.h>
+#include <wrl.h>
 
 namespace Engine::Rendering
 {
@@ -12,10 +13,10 @@ namespace Engine::Rendering
     class API_ENGINE Graphics
     {
     public:
-        Graphics(HWND p_hwnd);
+        Graphics(const HWND p_hwnd);
         Graphics(const Graphics&) = delete;
         Graphics& operator=(const Graphics&) = delete;
-        ~Graphics();
+        ~Graphics() = default;
 
         /*
          @brief Switch the front buffer with the back buffer
@@ -26,10 +27,13 @@ namespace Engine::Rendering
          */
         void ClearBuffer(float p_red, float p_green, float p_blue);
 
+
+        void DrawTriangle();
+
     private:
-        ID3D11Device* m_pDevice = nullptr;
-        IDXGISwapChain* m_pSwapChain = nullptr;
-        ID3D11DeviceContext* m_pContext = nullptr;
-        ID3D11RenderTargetView* m_pTarget = nullptr;
+        Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
+        Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
+        Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pContext;
+        Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pTarget;
     };
 }
