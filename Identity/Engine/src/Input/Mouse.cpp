@@ -3,24 +3,29 @@
 
 using namespace Engine::Input;
 
-std::pair<int, int> Mouse::GetPos() const noexcept
+Mouse::MouseState Mouse::GetState() const noexcept
+{
+    return m_mouseMap.first;
+}
+
+Vector2I Mouse::GetPos() const noexcept
 {
     return m_mouseMap.second;
 }
 
 int Mouse::GetPosX() const noexcept
 {
-    return m_mouseMap.second.first;
+    return m_mouseMap.second.x;
 }
 
 int Mouse::GetPosY() const noexcept
 {
-    return m_mouseMap.second.second;
+    return m_mouseMap.second.y;
 }
 
 bool Mouse::IsInWindow() const noexcept
 {
-    return IsInWindow();
+    return m_isInWindow;
 }
 
 bool Mouse::LeftIsPressed() const noexcept
@@ -35,7 +40,7 @@ bool Mouse::RightIsPressed() const noexcept
 
 void Mouse::Flush() noexcept
 {
-    m_mouseMap = std::pair<MouseState, std::pair<int, int>>();
+    m_mouseMap = std::pair<MouseState, Vector2I>();
 }
 
 void Mouse::OnMouseMove(const int p_x, const int p_y) noexcept
@@ -44,8 +49,21 @@ void Mouse::OnMouseMove(const int p_x, const int p_y) noexcept
     m_y = p_y;
 
     m_mouseMap.first = MOVE;
-    m_mouseMap.second = std::make_pair(m_x, m_y);
+    m_mouseMap.second = Vector2I(m_x,m_y);
 }
+
+void Mouse::OnMouseEnter() noexcept
+{
+    m_isInWindow = true;
+    m_mouseMap.first = ENTER;
+}
+
+void Mouse::OnMouseLeave() noexcept
+{
+    m_isInWindow = false;
+    m_mouseMap.first = LEAVE;
+}
+
 
 void Mouse::OnLeftPressed() noexcept
 {

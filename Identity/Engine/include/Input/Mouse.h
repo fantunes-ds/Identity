@@ -1,7 +1,6 @@
 #pragma once
-#include <queue>
-#include <unordered_map>
-
+#include <Export.h>
+#include <GPM/GPM.h>
 
 namespace Engine::Rendering
 {
@@ -10,7 +9,7 @@ namespace Engine::Rendering
 
 namespace Engine::Input
 {
-    class Mouse
+    class API_ENGINE Mouse
     {
         friend class Rendering::Window;
     public:
@@ -23,7 +22,9 @@ namespace Engine::Input
             WHEEL_DOWN = 4,
             WHEEL_UP = 5,
             MOVE = 6,
-            INVALID = 8
+            ENTER = 7,
+            LEAVE = 8,
+            INVALID = 9
         };
 
         Mouse() = default;
@@ -31,16 +32,19 @@ namespace Engine::Input
         Mouse& operator=(const Mouse&) = delete;
 
 
-        [[nodiscard]] std::pair<int, int> GetPos() const noexcept;
+        [[nodiscard]] MouseState GetState() const noexcept;
+        [[nodiscard]] Vector2I GetPos() const noexcept;
         [[nodiscard]] int GetPosX() const noexcept;
         [[nodiscard]] int GetPosY() const noexcept;
-        bool IsInWindow() const noexcept;
-        bool LeftIsPressed() const noexcept;
-        bool RightIsPressed() const noexcept;
+        [[nodiscard]] bool IsInWindow() const noexcept;
+        [[nodiscard]] bool LeftIsPressed() const noexcept;
+        [[nodiscard]] bool RightIsPressed() const noexcept;
 
         void Flush() noexcept;
     private:
         void OnMouseMove(int p_x, int p_y) noexcept;
+        void OnMouseEnter() noexcept;
+        void OnMouseLeave() noexcept;
         void OnLeftPressed() noexcept;
         void OnLeftReleased() noexcept;
         void OnRightPressed() noexcept;
@@ -53,6 +57,7 @@ namespace Engine::Input
         int                           m_y{0};
         bool                          m_leftIsPressed = false;
         bool                          m_rightIsPressed = false;
-        std::pair<MouseState, std::pair<int, int>> m_mouseMap;
+        bool                          m_isInWindow = false;
+        std::pair<MouseState, Vector2I> m_mouseMap;
     };
 }
