@@ -1,9 +1,9 @@
 #include <stdafx.h>
 #include <3DLoader/ObjectLoader.h>
 
-std::shared_ptr<Engine::Model> Engine::ObjectLoader::LoadModel(const std::string& p_file)
+std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(const std::string& p_file)
 {	
-	Engine::Model model;
+	Engine::ObjectElements::Model model;
 
 	Assimp::Importer& importer = GetInstance()->m_importer;
 	
@@ -30,10 +30,10 @@ std::shared_ptr<Engine::Model> Engine::ObjectLoader::LoadModel(const std::string
 		model.AddMesh(LoadMesh(m_scene->mMeshes[i]));
 	}
 	
-	return std::make_shared<Model>(model);
+	return std::make_shared<ObjectElements::Model>(model);
 }
 
-std::shared_ptr<Engine::Mesh> Engine::ObjectLoader::LoadMesh(aiMesh* p_assimpMesh)
+std::shared_ptr<Engine::ObjectElements::Mesh> Engine::ObjectLoader::LoadMesh(aiMesh* p_assimpMesh)
 {
 	std::vector<Geometry::Vertex> vertices;
 	std::vector<uint32_t> indices;
@@ -70,7 +70,7 @@ std::shared_ptr<Engine::Mesh> Engine::ObjectLoader::LoadMesh(aiMesh* p_assimpMes
 	}
 	offset += p_assimpMesh->mNumVertices;
 
-	return std::make_shared<Mesh>(vertices, indices );
+	return std::make_shared<ObjectElements::Mesh>(vertices, indices );
 }
 
 Engine::ObjectLoader::~ObjectLoader()
