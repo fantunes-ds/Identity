@@ -44,4 +44,10 @@ void App::DoFrame()
         OutputDebugString("U was released\n");
     else if (m_window.m_keyboard.IsKeyHeld(Input::Keyboard::H))
         OutputDebugString("H was held\n");
+
+    if (m_window.m_mouse.LeftIsPressed())
+    {
+        std::string output = std::to_string(m_window.m_mouse.GetPos().first);
+        OutputDebugString(output.c_str() + '\n');
+    }
 }

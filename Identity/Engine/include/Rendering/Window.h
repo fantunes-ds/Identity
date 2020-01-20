@@ -5,6 +5,7 @@
 #include <memory>
 #include <Input/Keyboard.h>
 #include <optional>
+#include <Input/Mouse.h>
 
 namespace Engine::Rendering
 {
@@ -45,6 +46,7 @@ namespace Engine::Rendering
         static std::optional<int> ProcessMessage();
 
         Input::Keyboard m_keyboard;
+        Input::Mouse m_mouse;
 
     private:
         static LRESULT CALLBACK HandleMsgSetup(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);

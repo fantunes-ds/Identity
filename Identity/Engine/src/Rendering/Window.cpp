@@ -136,6 +136,46 @@ LRESULT Window::HandleMsg(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lPa
         m_keyboard.OnChar(static_cast<unsigned char>(p_wParam));
         break;
         /*********** END KEYBOARD MESSAGES ***********/
+
+    /************* MOUSE MESSAGES ****************/
+    case WM_MOUSEMOVE:
+    {
+        POINTS pt = MAKEPOINTS(p_lParam);
+        m_mouse.OnMouseMove(pt.x, pt.y);
+    }
+    case WM_LBUTTONDOWN:
+    {
+        m_mouse.OnLeftPressed();
+        break;
+    }
+    case WM_RBUTTONDOWN:
+    {
+        m_mouse.OnRightPressed();
+        break;
+    }
+    case WM_LBUTTONUP:
+    {
+        m_mouse.OnLeftReleased();
+        break;
+    }
+    case WM_RBUTTONUP:
+    {
+        m_mouse.OnRightReleased();
+        break;
+    }
+    case WM_MOUSEWHEEL:
+    {
+        if (GET_WHEEL_DELTA_WPARAM(p_wParam) > 0)
+        {
+            m_mouse.OnWheelUp();
+        }
+        else if (GET_WHEEL_DELTA_WPARAM(p_wParam) < 0)
+        {
+            m_mouse.OnWheelDown();
+        }
+        break;
+    }
+    /************** END MOUSE MESSAGES **************/
     }
 
     return DefWindowProc(p_hwnd, p_msg, p_wParam, p_lParam);
