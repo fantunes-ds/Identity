@@ -3,7 +3,7 @@
 #include <vector>
 #include <Geometry/Vertex.h>
 
-namespace Engine
+namespace Engine::ObjectElements
 {
 	class API_ENGINE Mesh
 	{
