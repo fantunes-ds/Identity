@@ -1,5 +1,7 @@
 #pragma once
 
+#define INPUT Input::Input::GetInstance().get()
+
 #include <iostream>
 
 #include <GPM/GPM.h>
@@ -7,3 +9,5 @@
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
+
+#include <Input/Input.h>

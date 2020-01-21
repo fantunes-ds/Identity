@@ -54,6 +54,24 @@
     <ClInclude Include="include\Core\App.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\3DLoader\ObjectElements\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Objects\GameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Rendering\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Events\Event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Input\Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\TestDependencies.cpp">
@@ -83,5 +101,11 @@
     <ClCompile Include="src\Core\App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    </ClCompile>
+    <ClCompile Include="src\Input\Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+      <Filter>Source Files</Filter>
+    <ClCompile Include="src\3DLoader\ObjectLoader.cpp">
   </ItemGroup>
 </Project>
