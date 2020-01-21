@@ -60,6 +60,9 @@
     <ClInclude Include="include\Rendering\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Events\Event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\TestDependencies.cpp">
@@ -77,16 +80,19 @@
     <ClCompile Include="src\Core\App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Input\3DLoader\ObjectElements\Mesh.cpp">
+    <ClCompile Include="src\Rendering\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Input\3DLoader\ObjectElements\Model.cpp">
+    <ClCompile Include="src\3DLoader\ObjectElements\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Input\3DLoader\ObjectElements\Transform.cpp">
+    <ClCompile Include="src\3DLoader\ObjectElements\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Input\3DLoader\ObjectLoader.cpp">
+    <ClCompile Include="src\3DLoader\ObjectElements\Transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\3DLoader\ObjectLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
