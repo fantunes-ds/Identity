@@ -38,7 +38,7 @@ Window::WindowClass::~WindowClass()
     UnregisterClass(m_windowClassName, GetInstance());
 }
 
-Window::Window(int p_width, int p_height, const char* p_name)
+Window::Window(int p_width, int p_height, const char* p_name) : m_width(p_width), m_height(p_height)
 {
     //adjust the size ot he window so the coosen resolution is for the user view and not for the entire window
     RECT wr;
@@ -66,6 +66,10 @@ Graphics& Window::GetGraphics() const
     return *m_graphics;
 }
 
+void Window::SetTitle(const std::string& title)
+{
+    SetWindowText(m_hwnd, title.c_str());
+}
 
 std::optional<int> Window::ProcessMessage()
 {
@@ -116,26 +120,87 @@ LRESULT Window::HandleMsg(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lPa
 
         // clear keystate when window loses focus to prevent input getting "stuck"
     case WM_KILLFOCUS:
-        m_keyboard.ClearStates();
+        keyboard.ClearStates();
         break;
 
         /*********** KEYBOARD MESSAGES ***********/
     case WM_KEYDOWN:
         // sys-key commands need to be handled to track ALT key (VK_MENU) and F10
     case WM_SYSKEYDOWN:
-        if (!(p_lParam & 0x40000000) || m_keyboard.IsAutoRepeatEnabled()) // filter auto-repeat
+        if (!(p_lParam & 0x40000000) || keyboard.IsAutoRepeatEnabled()) // filter auto-repeat
         {
-            m_keyboard.OnKeyPressed(static_cast<unsigned char>(p_wParam));
+            keyboard.OnKeyPressed(static_cast<unsigned char>(p_wParam));
         }
         break;
     case WM_KEYUP:
     case WM_SYSKEYUP:
-        m_keyboard.OnKeyReleased(static_cast<unsigned char>(p_wParam));
+        keyboard.OnKeyReleased(static_cast<unsigned char>(p_wParam));
         break;
     case WM_CHAR:
-        m_keyboard.OnChar(static_cast<unsigned char>(p_wParam));
+        keyboard.OnChar(static_cast<unsigned char>(p_wParam));
         break;
         /*********** END KEYBOARD MESSAGES ***********/
+
+    /************* MOUSE MESSAGES ****************/
+    case WM_MOUSEMOVE:
+    {
+        const POINTS pt = MAKEPOINTS(p_lParam);
+        if (pt.x >= 0 && pt.x < m_width && pt.y >= 0 && pt.y < m_height)
+        {
+            mouse.OnMouseMove(pt.x, pt.y);
+            if (!mouse.IsInWindow())
+            {
+                SetCapture(p_hwnd);
+                mouse.OnMouseEnter();
+            }
+        }
+        else
+        {
+            if (p_wParam & (MK_LBUTTON | MK_RBUTTON))
+            {
+                mouse.OnMouseMove(pt.x, pt.y);
+            }
+            else
+            {
+                ReleaseCapture();
+                mouse.OnMouseLeave();
+            }
+        }
+        break;
+    }
+    case WM_LBUTTONDOWN:
+    {
+        mouse.OnLeftPressed();
+        break;
+    }
+    case WM_RBUTTONDOWN:
+    {
+        mouse.OnRightPressed();
+        break;
+    }
+    case WM_LBUTTONUP:
+    {
+        mouse.OnLeftReleased();
+        break;
+    }
+    case WM_RBUTTONUP:
+    {
+        mouse.OnRightReleased();
+        break;
+    }
+    case WM_MOUSEWHEEL:
+    {
+        if (GET_WHEEL_DELTA_WPARAM(p_wParam) > 0)
+        {
+            mouse.OnWheelUp();
+        }
+        else if (GET_WHEEL_DELTA_WPARAM(p_wParam) < 0)
+        {
+            mouse.OnWheelDown();
+        }
+        break;
+    }
+    /************** END MOUSE MESSAGES **************/
     }
 
     return DefWindowProc(p_hwnd, p_msg, p_wParam, p_lParam);

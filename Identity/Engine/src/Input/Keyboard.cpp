@@ -3,7 +3,7 @@
 
 using namespace Engine::Input;
 
-bool Keyboard::IsKeyDown(unsigned char p_charInCapital) noexcept
+bool Keyboard::IsKeyDown(const unsigned char p_charInCapital) noexcept
 {
     if (!(m_inputBuffer.find(p_charInCapital) == m_inputBuffer.end()))
         if (m_inputBuffer.find(p_charInCapital)->second == PRESSED)
@@ -14,7 +14,7 @@ bool Keyboard::IsKeyDown(unsigned char p_charInCapital) noexcept
     return false;
 }
 
-bool Keyboard::IsKeyDown(KeyCode p_keyCode) noexcept
+bool Keyboard::IsKeyDown(const KeyCode p_keyCode) noexcept
 {
     if (!(m_inputBuffer.find(p_keyCode) == m_inputBuffer.end()))
         if (m_inputBuffer.find(p_keyCode)->second == PRESSED)
@@ -25,7 +25,7 @@ bool Keyboard::IsKeyDown(KeyCode p_keyCode) noexcept
     return false;
 }
 
-bool Keyboard::IsKeyUp(unsigned char p_charInCapital) noexcept
+bool Keyboard::IsKeyUp(const unsigned char p_charInCapital) noexcept
 {
     if (!(m_inputBuffer.find(p_charInCapital) == m_inputBuffer.end()))
         if (m_inputBuffer.find(p_charInCapital)->second == RELEASED)
@@ -36,7 +36,7 @@ bool Keyboard::IsKeyUp(unsigned char p_charInCapital) noexcept
     return false;
 }
 
-bool Keyboard::IsKeyUp(KeyCode p_keyCode) noexcept
+bool Keyboard::IsKeyUp(const KeyCode p_keyCode) noexcept
 {
     if (!(m_inputBuffer.find(p_keyCode) == m_inputBuffer.end()))
         if (m_inputBuffer.find(p_keyCode)->second == RELEASED)
@@ -47,7 +47,7 @@ bool Keyboard::IsKeyUp(KeyCode p_keyCode) noexcept
     return false;
 }
 
-bool Keyboard::IsKeyHeld(unsigned char p_charInCapital) noexcept
+bool Keyboard::IsKeyHeld(const unsigned char p_charInCapital) noexcept
 {
     if (!(m_inputBuffer.find(p_charInCapital) == m_inputBuffer.end()))
         if (m_inputBuffer.find(p_charInCapital)->second == PRESSED)
@@ -55,7 +55,7 @@ bool Keyboard::IsKeyHeld(unsigned char p_charInCapital) noexcept
     return false;
 }
 
-bool Keyboard::IsKeyHeld(KeyCode p_keyCode) noexcept
+bool Keyboard::IsKeyHeld(const KeyCode p_keyCode) noexcept
 {
     if (!(m_inputBuffer.find(p_keyCode) == m_inputBuffer.end()))
         if (m_inputBuffer.find(p_keyCode)->second == PRESSED)
