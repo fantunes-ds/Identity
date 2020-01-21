@@ -3,6 +3,7 @@
 
 #include <WinSetup.h>
 #include <d3d11.h>
+#include <Tools/IdentityException.h>
 
 namespace Engine::Rendering
 {
@@ -11,6 +12,49 @@ namespace Engine::Rendering
      */
     class API_ENGINE Graphics
     {
+        //All exception class for the Graphics class
+    public:
+        /*
+         @brief Get the exceptions for the functions wich returns an HRESULT
+         */
+        class HrException : public Tools::IdentityException
+        {
+        public:
+            HrException(int p_line, const char* p_file, HRESULT p_hr, std::vector<std::string> p_infoMsg = {}) noexcept;
+            const char* what() const noexcept override;
+            const char* GetType() const noexcept override;
+            HRESULT GetErrorCode() const noexcept;
+            std::string GetErrorString() const noexcept;
+            std::string GetErrorDescription() const noexcept;
+            std::string GetErrorInfo() const noexcept;
+        private:
+            HRESULT m_hr;
+            std::string m_info;
+        };
+        /*
+         @brief Get the information when the functions return a void
+         */
+        class InfoException : public Tools::IdentityException
+        {
+        public:
+            InfoException(int p_line, const char* p_file, std::vector<std::string> p_infoMsg) noexcept;
+            const char* what() const noexcept override;
+            const char* GetType() const noexcept override;
+            std::string GetErrorInfo() const noexcept;
+        private:
+            std::string m_info;
+        };
+        /*
+         @brief Get the exceptions for the Graphics driver
+         */
+        class DeviceException : public HrException
+        {
+        public:
+            const char* GetType() const noexcept override;
+        private:
+            std::string m_reason;
+        };
+
     public:
         Graphics(HWND p_hwnd);
         Graphics(const Graphics&) = delete;
