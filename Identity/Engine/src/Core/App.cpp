@@ -1,5 +1,8 @@
 #include <stdafx.h>
 #include <Core/App.h>
+#include <3DLoader/ObjectElements/Transform.h>
+#include <Events/IEventCallback.h>
+#include "Events/Event.h"
 
 using namespace Engine::Core;
 
@@ -13,6 +16,22 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 
 int App::Run()
 {
+    GPM::Vector3D pos{ 0.0, 0.0, 0.0 };
+    GPM::Vector3D scale{ 1.0, 1.0, 1.0 };
+    GPM::Vector3D rot{ 90, 0, 0};
+
+    ObjectElements::Transform transform(pos, scale, rot);
+    //transform.RotateWithEulerAngles({ -90, 0, 0 });
+    OutputDebugString(transform.GetForward().ToString().c_str());
+    OutputDebugString(transform.GetRight().ToString().c_str());
+
+
+    auto* callback = new EventCallback<ObjectElements::Transform>(&transform, &ObjectElements::Transform::bullshit);
+     Event something;
+     something.AddListener(callback);
+     something.Fire();
+    OutputDebugString(transform.GetForward().ToString().c_str());
+
     while (true)
     {
         if (const auto eCode = Rendering::Window::ProcessMessage())

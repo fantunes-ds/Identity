@@ -214,6 +214,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />
     <ClInclude Include="include\3DLoader\ObjectLoader.h" />
     <ClInclude Include="include\Events\Event.h" />
+    <ClInclude Include="include\Events\IEventCallback.h" />
     <ClInclude Include="include\Export.h" />
     <ClInclude Include="include\Objects\GameObject.h" />
     <ClInclude Include="include\Rendering\Camera.h" />
@@ -230,6 +231,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\3DLoader\ObjectElements\Mesh.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Transform.cpp" />
     <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
+    <ClCompile Include="src\Events\Event.cpp" />
     <ClCompile Include="src\Rendering\Camera.cpp" />
     <ClCompile Include="src\Rendering\Graphics.cpp" />
     <ClCompile Include="src\Core\App.cpp" />
