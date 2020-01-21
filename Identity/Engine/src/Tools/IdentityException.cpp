@@ -31,6 +31,6 @@ std::string IdentityException::GetOriginString() const noexcept
 {
     std::ostringstream oss;
     oss << "[File] " << m_file << std::endl
-        << "[Line] " << m_file;
+        << "[Line] " << m_line;
     return oss.str();
 }

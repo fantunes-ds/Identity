@@ -36,6 +36,8 @@ void App::DoFrame()
     if (m_window.m_keyboard.IsKeyHeld('B'))
         m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
 
+    m_window.GetGraphics().DrawTriangle();
+
     m_window.GetGraphics().EndFrame();
 
     if (m_window.m_keyboard.IsKeyDown(Input::Keyboard::D))
