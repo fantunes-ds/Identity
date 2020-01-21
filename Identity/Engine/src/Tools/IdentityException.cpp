@@ -1,12 +1,14 @@
 #include <stdafx.h>
 #include <Tools/IdentityException.h>
 
+using namespace Engine::Tools;
+
 IdentityException::IdentityException(int p_line, const char* p_file) noexcept
     : m_line(p_line),
       m_file(p_file)
 {}
 
-const char* IdentityException::what() const
+const char* IdentityException::what() const noexcept
 {
     std::ostringstream oss;
     oss << GetType() << std::endl
@@ -23,11 +25,6 @@ const char* IdentityException::GetType() const noexcept
 int IdentityException::GetLine() const noexcept
 {
     return m_line;
-}
-
-const std::string& IdentityException::GetFile() const noexcept
-{
-    return m_file;
 }
 
 std::string IdentityException::GetOriginString() const noexcept
