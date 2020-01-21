@@ -30,18 +30,18 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(c
         model.AddMesh(LoadMesh(m_scene->mMeshes[i]));
     }
 
-    return std::make_shared<ObjectElements::Model>(model);
+    return std::make_shared<Engine::ObjectElements::Model>(model);
 }
 
 std::shared_ptr<Engine::ObjectElements::Mesh> Engine::ObjectLoader::LoadMesh(aiMesh* p_assimpMesh)
 {
-    std::vector<Geometry::Vertex> vertices;
+    std::vector<Engine::Geometry::Vertex> vertices;
     std::vector<uint32_t> indices;
     int offset = 0;
 
     for (unsigned int vertIdx = 0u; vertIdx < p_assimpMesh->mNumVertices; vertIdx++)
     {
-        Geometry::Vertex vertex;
+        Engine::Geometry::Vertex vertex;
 
         aiVector3D vert = p_assimpMesh->mVertices[vertIdx];
         aiVector3D norm = p_assimpMesh->mNormals[vertIdx];
@@ -70,7 +70,7 @@ std::shared_ptr<Engine::ObjectElements::Mesh> Engine::ObjectLoader::LoadMesh(aiM
     }
     offset += p_assimpMesh->mNumVertices;
 
-    return std::make_shared<ObjectElements::Mesh>(vertices, indices);
+    return std::make_shared<Engine::ObjectElements::Mesh>(vertices, indices);
 }
 
 Engine::ObjectLoader::~ObjectLoader()
