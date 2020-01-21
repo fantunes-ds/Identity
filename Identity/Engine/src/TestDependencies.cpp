@@ -20,7 +20,7 @@ void Test::TestGPM()
 void Test::TestAssimp()
 {	
 	Engine::ObjectLoader* loader = Engine::ObjectLoader::GetInstance();
-	std::shared_ptr<Engine::Model> model = Engine::ObjectLoader::LoadModel("../Engine/Resources/Box.fbx");
+	std::shared_ptr<Engine::ObjectElements::Model> model = Engine::ObjectLoader::LoadModel("../Engine/Resources/Box.fbx");
 
 	if (model == nullptr)
 		TestIrrKlang();

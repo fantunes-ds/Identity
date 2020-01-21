@@ -2,7 +2,9 @@
 #include <Export.h>
 
 #include <WinSetup.h>
+#include <vector>
 #include <d3d11.h>
+#include <Tools/IdentityException.h>
 #include <wrl.h>
 
 namespace Engine::Rendering
@@ -12,6 +14,55 @@ namespace Engine::Rendering
      */
     class API_ENGINE Graphics
     {
+        //All exception class for the Graphics class
+    public:
+        class Exception : public Tools::IdentityException
+        {
+            using IdentityException::IdentityException;
+        };
+
+        /*
+         @brief Get the exceptions for the functions wich returns an HRESULT
+         */
+        class HrException : public Exception
+        {
+        public:
+            HrException(int p_line, const char* p_file, HRESULT p_hr, std::vector<std::string> p_infoMsg = {}) noexcept;
+            const char* what() const noexcept override;
+            const char* GetType() const noexcept override;
+            HRESULT GetErrorCode() const noexcept;
+            std::string GetErrorString() const noexcept;
+            std::string GetErrorDescription() const noexcept;
+            std::string GetErrorInfo() const noexcept;
+        private:
+            HRESULT m_hr;
+            std::string m_info;
+        };
+        /*
+         @brief Get the information when the functions return a void
+         */
+        class InfoException : public Exception
+        {
+        public:
+            InfoException(int p_line, const char* p_file, std::vector<std::string> p_infoMsg) noexcept;
+            const char* what() const noexcept override;
+            const char* GetType() const noexcept override;
+            std::string GetErrorInfo() const noexcept;
+        private:
+            std::string m_info;
+        };
+        /*
+         @brief Get the exceptions for the Graphics driver
+         */
+        class DeviceException : public HrException
+        {
+            using HrException::HrException;
+        public:
+            const char* GetType() const noexcept override;
+        private:
+            std::string m_reason;
+        };
+
     public:
         Graphics(const HWND p_hwnd);
         Graphics(const Graphics&) = delete;

@@ -1,8 +1,8 @@
 #pragma once
 #include <Export.h>
-#include <3DLoader/Mesh.h>
+#include <3DLoader/ObjectElements/Mesh.h>
 
-namespace Engine
+namespace Engine::ObjectElements
 {
 	class API_ENGINE Model
 	{
