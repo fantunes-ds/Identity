@@ -4,14 +4,14 @@
 
 namespace Engine::ObjectElements
 {
-	class API_ENGINE Model
-	{
-	public:
-		Model() = default;
-		~Model() = default;
+    class API_ENGINE Model
+    {
+    public:
+        Model() = default;
+        ~Model() = default;
 
-		void AddMesh(std::shared_ptr<Mesh> p_mesh);
-		
-		std::vector<std::shared_ptr<Mesh>> m_meshes;
-	};
+        void AddMesh(std::shared_ptr<Mesh> p_mesh);
+
+        std::vector<std::shared_ptr<Mesh>> m_meshes;
+    };
 }

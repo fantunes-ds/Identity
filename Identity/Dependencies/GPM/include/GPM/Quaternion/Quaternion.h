@@ -373,6 +373,7 @@ namespace GPM
 			Quaternion& p_quaternion);
 
 		/**
+		 * @brief Rotate a vector around another one
 		 * @param p_toRotate
 		 * @warning This method is not implemented yet and will fail at compilation.
 		 */
@@ -387,6 +388,14 @@ namespace GPM
 		*/
 		static Vector3<double> RotateVectorAboutAngleAndAxis(const double p_angle, const Vector3<double>& p_axis, const Vector3<double>& p_vectorToRotate);
 
+		/**
+		 * @brief Return the value aliased with index, just like arrays
+		 * @param p_index The index to access. 0 = w, 1 = x, 2 = y, 3 = z
+		 * @return Return the value associated at the indicated index
+		 * @note Quaternion representation is as follow : [w, x, y, z]
+		 */
+		double operator[](const int p_index) const;
+		
 #pragma endregion
 #pragma region Conversions
 		/**
