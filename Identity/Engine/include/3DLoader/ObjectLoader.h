@@ -9,7 +9,6 @@
 
 namespace Engine
 {
-	
 	class API_ENGINE ObjectLoader
 	{
 	public:

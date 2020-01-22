@@ -29,29 +29,29 @@ void App::DoFrame()
 {
     m_window.GetGraphics().ClearBuffer(1.0f, 1.0f, 1.0f);
 
-    if (INPUT->keyboard.IsKeyHeld('R'))
+    if (_INPUT->keyboard.IsKeyHeld('R'))
         m_window.GetGraphics().ClearBuffer(1.0f, 0.0f, 0.0f);
 
-    if (INPUT->keyboard.IsKeyHeld('G'))
+    if (_INPUT->keyboard.IsKeyHeld('G'))
         m_window.GetGraphics().ClearBuffer(0.0f, 1.0f, 0.0f);
 
-    if (INPUT->keyboard.IsKeyHeld('B'))
+    if (_INPUT->keyboard.IsKeyHeld('B'))
         m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
 
     m_window.GetGraphics().EndFrame();
 
-    if (INPUT->keyboard.IsKeyDown(Input::Keyboard::D))
+    if (_INPUT->keyboard.IsKeyDown(Input::Keyboard::D))
         OutputDebugString("D was pressed\n");
-    else if (INPUT->keyboard.IsKeyUp(Input::Keyboard::U))
+    else if (_INPUT->keyboard.IsKeyUp(Input::Keyboard::U))
         OutputDebugString("U was released\n");
-    else if (INPUT->keyboard.IsKeyHeld(Input::Keyboard::H))
+    else if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::H))
         OutputDebugString("H was held\n");
 
-    if (INPUT->mouse.GetState() == Input::Mouse::MOVE)
+    if (_INPUT->mouse.GetState() == Input::Mouse::MOVE)
     {
-        std::string output = std::to_string(INPUT->mouse.GetPosX()) + '\n';
+        std::string output = std::to_string(_INPUT->mouse.GetPosX()) + '\n';
         OutputDebugString(output.c_str());
     }
-    else if (INPUT->mouse.GetState() == Input::Mouse::LEAVE)
+    else if (_INPUT->mouse.GetState() == Input::Mouse::LEAVE)
         m_window.SetTitle("Left screen\n");
 }

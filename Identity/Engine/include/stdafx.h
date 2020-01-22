@@ -1,6 +1,6 @@
 #pragma once
 
-#define INPUT Input::Input::GetInstance().get()
+#define _INPUT Input::Input::GetInstance().get()
 
 #include <iostream>
 

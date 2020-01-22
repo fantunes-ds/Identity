@@ -8,8 +8,8 @@ namespace Engine::Input
     class API_ENGINE Input
     {
     public:
-        Input() = delete;
-        ~Input() = delete;
+        Input() = default;
+        ~Input() = default;
 
         Input(const Input&) = delete;
         Input(const Input&&) = delete;
