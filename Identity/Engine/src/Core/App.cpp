@@ -25,6 +25,8 @@ int App::Run()
 
 void App::DoFrame()
 {
+    static float angle = 0;
+
     m_window.GetGraphics().ClearBuffer(1.0f, 1.0f, 1.0f);
 
     if (m_window.m_keyboard.IsKeyHeld('R'))
@@ -36,7 +38,7 @@ void App::DoFrame()
     if (m_window.m_keyboard.IsKeyHeld('B'))
         m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
 
-    m_window.GetGraphics().DrawTriangle();
+    m_window.GetGraphics().DrawTriangle(angle);
 
     m_window.GetGraphics().EndFrame();
 
@@ -46,4 +48,6 @@ void App::DoFrame()
         OutputDebugString("U was released\n");
     else if (m_window.m_keyboard.IsKeyHeld(Input::Keyboard::H))
         OutputDebugString("H was held\n");
+
+    angle += 0.01;
 }

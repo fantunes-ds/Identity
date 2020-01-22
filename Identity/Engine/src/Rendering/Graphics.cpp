@@ -83,7 +83,7 @@ void Graphics::ClearBuffer(float p_red, float p_green, float p_blue)
     m_pContext->ClearRenderTargetView(m_pTarget.Get(), colour);
 }
 
-void Graphics::DrawTriangle()
+void Graphics::DrawTriangle(float angle)
 {
     HRESULT hr;
 
@@ -111,7 +111,7 @@ void Graphics::DrawTriangle()
     Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
     D3D11_BUFFER_DESC vDesc = {};
     vDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    vDesc.Usage = D3D11_USAGE_DEFAULT;
+    vDesc.Usage = D3D11_USAGE_DEFAULT;      //default - values wont change once they are set
     vDesc.CPUAccessFlags = 0u;
     vDesc.MiscFlags = 0u;
     vDesc.ByteWidth = sizeof(vertices);
@@ -138,7 +138,7 @@ void Graphics::DrawTriangle()
     Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
     D3D11_BUFFER_DESC inDesc = {};
     inDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    inDesc.Usage = D3D11_USAGE_DEFAULT;
+    inDesc.Usage = D3D11_USAGE_DEFAULT;      //default - values wont change once they are set
     inDesc.CPUAccessFlags = 0u;
     inDesc.MiscFlags = 0u;
     inDesc.ByteWidth = sizeof(indices);
@@ -165,12 +165,28 @@ void Graphics::DrawTriangle()
     const ConstantBuffer cb =
     {
         {
-            std::cos(angle), std::sin(angle), 0.0f, 0.0f,
-            -std::sin(angle), std::cos(angle) 0.0f, 0.0f,
+           (600.0f / 800.0f) * std::cos(angle), std::sin(angle), 0.0f, 0.0f,
+           (600.0f / 800.0f) * -std::sin(angle), std::cos(angle), 0.0f, 0.0f,
             0.0f, 0.0f, 1.0f, 0.0f,
             0.0f, 0.0f, 0.0f, 1.0f,
         }
     };
+
+    Microsoft::WRL::ComPtr<ID3D11Buffer> constantBuffer;
+    D3D11_BUFFER_DESC conDesc = {};
+    conDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    conDesc.Usage = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
+    conDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    conDesc.MiscFlags = 0u;
+    conDesc.ByteWidth = sizeof(cb);
+    conDesc.StructureByteStride = 0u;
+    D3D11_SUBRESOURCE_DATA cSD = {};
+    cSD.pSysMem = &cb;
+    GFX_THROW_INFO(m_pDevice->CreateBuffer(&conDesc, &cSD, &constantBuffer));
+
+    //bind the buffer to the shader
+    m_pContext->VSSetConstantBuffers(0u, 1u, constantBuffer.GetAddressOf());
+
     // ********* WIP ********* //
 
 

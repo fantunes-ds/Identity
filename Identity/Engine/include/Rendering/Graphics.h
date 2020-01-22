@@ -79,7 +79,7 @@ namespace Engine::Rendering
         void ClearBuffer(float p_red, float p_green, float p_blue);
 
 
-        void DrawTriangle();
+        void DrawTriangle(float angle);
 
     private:
         Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
