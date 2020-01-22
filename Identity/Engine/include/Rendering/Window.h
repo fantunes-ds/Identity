@@ -5,6 +5,7 @@
 #include <memory>
 #include <Input/Keyboard.h>
 #include <optional>
+#include <Input/Mouse.h>
 
 namespace Engine::Rendering
 {
@@ -36,7 +37,8 @@ namespace Engine::Rendering
         /*
          @brief Return the DirectX context of the window
          */
-        Graphics& GetGraphics() const;
+        [[nodiscard]] Graphics& GetGraphics() const;
+        void SetTitle(const std::string& title);
         /*
          @brief Check if there is a message in the queue
          If there is no message, the method will return an empty optional and continue
@@ -44,7 +46,8 @@ namespace Engine::Rendering
          */
         static std::optional<int> ProcessMessage();
 
-        Input::Keyboard m_keyboard;
+        Input::Keyboard keyboard;
+        Input::Mouse mouse;
 
     private:
         static LRESULT CALLBACK HandleMsgSetup(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);

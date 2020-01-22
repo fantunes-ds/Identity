@@ -160,14 +160,14 @@ namespace Engine::Input
          * It NEEDS to be in capital letter, as lowcase will not be checked/detected.
          * @warning Only works in an update loop. You need to be able to detect at every frame
          */
-        [[nodiscard]] bool IsKeyDown(unsigned char p_charInCapital) noexcept;
+        [[nodiscard]] bool IsKeyDown(const unsigned char p_charInCapital) noexcept;
         /**
          * @brief Detects if a key has been pressed at a certain frame
          * @return true once next frame if key is down.
          * @param p_keyCode : The KeyCode enum parameter you want to check.
          * @warning Only works in an update loop. You need to be able to detect at every frame
          */
-        [[nodiscard]] bool IsKeyDown(KeyCode p_keyCode) noexcept;
+        [[nodiscard]] bool IsKeyDown(const KeyCode p_keyCode) noexcept;
         /**
          * @brief Detects if a key has been released at a certain frame
          * @return true once next frame if key is released.
@@ -175,14 +175,14 @@ namespace Engine::Input
          * It NEEDS to be in capital letter, as lowcase will not be checked/detected.
          * @warning Only works in an update loop. You need to be able to detect at every frame
          */
-        [[nodiscard]] bool IsKeyUp(unsigned char p_charInCapital) noexcept;
+        [[nodiscard]] bool IsKeyUp(const unsigned char p_charInCapital) noexcept;
         /**
          * @brief Detects if a key has been released at a certain frame
          * @return true once next frame if key is released.
          * @param p_keyCode : The KeyCode enum parameter you want to check.
          * @warning Only works in an update loop. You need to be able to detect at every frame
          */
-        [[nodiscard]] bool IsKeyUp(KeyCode p_keyCode) noexcept;
+        [[nodiscard]] bool IsKeyUp(const KeyCode p_keyCode) noexcept;
         /**
          * @brief Detects if a key is being pressed
          * @return true next frames as long as key is pressed.
@@ -190,14 +190,14 @@ namespace Engine::Input
          * It NEEDS to be in capital letter, as lowcase will not be checked/detected.
          * @warning Only works in an update loop. You need to be able to detect at every frame
          */
-        [[nodiscard]] bool IsKeyHeld(unsigned char p_charInCapital) noexcept;
+        [[nodiscard]] bool IsKeyHeld(const unsigned char p_charInCapital) noexcept;
         /**
          * @brief Detects if a key is being pressed
          * @return true next frames as long as key is pressed.
          * @param p_keyCode : The KeyCode enum parameter you want to check.
          * @warning Only works in an update loop. You need to be able to detect at every frame
          */
-        [[nodiscard]] bool IsKeyHeld(KeyCode p_keyCode) noexcept;
+        [[nodiscard]] bool IsKeyHeld(const KeyCode p_keyCode) noexcept;
 
         // char events, will be used to retrieve text input
         char ReadChar() noexcept;
@@ -213,18 +213,18 @@ namespace Engine::Input
          * @brief Event to be triggered when a key is pressed
          * @param p_keycode : The key that was pressed
          */
-        void OnKeyPressed(unsigned char p_keycode) noexcept;
+        void OnKeyPressed(const unsigned char p_keycode) noexcept;
         /**
          * @brief Event to be triggered when a key is released
          * @param p_keycode : The key that was released
          */
-        void OnKeyReleased(unsigned char p_keycode) noexcept;
+        void OnKeyReleased(const unsigned char p_keycode) noexcept;
         /**
          * @brief Event to be triggered when a key is pressed if you want
          * to have the name of the key pressed, and not just update it's state.
          * @param p_char : The key that was pressed
          */
-        void OnChar(char unsigned p_char) noexcept;
+        void OnChar(const char unsigned p_char) noexcept;
 
         /**
          * @brief This function resets default Invalid state for all keys in the map

@@ -729,6 +729,14 @@ namespace GPM
 		*/
 		constexpr static Vector4<T> Nlerp(const Vector4<T>& p_start, const Vector4<T>& p_end, const float p_interpolationCoefficient);
 
+		/**
+		 * @brief Return the value aliased with index, just like arrays
+		 * @param p_index The index to access. 0 = x, 1 = y, 2 = z, 3 = w
+		 * @return Return the value associated at the indicated index
+		 * @note Vector4 representation is as follow : [x, y, z, w]
+		 */
+		constexpr T operator[](const int p_index) const;
+		
 #pragma endregion
 #pragma region Conversions
 

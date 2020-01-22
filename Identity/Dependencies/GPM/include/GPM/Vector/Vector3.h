@@ -302,6 +302,14 @@ namespace GPM
         template<typename U>
         constexpr bool operator!=(const Vector3<U>& p_other) const;
 
+
+        /**
+         * @brief Return the value aliased with index, just like arrays
+         * @param p_index The index to access. 0 = x, 1 = y, 2 = z
+         * @return Return the value associated at the indicated index
+         * @note Vector4 representation is as follow : [x, y, z]
+         */
+        constexpr T operator[](const int p_index) const;
 	};
 
     template <typename T>
