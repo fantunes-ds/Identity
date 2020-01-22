@@ -1,14 +1,17 @@
 #include <stdafx.h>
 #include <Core/App.h>
+#include <Tools/ImGUI/imgui.h>
 
 using namespace Engine::Core;
 
 App::App() : m_window(800, 600, "Engine Window")
 {
+    ImGui::CreateContext();
 }
 
 App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name)
 {
+    ImGui::DestroyContext();
 }
 
 int App::Run()
@@ -54,4 +57,6 @@ void App::DoFrame()
     }
     else if (m_window.mouse.GetState() == Input::Mouse::LEAVE)
         m_window.SetTitle("Left screen\n");
+
+
 }

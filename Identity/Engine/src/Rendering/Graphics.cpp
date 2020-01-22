@@ -1,7 +1,7 @@
 #include <stdafx.h>
 #include <Rendering/Graphics.h>
 #include <d3dcompiler.h>
-#include <Tools/dxerr.h>
+#include <Tools/DirectX/dxerr.h>
 
 using namespace Engine::Rendering;
 
