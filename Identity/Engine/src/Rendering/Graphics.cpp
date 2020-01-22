@@ -91,6 +91,7 @@ void Graphics::DrawTriangle(float angle)
     {
         float x;
         float y;
+        float z;
 
         unsigned char r;
         unsigned char g;
@@ -101,12 +102,15 @@ void Graphics::DrawTriangle(float angle)
     // create vertex buffer (1 2d triangle at center of screen)
     const Vertex vertices[] =
     {
-        { 0.0f,0.5f, 255, 0, 0, 0 },    //0
-        { 0.5f,-0.5f, 0, 255, 0, 0 },   //1
-        { -0.5f,-0.5f, 0, 0, 255, 0 },  //2
-        { -0.3f,0.3f, 255, 0, 255, 0 }, //3
-        { 0.3f,0.3f, 255, 255, 0, 0 },  //4
-        { 0.0f,-0.8f, 0, 255, 255, 0 }  //5
+        {-1.0f, -1.0f, -1.0f    ,255, 0, 0},        //0
+        {1.0f, -1.0f, -1.0f     ,0, 255, 0},        //1
+        {-1.0f, 1.0f, -1.0f     ,0, 0, 255},        //2
+        {1.0f, 1.0f, -1.0f      ,255, 255, 0},      //3
+
+        {-1.0f, -1.0f, 1.0f     ,255, 0, 255},      //4
+        {1.0f, -1.0f, 1.0f      ,0, 255, 255},      //5
+        {-1.0f, 1.0f, 1.0f      ,0, 0, 0},          //6
+        {1.0f, 1.0f, 1.0f       ,255, 255, 255},    //7
     };
     Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
     D3D11_BUFFER_DESC vDesc = {};
@@ -130,10 +134,12 @@ void Graphics::DrawTriangle(float angle)
     // Create index buffer
     const unsigned short indices[] = 
     {
-        0,1,2,
-        0,2,3,
-        0,4,1,
-        2,1,5
+        0,2,1, 2,3,1,
+        1,3,5, 3,7,5,
+        2,6,3, 3,6,7,
+        4,5,7, 4,7,6,
+        0,4,2, 2,4,6,
+        0,1,4, 1,5,4
     };
     Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
     D3D11_BUFFER_DESC inDesc = {};
@@ -156,21 +162,39 @@ void Graphics::DrawTriangle(float angle)
     // create constant buffer for transform matrix
     struct ConstantBuffer
     {
-        struct
-        {
-            float element[4][4];
-        } tranformation;
+        Matrix4F tranformation;
     };
 
-    const ConstantBuffer cb =
-    {
-        {
-           (600.0f / 800.0f) * std::cos(angle), std::sin(angle), 0.0f, 0.0f,
-           (600.0f / 800.0f) * -std::sin(angle), std::cos(angle), 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 0.0f, 1.0f,
-        }
-    };
+    Vector3F quat{ 0, angle, 0 };
+
+    Matrix4F rot = Matrix4F::CreateRotation(Quaternion(1.0f, quat));
+    // Matrix4F rot{ std::cos(angle), std::sin(angle), 0.0f, 0.0f,
+    //               -std::sin(angle), std::cos(angle), 0.0f, 0.0f,
+    //               0.0f, 0.0f, 1.0f, 0.0f,
+    //               0.0f, 0.0f, 0.0f, 1.0f };
+
+    Matrix4F scal = Matrix4F::CreateScale(Vector3(600.0f / 800.0f, 1.0f, 1.0f));
+
+    Matrix4F mov = Matrix4F::CreateTranslation(Vector3(0.0f, 0.0f, 4.0f));
+    mov.Transpose();
+
+
+    float width = 1.0f;
+    float height = 3.0f / 4.0f;
+    float NearZ = 0.5f;
+    float FarZ = 10.0f;
+    float twoNearZ = NearZ + NearZ;
+    float fRange = FarZ / (FarZ - NearZ);
+
+    Matrix4F perspective{twoNearZ / width, 0.0f, 0.0f,0.0f,
+                         0.0f, twoNearZ / height, 0.0f, 0.0f,
+                         0.0f, 0.0f, fRange, 1.0f,
+                         0.0f, 0.0f, -fRange * NearZ, 0.0f};
+
+    Matrix4F trans = { rot * mov * perspective };
+    trans.Transpose();
+
+    const ConstantBuffer cb{ trans };
 
     Microsoft::WRL::ComPtr<ID3D11Buffer> constantBuffer;
     D3D11_BUFFER_DESC conDesc = {};
