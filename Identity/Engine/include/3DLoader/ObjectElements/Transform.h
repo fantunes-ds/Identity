@@ -46,7 +46,7 @@ namespace Engine::ObjectElements
 
         inline void bullshit()
         {
-            m_forward = GPM::Vector3D{99, 0, 0};
+            m_forward.x += 50;
         }
 
     private:
