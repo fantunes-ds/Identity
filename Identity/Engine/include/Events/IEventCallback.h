@@ -14,7 +14,10 @@ namespace Engine
     class EventCallback : public IEventCallback
     {
     public:
+        EventCallback(T* p_instance, void(T::* p_function)()) :
+            m_function{ p_function }, m_instance{ p_instance }, m_id{ ++m_staticId } {}
 
+        //@warning DO NOT USE, not functional yet
         template<typename ...Args, typename ...funcArgs>
         EventCallback(T* p_instance, void(T::* p_function)(funcArgs...), Args&&... p_args) :
             m_function{ p_function(&p_args...) }, m_instance{ p_instance }, m_id{ ++m_staticId } {}
