@@ -40,6 +40,7 @@ namespace Engine::ObjectElements
         inline GPM::Vector3D& GetPosition() { return m_position; }
         inline GPM::Vector3D& GetForward() { return m_forward; }
         inline GPM::Vector3D& GetRight() { return m_right; }
+        inline GPM::Vector3D& GetUp() { return m_up; }
         inline GPM::Vector3D& GetScale() { return m_scale; }
         inline GPM::Quaternion& GetRotation() { return m_rotation; }
         inline Transform* GetParent() const { return m_parent; }
@@ -50,6 +51,8 @@ namespace Engine::ObjectElements
         }
 
     private:
+        void CalculateAxes();
+
         GPM::Vector3D m_position;
         GPM::Vector3D m_forward;
         GPM::Vector3D m_right;

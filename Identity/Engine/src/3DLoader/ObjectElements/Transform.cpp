@@ -25,9 +25,7 @@ Engine::ObjectElements::Transform::Transform(GPM::Vector3D& p_position, GPM::Vec
     }
     else
     {
-        m_forward = p_rotation.Normalized();
-        m_right = GPM::Vector3D::Cross(GPM::Vector3D::up, m_forward);
-        m_up = GPM::Vector3D::Cross(GPM::Vector3D::right, m_forward);
+        CalculateAxes();
     }
 }
 
@@ -49,8 +47,8 @@ void Engine::ObjectElements::Transform::RotateWithEulerAngles(const GPM::Vector3
 {
     GPM::Quaternion quat;
     quat.MakeFromEuler(p_euler);
-    m_rotation *= quat;
-    m_forward = m_rotation.ToEuler();
+    m_rotation += quat;
+    CalculateAxes();
 }
 
 void Engine::ObjectElements::Transform::Scale(const GPM::Vector3D& p_scale)
@@ -61,4 +59,11 @@ void Engine::ObjectElements::Transform::Scale(const GPM::Vector3D& p_scale)
 GPM::Vector3D Engine::ObjectElements::Transform::GetEuler() const
 {
     return m_rotation.ToEuler();
+}
+
+void Engine::ObjectElements::Transform::CalculateAxes()
+{
+    m_forward = m_rotation.ToEuler().Normalized();
+    m_right = GPM::Vector3D::Cross(m_up, m_forward);
+    m_up = GPM::Vector3D::Cross(m_forward, m_right);
 }
