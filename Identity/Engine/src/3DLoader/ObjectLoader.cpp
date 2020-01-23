@@ -5,7 +5,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(c
 {
     Engine::ObjectElements::Model model;
 
-    Assimp::Importer& importer = GetInstance()->m_importer;
+    Assimp::Importer importer;
 
     const aiScene* m_scene = importer.ReadFile(p_file,
         aiProcess_CalcTangentSpace
@@ -71,20 +71,5 @@ std::shared_ptr<Engine::ObjectElements::Mesh> Engine::ObjectLoader::LoadMesh(aiM
     offset += p_assimpMesh->mNumVertices;
 
     return std::make_shared<Engine::ObjectElements::Mesh>(vertices, indices);
-}
-
-Engine::ObjectLoader::~ObjectLoader()
-{
-    delete m_instance;
-}
-
-Engine::ObjectLoader* Engine::ObjectLoader::GetInstance()
-{
-    if (m_instance == nullptr)
-    {
-        m_instance = new ObjectLoader();
-    }
-
-    return m_instance;
 }
 
