@@ -57,7 +57,8 @@ void App::DoFrame()
     if (m_window.keyboard.IsKeyHeld('B'))
         m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
 
-    m_window.GetGraphics().DrawTriangle(angle);
+    m_window.GetGraphics().DrawLoadedCube("../Engine/Resources/cube.obj");
+    // m_window.GetGraphics().DrawTriangle(angle);
 
     m_window.GetGraphics().EndFrame();
 
