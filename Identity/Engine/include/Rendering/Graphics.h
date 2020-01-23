@@ -67,7 +67,7 @@ namespace Engine::Rendering
         Graphics(const HWND p_hwnd);
         Graphics(const Graphics&) = delete;
         Graphics& operator=(const Graphics&) = delete;
-        ~Graphics() = default;
+        ~Graphics();
 
         /*
          @brief Switch the front buffer with the back buffer

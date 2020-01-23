@@ -240,6 +240,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Tools\IdentityException.h" />
     <ClInclude Include="include\Tools\ImGUI\imconfig.h" />
     <ClInclude Include="include\Tools\ImGUI\imgui.h" />
+    <ClInclude Include="include\Tools\ImGUI\ImGUIManager.h" />
     <ClInclude Include="include\Tools\ImGUI\imgui_impl_dx11.h" />
     <ClInclude Include="include\Tools\ImGUI\imgui_impl_win32.h" />
     <ClInclude Include="include\Tools\ImGUI\imgui_internal.h" />
@@ -263,6 +264,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Tools\DirectX\dxerr.cpp" />
     <ClCompile Include="src\Tools\IdentityException.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\ImGUIManager.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui_demo.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui_draw.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui_impl_dx11.cpp" />

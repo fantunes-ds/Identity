@@ -9,8 +9,8 @@
 //  [X] Platform: Multi-viewport support (multiple windows). Enable with 'io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable'.
 #include <stdafx.h>
 
-#include "Tools/ImGUI/imgui.h"
-#include "Tools/ImGUI/imgui_impl_win32.h"
+#include <Tools/ImGUI/imgui.h>
+#include <Tools/ImGUI/imgui_impl_win32.h>
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif

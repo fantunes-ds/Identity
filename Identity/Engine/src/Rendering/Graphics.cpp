@@ -2,6 +2,8 @@
 #include <Rendering/Graphics.h>
 #include <d3dcompiler.h>
 #include <Tools/DirectX/dxerr.h>
+#include <Tools/ImGUI/imgui.h>
+#include <Tools/ImGUI/imgui_impl_dx11.h>
 
 using namespace Engine::Rendering;
 
@@ -58,6 +60,11 @@ Graphics::Graphics(const HWND p_hwnd)
     Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
     GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer));
     GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
+}
+
+Graphics::~Graphics()
+{
+    ImGui_ImplDX11_Shutdown();
 }
 
 void Graphics::EndFrame()
@@ -161,6 +168,8 @@ void Graphics::DrawTriangle()
     viewPort.TopLeftX = 0;
     viewPort.TopLeftY = 0;
     m_pContext->RSSetViewports(1u, &viewPort);
+
+    ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
 
     GFX_THROW_INFO_ONLY(m_pContext->Draw(std::size(vertices), 0u));
 }
