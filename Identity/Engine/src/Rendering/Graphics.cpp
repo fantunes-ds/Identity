@@ -165,15 +165,9 @@ void Graphics::DrawTriangle(float angle)
         Matrix4F tranformation;
     };
 
-    Vector3F quat{ 0, angle, 0 };
 
-    Matrix4F rot = Matrix4F::CreateRotation(Quaternion(1.0f, quat));
-    // Matrix4F rot{ std::cos(angle), std::sin(angle), 0.0f, 0.0f,
-    //               -std::sin(angle), std::cos(angle), 0.0f, 0.0f,
-    //               0.0f, 0.0f, 1.0f, 0.0f,
-    //               0.0f, 0.0f, 0.0f, 1.0f };
-
-    Matrix4F scal = Matrix4F::CreateScale(Vector3(600.0f / 800.0f, 1.0f, 1.0f));
+    Vector3D quat{ 1, 1, 0 };
+    Matrix4F rot = Matrix4F::CreateRotation(Quaternion::CreateFromAxisAngle(quat, angle));
 
     Matrix4F mov = Matrix4F::CreateTranslation(Vector3(0.0f, 0.0f, 4.0f));
     mov.Transpose();
@@ -239,8 +233,8 @@ void Graphics::DrawTriangle(float angle)
     Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
     const D3D11_INPUT_ELEMENT_DESC inputDesc[] =
     {
-        {"Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        {"Colour", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 8u, D3D11_INPUT_PER_VERTEX_DATA, 0}
+        {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        {"Colour", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 12u, D3D11_INPUT_PER_VERTEX_DATA, 0}
     };
     GFX_THROW_INFO(m_pDevice->CreateInputLayout(inputDesc,
         std::size(inputDesc),

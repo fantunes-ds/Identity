@@ -9,10 +9,10 @@ cbuffer CBuf
     matrix tranform;
 };
 
-VSOut main( float2 pos : Position, float4 col : Colour )
+VSOut main( float3 pos : Position, float4 col : Colour )
 {
     VSOut vso;
     vso.col = col;
-    vso.pos = mul(float4(pos.x, pos.y, 0.0f, 1.0f), tranform);
+    vso.pos = mul(float4(pos.x, pos.y, pos.z, 1.0f), tranform);
     return vso;
 }
