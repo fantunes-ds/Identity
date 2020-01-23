@@ -4,18 +4,31 @@
 Engine::ObjectElements::Transform::Transform():
     m_position{ GPM::Vector3D::zero }, m_scale{ GPM::Vector3D::one }, m_rotation{ GPM::Quaternion{} }
 {
-    m_forward = {0.0, 0.0, 1.0};
-    m_right = m_forward.right;
+    m_forward = GPM::Vector3D::forward;
+    m_right = GPM::Vector3D::right;
+    m_up = GPM::Vector3D::up;
 }
 
 Engine::ObjectElements::Transform::Transform(GPM::Vector3D& p_position, GPM::Vector3D& p_scale, GPM::Vector3D& p_rotation) :
-    m_position{ p_position }, m_scale{ p_scale }, m_forward{ p_rotation.Normalized() }
+    m_position{ p_position }, m_scale{ p_scale }
 {
     //TODO: check if it properly accepts angles > 360
     GPM::Quaternion quat;
     quat.MakeFromEuler(p_rotation.x, p_rotation.y, p_rotation.z);
     m_rotation = quat;
-    m_right = GPM::Vector3D::Cross(m_forward.up, m_forward);
+
+    if (p_rotation.Magnitude() == 0.0)
+    {
+        m_forward = GPM::Vector3D::forward;
+        m_right = GPM::Vector3D::right;
+        m_up = GPM::Vector3D::up;
+    }
+    else
+    {
+        m_forward = p_rotation.Normalized();
+        m_right = GPM::Vector3D::Cross(GPM::Vector3D::up, m_forward);
+        m_up = GPM::Vector3D::Cross(GPM::Vector3D::right, m_forward);
+    }
 }
 
 Engine::ObjectElements::Transform::Transform(const Transform& p_other):
@@ -37,6 +50,7 @@ void Engine::ObjectElements::Transform::RotateWithEulerAngles(const GPM::Vector3
     GPM::Quaternion quat;
     quat.MakeFromEuler(p_euler);
     m_rotation *= quat;
+    m_forward = m_rotation.ToEuler();
 }
 
 void Engine::ObjectElements::Transform::Scale(const GPM::Vector3D& p_scale)
