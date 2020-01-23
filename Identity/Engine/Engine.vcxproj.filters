@@ -133,8 +133,4 @@
     <FxCompile Include="Resources\Shaders\PixelShader.hlsl" />
     <FxCompile Include="Resources\Shaders\VertexShader.hlsl" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Shaders\VShader.vs" />
-    <None Include="Resources\Shaders\PShader.ps" />
-  </ItemGroup>
 </Project>

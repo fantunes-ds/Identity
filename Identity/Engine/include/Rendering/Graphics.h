@@ -80,6 +80,7 @@ namespace Engine::Rendering
 
 
         void DrawTriangle(float angle);
+        void DrawLoadedCube(std::string p_path);
 
     private:
         Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
