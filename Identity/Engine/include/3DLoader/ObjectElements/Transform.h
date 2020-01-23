@@ -9,7 +9,8 @@ namespace Engine::ObjectElements
     public:
         Transform();
 
-        Transform(GPM::Vector3D& p_position, GPM::Vector3D& p_scale, GPM::Vector3D& p_rotation);
+        //Transform(GPM::Vector3D& p_position, GPM::Vector3D& p_scale, GPM::Vector3D& p_rotation);
+        Transform(GPM::Vector3D& p_position);
         ~Transform() = default;
 
         Transform(const Transform& p_other);
@@ -33,7 +34,11 @@ namespace Engine::ObjectElements
 
         inline void SetPosition(const GPM::Vector3D& p_position) { m_position = p_position; }
         inline void SetScale(const GPM::Vector3D& p_scale) { m_scale = p_scale; }
-        inline void SetRotation(const GPM::Quaternion& p_rotation) { m_rotation = p_rotation; }
+        inline void SetRotation(const GPM::Quaternion& p_rotation)
+        {
+            m_rotation = p_rotation;
+            CalculateAxes();
+        }
         inline void SetParent(Transform* p_parent) { m_parent = p_parent; }
 
         [[nodiscard]] GPM::Vector3D GetEuler() const;
@@ -53,12 +58,15 @@ namespace Engine::ObjectElements
     private:
         void CalculateAxes();
 
-        GPM::Vector3D m_position;
+        Transform* m_parent = nullptr;
         GPM::Vector3D m_forward;
         GPM::Vector3D m_right;
         GPM::Vector3D m_up;
         GPM::Vector3D m_scale;
+        GPM::Vector3D m_position;
         GPM::Quaternion m_rotation;
-        Transform* m_parent = nullptr;
+
+        GPM::Matrix4F m_axes;
+        GPM::Matrix4F m_transform;
     };
 }
