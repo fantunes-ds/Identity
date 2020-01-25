@@ -264,42 +264,9 @@ void Graphics::DrawLoadedCube(std::string p_path)
     HRESULT hr;
 
     std::shared_ptr<ObjectElements::Model> mod;
+    std::shared_ptr<ObjectElements::Mesh> mesh;
     mod = ObjectLoader::LoadModel(p_path);
-
-    //mod->m_meshes[0].get()->m_vertices[0];
-
-    //*********** how to ***********//
-    //
-    //    const Vertex vertices[] =
-    // {
-    //     {-1.0f, -1.0f, -1.0f, 255, 0, 0},        //0
-    //     { 1.0f, -1.0f, -1.0f     ,0, 255, 0 },        //1
-    //     { -1.0f, 1.0f, -1.0f     ,0, 0, 255 },        //2
-    //     { 1.0f, 1.0f, -1.0f      ,255, 255, 0 },      //3
-    //
-    //     { -1.0f, -1.0f, 1.0f     ,255, 0, 255 },      //4
-    //     { 1.0f, -1.0f, 1.0f      ,0, 255, 255 },      //5
-    //     { -1.0f, 1.0f, 1.0f      ,0, 0, 0 },          //6
-    //     { 1.0f, 1.0f, 1.0f       ,255, 255, 255 },    //7
-    // };
-    // Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
-    // D3D11_BUFFER_DESC vDesc = {};
-    // vDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    // vDesc.Usage = D3D11_USAGE_DEFAULT;      //default - values wont change once they are set
-    // vDesc.CPUAccessFlags = 0u;
-    // vDesc.MiscFlags = 0u;
-    // vDesc.ByteWidth = sizeof(vertices);
-    // vDesc.StructureByteStride = sizeof(Vertex);
-    // D3D11_SUBRESOURCE_DATA vSD = {};
-    // vSD.pSysMem = vertices;
-    // GFX_THROW_INFO(m_pDevice->CreateBuffer(&vDesc, &vSD, &vertexBuffer));
-    //
-    // // Bind vertex buffer to pipeline
-    // const UINT stride = sizeof(Vertex);
-    // const UINT offset = 0u;
-    // m_pContext->IASetVertexBuffers(0u, 1u, vertexBuffer.GetAddressOf(), &stride, &offset);
-    //
-    //*********** how to ***********//
+	mesh = mod->GetMeshes()[0];
 
     Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
     D3D11_BUFFER_DESC vDesc = {};
@@ -307,44 +274,15 @@ void Graphics::DrawLoadedCube(std::string p_path)
     vDesc.Usage = D3D11_USAGE_DEFAULT;
     vDesc.CPUAccessFlags = 0u;
     vDesc.MiscFlags = 0u;
-    vDesc.ByteWidth = sizeof(ObjectElements::Mesh::m_vertices);
+    vDesc.ByteWidth = sizeof(mesh->m_vertices[0]) * mesh->m_vertices.size();
     vDesc.StructureByteStride = sizeof(Geometry::Vertex);
 
     D3D11_SUBRESOURCE_DATA vSD = {};
-    vSD.pSysMem = mod->m_meshes[0].get()->m_vertices.data();
+    vSD.pSysMem = mesh->m_vertices.data();
     GFX_THROW_INFO(m_pDevice->CreateBuffer(&vDesc, &vSD, &vertexBuffer));
     const UINT stride = sizeof(Geometry::Vertex);
     const UINT offset = 0u;
     m_pContext->IASetVertexBuffers(0u, 1u, vertexBuffer.GetAddressOf(), &stride, &offset);
-
-    //*********** how to ***********//
-    //
-    // Create index buffer
-    // const unsigned short indices[] =
-    // {
-    //     0,2,1, 2,3,1,
-    //     1,3,5, 3,7,5,
-    //     2,6,3, 3,6,7,
-    //     4,5,7, 4,7,6,
-    //     0,4,2, 2,4,6,
-    //     0,1,4, 1,5,4
-    // };
-    // Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
-    // D3D11_BUFFER_DESC inDesc = {};
-    // inDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    // inDesc.Usage = D3D11_USAGE_DEFAULT;      //default - values wont change once they are set
-    // inDesc.CPUAccessFlags = 0u;
-    // inDesc.MiscFlags = 0u;
-    // inDesc.ByteWidth = sizeof(indices);
-    // inDesc.StructureByteStride = sizeof(unsigned short);
-    // D3D11_SUBRESOURCE_DATA iSD = {};
-    // iSD.pSysMem = indices;
-    // GFX_THROW_INFO(m_pDevice->CreateBuffer(&inDesc, &iSD, &indexBuffer));
-    //
-    // bind indices buffer to pipeline
-    // m_pContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
-    //
-    //*********** how to ***********//
 
     Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
     D3D11_BUFFER_DESC inDesc = {};
@@ -352,10 +290,10 @@ void Graphics::DrawLoadedCube(std::string p_path)
     inDesc.Usage = D3D11_USAGE_DEFAULT;
     inDesc.CPUAccessFlags = 0u;
     inDesc.MiscFlags = 0u;
-    inDesc.ByteWidth = sizeof(ObjectElements::Mesh::m_indices);
-    inDesc.StructureByteStride = sizeof(uint32_t);
+    inDesc.ByteWidth = sizeof(mesh->m_indices[0]) * mesh->m_indices.size();
+    inDesc.StructureByteStride = sizeof(unsigned short);
     D3D11_SUBRESOURCE_DATA iSD = {};
-    iSD.pSysMem = mod->m_meshes[0].get()->m_indices.data();
+    iSD.pSysMem = mesh->m_indices.data();
     GFX_THROW_INFO(m_pDevice->CreateBuffer(&inDesc, &iSD, &indexBuffer));
     m_pContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
 
@@ -370,7 +308,7 @@ void Graphics::DrawLoadedCube(std::string p_path)
 
     Vector3D quat{ 1, 1, 0 };
     Matrix4F rot = Matrix4F::CreateRotation(Quaternion::CreateFromAxisAngle(quat, 90));
-
+	rot.Scale(Vector3F{ 0.02f,0.02f,0.02f });
     Matrix4F mov = Matrix4F::CreateTranslation(Vector3(0.0f, 0.0f, 4.0f));
     mov.Transpose();
 
@@ -433,7 +371,7 @@ void Graphics::DrawLoadedCube(std::string p_path)
     const D3D11_INPUT_ELEMENT_DESC inputDesc[] =
     {
         {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        {"Colour", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 12u, D3D11_INPUT_PER_VERTEX_DATA, 0}
+        {"Colour", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
     };
     GFX_THROW_INFO(m_pDevice->CreateInputLayout(inputDesc,
         std::size(inputDesc),
@@ -453,7 +391,7 @@ void Graphics::DrawLoadedCube(std::string p_path)
     viewPort.TopLeftY = 0;
     m_pContext->RSSetViewports(1u, &viewPort);
 
-    GFX_THROW_INFO_ONLY(m_pContext->DrawIndexed((UINT)std::size(mod->m_meshes[0].get()->m_indices), 0u, 0u));
+    GFX_THROW_INFO_ONLY(m_pContext->DrawIndexed((UINT)mesh->m_indices.size(), 0u, 0u));
 
 }
 

@@ -36,7 +36,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(c
 std::shared_ptr<Engine::ObjectElements::Mesh> Engine::ObjectLoader::LoadMesh(aiMesh* p_assimpMesh)
 {
     std::vector<Engine::Geometry::Vertex> vertices;
-    std::vector<uint32_t> indices;
+    std::vector<unsigned short> indices;
     int offset = 0;
 
     for (unsigned int vertIdx = 0u; vertIdx < p_assimpMesh->mNumVertices; vertIdx++)
