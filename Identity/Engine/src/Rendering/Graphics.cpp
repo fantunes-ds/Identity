@@ -5,7 +5,7 @@
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
 #include <3DLoader/ObjectElements/Model.h>
-#include <3DLoader/ObjectLoader.h>
+#include "3DLoader/ObjectLoader.h"
 
 using namespace Engine::Rendering;
 
@@ -62,6 +62,9 @@ Graphics::Graphics(const HWND p_hwnd)
     Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
     GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer));
     GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
+
+
+    m_mod = ObjectLoader::LoadModel("../Engine/Resources/statue.obj");
 }
 
 Graphics::~Graphics()
@@ -268,14 +271,12 @@ void Graphics::DrawTriangle(float angle)
     GFX_THROW_INFO_ONLY(m_pContext->Draw(std::size(vertices), 0u));
 }
 
-void Graphics::DrawLoadedCube(std::string p_path)
+void Graphics::DrawLoadedCube(std::string p_path, float angle)
 {
     HRESULT hr;
 
-    std::shared_ptr<ObjectElements::Model> mod;
     std::shared_ptr<ObjectElements::Mesh> mesh;
-    mod = ObjectLoader::LoadModel(p_path);
-	mesh = mod->GetMeshes()[0];
+	mesh = m_mod->GetMeshes()[0];
 
     Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
     D3D11_BUFFER_DESC vDesc = {};
@@ -316,8 +317,8 @@ void Graphics::DrawLoadedCube(std::string p_path)
 
 
     Vector3D quat{ 1, 1, 0 };
-    Matrix4F rot = Matrix4F::CreateRotation(Quaternion::CreateFromAxisAngle(quat, 90));
-	rot.Scale(Vector3F{ 0.02f,0.02f,0.02f });
+    Matrix4F rot = Matrix4F::CreateRotation(Quaternion::CreateFromAxisAngle(quat, angle));
+    Matrix4F scal = Matrix4F::CreateScale(Vector3F{ 0.02f,0.02f,0.02f });
     Matrix4F mov = Matrix4F::CreateTranslation(Vector3(0.0f, 0.0f, 4.0f));
     mov.Transpose();
 
@@ -334,7 +335,7 @@ void Graphics::DrawLoadedCube(std::string p_path)
                          0.0f, 0.0f, fRange, 1.0f,
                          0.0f, 0.0f, -fRange * NearZ, 0.0f };
 
-    Matrix4F trans = { rot * mov * perspective };
+    Matrix4F trans = { scal * rot * mov * perspective };
     trans.Transpose();
 
     const ConstantBuffer cb{ trans };
@@ -399,6 +400,8 @@ void Graphics::DrawLoadedCube(std::string p_path)
     viewPort.TopLeftX = 0;
     viewPort.TopLeftY = 0;
     m_pContext->RSSetViewports(1u, &viewPort);
+
+    ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
 
     GFX_THROW_INFO_ONLY(m_pContext->DrawIndexed((UINT)mesh->m_indices.size(), 0u, 0u));
 

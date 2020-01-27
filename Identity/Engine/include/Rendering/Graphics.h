@@ -6,6 +6,7 @@
 #include <d3d11.h>
 #include <Tools/IdentityException.h>
 #include <wrl.h>
+#include "3DLoader/ObjectElements/Model.h"
 
 namespace Engine::Rendering
 {
@@ -80,12 +81,13 @@ namespace Engine::Rendering
 
 
         void DrawTriangle(float angle);
-        void DrawLoadedCube(std::string p_path);
+        void DrawLoadedCube(std::string p_path, float angle);
 
     private:
         Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
         Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pContext;
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pTarget;
+        std::shared_ptr<ObjectElements::Model> m_mod;
     };
 }
