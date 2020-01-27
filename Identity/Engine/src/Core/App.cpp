@@ -3,6 +3,9 @@
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
+#include <3DLoader/ObjectElements/Transform.h>
+#include <Events/IEventCallback.h>
+#include "Events/Event.h"
 
 using namespace Engine::Core;
 
@@ -28,6 +31,8 @@ int App::Run()
 
 void App::DoFrame()
 {
+    static float angle = 0;
+
     m_window.GetGraphics().ClearBuffer(1.0f, 1.0f, 1.0f);
 
     if (m_window.keyboard.IsKeyHeld('R'))
@@ -39,14 +44,6 @@ void App::DoFrame()
     if (m_window.keyboard.IsKeyHeld('B'))
         m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
 
-    if (m_window.keyboard.IsKeyDown(Input::Keyboard::D))
-        OutputDebugString("D was pressed\n");
-    else if (m_window.keyboard.IsKeyUp(Input::Keyboard::U))
-        OutputDebugString("U was released\n");
-    else if (m_window.keyboard.IsKeyHeld(Input::Keyboard::H))
-        OutputDebugString("H was held\n");
-
-    m_window.GetGraphics().DrawTriangle();
 
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
@@ -68,4 +65,6 @@ void App::DoFrame()
 
     m_window.GetGraphics().EndFrame();
 
+    m_window.GetGraphics().DrawLoadedCube("../Engine/Resources/statue.obj");
+    angle += 0.01;
 }

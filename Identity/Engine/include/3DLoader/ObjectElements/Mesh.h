@@ -9,12 +9,12 @@ namespace Engine::ObjectElements
     {
     public:
         Mesh() = default;
-        Mesh(std::vector<Geometry::Vertex>& p_vertices, std::vector<uint32_t>& p_indices);
+        Mesh(std::vector<Geometry::Vertex>& p_vertices, std::vector<unsigned short>& p_indices);
         ~Mesh() = default;
         Mesh(const Mesh& p_other);
 
 
         std::vector<Geometry::Vertex> m_vertices;
-        std::vector<uint32_t> m_indices;
+        std::vector<unsigned short> m_indices;
     };
 }

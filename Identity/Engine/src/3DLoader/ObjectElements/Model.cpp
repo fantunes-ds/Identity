@@ -1,6 +1,7 @@
 #include <stdafx.h>
 #include <3DLoader/ObjectElements/Model.h>
 #include <3DLoader/ObjectElements/Mesh.h>
+#include <3DLoader/ObjectLoader.h>
 
 void Engine::ObjectElements::Model::AddMesh(std::shared_ptr<Engine::ObjectElements::Mesh> p_mesh)
 {
