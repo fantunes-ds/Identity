@@ -25,7 +25,7 @@ void Engine::Manager::ModelManager::AddModel(const std::string& p_path, const st
     m_models.emplace_back(model);
 }
 
-std::shared_ptr<Engine::ObjectElements::Model> Engine::Manager::ModelManager::FindModel(std::string& p_name)
+std::shared_ptr<Engine::ObjectElements::Model> Engine::Manager::ModelManager::FindModel(const std::string& p_name)
 {
     for (auto model: m_models)
     {

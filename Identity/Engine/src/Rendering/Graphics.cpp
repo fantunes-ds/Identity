@@ -5,21 +5,11 @@
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
 #include <3DLoader/ObjectElements/Model.h>
-#include "3DLoader/ObjectLoader.h"
+#include <3DLoader/ObjectLoader.h>
+#include <3DLoader/Manager/ModelManager.h>
+#include <Tools/DirectX/GraphicsMacros.h>
 
 using namespace Engine::Rendering;
-
-#pragma region ExcpetionsMacro
-
-#define GFX_EXCEPT_NOINFO(hr) Graphics::HrException(__LINE__, __FILE__, (hr))
-#define GFX_THROW_NOINFO(hrcall) if (FAILED(hr = (hrcall))) throw Graphics::HrException(__LINE__, __FILE__, hr)
-
-#define GFX_EXCEPT(hr) Graphics::HrException(__LINE__, __FILE__, (hr))
-#define GFX_THROW_INFO(hrcall) GFX_THROW_NOINFO(hrcall)
-#define GFX_DEVICE_REMOVED_EXCEPT(hr) Graphics::DeviceException(__LINE__, __FILE__, (hr))
-#define GFX_THROW_INFO_ONLY(call) (call)
-
-#pragma endregion
 
 Graphics::Graphics(const HWND p_hwnd)
 {
@@ -62,9 +52,6 @@ Graphics::Graphics(const HWND p_hwnd)
     Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
     GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer));
     GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
-
-
-    m_mod = ObjectLoader::LoadModel("../Engine/Resources/statue.obj");
 }
 
 Graphics::~Graphics()
@@ -271,45 +258,20 @@ void Graphics::DrawTriangle(float angle)
     GFX_THROW_INFO_ONLY(m_pContext->Draw(std::size(vertices), 0u));
 }
 
-void Graphics::DrawLoadedCube(std::string p_path, float angle)
+void Graphics::DrawLoadedCube(std::string p_path, float angle, Vector3F p_pos)
 {
     HRESULT hr;
 
     std::shared_ptr<ObjectElements::Mesh> mesh;
-	mesh = m_mod->GetMeshes()[0];
+    mesh = Manager::ModelManager::GetInstance()->FindModel("statue")->GetMeshes()[0];
 
-    Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
-    D3D11_BUFFER_DESC vDesc = {};
-    vDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    vDesc.Usage = D3D11_USAGE_DEFAULT;
-    vDesc.CPUAccessFlags = 0u;
-    vDesc.MiscFlags = 0u;
-    vDesc.ByteWidth = sizeof(mesh->m_vertices[0]) * mesh->m_vertices.size();
-    vDesc.StructureByteStride = sizeof(Geometry::Vertex);
+    // mesh->GenerateBuffers(m_pDevice);
+    mesh->Bind(m_pContext);
 
-    D3D11_SUBRESOURCE_DATA vSD = {};
-    vSD.pSysMem = mesh->m_vertices.data();
-    GFX_THROW_INFO(m_pDevice->CreateBuffer(&vDesc, &vSD, &vertexBuffer));
-    const UINT stride = sizeof(Geometry::Vertex);
-    const UINT offset = 0u;
-    m_pContext->IASetVertexBuffers(0u, 1u, vertexBuffer.GetAddressOf(), &stride, &offset);
-
-    Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
-    D3D11_BUFFER_DESC inDesc = {};
-    inDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    inDesc.Usage = D3D11_USAGE_DEFAULT;
-    inDesc.CPUAccessFlags = 0u;
-    inDesc.MiscFlags = 0u;
-    inDesc.ByteWidth = sizeof(mesh->m_indices[0]) * mesh->m_indices.size();
-    inDesc.StructureByteStride = sizeof(unsigned short);
-    D3D11_SUBRESOURCE_DATA iSD = {};
-    iSD.pSysMem = mesh->m_indices.data();
-    GFX_THROW_INFO(m_pDevice->CreateBuffer(&inDesc, &iSD, &indexBuffer));
-    m_pContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
 
     // ********* WIP ********* //
 
-// create constant buffer for transform matrix
+    // create constant buffer for transform matrix
     struct ConstantBuffer
     {
         Matrix4F tranformation;
@@ -317,12 +279,12 @@ void Graphics::DrawLoadedCube(std::string p_path, float angle)
 
 
     Vector3D quat{ 1, 1, 0 };
-    Matrix4F rot = Matrix4F::CreateRotation(Quaternion::CreateFromAxisAngle(quat, angle));
-    Matrix4F scal = Matrix4F::CreateScale(Vector3F{ 0.02f,0.02f,0.02f });
-    Matrix4F mov = Matrix4F::CreateTranslation(Vector3(0.0f, 0.0f, 4.0f));
-    mov.Transpose();
+    Matrix4F transform = Matrix4F::CreateTransformation(p_pos,
+                                                Quaternion::CreateFromAxisAngle(quat, angle),
+                                                        Vector3F{ 0.02f,0.02f,0.02f });
 
 
+    //Create perspective matrix
     float width = 1.0f;
     float height = 3.0f / 4.0f;
     float NearZ = 0.5f;
@@ -334,8 +296,9 @@ void Graphics::DrawLoadedCube(std::string p_path, float angle)
                          0.0f, twoNearZ / height, 0.0f, 0.0f,
                          0.0f, 0.0f, fRange, 1.0f,
                          0.0f, 0.0f, -fRange * NearZ, 0.0f };
+    //-----------------
 
-    Matrix4F trans = { scal * rot * mov * perspective };
+    Matrix4F trans = { transform * perspective };
     trans.Transpose();
 
     const ConstantBuffer cb{ trans };
@@ -354,23 +317,12 @@ void Graphics::DrawLoadedCube(std::string p_path, float angle)
 
     //bind the buffer to the shader
     m_pContext->VSSetConstantBuffers(0u, 1u, constantBuffer.GetAddressOf());
+    //-----------------
 
-    //**********MAKE SHADERS************//
-    //create pixel shader
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
-    Microsoft::WRL::ComPtr<ID3DBlob> blob;
-    GFX_THROW_INFO(D3DReadFileToBlob(L"../Engine/Resources/Shaders/PixelShader.cso", &blob));
-    GFX_THROW_INFO(m_pDevice->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &pixelShader));
-    m_pContext->PSSetShader(pixelShader.Get(), nullptr, 0u);
+    LoadPixelShader(L"../Engine/Resources/Shaders/PixelShader.cso");
+    LoadVertexShader(L"../Engine/Resources/Shaders/VertexShader.cso");
 
-    //create vertex shader
-    Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
-    GFX_THROW_INFO(D3DReadFileToBlob(L"../Engine/Resources/Shaders/VertexShader.cso", &blob));
-    GFX_THROW_INFO(m_pDevice->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &vertexShader));
-    m_pContext->VSSetShader(vertexShader.Get(), nullptr, 0u);
-    //***********END SHADERS************//
-
-        //bind render target
+    //bind render target
     m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), nullptr);
 
     //set primitive draw
@@ -385,8 +337,8 @@ void Graphics::DrawLoadedCube(std::string p_path, float angle)
     };
     GFX_THROW_INFO(m_pDevice->CreateInputLayout(inputDesc,
         std::size(inputDesc),
-        blob->GetBufferPointer(),
-        blob->GetBufferSize(),
+        m_blob->GetBufferPointer(),
+        m_blob->GetBufferSize(),
         &inputLayout));
 
     m_pContext->IASetInputLayout(inputLayout.Get());
@@ -405,6 +357,74 @@ void Graphics::DrawLoadedCube(std::string p_path, float angle)
 
     GFX_THROW_INFO_ONLY(m_pContext->DrawIndexed((UINT)mesh->m_indices.size(), 0u, 0u));
 
+}
+
+void Graphics::CreateVertexBuffer(Engine::ObjectElements::Mesh* p_mesh) const
+{
+    HRESULT hr;
+
+    //create vertex buffer
+    Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
+    D3D11_BUFFER_DESC vDesc = {};
+    vDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    vDesc.Usage = D3D11_USAGE_DEFAULT;
+    vDesc.CPUAccessFlags = 0u;
+    vDesc.MiscFlags = 0u;
+    vDesc.ByteWidth = sizeof(p_mesh->m_vertices[0]) * p_mesh->m_vertices.size();
+    vDesc.StructureByteStride = sizeof(Geometry::Vertex);
+
+    D3D11_SUBRESOURCE_DATA vSD = {};
+    vSD.pSysMem = p_mesh->m_vertices.data();
+    GFX_THROW_INFO(m_pDevice->CreateBuffer(&vDesc, &vSD, &vertexBuffer));
+    const UINT stride = sizeof(Geometry::Vertex);
+    const UINT offset = 0u;
+    //---------------
+    
+    //bind vertex buffer
+    m_pContext->IASetVertexBuffers(0u, 1u, vertexBuffer.GetAddressOf(), &stride, &offset);
+}
+
+void Graphics::CreateIndexBuffer(Engine::ObjectElements::Mesh* p_mesh) const
+{
+    HRESULT hr;
+
+    Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
+    D3D11_BUFFER_DESC inDesc = {};
+    inDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    inDesc.Usage = D3D11_USAGE_DEFAULT;
+    inDesc.CPUAccessFlags = 0u;
+    inDesc.MiscFlags = 0u;
+    inDesc.ByteWidth = sizeof(p_mesh->m_indices[0]) * p_mesh->m_indices.size();
+    inDesc.StructureByteStride = sizeof(unsigned short);
+    D3D11_SUBRESOURCE_DATA iSD = {};
+    iSD.pSysMem = p_mesh->m_indices.data();
+    GFX_THROW_INFO(m_pDevice->CreateBuffer(&inDesc, &iSD, &indexBuffer));
+    m_pContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
+}
+
+void Graphics::LoadPixelShader(const std::wstring& p_path)
+{
+    HRESULT hr;
+
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
+    GFX_THROW_INFO(D3DReadFileToBlob(p_path.c_str(), &m_blob));
+    GFX_THROW_INFO(m_pDevice->CreatePixelShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), nullptr, &pixelShader));
+    m_pContext->PSSetShader(pixelShader.Get(), nullptr, 0u);
+}
+
+void Graphics::LoadVertexShader(const std::wstring& p_path)
+{
+    HRESULT hr;
+
+    Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
+    GFX_THROW_INFO(D3DReadFileToBlob(p_path.c_str(), &m_blob));
+    GFX_THROW_INFO(m_pDevice->CreateVertexShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), nullptr, &vertexShader));
+    m_pContext->VSSetShader(vertexShader.Get(), nullptr, 0u);
+}
+
+void Graphics::GenerateBuffers()
+{
+    Manager::ModelManager::GetInstance()->FindModel("statue")->GetMeshes()[0]->GenerateBuffers(m_pDevice);
 }
 
 #pragma region ExceptionsClass

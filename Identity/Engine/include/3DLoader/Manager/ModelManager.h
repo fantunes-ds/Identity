@@ -14,7 +14,7 @@ namespace Engine::Manager
 
         static ModelManager* GetInstance();
         void AddModel(const std::string& p_path, const std::string& p_name);
-        std::shared_ptr<ObjectElements::Model> FindModel(std::string& p_name);
+        std::shared_ptr<ObjectElements::Model> FindModel(const std::string& p_name);
 
     private:
         ModelManager() = default;

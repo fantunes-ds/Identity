@@ -19,6 +19,9 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 
 int App::Run()
 {
+    Manager::ModelManager::GetInstance()->AddModel("../Engine/Resources/statue.obj", "statue");
+
+    m_window.GetGraphics().GenerateBuffers();
     while (true)
     {
         if (const auto eCode = Rendering::Window::ProcessMessage())
@@ -44,7 +47,8 @@ void App::DoFrame()
     if (m_window.keyboard.IsKeyHeld('B'))
         m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
 
-    m_window.GetGraphics().DrawLoadedCube("../Engine/Resources/statue.obj", angle);
+    m_window.GetGraphics().DrawLoadedCube("../Engine/Resources/statue.obj", angle, Vector3F(3.0f, 0.0f, 4.0f));
+    m_window.GetGraphics().DrawLoadedCube("../Engine/Resources/statue.obj", angle, Vector3F(-3.0f, 0.0f, 4.0f));
 
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
