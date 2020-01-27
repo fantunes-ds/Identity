@@ -238,8 +238,17 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Input\Keyboard.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\TestDependencies.h" />
-    <ClInclude Include="include\Tools\dxerr.h" />
+    <ClInclude Include="include\Tools\DirectX\dxerr.h" />
     <ClInclude Include="include\Tools\IdentityException.h" />
+    <ClInclude Include="include\Tools\ImGUI\imconfig.h" />
+    <ClInclude Include="include\Tools\ImGUI\imgui.h" />
+    <ClInclude Include="include\Tools\ImGUI\ImGUIManager.h" />
+    <ClInclude Include="include\Tools\ImGUI\imgui_impl_dx11.h" />
+    <ClInclude Include="include\Tools\ImGUI\imgui_impl_win32.h" />
+    <ClInclude Include="include\Tools\ImGUI\imgui_internal.h" />
+    <ClInclude Include="include\Tools\ImGUI\imstb_rectpack.h" />
+    <ClInclude Include="include\Tools\ImGUI\imstb_textedit.h" />
+    <ClInclude Include="include\Tools\ImGUI\imstb_truetype.h" />
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
@@ -256,8 +265,15 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Rendering\Window.cpp" />
     <ClCompile Include="src\Input\Keyboard.cpp" />
     <ClCompile Include="src\TestDependencies.cpp" />
-    <ClCompile Include="src\Tools\dxerr.cpp" />
+    <ClCompile Include="src\Tools\DirectX\dxerr.cpp" />
     <ClCompile Include="src\Tools\IdentityException.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\imgui.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\ImGUIManager.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\imgui_demo.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\imgui_impl_dx11.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\imgui_impl_win32.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\PixelShader.hlsl">
@@ -282,9 +298,9 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\Tools\DXGetErrorDescription.inl" />
-    <None Include="include\Tools\DXGetErrorString.inl" />
-    <None Include="include\Tools\DXTrace.inl" />
+    <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />
+    <None Include="include\Tools\DirectX\DXGetErrorString.inl" />
+    <None Include="include\Tools\DirectX\DXTrace.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

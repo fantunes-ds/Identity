@@ -1,5 +1,7 @@
 #include <stdafx.h>
 #include <Rendering/Window.h>
+#include <Tools/ImGUI/imgui.h>
+#include <Tools/ImGUI/imgui_impl_win32.h>
 
 using namespace Engine::Rendering;
 
@@ -53,11 +55,14 @@ Window::Window(int p_width, int p_height, const char* p_name) : m_width(p_width)
 
     ShowWindow(m_hwnd, SW_SHOWDEFAULT);
 
+    ImGui_ImplWin32_Init(m_hwnd);
+
     m_graphics = std::make_unique<Graphics>(m_hwnd);
 }
 
 Window::~Window()
 {
+    ImGui_ImplWin32_Shutdown();
     DestroyWindow(m_hwnd);
 }
 
@@ -108,8 +113,11 @@ LRESULT Window::HandleMsgThunk(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM 
     return window->HandleMsg(p_hwnd, p_msg, p_wParam, p_lParam);
 }
 
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT Window::HandleMsg(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)
 {
+    if (ImGui_ImplWin32_WndProcHandler(p_hwnd, p_msg, p_wParam, p_lParam))
+        return true;
     // no default switch case because windows sends a lot of different
     // random unknown messages, and we don't need to filter them all.
     switch(p_msg)

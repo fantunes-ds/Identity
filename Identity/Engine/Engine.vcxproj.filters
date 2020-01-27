@@ -72,7 +72,34 @@
     <ClInclude Include="include\Tools\IdentityException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Tools\dxerr.h">
+    <ClInclude Include="include\Tools\ImGUI\imgui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tools\ImGUI\imgui_impl_dx11.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tools\ImGUI\imgui_impl_win32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tools\ImGUI\imgui_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tools\ImGUI\imstb_rectpack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tools\ImGUI\imstb_textedit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tools\ImGUI\imstb_truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tools\DirectX\dxerr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tools\ImGUI\imconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tools\ImGUI\ImGUIManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\3DLoader\Manager\ModelManager.h">
@@ -110,9 +137,6 @@
     <ClCompile Include="src\Tools\IdentityException.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tools\dxerr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\3DLoader\ObjectElements\Transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -125,19 +149,43 @@
     <ClCompile Include="src\3DLoader\Manager\ModelManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tools\ImGUI\imgui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\ImGUI\imgui_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\ImGUI\imgui_draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\ImGUI\imgui_impl_dx11.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\ImGUI\imgui_impl_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\ImGUI\imgui_widgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\DirectX\dxerr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\ImGUI\ImGUIManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\PixelShader.hlsl" />
     <FxCompile Include="Resources\Shaders\VertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\Tools\DXTrace.inl">
+    <None Include="include\Tools\DirectX\DXGetErrorDescription.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="include\Tools\DXGetErrorDescription.inl">
+    <None Include="include\Tools\DirectX\DXGetErrorString.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="include\Tools\DXGetErrorString.inl">
+    <None Include="include\Tools\DirectX\DXTrace.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

@@ -2,6 +2,8 @@
 #include <Export.h>
 #include <Rendering/Window.h>
 
+#include <Tools/ImGUI/ImGUIManager.h>
+
 namespace Engine::Core
 {
     /*
@@ -23,6 +25,7 @@ namespace Engine::Core
         void DoFrame();
 
     private:
+        Tools::UI::ImGUIManager imguiManager;
         Rendering::Window m_window;
         MSG m_msg;
         BOOL m_gResult;
