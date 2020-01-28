@@ -47,13 +47,12 @@ void App::DoFrame()
     if (m_window.keyboard.IsKeyHeld('B'))
         m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
 
-    m_window.GetGraphics().DrawLoadedCube("../Engine/Resources/statue.obj", angle, Vector3F(3.0f, 0.0f, 4.0f));
-    m_window.GetGraphics().DrawLoadedCube("../Engine/Resources/statue.obj", angle, Vector3F(-3.0f, 0.0f, 4.0f));
 
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
+    m_window.GetGraphics().DrawLoadedCube("../Engine/Resources/statue.obj", angle, Vector3F(0.0f, 0.0f, 4.0f));
     ImGui::Begin("Identity UI Tools");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::End();

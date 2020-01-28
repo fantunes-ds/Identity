@@ -8,6 +8,7 @@
 #include <3DLoader/ObjectLoader.h>
 #include <3DLoader/Manager/ModelManager.h>
 #include <Tools/DirectX/GraphicsMacros.h>
+#include <Rendering/Light.h>
 
 using namespace Engine::Rendering;
 
@@ -52,6 +53,9 @@ Graphics::Graphics(const HWND p_hwnd)
     Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
     GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer));
     GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
+
+    ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
+
 }
 
 Graphics::~Graphics()
@@ -268,56 +272,94 @@ void Graphics::DrawLoadedCube(std::string p_path, float angle, Vector3F p_pos)
     // mesh->GenerateBuffers(m_pDevice);
     mesh->Bind(m_pContext);
 
-
     // ********* WIP ********* //
 
     // create constant buffer for transform matrix
-    struct ConstantBuffer
+    struct VertexConstantBuffer
     {
-        Matrix4F tranformation;
+        Matrix4F model;
+        Matrix4F perspective;
     };
 
-
-    Vector3D quat{ 1, 1, 0 };
-    Matrix4F transform = Matrix4F::CreateTransformation(p_pos,
-                                                Quaternion::CreateFromAxisAngle(quat, angle),
-                                                        Vector3F{ 0.02f,0.02f,0.02f });
+    Vector3D quat{0, 1, 0};
+    Matrix4F model = Matrix4F::CreateTransformation(p_pos,
+                                                        Quaternion::CreateFromAxisAngle(quat, angle),
+                                                        Vector3F{0.02f, 0.02f, 0.02f});
 
 
     //Create perspective matrix
-    float width = 1.0f;
-    float height = 3.0f / 4.0f;
-    float NearZ = 0.5f;
-    float FarZ = 10.0f;
+    float width    = 1.0f;
+    float height   = 3.0f / 4.0f;
+    float NearZ    = 0.5f;
+    float FarZ     = 10.0f;
     float twoNearZ = NearZ + NearZ;
-    float fRange = FarZ / (FarZ - NearZ);
+    float fRange   = FarZ / (FarZ - NearZ);
 
-    Matrix4F perspective{ twoNearZ / width, 0.0f, 0.0f,0.0f,
-                         0.0f, twoNearZ / height, 0.0f, 0.0f,
-                         0.0f, 0.0f, fRange, 1.0f,
-                         0.0f, 0.0f, -fRange * NearZ, 0.0f };
-    //-----------------
+    Matrix4F perspective{
+        twoNearZ / width, 0.0f, 0.0f, 0.0f,
+        0.0f, twoNearZ / height, 0.0f, 0.0f,
+        0.0f, 0.0f, fRange, 1.0f,
+        0.0f, 0.0f, -fRange * NearZ, 0.0f
+    };
 
-    Matrix4F trans = { transform * perspective };
-    trans.Transpose();
+    model.Transpose();
+    perspective.Transpose();
 
-    const ConstantBuffer cb{ trans };
+    const VertexConstantBuffer vcb{ model, perspective };
 
-    Microsoft::WRL::ComPtr<ID3D11Buffer> constantBuffer;
-    D3D11_BUFFER_DESC conDesc = {};
-    conDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    conDesc.Usage = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
-    conDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    conDesc.MiscFlags = 0u;
-    conDesc.ByteWidth = sizeof(cb);
-    conDesc.StructureByteStride = 0u;
-    D3D11_SUBRESOURCE_DATA cSD = {};
-    cSD.pSysMem = &cb;
-    GFX_THROW_INFO(m_pDevice->CreateBuffer(&conDesc, &cSD, &constantBuffer));
+    Microsoft::WRL::ComPtr<ID3D11Buffer> vertexConstantBuffer;
+    D3D11_BUFFER_DESC                    vertexBufferDesc = {};
+    vertexBufferDesc.BindFlags                            = D3D11_BIND_CONSTANT_BUFFER;
+    vertexBufferDesc.Usage                                = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
+    vertexBufferDesc.CPUAccessFlags                       = D3D11_CPU_ACCESS_WRITE;
+    vertexBufferDesc.MiscFlags                            = 0u;
+    vertexBufferDesc.ByteWidth                            = sizeof(vcb);
+    vertexBufferDesc.StructureByteStride                  = 0u;
+    D3D11_SUBRESOURCE_DATA VertexConstantShaderData       = {};
+    VertexConstantShaderData.pSysMem                      = &vcb;
+    GFX_THROW_INFO(m_pDevice->CreateBuffer(&vertexBufferDesc, &VertexConstantShaderData, &vertexConstantBuffer));
 
     //bind the buffer to the shader
-    m_pContext->VSSetConstantBuffers(0u, 1u, constantBuffer.GetAddressOf());
-    //-----------------
+    m_pContext->VSSetConstantBuffers(0u, 1u, vertexConstantBuffer.GetAddressOf());
+
+    struct PixelConstantBuffer
+    {
+        Light lightSource;
+        float lightShininess;
+    };
+
+    Light dirLight{};
+    dirLight.position  = Vector3F(-4.0f, 4.0f, 3.0f);
+    dirLight.ambient   = Vector3F(0.1f, 0.1f, 0.1f);
+    dirLight.diffuse   = Vector3F(1.0f, 1.0f, 0.95f);
+    dirLight.specular  = Vector3F(1.0f, 1.0f, 0.95f);
+    dirLight.direction = Vector3F(-0.5f, -0.5f, -0.5f).Normalized();
+    
+    if (ImGui::Begin("Lighting Tool"));
+    {
+        ImGui::SliderFloat("LightPosX", &dirLight.position.x, -10.0f, 10.0f, "%.1f");
+        ImGui::SliderFloat("LightPosY", &dirLight.position.y, -10.0f, 10.0f, "%.1f");
+        ImGui::SliderFloat("LightPosZ", &dirLight.position.z, -10.0f, 10.0f, "%.1f");
+    }ImGui::End();
+
+    const PixelConstantBuffer pcb{dirLight.position, dirLight.ambient, dirLight.diffuse,
+                                  dirLight.specular, dirLight.direction, 64.0f};
+
+    Microsoft::WRL::ComPtr<ID3D11Buffer> pixelConstantBuffer;
+    D3D11_BUFFER_DESC                    pixelBufferDesc = {};
+    pixelBufferDesc.BindFlags                            = D3D11_BIND_CONSTANT_BUFFER;
+    pixelBufferDesc.Usage                                = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
+    pixelBufferDesc.CPUAccessFlags                       = D3D11_CPU_ACCESS_WRITE;
+    pixelBufferDesc.MiscFlags                            = 0u;
+    pixelBufferDesc.ByteWidth                            = sizeof(pcb);
+    pixelBufferDesc.StructureByteStride                  = 0u;
+
+    D3D11_SUBRESOURCE_DATA PixelConstantShaderData = {};
+    PixelConstantShaderData.pSysMem                = &pcb;
+    GFX_THROW_INFO(m_pDevice->CreateBuffer(&pixelBufferDesc, &PixelConstantShaderData, &pixelConstantBuffer));
+
+    //bind the buffer to the shader
+    m_pContext->PSSetConstantBuffers(0u, 1u, pixelConstantBuffer.GetAddressOf());
 
     LoadPixelShader(L"../Engine/Resources/Shaders/PixelShader.cso");
     LoadVertexShader(L"../Engine/Resources/Shaders/VertexShader.cso");
@@ -330,33 +372,31 @@ void Graphics::DrawLoadedCube(std::string p_path, float angle, Vector3F p_pos)
 
     //create input layout
     Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
-    const D3D11_INPUT_ELEMENT_DESC inputDesc[] =
+    const D3D11_INPUT_ELEMENT_DESC            inputDesc[] =
     {
-        {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        {"Colour", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
+        {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"TxCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12u, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20u, D3D11_INPUT_PER_VERTEX_DATA, 0}
     };
     GFX_THROW_INFO(m_pDevice->CreateInputLayout(inputDesc,
-        std::size(inputDesc),
-        m_blob->GetBufferPointer(),
-        m_blob->GetBufferSize(),
-        &inputLayout));
+                       std::size(inputDesc),
+                       m_blob->GetBufferPointer(),
+                       m_blob->GetBufferSize(),
+                       &inputLayout));
 
     m_pContext->IASetInputLayout(inputLayout.Get());
 
     //configure viewport
     D3D11_VIEWPORT viewPort;
-    viewPort.Width = 800;
-    viewPort.Height = 600;
+    viewPort.Width    = 800;
+    viewPort.Height   = 600;
     viewPort.MinDepth = 0;
     viewPort.MaxDepth = 1;
     viewPort.TopLeftX = 0;
     viewPort.TopLeftY = 0;
     m_pContext->RSSetViewports(1u, &viewPort);
 
-    ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
-
     GFX_THROW_INFO_ONLY(m_pContext->DrawIndexed((UINT)mesh->m_indices.size(), 0u, 0u));
-
 }
 
 void Graphics::CreateVertexBuffer(Engine::ObjectElements::Mesh* p_mesh) const
