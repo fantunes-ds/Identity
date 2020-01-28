@@ -9,6 +9,7 @@ struct VSOut
 cbuffer CBuf
 {
     matrix model;
+    matrix normalModel;
     matrix perspective;
 };
 
@@ -18,6 +19,6 @@ VSOut main( float3 vpos : Position, float3 vnorm: Normal)
     vso.col = float4(1.0f, 0.5f, 0.5f, 1.0f);
     vso.pos = mul(float4(vpos.x, vpos.y, vpos.z, 1.0f), mul(model, perspective));
     vso.worldPos = float4(mul(model, float4(vpos, 1.0f))).rgb;
-    vso.norm = vnorm;
+    vso.norm = float3(mul(normalModel, float4(vnorm, 1)).rgb);
     return vso;
 }

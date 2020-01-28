@@ -28,7 +28,13 @@ float4 main(VS_OUT f_in) : SV_TARGET
     
     float diff = max(dot(f_in.norm, lightDir), 0.0);
     float3 diffuse = diff * float3(1.0f, 1.0f, 1.0f);
-
-    f_in.vertexColor *= float4(light.ambient + diffuse, 1) * f_in.vertexColor;
+    
+    float3 viewDir = normalize(float3(0.0f, 0.0f, 0.0f) - f_in.worldPos);
+    float3 reflectDir = reflect(-lightDir, f_in.norm);
+    
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    float3 specular = light.specular * spec * float3(1.0f, 1.0f, 1.0f);
+    
+    f_in.vertexColor *= float4(light.ambient + diffuse + specular, 1) * f_in.vertexColor;
     return f_in.vertexColor;
 }

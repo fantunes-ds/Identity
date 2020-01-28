@@ -278,15 +278,16 @@ void Graphics::DrawLoadedCube(std::string p_path, float angle, Vector3F p_pos)
     struct VertexConstantBuffer
     {
         Matrix4F model;
+        Matrix4F normalModel;
         Matrix4F perspective;
     };
 
     Vector3D quat{0, 1, 0};
     Matrix4F model = Matrix4F::CreateTransformation(p_pos,
-                                                        Quaternion::CreateFromAxisAngle(quat, angle),
+                                                        Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(180.0f)),
                                                         Vector3F{0.02f, 0.02f, 0.02f});
 
-
+    Matrix4F normalModel = Matrix4F::Inverse(model);
     //Create perspective matrix
     float width    = 1.0f;
     float height   = 3.0f / 4.0f;
@@ -302,10 +303,12 @@ void Graphics::DrawLoadedCube(std::string p_path, float angle, Vector3F p_pos)
         0.0f, 0.0f, -fRange * NearZ, 0.0f
     };
 
+
     model.Transpose();
+    normalModel.Transpose();
     perspective.Transpose();
 
-    const VertexConstantBuffer vcb{ model, perspective };
+    const VertexConstantBuffer vcb{ model, normalModel,perspective };
 
     Microsoft::WRL::ComPtr<ID3D11Buffer> vertexConstantBuffer;
     D3D11_BUFFER_DESC                    vertexBufferDesc = {};
@@ -329,21 +332,21 @@ void Graphics::DrawLoadedCube(std::string p_path, float angle, Vector3F p_pos)
     };
 
     Light dirLight{};
-    dirLight.position  = Vector3F(-4.0f, 4.0f, 3.0f);
+    dirLight.position  = Vector3F(-cos(angle) * 40.0f, 40.0f, -40.0f);
     dirLight.ambient   = Vector3F(0.1f, 0.1f, 0.1f);
     dirLight.diffuse   = Vector3F(1.0f, 1.0f, 0.95f);
     dirLight.specular  = Vector3F(1.0f, 1.0f, 0.95f);
     dirLight.direction = Vector3F(-0.5f, -0.5f, -0.5f).Normalized();
     
-    if (ImGui::Begin("Lighting Tool"));
+    if (ImGui::Begin("Lighting Tool"))
     {
-        ImGui::SliderFloat("LightPosX", &dirLight.position.x, -10.0f, 10.0f, "%.1f");
-        ImGui::SliderFloat("LightPosY", &dirLight.position.y, -10.0f, 10.0f, "%.1f");
-        ImGui::SliderFloat("LightPosZ", &dirLight.position.z, -10.0f, 10.0f, "%.1f");
+        ImGui::SliderFloat("LightPosX", &dirLight.position.x, -40.0f, 40.0f, "%.1f");
+        ImGui::SliderFloat("LightPosY", &dirLight.position.y, -40.0f, 40.0f, "%.1f");
+        ImGui::SliderFloat("LightPosZ", &dirLight.position.z, -40.0f, 40.0f, "%.1f");
     }ImGui::End();
 
     const PixelConstantBuffer pcb{dirLight.position, dirLight.ambient, dirLight.diffuse,
-                                  dirLight.specular, dirLight.direction, 64.0f};
+                                  dirLight.specular, dirLight.direction, 32.0f};
 
     Microsoft::WRL::ComPtr<ID3D11Buffer> pixelConstantBuffer;
     D3D11_BUFFER_DESC                    pixelBufferDesc = {};
