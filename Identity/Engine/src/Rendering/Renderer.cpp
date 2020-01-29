@@ -53,8 +53,8 @@ Renderer::Renderer(const HWND p_hwnd)
     Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
     GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer));
     GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
-
-
+    
+    
     //Depth stencil state
     D3D11_DEPTH_STENCIL_DESC depthDesc = {};
     depthDesc.DepthEnable = TRUE;
@@ -62,9 +62,9 @@ Renderer::Renderer(const HWND p_hwnd)
     depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
     GFX_THROW_INFO(m_pDevice->CreateDepthStencilState(&depthDesc, &depthStencilState));
-
+    
     m_pContext->OMSetDepthStencilState(depthStencilState.Get(), 1u);
-
+    
     //create depth stencil texture
     Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
     D3D11_TEXTURE2D_DESC descDepth = {};
@@ -78,17 +78,14 @@ Renderer::Renderer(const HWND p_hwnd)
     descDepth.Usage = D3D11_USAGE_DEFAULT;
     descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     GFX_THROW_INFO(m_pDevice->CreateTexture2D(&descDepth, nullptr, &depthStencil));
-
+    
     //create depth stencil view
     D3D11_DEPTH_STENCIL_VIEW_DESC depthViewDesc = {};
     depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
     depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     depthViewDesc.Texture2D.MipSlice = 0u;
     GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(depthStencil.Get(), &depthViewDesc, &m_pDepthStencil));
-
-    //bind the depth stencil view
-    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
-
+    
     //add viewport here so we dont create it every frame
     D3D11_VIEWPORT viewPort;
     viewPort.Width = 800;
@@ -236,6 +233,9 @@ void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
     LoadPixelShader(L"../Engine/Resources/Shaders/PixelShader.cso");
     LoadVertexShader(L"../Engine/Resources/Shaders/VertexShader.cso");
 
+    //bind the render target and depth/stencil buffer (need to be done each frame ow we have problem with ImGUI)
+    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
+
     //set primitive draw
     m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -254,8 +254,6 @@ void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
                        &inputLayout));
 
     m_pContext->IASetInputLayout(inputLayout.Get());
-
-    ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
 
     GFX_THROW_INFO_ONLY(m_pContext->DrawIndexed(static_cast<UINT>(mesh->m_indices.size()), 0u, 0u));
 
