@@ -22,7 +22,7 @@ Graphics::Graphics(const HWND p_hwnd)
     swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
     swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
     swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-    swapChainDesc.SampleDesc.Count = 1;
+    swapChainDesc.SampleDesc.Count = 1;     //will change for antialiasing
     swapChainDesc.SampleDesc.Quality = 0;
     swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapChainDesc.BufferCount = 1;
@@ -54,8 +54,52 @@ Graphics::Graphics(const HWND p_hwnd)
     GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer));
     GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
 
-    ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
 
+    //Depth stencil state
+    D3D11_DEPTH_STENCIL_DESC depthDesc = {};
+    depthDesc.DepthEnable = TRUE;
+    depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
+    GFX_THROW_INFO(m_pDevice->CreateDepthStencilState(&depthDesc, &depthStencilState));
+
+    m_pContext->OMSetDepthStencilState(depthStencilState.Get(), 1u);
+
+    //create depth stencil texture
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
+    D3D11_TEXTURE2D_DESC descDepth = {};
+    descDepth.Width = 800u;
+    descDepth.Height = 600u;
+    descDepth.MipLevels = 1u;
+    descDepth.ArraySize = 1u;
+    descDepth.Format = DXGI_FORMAT_D32_FLOAT;
+    descDepth.SampleDesc.Count = 1u;        //will change for antialiasing
+    descDepth.SampleDesc.Quality = 0u;
+    descDepth.Usage = D3D11_USAGE_DEFAULT;
+    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&descDepth, nullptr, &depthStencil));
+
+    //create depth stencil view
+    D3D11_DEPTH_STENCIL_VIEW_DESC depthViewDesc = {};
+    depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
+    depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    depthViewDesc.Texture2D.MipSlice = 0u;
+    GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(depthStencil.Get(), &depthViewDesc, &m_pDepthStencil));
+
+    //bind the depth stencil view
+    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
+
+    //add viewport here so we dont create it every frame
+    D3D11_VIEWPORT viewPort;
+    viewPort.Width = 800;
+    viewPort.Height = 600;
+    viewPort.MinDepth = 0;
+    viewPort.MaxDepth = 1;
+    viewPort.TopLeftX = 0;
+    viewPort.TopLeftY = 0;
+    m_pContext->RSSetViewports(1u, &viewPort);
+
+    ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
 }
 
 Graphics::~Graphics()
@@ -84,6 +128,7 @@ void Graphics::ClearBuffer(float p_red, float p_green, float p_blue)
 {
     const float colour[] = { p_red, p_green, p_blue, 1.0f };
     m_pContext->ClearRenderTargetView(m_pTarget.Get(), colour);
+    m_pContext->ClearDepthStencilView(m_pDepthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
 }
 
 void Graphics::DrawObject(std::string p_name, float angle, Vector3F p_pos)
@@ -108,7 +153,7 @@ void Graphics::DrawObject(std::string p_name, float angle, Vector3F p_pos)
 
     Vector3D quat{0, 1, 0};
     Matrix4F model = Matrix4F::CreateTransformation(p_pos,
-                                                        Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(180.0f)),
+                                                        Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(135.0f)),
                                                         Vector3F{0.02f, 0.02f, 0.02f});
 
     Matrix4F normalModel = Matrix4F::Inverse(model);
@@ -191,9 +236,6 @@ void Graphics::DrawObject(std::string p_name, float angle, Vector3F p_pos)
     LoadPixelShader(L"../Engine/Resources/Shaders/PixelShader.cso");
     LoadVertexShader(L"../Engine/Resources/Shaders/VertexShader.cso");
 
-    //bind render target
-    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), nullptr);
-
     //set primitive draw
     m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -212,16 +254,6 @@ void Graphics::DrawObject(std::string p_name, float angle, Vector3F p_pos)
                        &inputLayout));
 
     m_pContext->IASetInputLayout(inputLayout.Get());
-
-    //configure viewport
-    D3D11_VIEWPORT viewPort;
-    viewPort.Width    = 800;
-    viewPort.Height   = 600;
-    viewPort.MinDepth = 0;
-    viewPort.MaxDepth = 1;
-    viewPort.TopLeftX = 0;
-    viewPort.TopLeftY = 0;
-    m_pContext->RSSetViewports(1u, &viewPort);
 
     ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
 
@@ -294,8 +326,8 @@ void Graphics::LoadVertexShader(const std::wstring& p_path)
 
 void Graphics::GenerateBuffers()
 {
-    // Manager::ModelManager::GetInstance()->FindModel("statue")->GetMeshes()[0]->GenerateBuffers(m_pDevice);
-    Manager::ModelManager::GetInstance()->FindModel("box")->GetMeshes()[0]->GenerateBuffers(m_pDevice);
+    Manager::ModelManager::GetInstance()->FindModel("statue")->GetMeshes()[0]->GenerateBuffers(m_pDevice);
+    // Manager::ModelManager::GetInstance()->FindModel("box")->GetMeshes()[0]->GenerateBuffers(m_pDevice);
 }
 
 #pragma region ExceptionsClass
