@@ -1,5 +1,6 @@
 #pragma once
 #include <GPM/Quaternion/Quaternion.h>
+#include <GPM/Vector/Vector3.h>
 #include <stdexcept>
 
 // struct GPM::Quaternion;
@@ -278,7 +279,19 @@ constexpr Matrix4<T> Matrix4<T>::Inverse(const Matrix4<T>& p_matrix)
 template<typename T>
 Matrix4<T> Matrix4<T>::LookAt(const Vector3<T>& p_from, const Vector3<T>& p_to, const Vector3<T>& p_up)
 {
+    Vector3<T> forward = (p_to - p_from).Normalized();
+    Vector3<T> right = (Vector3<T>::Cross(forward, p_up)).Normalized();
+    Vector3<T> up = Vector3<T>::Cross(right, forward);
 
+    return Matrix4<T>{
+            right.x, up.x, forward.x, 0,
+            right.y, up.y, forward.y, 0,
+            right.z, up.z, forward.z, 0,
+            T{ 0 }, T{ 0 }, T{ 0 }, T{ 1 }
+    } * Matrix4F(1.0f, 0.0f, 0.0f, 0.0f,
+                 0.0f, 1.0f, 0.0f, 0.0f,
+                 0.0f, 0.0f, 1.0f, 0.0f,
+                 -p_from.x, -p_from.y, -p_from.z, 1.0f);
 }
 
 

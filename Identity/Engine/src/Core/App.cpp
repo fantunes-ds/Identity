@@ -51,10 +51,12 @@ void App::DoFrame()
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
+    bool show_demo_window = true;
 
-    m_window.GetRenderer().DrawObject("statue", angle, Vector3F(0.0f, 0.0f, 4.0f));
+    m_window.GetRenderer().DrawObject("statue", angle, Vector3F(0.0f, 0.0f, 0.0f));
     ImGui::Begin("Identity UI Tools");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::ShowDemoWindow(&show_demo_window);
     ImGui::End();
 
     ImGui::Render();

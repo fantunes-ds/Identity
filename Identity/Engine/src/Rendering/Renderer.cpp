@@ -108,7 +108,7 @@ void Renderer::EndFrame()
 {
     HRESULT hr;
 
-    if (FAILED( hr = m_pSwapChain->Present(1u, 0u)))
+    if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
     {
         if (hr == DXGI_ERROR_DEVICE_REMOVED)
         {
@@ -128,6 +128,9 @@ void Renderer::ClearBuffer(float p_red, float p_green, float p_blue)
     m_pContext->ClearDepthStencilView(m_pDepthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
 }
 
+static Light dirLight{ Vector3F(40.0f, 40.0f, -40.0f) , Vector3F(0.1f, 0.1f, 0.1f) ,Vector3F(1.0f, 1.0f, 0.95f), Vector3F(1.0f, 1.0f, 0.95f), Vector3F(-0.5f, -0.5f, -0.5f).Normalized() };
+static Vector3F cameraPos{ 0.0f, 0.0f, -10.0f };
+
 void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
 {
     HRESULT hr;
@@ -144,23 +147,51 @@ void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
     struct VertexConstantBuffer
     {
         Matrix4F model;
+        Matrix4F view;
         Matrix4F normalModel;
         Matrix4F perspective;
     };
 
-    Vector3D quat{0, 1, 0};
+    Vector3D quat{ 0, 1, 0 };
     Matrix4F model = Matrix4F::CreateTransformation(p_pos,
-                                                        Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(135.0f)),
-                                                        Vector3F{0.02f, 0.02f, 0.02f});
+        Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(135.0f)),
+        Vector3F{ 0.02f, 0.02f, 0.02f });
 
     Matrix4F normalModel = Matrix4F::Inverse(model);
+
+    //Create Camera
+
+    if (ImGui::Begin("Camera Tool"))
+    {
+        ImGui::SliderFloat("CameraX", &cameraPos.x, -10.0f, 10.0f, "%.1f");
+        ImGui::SliderFloat("CameraY", &cameraPos.y, -10.0f, 10.0f, "%.1f");
+        ImGui::SliderFloat("CameraZ", &cameraPos.z, -10.0f, 10.0f, "%.1f");
+    }ImGui::End();
+
+    Vector3F cameraTarget = Vector3F(0.0f, 0.0f, 0.0f);
+    Vector3F cameraDirection = Vector3F(cameraPos - cameraTarget).Normalized();
+    Vector3F worldUp = Vector3F(0.0f, 1.0f, 0.0f);
+    Vector3F cameraRight = Vector3F(Vector3F::Cross(worldUp, cameraDirection));
+    Vector3F cameraUp = Vector3F::Cross(cameraDirection, cameraRight);
+    Vector3F cameraFront = Vector3F(0.0f, 0.0f, -1.0f);
+
+
+
+    const float radius = 10.0f;
+    float camX = sin(angle) * radius;
+    float camZ = cos(angle) * radius;
+    Matrix4F view;
+    view = Matrix4F::LookAt(cameraPos,
+        cameraPos + cameraFront,
+        cameraUp);
+
     //Create perspective matrix
     float width = 1.0f;
     float height = 3.0f / 4.0f;
     float NearZ = 0.5f;
     float FarZ = 1000.0f;
     float twoNearZ = NearZ + NearZ;
-    float fRange   = FarZ / (FarZ - NearZ);
+    float fRange = FarZ / (FarZ - NearZ);
 
     Matrix4F perspective{
         twoNearZ / width, 0.0f, 0.0f, 0.0f,
@@ -171,21 +202,22 @@ void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
 
 
     model.Transpose();
+    view.Transpose();
     normalModel.Transpose();
     perspective.Transpose();
 
-    const VertexConstantBuffer vcb{ model, normalModel,perspective };
+    const VertexConstantBuffer vcb{ model,view, normalModel,perspective };
 
     Microsoft::WRL::ComPtr<ID3D11Buffer> vertexConstantBuffer;
     D3D11_BUFFER_DESC                    vertexBufferDesc = {};
-    vertexBufferDesc.BindFlags                            = D3D11_BIND_CONSTANT_BUFFER;
-    vertexBufferDesc.Usage                                = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
-    vertexBufferDesc.CPUAccessFlags                       = D3D11_CPU_ACCESS_WRITE;
-    vertexBufferDesc.MiscFlags                            = 0u;
-    vertexBufferDesc.ByteWidth                            = sizeof(vcb);
-    vertexBufferDesc.StructureByteStride                  = 0u;
-    D3D11_SUBRESOURCE_DATA VertexConstantShaderData       = {};
-    VertexConstantShaderData.pSysMem                      = &vcb;
+    vertexBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
+    vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    vertexBufferDesc.MiscFlags = 0u;
+    vertexBufferDesc.ByteWidth = sizeof(vcb);
+    vertexBufferDesc.StructureByteStride = 0u;
+    D3D11_SUBRESOURCE_DATA VertexConstantShaderData = {};
+    VertexConstantShaderData.pSysMem = &vcb;
     GFX_THROW_INFO(m_pDevice->CreateBuffer(&vertexBufferDesc, &VertexConstantShaderData, &vertexConstantBuffer));
 
     //bind the buffer to the shader
@@ -195,15 +227,12 @@ void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
     {
         Light lightSource;
         float lightShininess;
+        Vector3F viewPos;
+        float padding;
     };
 
-    Light dirLight{};
-    dirLight.position  = Vector3F(-cos(angle) * 40.0f, 40.0f, -40.0f);
-    dirLight.ambient   = Vector3F(0.1f, 0.1f, 0.1f);
-    dirLight.diffuse   = Vector3F(1.0f, 1.0f, 0.95f);
-    dirLight.specular  = Vector3F(1.0f, 1.0f, 0.95f);
-    dirLight.direction = Vector3F(-0.5f, -0.5f, -0.5f).Normalized();
-    
+
+
     if (ImGui::Begin("Lighting Tool"))
     {
         ImGui::SliderFloat("LightPosX", &dirLight.position.x, -40.0f, 40.0f, "%.1f");
@@ -211,20 +240,20 @@ void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
         ImGui::SliderFloat("LightPosZ", &dirLight.position.z, -40.0f, 40.0f, "%.1f");
     }ImGui::End();
 
-    const PixelConstantBuffer pcb{dirLight.position, dirLight.ambient, dirLight.diffuse,
-                                  dirLight.specular, dirLight.direction, 32.0f};
+    const PixelConstantBuffer pcb{ dirLight.position, dirLight.ambient, dirLight.diffuse,
+                                  dirLight.specular, dirLight.direction, 32.0f, cameraPos, 0.0f };
 
     Microsoft::WRL::ComPtr<ID3D11Buffer> pixelConstantBuffer;
     D3D11_BUFFER_DESC                    pixelBufferDesc = {};
-    pixelBufferDesc.BindFlags                            = D3D11_BIND_CONSTANT_BUFFER;
-    pixelBufferDesc.Usage                                = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
-    pixelBufferDesc.CPUAccessFlags                       = D3D11_CPU_ACCESS_WRITE;
-    pixelBufferDesc.MiscFlags                            = 0u;
-    pixelBufferDesc.ByteWidth                            = sizeof(pcb);
-    pixelBufferDesc.StructureByteStride                  = 0u;
+    pixelBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    pixelBufferDesc.Usage = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
+    pixelBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    pixelBufferDesc.MiscFlags = 0u;
+    pixelBufferDesc.ByteWidth = sizeof(pcb);
+    pixelBufferDesc.StructureByteStride = 0u;
 
     D3D11_SUBRESOURCE_DATA PixelConstantShaderData = {};
-    PixelConstantShaderData.pSysMem                = &pcb;
+    PixelConstantShaderData.pSysMem = &pcb;
     GFX_THROW_INFO(m_pDevice->CreateBuffer(&pixelBufferDesc, &PixelConstantShaderData, &pixelConstantBuffer));
 
     //bind the buffer to the shader
@@ -248,10 +277,10 @@ void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
         {"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20u, D3D11_INPUT_PER_VERTEX_DATA, 0}
     };
     GFX_THROW_INFO(m_pDevice->CreateInputLayout(inputDesc,
-                       std::size(inputDesc),
-                       m_blob->GetBufferPointer(),
-                       m_blob->GetBufferSize(),
-                       &inputLayout));
+        std::size(inputDesc),
+        m_blob->GetBufferPointer(),
+        m_blob->GetBufferSize(),
+        &inputLayout));
 
     m_pContext->IASetInputLayout(inputLayout.Get());
 
@@ -279,7 +308,7 @@ void Renderer::CreateVertexBuffer(Engine::ObjectElements::Mesh* p_mesh) const
     const UINT stride = sizeof(Geometry::Vertex);
     const UINT offset = 0u;
     //---------------
-    
+
     //bind vertex buffer
     m_pContext->IASetVertexBuffers(0u, 1u, vertexBuffer.GetAddressOf(), &stride, &offset);
 }
@@ -368,7 +397,7 @@ const char* Renderer::HrException::what() const noexcept
 
 const char* Renderer::HrException::GetType() const noexcept
 {
-    return "Identity Renderer Exception";
+    return "Identity Graphics Exception";
 }
 
 HRESULT Renderer::HrException::GetErrorCode() const noexcept
@@ -421,7 +450,7 @@ const char* Renderer::InfoException::what() const noexcept
 
 const char* Renderer::InfoException::GetType() const noexcept
 {
-    return "Identity Renderer Info Exception";
+    return "Identity Graphics Info Exception";
 }
 
 std::string Renderer::InfoException::GetErrorInfo() const noexcept
@@ -433,7 +462,7 @@ std::string Renderer::InfoException::GetErrorInfo() const noexcept
 #pragma region DeviceExceptionClass
 const char* Renderer::DeviceException::GetType() const noexcept
 {
-    return "Identity Renderer Exception [DEVICE REMOVED] (DXGI_ERROR_DEVICE_REMOVED)";
+    return "Identity Graphics Exception [DEVICE REMOVED] (DXGI_ERROR_DEVICE_REMOVED)";
 }
 #pragma endregion
 

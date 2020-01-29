@@ -1,6 +1,7 @@
 #pragma once
 #include <stdexcept>
 #include <iostream>
+#include <gpm/Vector/Vector3.h>
 
 namespace GPM
 {
@@ -198,6 +199,15 @@ namespace GPM
     {
         Vector3<T> tmp = p_other.Normalized();
         Vector3<T> tmp2 = Normalized();
+        return (tmp2.x * tmp.x) + (tmp2.y * tmp.y) + (tmp2.z * tmp.z);
+    }
+
+    template<typename T>
+    template<typename U>
+    inline constexpr T Vector3<T>::Dot(const Vector3<T>& p_1, const Vector3<U>& p_2)
+    {
+        Vector3<T> tmp = p_1.Normalized();
+        Vector3<T> tmp2 = p_2.Normalized();
         return (tmp2.x * tmp.x) + (tmp2.y * tmp.y) + (tmp2.z * tmp.z);
     }
 
