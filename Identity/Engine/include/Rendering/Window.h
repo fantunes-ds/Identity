@@ -1,7 +1,7 @@
 #pragma once
 #include <Export.h>
 #include <WinSetup.h>
-#include <Rendering/Graphics.h>
+#include <Rendering/Renderer.h>
 #include <memory>
 #include <Input/Keyboard.h>
 #include <optional>
@@ -37,7 +37,7 @@ namespace Engine::Rendering
         /*
          @brief Return the DirectX context of the window
          */
-        [[nodiscard]] Graphics& GetGraphics() const;
+        [[nodiscard]] Engine::Rendering::Renderer& GetRenderer() const;
         void SetTitle(const std::string& title);
         /*
          @brief Check if there is a message in the queue
@@ -58,6 +58,6 @@ namespace Engine::Rendering
         int m_height;
         HWND m_hwnd;
 
-        std::unique_ptr<Graphics> m_graphics;
+        std::unique_ptr<Renderer> m_renderer;
     };
 }

@@ -57,7 +57,7 @@ Window::Window(int p_width, int p_height, const char* p_name) : m_width(p_width)
 
     ImGui_ImplWin32_Init(m_hwnd);
 
-    m_graphics = std::make_unique<Graphics>(m_hwnd);
+    m_renderer = std::make_unique<Renderer>(m_hwnd);
 }
 
 Window::~Window()
@@ -66,9 +66,9 @@ Window::~Window()
     DestroyWindow(m_hwnd);
 }
 
-Graphics& Window::GetGraphics() const
+Renderer& Window::GetRenderer() const
 {
-    return *m_graphics;
+    return *m_renderer;
 }
 
 void Window::SetTitle(const std::string& title)

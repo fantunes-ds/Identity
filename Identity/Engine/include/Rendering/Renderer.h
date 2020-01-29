@@ -13,9 +13,9 @@ namespace Engine::Rendering
     /*
      @brief Contains the DirectX API
      */
-    class API_ENGINE Graphics
+    class API_ENGINE Renderer
     {
-        //All exception class for the Graphics class
+        //All exception class for the Renderer class
     public:
         class Exception : public Tools::IdentityException
         {
@@ -53,7 +53,7 @@ namespace Engine::Rendering
             std::string m_info;
         };
         /*
-         @brief Get the exceptions for the Graphics driver
+         @brief Get the exceptions for the Renderer driver
          */
         class DeviceException : public HrException
         {
@@ -65,10 +65,10 @@ namespace Engine::Rendering
         };
 
     public:
-        Graphics(const HWND p_hwnd);
-        Graphics(const Graphics&) = delete;
-        Graphics& operator=(const Graphics&) = delete;
-        ~Graphics();
+        Renderer(const HWND p_hwnd);
+        Renderer(const Renderer&) = delete;
+        Renderer& operator=(const Renderer&) = delete;
+        ~Renderer();
 
         /*
          @brief Switch the front buffer with the back buffer

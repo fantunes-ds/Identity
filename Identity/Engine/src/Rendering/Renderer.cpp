@@ -1,5 +1,5 @@
 #include <stdafx.h>
-#include <Rendering/Graphics.h>
+#include <Rendering/Renderer.h>
 #include <d3dcompiler.h>
 #include <Tools/DirectX/dxerr.h>
 #include <Tools/ImGUI/imgui.h>
@@ -12,7 +12,7 @@
 
 using namespace Engine::Rendering;
 
-Graphics::Graphics(const HWND p_hwnd)
+Renderer::Renderer(const HWND p_hwnd)
 {
     DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
     swapChainDesc.BufferDesc.Width = 0;
@@ -102,12 +102,12 @@ Graphics::Graphics(const HWND p_hwnd)
     ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
 }
 
-Graphics::~Graphics()
+Renderer::~Renderer()
 {
     ImGui_ImplDX11_Shutdown();
 }
 
-void Graphics::EndFrame()
+void Renderer::EndFrame()
 {
     HRESULT hr;
 
@@ -124,14 +124,14 @@ void Graphics::EndFrame()
     }
 }
 
-void Graphics::ClearBuffer(float p_red, float p_green, float p_blue)
+void Renderer::ClearBuffer(float p_red, float p_green, float p_blue)
 {
     const float colour[] = { p_red, p_green, p_blue, 1.0f };
     m_pContext->ClearRenderTargetView(m_pTarget.Get(), colour);
     m_pContext->ClearDepthStencilView(m_pDepthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
 }
 
-void Graphics::DrawObject(std::string p_name, float angle, Vector3F p_pos)
+void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
 {
     HRESULT hr;
 
@@ -261,7 +261,7 @@ void Graphics::DrawObject(std::string p_name, float angle, Vector3F p_pos)
 
 }
 
-void Graphics::CreateVertexBuffer(Engine::ObjectElements::Mesh* p_mesh) const
+void Renderer::CreateVertexBuffer(Engine::ObjectElements::Mesh* p_mesh) const
 {
     HRESULT hr;
 
@@ -286,7 +286,7 @@ void Graphics::CreateVertexBuffer(Engine::ObjectElements::Mesh* p_mesh) const
     m_pContext->IASetVertexBuffers(0u, 1u, vertexBuffer.GetAddressOf(), &stride, &offset);
 }
 
-void Graphics::CreateIndexBuffer(Engine::ObjectElements::Mesh* p_mesh) const
+void Renderer::CreateIndexBuffer(Engine::ObjectElements::Mesh* p_mesh) const
 {
     HRESULT hr;
 
@@ -304,7 +304,7 @@ void Graphics::CreateIndexBuffer(Engine::ObjectElements::Mesh* p_mesh) const
     m_pContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
 }
 
-void Graphics::LoadPixelShader(const std::wstring& p_path)
+void Renderer::LoadPixelShader(const std::wstring& p_path)
 {
     HRESULT hr;
 
@@ -314,7 +314,7 @@ void Graphics::LoadPixelShader(const std::wstring& p_path)
     m_pContext->PSSetShader(pixelShader.Get(), nullptr, 0u);
 }
 
-void Graphics::LoadVertexShader(const std::wstring& p_path)
+void Renderer::LoadVertexShader(const std::wstring& p_path)
 {
     HRESULT hr;
 
@@ -324,7 +324,7 @@ void Graphics::LoadVertexShader(const std::wstring& p_path)
     m_pContext->VSSetShader(vertexShader.Get(), nullptr, 0u);
 }
 
-void Graphics::GenerateBuffers()
+void Renderer::GenerateBuffers()
 {
     Manager::ModelManager::GetInstance()->FindModel("statue")->GetMeshes()[0]->GenerateBuffers(m_pDevice);
     // Manager::ModelManager::GetInstance()->FindModel("box")->GetMeshes()[0]->GenerateBuffers(m_pDevice);
@@ -333,7 +333,7 @@ void Graphics::GenerateBuffers()
 #pragma region ExceptionsClass
 
 #pragma region HrExceptionClass
-Graphics::HrException::HrException(int p_line, const char* p_file, HRESULT p_hr,
+Renderer::HrException::HrException(int p_line, const char* p_file, HRESULT p_hr,
     std::vector<std::string> p_infoMsg) noexcept
     : Exception(p_line, p_file),
     m_hr(p_hr)
@@ -349,7 +349,7 @@ Graphics::HrException::HrException(int p_line, const char* p_file, HRESULT p_hr,
     }
 }
 
-const char* Graphics::HrException::what() const noexcept
+const char* Renderer::HrException::what() const noexcept
 {
     std::ostringstream oss;
     oss << GetType() << std::endl
@@ -368,36 +368,36 @@ const char* Graphics::HrException::what() const noexcept
     return whatBuffer.c_str();
 }
 
-const char* Graphics::HrException::GetType() const noexcept
+const char* Renderer::HrException::GetType() const noexcept
 {
-    return "Identity Graphics Exception";
+    return "Identity Renderer Exception";
 }
 
-HRESULT Graphics::HrException::GetErrorCode() const noexcept
+HRESULT Renderer::HrException::GetErrorCode() const noexcept
 {
     return m_hr;
 }
 
-std::string Graphics::HrException::GetErrorString() const noexcept
+std::string Renderer::HrException::GetErrorString() const noexcept
 {
     return DXGetErrorString(m_hr);
 }
 
-std::string Graphics::HrException::GetErrorDescription() const noexcept
+std::string Renderer::HrException::GetErrorDescription() const noexcept
 {
     char buf[512];
     DXGetErrorDescription(m_hr, buf, sizeof(buf));
     return buf;
 }
 
-std::string Graphics::HrException::GetErrorInfo() const noexcept
+std::string Renderer::HrException::GetErrorInfo() const noexcept
 {
     return m_info;
 }
 #pragma endregion
 
 #pragma region InfoExceptionClass
-Graphics::InfoException::InfoException(int p_line, const char* p_file, std::vector<std::string> p_infoMsg) noexcept
+Renderer::InfoException::InfoException(int p_line, const char* p_file, std::vector<std::string> p_infoMsg) noexcept
     : Exception(p_line, p_file)
 {
     for (const auto& msg : p_infoMsg)
@@ -411,7 +411,7 @@ Graphics::InfoException::InfoException(int p_line, const char* p_file, std::vect
     }
 }
 
-const char* Graphics::InfoException::what() const noexcept
+const char* Renderer::InfoException::what() const noexcept
 {
     std::ostringstream oss;
     oss << GetType() << std::endl
@@ -421,21 +421,21 @@ const char* Graphics::InfoException::what() const noexcept
     return whatBuffer.c_str();
 }
 
-const char* Graphics::InfoException::GetType() const noexcept
+const char* Renderer::InfoException::GetType() const noexcept
 {
-    return "Identity Graphics Info Exception";
+    return "Identity Renderer Info Exception";
 }
 
-std::string Graphics::InfoException::GetErrorInfo() const noexcept
+std::string Renderer::InfoException::GetErrorInfo() const noexcept
 {
     return m_info;
 }
 #pragma endregion
 
 #pragma region DeviceExceptionClass
-const char* Graphics::DeviceException::GetType() const noexcept
+const char* Renderer::DeviceException::GetType() const noexcept
 {
-    return "Identity Graphics Exception [DEVICE REMOVED] (DXGI_ERROR_DEVICE_REMOVED)";
+    return "Identity Renderer Exception [DEVICE REMOVED] (DXGI_ERROR_DEVICE_REMOVED)";
 }
 #pragma endregion
 

@@ -22,7 +22,7 @@ int App::Run()
     Manager::ModelManager::GetInstance()->AddModel("../Engine/Resources/statue.obj", "statue");
     Manager::ModelManager::GetInstance()->AddModel("../Engine/Resources/cube.obj", "cube");
 
-    m_window.GetGraphics().GenerateBuffers();
+    m_window.GetRenderer().GenerateBuffers();
     while (true)
     {
         if (const auto eCode = Rendering::Window::ProcessMessage())
@@ -37,22 +37,22 @@ void App::DoFrame()
 {
     static float angle = 0;
 
-    m_window.GetGraphics().ClearBuffer(1.0f, 1.0f, 1.0f);
+    m_window.GetRenderer().ClearBuffer(1.0f, 1.0f, 1.0f);
 
     if (m_window.keyboard.IsKeyHeld('R'))
-        m_window.GetGraphics().ClearBuffer(1.0f, 0.0f, 0.0f);
+        m_window.GetRenderer().ClearBuffer(1.0f, 0.0f, 0.0f);
 
     if (m_window.keyboard.IsKeyHeld('G'))
-        m_window.GetGraphics().ClearBuffer(0.0f, 1.0f, 0.0f);
+        m_window.GetRenderer().ClearBuffer(0.0f, 1.0f, 0.0f);
 
     if (m_window.keyboard.IsKeyHeld('B'))
-        m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
+        m_window.GetRenderer().ClearBuffer(0.0f, 0.0f, 1.0f);
 
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    m_window.GetGraphics().DrawObject("statue", angle, Vector3F(0.0f, 0.0f, 4.0f));
+    m_window.GetRenderer().DrawObject("statue", angle, Vector3F(0.0f, 0.0f, 4.0f));
     ImGui::Begin("Identity UI Tools");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::End();
@@ -67,7 +67,7 @@ void App::DoFrame()
         ImGui::RenderPlatformWindowsDefault();
     }
 
-    m_window.GetGraphics().EndFrame();
+    m_window.GetRenderer().EndFrame();
 
     angle += 0.01;
 }
