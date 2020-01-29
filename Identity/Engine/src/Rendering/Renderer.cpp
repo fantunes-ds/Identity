@@ -9,6 +9,7 @@
 #include <3DLoader/Manager/ModelManager.h>
 #include <Tools/DirectX/GraphicsMacros.h>
 #include <Rendering/Light.h>
+#include <Input/Input.h>
 
 using namespace Engine::Rendering;
 
@@ -128,9 +129,10 @@ void Renderer::ClearBuffer(float p_red, float p_green, float p_blue)
     m_pContext->ClearDepthStencilView(m_pDepthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
 }
 
+
+//todo Rearrange all the below function and these global variables. They are just here because we needed to test very quickly.
 static Light dirLight{ Vector3F(40.0f, 40.0f, -40.0f) , Vector3F(0.1f, 0.1f, 0.1f) ,Vector3F(1.0f, 1.0f, 0.95f), Vector3F(1.0f, 1.0f, 0.95f), Vector3F(-0.5f, -0.5f, -0.5f).Normalized() };
 static Vector3F cameraPos{ 0.0f, 0.0f, -10.0f };
-
 void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
 {
     HRESULT hr;
@@ -142,7 +144,6 @@ void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
     mesh->Bind(m_pContext);
 
     // ********* WIP ********* //
-
     // create constant buffer for transform matrix
     struct VertexConstantBuffer
     {
@@ -154,7 +155,7 @@ void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
 
     Vector3D quat{ 0, 1, 0 };
     Matrix4F model = Matrix4F::CreateTransformation(p_pos,
-        Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(135.0f)),
+        Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(0.0f)),
         Vector3F{ 0.02f, 0.02f, 0.02f });
 
     Matrix4F normalModel = Matrix4F::Inverse(model);
@@ -168,14 +169,23 @@ void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
         ImGui::SliderFloat("CameraZ", &cameraPos.z, -10.0f, 10.0f, "%.1f");
     }ImGui::End();
 
+    float cameraSpeed = 0.05f;
     Vector3F cameraTarget = Vector3F(0.0f, 0.0f, 0.0f);
     Vector3F cameraDirection = Vector3F(cameraPos - cameraTarget).Normalized();
     Vector3F worldUp = Vector3F(0.0f, 1.0f, 0.0f);
     Vector3F cameraRight = Vector3F(Vector3F::Cross(worldUp, cameraDirection));
     Vector3F cameraUp = Vector3F::Cross(cameraDirection, cameraRight);
     Vector3F cameraFront = Vector3F(0.0f, 0.0f, -1.0f);
+    Vector3F direction;
 
-
+    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
+        cameraPos -= cameraFront * cameraSpeed;
+    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
+        cameraPos += cameraFront * cameraSpeed;
+    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
+        cameraPos -= Vector3F::Cross(cameraFront, cameraUp).Normalized() * cameraSpeed;
+    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
+        cameraPos += Vector3F::Cross(cameraFront, cameraUp).Normalized() * cameraSpeed;
 
     const float radius = 10.0f;
     float camX = sin(angle) * radius;
@@ -230,8 +240,6 @@ void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
         Vector3F viewPos;
         float padding;
     };
-
-
 
     if (ImGui::Begin("Lighting Tool"))
     {
