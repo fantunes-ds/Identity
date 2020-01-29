@@ -18,11 +18,23 @@ Engine::Manager::ModelManager* Engine::Manager::ModelManager::GetInstance()
     return m_instance;
 }
 
-void Engine::Manager::ModelManager::AddModel(const std::string& p_path, const std::string& p_name)
+std::shared_ptr<Engine::ObjectElements::Model> Engine::Manager::ModelManager::AddModel(const std::string& p_path, const std::string& p_name)
 {
+    if (!m_graphicsDevice)
+    {
+        std::string error("Could not load model at " + p_path + " because ModelManager was not assigned a Graphics Device");
+        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+        return nullptr;
+    }
+
     std::shared_ptr<ObjectElements::Model> model = ObjectLoader::LoadModel(p_path);
     model->SetName(p_name);
+
+    for (auto& mesh : model->GetMeshes())
+        mesh->GenerateBuffers(m_graphicsDevice);
+
     m_models.emplace_back(model);
+    return model;
 }
 
 std::shared_ptr<Engine::ObjectElements::Model> Engine::Manager::ModelManager::FindModel(const std::string& p_name)

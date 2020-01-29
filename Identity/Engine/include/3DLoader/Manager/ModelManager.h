@@ -13,13 +13,17 @@ namespace Engine::Manager
         ModelManager(const ModelManager&&) = delete;
 
         static ModelManager* GetInstance();
-        void AddModel(const std::string& p_path, const std::string& p_name);
+        std::shared_ptr<Engine::ObjectElements::Model> AddModel(const std::string& p_path, const std::string& p_name);
         std::shared_ptr<ObjectElements::Model> FindModel(const std::string& p_name);
+        inline std::vector<std::shared_ptr<ObjectElements::Model>>& GetAllModels() { return m_models; }
+
+        inline void SetGraphicsDevice(Microsoft::WRL::ComPtr<ID3D11Device> p_device) { m_graphicsDevice = p_device; }
 
     private:
         ModelManager() = default;
 
         inline static ModelManager* m_instance = nullptr;
+        Microsoft::WRL::ComPtr<ID3D11Device> m_graphicsDevice;
         std::vector<std::shared_ptr<ObjectElements::Model>> m_models;
     };
 }

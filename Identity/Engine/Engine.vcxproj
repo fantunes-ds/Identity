@@ -226,6 +226,8 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />
     <ClInclude Include="include\3DLoader\ObjectLoader.h" />
+    <ClInclude Include="include\Systems\IECSSystem.h" />
+    <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\Events\Event.h" />
     <ClInclude Include="include\Events\IEventCallback.h" />
     <ClInclude Include="include\Export.h" />
@@ -261,6 +263,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\3DLoader\ObjectElements\Mesh.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Transform.cpp" />
     <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
+    <ClCompile Include="src\Systems\RenderSystem.cpp" />
     <ClCompile Include="src\Events\Event.cpp" />
     <ClCompile Include="src\Rendering\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Rendering\Buffers\VertexBuffer.cpp" />

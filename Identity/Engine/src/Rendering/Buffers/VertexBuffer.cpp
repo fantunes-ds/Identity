@@ -16,7 +16,7 @@ void Engine::Rendering::Buffers::VertexBuffer::Generate(Microsoft::WRL::ComPtr<I
 
     subData.pSysMem = p_vertices.data();
     GFX_THROW_INFO(p_device->CreateBuffer(&descriptor, &subData, &buffer));
-
+    p_device->CreateBuffer(&descriptor, &subData, &buffer);
     stride = sizeof(Geometry::Vertex);
     offset = 0u;
 }
