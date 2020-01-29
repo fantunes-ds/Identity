@@ -235,6 +235,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Rendering\Buffers\VertexBuffer.h" />
     <ClInclude Include="include\Rendering\Camera.h" />
     <ClInclude Include="include\Rendering\Graphics.h" />
+    <ClInclude Include="include\Rendering\Light.h" />
     <ClInclude Include="include\Rendering\Window.h" />
     <ClInclude Include="include\Geometry\Vertex.h" />
     <ClInclude Include="include\Input\Keyboard.h" />
