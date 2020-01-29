@@ -13,9 +13,9 @@ namespace Engine::Rendering
     /*
      @brief Contains the DirectX API
      */
-    class API_ENGINE Graphics
+    class API_ENGINE Renderer
     {
-        //All exception class for the Graphics class
+        //All exception class for the Renderer class
     public:
         class Exception : public Tools::IdentityException
         {
@@ -53,7 +53,7 @@ namespace Engine::Rendering
             std::string m_info;
         };
         /*
-         @brief Get the exceptions for the Graphics driver
+         @brief Get the exceptions for the Renderer driver
          */
         class DeviceException : public HrException
         {
@@ -65,10 +65,10 @@ namespace Engine::Rendering
         };
 
     public:
-        Graphics(const HWND p_hwnd);
-        Graphics(const Graphics&) = delete;
-        Graphics& operator=(const Graphics&) = delete;
-        ~Graphics();
+        Renderer(const HWND p_hwnd);
+        Renderer(const Renderer&) = delete;
+        Renderer& operator=(const Renderer&) = delete;
+        ~Renderer();
 
         /*
          @brief Switch the front buffer with the back buffer
@@ -79,9 +79,7 @@ namespace Engine::Rendering
          */
         void ClearBuffer(float p_red, float p_green, float p_blue);
 
-
-        void DrawTriangle(float angle);
-        void DrawLoadedCube(std::string p_path, float angle, Vector3F p_pos);
+        void DrawObject(std::string p_name, float angle, Vector3F p_pos);
 
         //---------WIP--------
         void CreateVertexBuffer(Engine::ObjectElements::Mesh* p_mesh) const;
@@ -97,6 +95,7 @@ namespace Engine::Rendering
         Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pContext;
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pTarget;
+        Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencil;
         Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
         // std::shared_ptr<ObjectElements::Model> m_mod;
     };

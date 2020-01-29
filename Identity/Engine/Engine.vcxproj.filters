@@ -36,9 +36,6 @@
     <ClInclude Include="include\3DLoader\ObjectLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Rendering\Graphics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Input\Keyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -117,15 +114,15 @@
     <ClInclude Include="include\Rendering\Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Rendering\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\TestDependencies.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Rendering\Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Input\Keyboard.cpp">
@@ -189,6 +186,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Rendering\Buffers\IndexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

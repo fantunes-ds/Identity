@@ -234,7 +234,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Rendering\Buffers\IndexBuffer.h" />
     <ClInclude Include="include\Rendering\Buffers\VertexBuffer.h" />
     <ClInclude Include="include\Rendering\Camera.h" />
-    <ClInclude Include="include\Rendering\Graphics.h" />
+    <ClInclude Include="include\Rendering\Renderer.h" />
     <ClInclude Include="include\Rendering\Light.h" />
     <ClInclude Include="include\Rendering\Window.h" />
     <ClInclude Include="include\Geometry\Vertex.h" />
@@ -266,7 +266,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Rendering\Buffers\VertexBuffer.cpp" />
     <ClCompile Include="src\Rendering\Camera.cpp" />
     <ClCompile Include="src\Input\Mouse.cpp" />
-    <ClCompile Include="src\Rendering\Graphics.cpp" />
+    <ClCompile Include="src\Rendering\Renderer.cpp" />
     <ClCompile Include="src\Core\App.cpp" />
     <ClCompile Include="src\Rendering\Window.cpp" />
     <ClCompile Include="src\Input\Keyboard.cpp" />
