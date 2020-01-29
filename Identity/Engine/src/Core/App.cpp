@@ -48,6 +48,8 @@ void App::DoFrame()
     if (m_window.keyboard.IsKeyHeld('B'))
         m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
 
+    // m_window.GetGraphics().DrawObject("statue", angle, Vector3F(3.0f, 0.0f, 200.0f));
+    m_window.GetGraphics().DrawObject("box", angle, Vector3F(0.0f, 0.0f, 50.0f));
 
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();

@@ -79,9 +79,7 @@ namespace Engine::Rendering
          */
         void ClearBuffer(float p_red, float p_green, float p_blue);
 
-
-        void DrawTriangle(float angle);
-        void DrawLoadedCube(std::string p_path, float angle, Vector3F p_pos);
+        void DrawObject(std::string p_name, float angle, Vector3F p_pos);
 
         //---------WIP--------
         void CreateVertexBuffer(Engine::ObjectElements::Mesh* p_mesh) const;
