@@ -129,7 +129,7 @@ LRESULT Window::HandleMsg(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lPa
 
         // clear keystate when window loses focus to prevent input getting "stuck"
     case WM_KILLFOCUS:
-        _INPUT->keyboard.ClearStates();
+        Input::Input::GetInstance().get()->keyboard.ClearStates();
         break;
 
         /*********** KEYBOARD MESSAGES ***********/

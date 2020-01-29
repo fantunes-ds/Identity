@@ -4,8 +4,7 @@
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
 #include <3DLoader/ObjectElements/Transform.h>
-#include <Events/IEventCallback.h>
-#include "Events/Event.h"
+#include <Input/Input.h>
 
 using namespace Engine::Core;
 
@@ -38,14 +37,15 @@ void App::DoFrame()
 {
     static float angle = 0;
 
+    m_window.GetRenderer().ClearBuffer(1.0f, 1.0f, 1.0f);
     if (_INPUT->keyboard.IsKeyHeld('R'))
-        m_window.GetGraphics().ClearBuffer(1.0f, 0.0f, 0.0f);
+        m_window.GetRenderer().ClearBuffer(1.0f, 0.0f, 0.0f);
 
     if (_INPUT->keyboard.IsKeyHeld('G'))
-        m_window.GetGraphics().ClearBuffer(0.0f, 1.0f, 0.0f);
+        m_window.GetRenderer().ClearBuffer(0.0f, 1.0f, 0.0f);
 
     if (_INPUT->keyboard.IsKeyHeld('B'))
-        m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
+        m_window.GetRenderer().ClearBuffer(0.0f, 0.0f, 1.0f);
 
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
