@@ -2,6 +2,7 @@
 #include <Rendering/Window.h>
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
+#include <Input/Input.h>
 
 using namespace Engine::Rendering;
 
@@ -128,24 +129,24 @@ LRESULT Window::HandleMsg(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lPa
 
         // clear keystate when window loses focus to prevent input getting "stuck"
     case WM_KILLFOCUS:
-        keyboard.ClearStates();
+        _INPUT->keyboard.ClearStates();
         break;
 
         /*********** KEYBOARD MESSAGES ***********/
     case WM_KEYDOWN:
         // sys-key commands need to be handled to track ALT key (VK_MENU) and F10
     case WM_SYSKEYDOWN:
-        if (!(p_lParam & 0x40000000) || keyboard.IsAutoRepeatEnabled()) // filter auto-repeat
+        if (!(p_lParam & 0x40000000) || _INPUT->keyboard.IsAutoRepeatEnabled()) // filter auto-repeat
         {
-            keyboard.OnKeyPressed(static_cast<unsigned char>(p_wParam));
+            _INPUT->keyboard.OnKeyPressed(static_cast<unsigned char>(p_wParam));
         }
         break;
     case WM_KEYUP:
     case WM_SYSKEYUP:
-        keyboard.OnKeyReleased(static_cast<unsigned char>(p_wParam));
+        _INPUT->keyboard.OnKeyReleased(static_cast<unsigned char>(p_wParam));
         break;
     case WM_CHAR:
-        keyboard.OnChar(static_cast<unsigned char>(p_wParam));
+        _INPUT->keyboard.OnChar(static_cast<unsigned char>(p_wParam));
         break;
         /*********** END KEYBOARD MESSAGES ***********/
 
@@ -155,56 +156,56 @@ LRESULT Window::HandleMsg(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lPa
         const POINTS pt = MAKEPOINTS(p_lParam);
         if (pt.x >= 0 && pt.x < m_width && pt.y >= 0 && pt.y < m_height)
         {
-            mouse.OnMouseMove(pt.x, pt.y);
-            if (!mouse.IsInWindow())
+            _INPUT->mouse.OnMouseMove(pt.x, pt.y);
+            if (!_INPUT->mouse.IsInWindow())
             {
                 SetCapture(p_hwnd);
-                mouse.OnMouseEnter();
+                _INPUT->mouse.OnMouseEnter();
             }
         }
         else
         {
             if (p_wParam & (MK_LBUTTON | MK_RBUTTON))
             {
-                mouse.OnMouseMove(pt.x, pt.y);
+                _INPUT->mouse.OnMouseMove(pt.x, pt.y);
             }
             else
             {
                 ReleaseCapture();
-                mouse.OnMouseLeave();
+                _INPUT->mouse.OnMouseLeave();
             }
         }
         break;
     }
     case WM_LBUTTONDOWN:
     {
-        mouse.OnLeftPressed();
+        _INPUT->mouse.OnLeftPressed();
         break;
     }
     case WM_RBUTTONDOWN:
     {
-        mouse.OnRightPressed();
+        _INPUT->mouse.OnRightPressed();
         break;
     }
     case WM_LBUTTONUP:
     {
-        mouse.OnLeftReleased();
+        _INPUT->mouse.OnLeftReleased();
         break;
     }
     case WM_RBUTTONUP:
     {
-        mouse.OnRightReleased();
+        _INPUT->mouse.OnRightReleased();
         break;
     }
     case WM_MOUSEWHEEL:
     {
         if (GET_WHEEL_DELTA_WPARAM(p_wParam) > 0)
         {
-            mouse.OnWheelUp();
+            _INPUT->mouse.OnWheelUp();
         }
         else if (GET_WHEEL_DELTA_WPARAM(p_wParam) < 0)
         {
-            mouse.OnWheelDown();
+            _INPUT->mouse.OnWheelDown();
         }
         break;
     }

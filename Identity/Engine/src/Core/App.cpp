@@ -11,6 +11,7 @@ using namespace Engine::Core;
 
 App::App() : m_window(800, 600, "Engine Window")
 {
+    Input::Input::InitInput();
 }
 
 App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name)
@@ -37,16 +38,14 @@ void App::DoFrame()
 {
     static float angle = 0;
 
-    m_window.GetRenderer().ClearBuffer(1.0f, 1.0f, 1.0f);
+    if (_INPUT->keyboard.IsKeyHeld('R'))
+        m_window.GetGraphics().ClearBuffer(1.0f, 0.0f, 0.0f);
 
-    if (m_window.keyboard.IsKeyHeld('R'))
-        m_window.GetRenderer().ClearBuffer(1.0f, 0.0f, 0.0f);
+    if (_INPUT->keyboard.IsKeyHeld('G'))
+        m_window.GetGraphics().ClearBuffer(0.0f, 1.0f, 0.0f);
 
-    if (m_window.keyboard.IsKeyHeld('G'))
-        m_window.GetRenderer().ClearBuffer(0.0f, 1.0f, 0.0f);
-
-    if (m_window.keyboard.IsKeyHeld('B'))
-        m_window.GetRenderer().ClearBuffer(0.0f, 0.0f, 1.0f);
+    if (_INPUT->keyboard.IsKeyHeld('B'))
+        m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
 
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();

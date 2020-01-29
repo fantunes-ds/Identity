@@ -229,6 +229,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Events\Event.h" />
     <ClInclude Include="include\Events\IEventCallback.h" />
     <ClInclude Include="include\Export.h" />
+    <ClInclude Include="include\Input\Input.h" />
     <ClInclude Include="include\Input\Mouse.h" />
     <ClInclude Include="include\Objects\GameObject.h" />
     <ClInclude Include="include\Rendering\Buffers\IndexBuffer.h" />
