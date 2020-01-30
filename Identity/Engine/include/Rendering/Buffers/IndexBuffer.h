@@ -8,7 +8,7 @@
 
 namespace Engine::Rendering::Buffers
 {
-    struct IndexBuffer
+    struct API_ENGINE IndexBuffer
     {
         void Generate(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, std::vector<unsigned short> p_indices);
         void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const;

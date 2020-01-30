@@ -9,7 +9,9 @@
 
 namespace Engine
 {
-
+    /*
+     * @brief static class that uses an outside dependency of our choice to load object files
+     */
     class API_ENGINE ObjectLoader
     {
     public:
@@ -18,6 +20,8 @@ namespace Engine
         ObjectLoader(const ObjectLoader&) = delete;
 
         static std::shared_ptr<ObjectElements::Model> LoadModel(const std::string& p_file);
+
+    private:
         static std::shared_ptr<ObjectElements::Mesh> LoadMesh(aiMesh* p_assimpMesh);
     };
 }

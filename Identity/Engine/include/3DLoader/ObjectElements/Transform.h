@@ -9,25 +9,26 @@ namespace Engine::ObjectElements
     public:
         Transform();
 
-        //Transform(GPM::Vector3D& p_position, GPM::Vector3D& p_scale, GPM::Vector3D& p_rotation);
         Transform(GPM::Vector3D& p_position);
         ~Transform() = default;
 
         Transform(const Transform& p_other);
         Transform(const Transform&& p_other) noexcept;
 
-        /* @brief Adds the given vector to the current position.
-         *
+        /** 
+         * @brief Adds the given vector to the current position.
          */
         void Translate(const GPM::Vector3D& p_vector);
 
-        /* @brief Rotates transform by a vector of Euler angles.
-         * @warning: may contain error at m_rotation *= quat
+        /**
+         *@brief Rotates transform by a vector of Euler angles.
+         *@warning: may contain error at m_rotation *= quat
          */
         void RotateWithEulerAngles(const GPM::Vector3D& p_euler);
 
-        /* @brief Multiplies the Transform's current scale by the given vector.
-         * 
+        /**
+         *@brief Multiplies the Transform's current scale by the given vector.
+          
          */
         void Scale(const GPM::Vector3D& p_scale);
 

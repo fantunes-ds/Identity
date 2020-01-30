@@ -50,7 +50,7 @@ int App::Run() const
 
 void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
 {
-    m_window.GetRenderer().ClearBuffer(0.0f, 0.0f, 0.0f);
+    m_window.GetRenderer().ClearBuffer(0.3f, 0.3f, 0.3f);
     if (_INPUT->keyboard.IsKeyHeld('R'))
         m_window.GetRenderer().ClearBuffer(1.0f, 0.0f, 0.0f);
 
