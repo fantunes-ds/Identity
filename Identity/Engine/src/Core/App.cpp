@@ -29,7 +29,7 @@ int App::Run() const
     renderSystem.AddModel("../Engine/Resources/Lambo.obj", "flab");
 
     Rendering::Light dirLight{};
-    dirLight.position = Vector3F(-cos(0.0f) * 40.0f, 40.0f, -40.0f);
+    dirLight.position = Vector3F(40.0f, 40.0f, -40.0f);
     dirLight.ambient = Vector3F(0.1f, 0.1f, 0.1f);
     dirLight.diffuse = Vector3F(1.0f, 1.0f, 0.95f);
     dirLight.specular = Vector3F(1.0f, 1.0f, 0.95f);
