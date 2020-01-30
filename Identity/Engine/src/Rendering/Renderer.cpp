@@ -4,12 +4,8 @@
 #include <Tools/DirectX/dxerr.h>
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
-#include <3DLoader/ObjectElements/Model.h>
 #include <3DLoader/ObjectLoader.h>
-#include <Managers/ModelManager.h>
 #include <Tools/DirectX/GraphicsMacros.h>
-#include <Rendering/Light.h>
-#include <Input/Input.h>
 
 using namespace Engine::Rendering;
 

@@ -2,11 +2,16 @@
 #include <Export.h>
 #include <GPM/GPM.h>
 
+namespace Engine::Systems
+{
+    class RenderSystem;
+}
+
 namespace Engine::Rendering
 {
     class API_ENGINE Camera
     {
-        friend class Renderer;
+        friend class Systems::RenderSystem;
     public:
         Camera() = default;
         ~Camera() = default;

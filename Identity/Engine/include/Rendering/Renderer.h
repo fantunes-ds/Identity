@@ -91,8 +91,5 @@ namespace Engine::Rendering
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pTarget;
         Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencil;
         Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
-
-        Camera m_camera;
-        // std::shared_ptr<ObjectElements::Model> m_mod;
     };
 }

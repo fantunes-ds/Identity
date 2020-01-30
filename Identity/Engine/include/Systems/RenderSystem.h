@@ -26,6 +26,8 @@ namespace Engine::Systems
         std::map<int, std::shared_ptr<ObjectElements::Model>> m_models;
         std::map<int, std::shared_ptr<Rendering::Light>> m_lights;
 
+        Rendering::Camera m_camera;
+
         Rendering::Renderer* m_renderer;
     };
 }

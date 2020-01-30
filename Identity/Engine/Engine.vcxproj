@@ -223,7 +223,6 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Managers\GameObjectManager.h" />
     <ClInclude Include="include\Managers\ModelManager.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Transform.h" />
-    <ClInclude Include="include\Core\App.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />
     <ClInclude Include="include\Systems\IECSSystem.h" />
@@ -261,11 +260,13 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\App.cpp" />
     <ClCompile Include="src\Managers\ModelManager.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Model.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Mesh.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Transform.cpp" />
     <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
+    <ClInclude Include="src\Core\App.h" />
     <ClCompile Include="src\Systems\RenderSystem.cpp" />
     <ClCompile Include="src\Events\Event.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
@@ -274,7 +275,6 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Rendering\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Rendering\Buffers\VertexBuffer.cpp" />
     <ClCompile Include="src\Rendering\Camera.cpp" />
-    <ClCompile Include="src\Input\Mouse.cpp" />
     <ClCompile Include="src\Rendering\Renderer.cpp" />
     <ClCompile Include="src\Rendering\Window.cpp" />
     <ClCompile Include="src\TestDependencies.cpp" />

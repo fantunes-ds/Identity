@@ -5,6 +5,7 @@
 #include "Rendering/Light.h"
 #include "Tools/ImGUI/imgui.h"
 #include "Tools/ImGUI/imgui_impl_dx11.h"
+#include <Input/Input.h>
 
 Engine::Systems::RenderSystem::RenderSystem(Rendering::Renderer* p_renderer): m_renderer(p_renderer)
 {
@@ -37,37 +38,39 @@ void Engine::Systems::RenderSystem::DrawScene()
             struct VertexConstantBuffer
             {
                 Matrix4F model;
+                Matrix4F view;
                 Matrix4F normalModel;
-                Matrix4F perspective;
+                Matrix4F projection;
             };
 
             Vector3D quat{ 0, 1, 0 };
-            Matrix4F model = Matrix4F::CreateTransformation(Vector3F(tmp, 0.0f, 4.0f),
-                Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(135.0f)),
+            Matrix4F model = Matrix4F::CreateTransformation(Vector3F(tmp, 0.0f, 0.0f),
+                Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(180.0f)),
                 Vector3F{ 0.02f, 0.02f, 0.02f });
 
             Matrix4F normalModel = Matrix4F::Inverse(model);
-            //Create perspective matrix
-            float width = 1.0f;
-            float height = 3.0f / 4.0f;
-            float NearZ = 0.5f;
-            float FarZ = 1000.0f;
-            float twoNearZ = NearZ + NearZ;
-            float fRange = FarZ / (FarZ - NearZ);
 
-            Matrix4F perspective{
-                twoNearZ / width, 0.0f, 0.0f, 0.0f,
-                0.0f, twoNearZ / height, 0.0f, 0.0f,
-                0.0f, 0.0f, fRange, 1.0f,
-                0.0f, 0.0f, -fRange * NearZ, 0.0f
-            };
+            m_camera.UpdateVectors();
+
+            if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
+                m_camera.m_position -= m_camera.m_forward * m_camera.m_speed;
+            if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
+                m_camera.m_position += m_camera.m_forward * m_camera.m_speed;
+            if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
+                m_camera.m_position -= Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
+            if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
+                m_camera.m_position += Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
+
+            Matrix4F view = m_camera.GetViewMatrix();
+            Matrix4F perspective = m_camera.GetPerspectiveMatrix();
 
 
             model.Transpose();
+            view.Transpose();
             normalModel.Transpose();
             perspective.Transpose();
 
-            const VertexConstantBuffer vcb{ model, normalModel,perspective };
+            const VertexConstantBuffer vcb{ model, view, normalModel,perspective };
 
             Microsoft::WRL::ComPtr<ID3D11Buffer> vertexConstantBuffer;
             D3D11_BUFFER_DESC                    vertexBufferDesc = {};
@@ -88,6 +91,8 @@ void Engine::Systems::RenderSystem::DrawScene()
             {
                 Rendering::Light lightSource;
                 float lightShininess;
+                Vector3F cameraPos;
+                float padding;
             };
 
             Rendering::Light dirLight{};
@@ -97,10 +102,15 @@ void Engine::Systems::RenderSystem::DrawScene()
             dirLight.specular = Vector3F(1.0f, 1.0f, 0.95f);
             dirLight.direction = Vector3F(-0.5f, -0.5f, -0.5f).Normalized();
 
-      
+            if (ImGui::Begin("Lighting Tool"))
+            {
+                ImGui::SliderFloat("LightPosX", &dirLight.position.x, -40.0f, 40.0f, "%.1f");
+                ImGui::SliderFloat("LightPosY", &dirLight.position.y, -40.0f, 40.0f, "%.1f");
+                ImGui::SliderFloat("LightPosZ", &dirLight.position.z, -40.0f, 40.0f, "%.1f");
+            }ImGui::End();
 
             const PixelConstantBuffer pcb{ dirLight.position, dirLight.ambient, dirLight.diffuse,
-                                          dirLight.specular, dirLight.direction, 32.0f };
+                                          dirLight.specular, dirLight.direction, 32.0f, m_camera.GetPosition(), 0.0f };
 
             Microsoft::WRL::ComPtr<ID3D11Buffer> pixelConstantBuffer;
             D3D11_BUFFER_DESC                    pixelBufferDesc = {};
