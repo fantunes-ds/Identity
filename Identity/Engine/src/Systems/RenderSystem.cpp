@@ -26,6 +26,15 @@ void Engine::Systems::RenderSystem::DrawScene()
     HRESULT hr;
     float offset = 0;
 
+    std::shared_ptr<Rendering::Light> light = m_lights.begin()->second;
+
+    //TODO: Light will be moved soon
+    if (ImGui::Begin("Lighting Tool"))
+    {
+        ImGui::SliderFloat("LightPosX", &light->position.x, -40.0f, 40.0f, "%.1f");
+        ImGui::SliderFloat("LightPosY", &light->position.y, -40.0f, 40.0f, "%.1f");
+        ImGui::SliderFloat("LightPosZ", &light->position.z, -40.0f, 40.0f, "%.1f");
+    }ImGui::End();
     for (auto& model : m_models)
     {
         for (auto& mesh : model.second->GetMeshes())
@@ -92,16 +101,7 @@ void Engine::Systems::RenderSystem::DrawScene()
                 float lightShininess;
                 Vector3F cameraPos;
                 float padding;
-            };
-
-            std::shared_ptr<Rendering::Light> light = m_lights.begin()->second;
-
-            if (ImGui::Begin("Lighting Tool"))
-            {
-                ImGui::SliderFloat("LightPosX", &light->position.x, -40.0f, 40.0f, "%.1f");
-                ImGui::SliderFloat("LightPosY", &light->position.y, -40.0f, 40.0f, "%.1f");
-                ImGui::SliderFloat("LightPosZ", &light->position.z, -40.0f, 40.0f, "%.1f");
-            }ImGui::End();
+            };  
 
             const PixelConstantBuffer pcb{ light->position, light->ambient, light->diffuse, light->specular};
 
