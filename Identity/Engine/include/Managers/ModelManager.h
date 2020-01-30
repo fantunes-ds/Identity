@@ -1,5 +1,6 @@
 #pragma once
 #include <Export.h>
+#include <Tools/IDCounter.h>
 #include <3DLoader/ObjectElements/Model.h>
 
 

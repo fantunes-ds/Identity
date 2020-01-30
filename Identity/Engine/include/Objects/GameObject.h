@@ -13,7 +13,7 @@ namespace Engine::Objects
         ObjectElements::Transform& GetTransform() { return m_transform; }
 
     private:
-        ObjectElements::Transform m_transform;
+        std::shared_ptr<ObjectElements::Transform> m_transform;
 
     };
 }

@@ -50,7 +50,6 @@ void Engine::Systems::RenderSystem::DrawScene()
 
             Matrix4F normalModel = Matrix4F::Inverse(model);
 
-            m_camera.UpdateVectors();
 
             if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
                 m_camera.m_position -= m_camera.m_forward * m_camera.m_speed;
@@ -95,22 +94,16 @@ void Engine::Systems::RenderSystem::DrawScene()
                 float padding;
             };
 
-            Rendering::Light dirLight{};
-            dirLight.position = Vector3F(-cos(0.0f) * 40.0f, 40.0f, -40.0f);
-            dirLight.ambient = Vector3F(0.1f, 0.1f, 0.1f);
-            dirLight.diffuse = Vector3F(1.0f, 1.0f, 0.95f);
-            dirLight.specular = Vector3F(1.0f, 1.0f, 0.95f);
-            dirLight.direction = Vector3F(-0.5f, -0.5f, -0.5f).Normalized();
+            std::shared_ptr<Rendering::Light> light = m_lights.begin()->second;
 
             if (ImGui::Begin("Lighting Tool"))
             {
-                ImGui::SliderFloat("LightPosX", &dirLight.position.x, -40.0f, 40.0f, "%.1f");
-                ImGui::SliderFloat("LightPosY", &dirLight.position.y, -40.0f, 40.0f, "%.1f");
-                ImGui::SliderFloat("LightPosZ", &dirLight.position.z, -40.0f, 40.0f, "%.1f");
+                ImGui::SliderFloat("LightPosX", &light->position.x, -40.0f, 40.0f, "%.1f");
+                ImGui::SliderFloat("LightPosY", &light->position.y, -40.0f, 40.0f, "%.1f");
+                ImGui::SliderFloat("LightPosZ", &light->position.z, -40.0f, 40.0f, "%.1f");
             }ImGui::End();
 
-            const PixelConstantBuffer pcb{ dirLight.position, dirLight.ambient, dirLight.diffuse,
-                                          dirLight.specular, dirLight.direction, 32.0f, m_camera.GetPosition(), 0.0f };
+            const PixelConstantBuffer pcb{ light->position, light->ambient, light->diffuse, light->specular};
 
             Microsoft::WRL::ComPtr<ID3D11Buffer> pixelConstantBuffer;
             D3D11_BUFFER_DESC                    pixelBufferDesc = {};
@@ -162,6 +155,7 @@ void Engine::Systems::RenderSystem::DrawScene()
 
 void Engine::Systems::RenderSystem::Update()
 {
+    m_camera.UpdateVectors();
     DrawScene();
 }
 
@@ -175,15 +169,28 @@ uint32_t Engine::Systems::RenderSystem::AddModel(const std::string& p_path, cons
         return -1;
     }
 
-    static uint32_t id = 0;
 
     std::shared_ptr newModel = Manager::ModelManager::GetInstance()->AddModel(p_path, p_name);
 
     if (newModel)
     {
-        m_models.insert_or_assign(id, newModel);
-        uint32_t tmpId = id;
-        ++id;
+        
+        const uint32_t tmpId = Tools::IDCounter::GetID();
+        m_models.insert_or_assign(tmpId, newModel);
+        return tmpId;
+    }
+    else
+        return -1;
+}
+
+uint32_t Engine::Systems::RenderSystem::AddLight(Rendering::Light& p_light)
+{
+    std::shared_ptr newLight = std::make_shared<Rendering::Light>(p_light);
+
+    if (newLight)
+    {
+        const uint32_t tmpId = Tools::IDCounter::GetID();
+        m_lights.insert_or_assign(tmpId, newLight);
         return tmpId;
     }
     else
