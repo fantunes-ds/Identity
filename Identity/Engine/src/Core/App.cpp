@@ -26,6 +26,16 @@ int App::Run() const
 
     Systems::RenderSystem renderSystem(&m_window.GetRenderer());
     renderSystem.AddModel("../Engine/Resources/statue.obj", "statue");
+    renderSystem.AddModel("../Engine/Resources/Lambo.obj", "flab");
+
+    Rendering::Light dirLight{};
+    dirLight.position = Vector3F(-cos(0.0f) * 40.0f, 40.0f, -40.0f);
+    dirLight.ambient = Vector3F(0.1f, 0.1f, 0.1f);
+    dirLight.diffuse = Vector3F(1.0f, 1.0f, 0.95f);
+    dirLight.specular = Vector3F(1.0f, 1.0f, 0.95f);
+    dirLight.direction = Vector3F(-0.5f, -0.5f, -0.5f).Normalized();
+
+    renderSystem.AddLight(dirLight);
 
     while (true)
     {

@@ -21,6 +21,7 @@ namespace Engine::Systems
          * @return returns the new model's id if successful, -1 if unsuccessful
          */
         uint32_t AddModel(const std::string& p_path, const std::string& p_name);
+        uint32_t AddLight(Rendering::Light& p_light);
 
     private:
         std::map<int, std::shared_ptr<ObjectElements::Model>> m_models;
