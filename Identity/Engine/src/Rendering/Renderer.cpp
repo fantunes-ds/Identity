@@ -6,7 +6,7 @@
 #include <Tools/ImGUI/imgui_impl_dx11.h>
 #include <3DLoader/ObjectElements/Model.h>
 #include <3DLoader/ObjectLoader.h>
-#include <3DLoader/Manager/ModelManager.h>
+#include <Managers/ModelManager.h>
 #include <Tools/DirectX/GraphicsMacros.h>
 #include <Rendering/Light.h>
 #include <Input/Input.h>
@@ -54,8 +54,8 @@ Renderer::Renderer(const HWND p_hwnd)
     Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
     GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer));
     GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
-    
-    
+
+
     //Depth stencil state
     D3D11_DEPTH_STENCIL_DESC depthDesc = {};
     depthDesc.DepthEnable = TRUE;
@@ -63,9 +63,9 @@ Renderer::Renderer(const HWND p_hwnd)
     depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
     GFX_THROW_INFO(m_pDevice->CreateDepthStencilState(&depthDesc, &depthStencilState));
-    
+
     m_pContext->OMSetDepthStencilState(depthStencilState.Get(), 1u);
-    
+
     //create depth stencil texture
     Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
     D3D11_TEXTURE2D_DESC descDepth = {};
@@ -79,14 +79,17 @@ Renderer::Renderer(const HWND p_hwnd)
     descDepth.Usage = D3D11_USAGE_DEFAULT;
     descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     GFX_THROW_INFO(m_pDevice->CreateTexture2D(&descDepth, nullptr, &depthStencil));
-    
+
     //create depth stencil view
     D3D11_DEPTH_STENCIL_VIEW_DESC depthViewDesc = {};
     depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
     depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     depthViewDesc.Texture2D.MipSlice = 0u;
     GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(depthStencil.Get(), &depthViewDesc, &m_pDepthStencil));
-    
+
+    //bind the depth stencil view
+    //m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
+
     //add viewport here so we dont create it every frame
     D3D11_VIEWPORT viewPort;
     viewPort.Width = 800;
@@ -129,178 +132,6 @@ void Renderer::ClearBuffer(float p_red, float p_green, float p_blue)
     m_pContext->ClearDepthStencilView(m_pDepthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
 }
 
-
-//todo Rearrange all the below function and these global variables. They are just here because we needed to test very quickly.
-static Light dirLight{ Vector3F(40.0f, 40.0f, -40.0f) , Vector3F(0.1f, 0.1f, 0.1f) ,Vector3F(1.0f, 1.0f, 0.95f), Vector3F(1.0f, 1.0f, 0.95f), Vector3F(-0.5f, -0.5f, -0.5f).Normalized() };
-void Renderer::DrawObject(std::string p_name, float angle, Vector3F p_pos)
-{
-    HRESULT hr;
-
-    std::shared_ptr<ObjectElements::Mesh> mesh;
-    mesh = Manager::ModelManager::GetInstance()->FindModel(p_name)->GetMeshes()[0];
-
-    // mesh->GenerateBuffers(m_pDevice);
-    mesh->Bind(m_pContext);
-
-    // ********* WIP ********* //
-    // create constant buffer for transform matrix
-    struct VertexConstantBuffer
-    {
-        Matrix4F model;
-        Matrix4F view;
-        Matrix4F normalModel;
-        Matrix4F perspective;
-    };
-
-    Vector3D quat{ 0, 1, 0 };
-    Matrix4F model = Matrix4F::CreateTransformation(p_pos,
-        Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(0.0f)),
-        Vector3F{ 0.02f, 0.02f, 0.02f });
-
-    Matrix4F normalModel = Matrix4F::Inverse(model);
-
-    m_camera.UpdateVectors();
-
-    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
-        m_camera.m_position -= m_camera.m_forward * m_camera.m_speed;
-    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
-        m_camera.m_position += m_camera.m_forward * m_camera.m_speed;
-    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
-        m_camera.m_position -= Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
-    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
-        m_camera.m_position += Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
-
-    Matrix4F view = m_camera.GetViewMatrix();
-    Matrix4F perspective = m_camera.GetPerspectiveMatrix();
-
-    model.Transpose();
-    view.Transpose();
-    normalModel.Transpose();
-    perspective.Transpose();
-
-    const VertexConstantBuffer vcb{ model,view, normalModel,perspective };
-
-    Microsoft::WRL::ComPtr<ID3D11Buffer> vertexConstantBuffer;
-    D3D11_BUFFER_DESC                    vertexBufferDesc = {};
-    vertexBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
-    vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    vertexBufferDesc.MiscFlags = 0u;
-    vertexBufferDesc.ByteWidth = sizeof(vcb);
-    vertexBufferDesc.StructureByteStride = 0u;
-    D3D11_SUBRESOURCE_DATA VertexConstantShaderData = {};
-    VertexConstantShaderData.pSysMem = &vcb;
-    GFX_THROW_INFO(m_pDevice->CreateBuffer(&vertexBufferDesc, &VertexConstantShaderData, &vertexConstantBuffer));
-
-    //bind the buffer to the shader
-    m_pContext->VSSetConstantBuffers(0u, 1u, vertexConstantBuffer.GetAddressOf());
-
-    struct PixelConstantBuffer
-    {
-        Light lightSource;
-        float lightShininess;
-        Vector3F viewPos;
-        float padding;
-    };
-
-    if (ImGui::Begin("Lighting Tool"))
-    {
-        ImGui::SliderFloat("LightPosX", &dirLight.position.x, -40.0f, 40.0f, "%.1f");
-        ImGui::SliderFloat("LightPosY", &dirLight.position.y, -40.0f, 40.0f, "%.1f");
-        ImGui::SliderFloat("LightPosZ", &dirLight.position.z, -40.0f, 40.0f, "%.1f");
-    }ImGui::End();
-
-    const PixelConstantBuffer pcb{ dirLight.position, dirLight.ambient, dirLight.diffuse,
-                                  dirLight.specular, dirLight.direction, 32.0f, m_camera.GetPosition(), 0.0f };
-
-    Microsoft::WRL::ComPtr<ID3D11Buffer> pixelConstantBuffer;
-    D3D11_BUFFER_DESC                    pixelBufferDesc = {};
-    pixelBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    pixelBufferDesc.Usage = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
-    pixelBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    pixelBufferDesc.MiscFlags = 0u;
-    pixelBufferDesc.ByteWidth = sizeof(pcb);
-    pixelBufferDesc.StructureByteStride = 0u;
-
-    D3D11_SUBRESOURCE_DATA PixelConstantShaderData = {};
-    PixelConstantShaderData.pSysMem = &pcb;
-    GFX_THROW_INFO(m_pDevice->CreateBuffer(&pixelBufferDesc, &PixelConstantShaderData, &pixelConstantBuffer));
-
-    //bind the buffer to the shader
-    m_pContext->PSSetConstantBuffers(0u, 1u, pixelConstantBuffer.GetAddressOf());
-
-    LoadPixelShader(L"../Engine/Resources/Shaders/PixelShader.cso");
-    LoadVertexShader(L"../Engine/Resources/Shaders/VertexShader.cso");
-
-    //bind the render target and depth/stencil buffer (need to be done each frame ow we have problem with ImGUI)
-    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
-
-    //set primitive draw
-    m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    //create input layout
-    Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
-    const D3D11_INPUT_ELEMENT_DESC            inputDesc[] =
-    {
-        {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"TxCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12u, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20u, D3D11_INPUT_PER_VERTEX_DATA, 0}
-    };
-    GFX_THROW_INFO(m_pDevice->CreateInputLayout(inputDesc,
-        std::size(inputDesc),
-        m_blob->GetBufferPointer(),
-        m_blob->GetBufferSize(),
-        &inputLayout));
-
-    m_pContext->IASetInputLayout(inputLayout.Get());
-
-    GFX_THROW_INFO_ONLY(m_pContext->DrawIndexed(static_cast<UINT>(mesh->m_indices.size()), 0u, 0u));
-
-}
-
-void Renderer::CreateVertexBuffer(Engine::ObjectElements::Mesh* p_mesh) const
-{
-    HRESULT hr;
-
-    //create vertex buffer
-    Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
-    D3D11_BUFFER_DESC vDesc = {};
-    vDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    vDesc.Usage = D3D11_USAGE_DEFAULT;
-    vDesc.CPUAccessFlags = 0u;
-    vDesc.MiscFlags = 0u;
-    vDesc.ByteWidth = sizeof(p_mesh->m_vertices[0]) * p_mesh->m_vertices.size();
-    vDesc.StructureByteStride = sizeof(Geometry::Vertex);
-
-    D3D11_SUBRESOURCE_DATA vSD = {};
-    vSD.pSysMem = p_mesh->m_vertices.data();
-    GFX_THROW_INFO(m_pDevice->CreateBuffer(&vDesc, &vSD, &vertexBuffer));
-    const UINT stride = sizeof(Geometry::Vertex);
-    const UINT offset = 0u;
-    //---------------
-
-    //bind vertex buffer
-    m_pContext->IASetVertexBuffers(0u, 1u, vertexBuffer.GetAddressOf(), &stride, &offset);
-}
-
-void Renderer::CreateIndexBuffer(Engine::ObjectElements::Mesh* p_mesh) const
-{
-    HRESULT hr;
-
-    Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
-    D3D11_BUFFER_DESC inDesc = {};
-    inDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    inDesc.Usage = D3D11_USAGE_DEFAULT;
-    inDesc.CPUAccessFlags = 0u;
-    inDesc.MiscFlags = 0u;
-    inDesc.ByteWidth = sizeof(p_mesh->m_indices[0]) * p_mesh->m_indices.size();
-    inDesc.StructureByteStride = sizeof(unsigned short);
-    D3D11_SUBRESOURCE_DATA iSD = {};
-    iSD.pSysMem = p_mesh->m_indices.data();
-    GFX_THROW_INFO(m_pDevice->CreateBuffer(&inDesc, &iSD, &indexBuffer));
-    m_pContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
-}
-
 void Renderer::LoadPixelShader(const std::wstring& p_path)
 {
     HRESULT hr;
@@ -319,12 +150,6 @@ void Renderer::LoadVertexShader(const std::wstring& p_path)
     GFX_THROW_INFO(D3DReadFileToBlob(p_path.c_str(), &m_blob));
     GFX_THROW_INFO(m_pDevice->CreateVertexShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), nullptr, &vertexShader));
     m_pContext->VSSetShader(vertexShader.Get(), nullptr, 0u);
-}
-
-void Renderer::GenerateBuffers()
-{
-    Manager::ModelManager::GetInstance()->FindModel("statue")->GetMeshes()[0]->GenerateBuffers(m_pDevice);
-    // Manager::ModelManager::GetInstance()->FindModel("box")->GetMeshes()[0]->GenerateBuffers(m_pDevice);
 }
 
 #pragma region ExceptionsClass

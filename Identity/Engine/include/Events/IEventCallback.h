@@ -52,7 +52,7 @@ namespace Engine
     private:
         void (T::* m_function)();
         T* m_instance;
-        const int32_t m_id;
-        inline static int32_t m_staticId = 0;
+        const uint32_t m_id;
+        inline static uint32_t m_staticId = 0;
     };
 }

@@ -4,6 +4,9 @@
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
 #include <3DLoader/ObjectElements/Transform.h>
+#include <Events/IEventCallback.h>
+#include "Events/Event.h"
+#include <Systems/RenderSystem.h>
 #include <Input/Input.h>
 
 using namespace Engine::Core;
@@ -19,21 +22,23 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 
 int App::Run()
 {
-    Manager::ModelManager::GetInstance()->AddModel("../Engine/Resources/statue.obj", "statue");
-    Manager::ModelManager::GetInstance()->AddModel("../Engine/Resources/cube.obj", "cube");
+    Manager::ModelManager::GetInstance()->SetGraphicsDevice(m_window.GetRenderer().m_pDevice);
 
-    m_window.GetRenderer().GenerateBuffers();
+    Systems::RenderSystem renderSystem(&m_window.GetRenderer());
+    renderSystem.AddModel("../Engine/Resources/statue.obj", "statue");
+
     while (true)
     {
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;
         }
-        DoFrame();
+        
+        DoFrame(renderSystem);
     }
 }
 
-void App::DoFrame()
+void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem)
 {
     static float angle = 0;
 
@@ -52,7 +57,8 @@ void App::DoFrame()
     ImGui::NewFrame();
     bool show_demo_window = true;
 
-    m_window.GetRenderer().DrawObject("statue", angle, Vector3F(0.0f, 0.0f, 0.0f));
+    p_renderSystem.Update();
+
     ImGui::Begin("Identity UI Tools");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::ShowDemoWindow(&show_demo_window);
@@ -68,7 +74,7 @@ void App::DoFrame()
         ImGui::RenderPlatformWindowsDefault();
     }
 
-    m_window.GetRenderer().EndFrame();
 
     angle += 0.01;
+    m_window.GetRenderer().EndFrame();
 }

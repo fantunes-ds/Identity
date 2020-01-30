@@ -3,7 +3,13 @@
 #include <Rendering/Window.h>
 
 #include <Tools/ImGUI/ImGUIManager.h>
-#include <3DLoader/Manager/ModelManager.h>
+#include <Managers/ModelManager.h>
+
+namespace Engine {
+    namespace Systems {
+        class RenderSystem;
+    }
+}
 
 namespace Engine::Core
 {
@@ -23,7 +29,7 @@ namespace Engine::Core
         int Run();
 
     private:
-        void DoFrame();
+        void DoFrame(Systems::RenderSystem& p_renderSystem);
 
     private:
         Tools::UI::ImGUIManager m_imguiManager;
