@@ -15,6 +15,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(c
         | aiProcess_GenNormals
         | aiProcess_FixInfacingNormals
         | aiProcess_GenUVCoords
+        | aiProcess_MakeLeftHanded
         | aiProcess_FlipUVs
     );
 

@@ -7,6 +7,7 @@
 #include <Tools/IdentityException.h>
 #include <wrl.h>
 #include "3DLoader/ObjectElements/Model.h"
+#include "Camera.h"
 
 namespace Engine::Rendering
 {

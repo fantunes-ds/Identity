@@ -4,11 +4,8 @@
 #include <Tools/DirectX/dxerr.h>
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
-#include <3DLoader/ObjectElements/Model.h>
 #include <3DLoader/ObjectLoader.h>
-#include <Managers/ModelManager.h>
 #include <Tools/DirectX/GraphicsMacros.h>
-#include <Rendering/Light.h>
 
 using namespace Engine::Rendering;
 
@@ -111,7 +108,7 @@ void Renderer::EndFrame()
 {
     HRESULT hr;
 
-    if (FAILED( hr = m_pSwapChain->Present(1u, 0u)))
+    if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
     {
         if (hr == DXGI_ERROR_DEVICE_REMOVED)
         {
@@ -191,7 +188,7 @@ const char* Renderer::HrException::what() const noexcept
 
 const char* Renderer::HrException::GetType() const noexcept
 {
-    return "Identity Renderer Exception";
+    return "Identity Graphics Exception";
 }
 
 HRESULT Renderer::HrException::GetErrorCode() const noexcept
@@ -244,7 +241,7 @@ const char* Renderer::InfoException::what() const noexcept
 
 const char* Renderer::InfoException::GetType() const noexcept
 {
-    return "Identity Renderer Info Exception";
+    return "Identity Graphics Info Exception";
 }
 
 std::string Renderer::InfoException::GetErrorInfo() const noexcept
@@ -256,7 +253,7 @@ std::string Renderer::InfoException::GetErrorInfo() const noexcept
 #pragma region DeviceExceptionClass
 const char* Renderer::DeviceException::GetType() const noexcept
 {
-    return "Identity Renderer Exception [DEVICE REMOVED] (DXGI_ERROR_DEVICE_REMOVED)";
+    return "Identity Graphics Exception [DEVICE REMOVED] (DXGI_ERROR_DEVICE_REMOVED)";
 }
 #pragma endregion
 

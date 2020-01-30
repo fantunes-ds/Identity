@@ -33,7 +33,6 @@ namespace Engine::Core
 
     private:
         Tools::UI::ImGUIManager m_imguiManager;
-        // Manager::ModelManager m_modelManager;
         Rendering::Window m_window;
         MSG m_msg;
         BOOL m_gResult;

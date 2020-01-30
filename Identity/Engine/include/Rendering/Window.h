@@ -45,10 +45,6 @@ namespace Engine::Rendering
          If there is a message, the method will return the message
          */
         static std::optional<int> ProcessMessage();
-
-        Input::Keyboard keyboard;
-        Input::Mouse mouse;
-
     private:
         static LRESULT CALLBACK HandleMsgSetup(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
         static LRESULT CALLBACK HandleMsgThunk(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
