@@ -87,7 +87,7 @@ Renderer::Renderer(const HWND p_hwnd)
     GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(depthStencil.Get(), &depthViewDesc, &m_pDepthStencil));
 
     //bind the depth stencil view
-    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
+    //m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
 
     //add viewport here so we dont create it every frame
     D3D11_VIEWPORT viewPort;

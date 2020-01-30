@@ -15,6 +15,11 @@ namespace Engine::Systems
 
         void DrawScene();
         void Update() override;
+
+        /**
+         * @brief
+         * @return returns the new model's id if successful, -1 if unsuccessful
+         */
         uint32_t AddModel(const std::string& p_path, const std::string& p_name);
 
     private:

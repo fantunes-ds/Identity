@@ -121,6 +121,8 @@ void Engine::Systems::RenderSystem::DrawScene()
             m_renderer->LoadPixelShader(L"../Engine/Resources/Shaders/PixelShader.cso");
             m_renderer->LoadVertexShader(L"../Engine/Resources/Shaders/VertexShader.cso");
 
+            m_renderer->m_pContext->OMSetRenderTargets(1u, m_renderer->m_pTarget.GetAddressOf(), m_renderer->m_pDepthStencil.Get());
+
             //set primitive draw
             m_renderer->m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -162,7 +164,7 @@ uint32_t Engine::Systems::RenderSystem::AddModel(const std::string& p_path, cons
         MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
         return -1;
     }
-    //TODO: make sure same model can't be loaded more than once
+
     static uint32_t id = 0;
 
     std::shared_ptr newModel = Manager::ModelManager::GetInstance()->AddModel(p_path, p_name);

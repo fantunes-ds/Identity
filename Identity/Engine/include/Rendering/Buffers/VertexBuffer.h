@@ -13,6 +13,8 @@ namespace Engine::Rendering::Buffers
         void Generate(Microsoft::WRL::ComPtr<ID3D11Device> p_device, std::vector<Geometry::Vertex> p_vertices);
         void Bind(Microsoft::WRL::ComPtr<ID3D11DeviceContext> p_context);
 
+        bool operator==(const VertexBuffer& p_other) const;
+
         Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
         D3D11_SUBRESOURCE_DATA subData;
         D3D11_BUFFER_DESC descriptor;

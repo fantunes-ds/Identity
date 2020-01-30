@@ -25,3 +25,11 @@ void Engine::Rendering::Buffers::VertexBuffer::Bind(Microsoft::WRL::ComPtr<ID3D1
 {
     p_context->IASetVertexBuffers(0u, 1u, buffer.GetAddressOf(), &stride, &offset);
 }
+
+bool Engine::Rendering::Buffers::VertexBuffer::operator==(const VertexBuffer& p_other) const
+{
+    if (stride == p_other.stride && offset == p_other.offset)
+        return true;
+
+    return false;
+}

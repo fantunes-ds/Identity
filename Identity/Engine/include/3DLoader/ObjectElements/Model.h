@@ -17,6 +17,8 @@ namespace Engine::ObjectElements
 
         void SetName(const std::string& p_name) { m_name = p_name; }
 
+        bool operator==(const Model& p_other);
+
     private:
         std::string m_name;
         std::vector<std::shared_ptr<Mesh>> m_meshes;

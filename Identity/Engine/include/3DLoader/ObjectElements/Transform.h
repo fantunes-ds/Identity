@@ -39,7 +39,7 @@ namespace Engine::ObjectElements
             m_rotation = p_rotation;
             CalculateAxes();
         }
-        inline void SetParent(Transform* p_parent) { m_parent = p_parent; }
+        inline void SetParent(Transform& p_parent) { m_parent = std::make_shared<Transform>(p_parent); }
 
         [[nodiscard]] GPM::Vector3D GetEuler() const;
         inline GPM::Vector3D& GetPosition() { return m_position; }
@@ -48,12 +48,12 @@ namespace Engine::ObjectElements
         inline GPM::Vector3D& GetUp() { return m_up; }
         inline GPM::Vector3D& GetScale() { return m_scale; }
         inline GPM::Quaternion& GetRotation() { return m_rotation; }
-        inline Transform* GetParent() const { return m_parent; }
+        inline std::shared_ptr<Transform> GetParent() const { return m_parent; }
 
     private:
         void CalculateAxes();
 
-        Transform* m_parent = nullptr;
+        std::shared_ptr<Transform> m_parent = nullptr;
         GPM::Vector3D m_forward;
         GPM::Vector3D m_right;
         GPM::Vector3D m_up;

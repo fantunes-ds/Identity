@@ -143,9 +143,6 @@
     <ClCompile Include="src\Core\App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\3DLoader\ObjectElements\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -20,6 +20,9 @@ namespace Engine::ObjectElements
         void GenerateBuffers(Microsoft::WRL::ComPtr<ID3D11Device> p_device);
         void Bind(Microsoft::WRL::ComPtr<ID3D11DeviceContext> p_context);
 
+        bool operator==(const Mesh& p_other) const;
+        bool operator!=(const Mesh& p_other) const;
+
         Rendering::Buffers::VertexBuffer m_vertexBuffer;
         Rendering::Buffers::IndexBuffer m_indexBuffer;
         std::vector<Geometry::Vertex> m_vertices;
