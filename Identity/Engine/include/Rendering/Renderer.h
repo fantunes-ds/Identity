@@ -6,22 +6,24 @@
 #include <d3d11.h>
 #include <Tools/IdentityException.h>
 #include <wrl.h>
+#include "3DLoader/ObjectElements/Model.h"
+#include "Camera.h"
 
 namespace Engine::Rendering
 {
-    /*
+    /**
      @brief Contains the DirectX API
      */
-    class API_ENGINE Graphics
+    class API_ENGINE Renderer
     {
-        //All exception class for the Graphics class
+        //All exception class for the Renderer class
     public:
         class Exception : public Tools::IdentityException
         {
             using IdentityException::IdentityException;
         };
 
-        /*
+        /**
          @brief Get the exceptions for the functions wich returns an HRESULT
          */
         class HrException : public Exception
@@ -38,7 +40,7 @@ namespace Engine::Rendering
             HRESULT m_hr;
             std::string m_info;
         };
-        /*
+        /**
          @brief Get the information when the functions return a void
          */
         class InfoException : public Exception
@@ -51,8 +53,8 @@ namespace Engine::Rendering
         private:
             std::string m_info;
         };
-        /*
-         @brief Get the exceptions for the Graphics driver
+        /**
+         @brief Get the exceptions for the Renderer driver
          */
         class DeviceException : public HrException
         {
@@ -64,27 +66,38 @@ namespace Engine::Rendering
         };
 
     public:
-        Graphics(const HWND p_hwnd);
-        Graphics(const Graphics&) = delete;
-        Graphics& operator=(const Graphics&) = delete;
-        ~Graphics() = default;
+        Renderer(const HWND p_hwnd);
+        Renderer(const Renderer&) = delete;
+        Renderer& operator=(const Renderer&) = delete;
+        ~Renderer();
 
-        /*
+        /**
          @brief Switch the front buffer with the back buffer
          */
-        void EndFrame();
-        /*
+        void EndFrame() const;
+        /**
          @brief Reset the base colour of the back buffer
          */
-        void ClearBuffer(float p_red, float p_green, float p_blue);
+        void ClearBuffer(float p_red, float p_green, float p_blue) const;
 
+        //---------WIP--------
 
-        void DrawTriangle();
+        void LoadPixelShader(const std::wstring& p_path);
+        void LoadVertexShader(const std::wstring& p_path);
+
+        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() { return m_pDevice; };
+        [[nodiscard]] Microsoft::WRL::ComPtr<IDXGISwapChain>& GetSwapChain() { return m_pSwapChain; };
+        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() { return m_pContext; };
+        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& GetTarget() { return m_pTarget; };
+        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& GetDepthStencil() { return m_pDepthStencil; };
+        [[nodiscard]] Microsoft::WRL::ComPtr<ID3DBlob>& GetBlob() { return m_blob; };
 
     private:
         Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
         Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pContext;
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pTarget;
+        Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencil;
+        Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
     };
 }

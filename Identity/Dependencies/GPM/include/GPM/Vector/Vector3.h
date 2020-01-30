@@ -112,6 +112,9 @@ namespace GPM
         template<typename U>
         constexpr T Dot(const Vector3<U>& p_other) const;
 
+	    template<typename U>
+        constexpr static T Dot(const Vector3<T>& p_1, const Vector3<U>& p_2);
+
         /**
          * @brief Calculate the Angle between other vector and the current vector
          * @param p_other : The other vector you want calculate the Angle with

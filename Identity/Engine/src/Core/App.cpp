@@ -1,57 +1,88 @@
 #include <stdafx.h>
 #include <Core/App.h>
+#include <Tools/ImGUI/imgui.h>
+#include <Tools/ImGUI/imgui_impl_win32.h>
+#include <Tools/ImGUI/imgui_impl_dx11.h>
+#include <3DLoader/ObjectElements/Transform.h>
+#include <Events/IEventCallback.h>
+#include "Events/Event.h"
+#include <Systems/RenderSystem.h>
+#include <Input/Input.h>
 
 using namespace Engine::Core;
 
 App::App() : m_window(800, 600, "Engine Window")
 {
+    Input::Input::InitInput();
 }
 
 App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name)
 {
 }
 
-int App::Run()
+int App::Run() const
 {
+    Manager::ModelManager::GetInstance()->SetGraphicsDevice(m_window.GetRenderer().GetDevice());
+
+    Systems::RenderSystem renderSystem(&m_window.GetRenderer());
+    renderSystem.AddModel("../Engine/Resources/statue.obj", "statue");
+    renderSystem.AddModel("../Engine/Resources/Lambo.obj", "flab");
+
+    Rendering::Light dirLight{};
+    dirLight.position = Vector3F(-cos(0.0f) * 40.0f, 40.0f, -40.0f);
+    dirLight.ambient = Vector3F(0.1f, 0.1f, 0.1f);
+    dirLight.diffuse = Vector3F(1.0f, 1.0f, 0.95f);
+    dirLight.specular = Vector3F(1.0f, 1.0f, 0.95f);
+    dirLight.direction = Vector3F(-0.5f, -0.5f, -0.5f).Normalized();
+
+    renderSystem.AddLight(dirLight);
+
     while (true)
     {
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;
         }
-        DoFrame();
+        
+        DoFrame(renderSystem);
     }
 }
 
-void App::DoFrame()
+void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
 {
-    m_window.GetGraphics().ClearBuffer(1.0f, 1.0f, 1.0f);
+    m_window.GetRenderer().ClearBuffer(0.3f, 0.3f, 0.3f);
+    if (_INPUT->keyboard.IsKeyHeld('R'))
+        m_window.GetRenderer().ClearBuffer(1.0f, 0.0f, 0.0f);
 
-    if (m_window.keyboard.IsKeyHeld('R'))
-        m_window.GetGraphics().ClearBuffer(1.0f, 0.0f, 0.0f);
+    if (_INPUT->keyboard.IsKeyHeld('G'))
+        m_window.GetRenderer().ClearBuffer(0.0f, 1.0f, 0.0f);
 
-    if (m_window.keyboard.IsKeyHeld('G'))
-        m_window.GetGraphics().ClearBuffer(0.0f, 1.0f, 0.0f);
+    if (_INPUT->keyboard.IsKeyHeld('B'))
+        m_window.GetRenderer().ClearBuffer(0.0f, 0.0f, 1.0f);
 
-    if (m_window.keyboard.IsKeyHeld('B'))
-        m_window.GetGraphics().ClearBuffer(0.0f, 0.0f, 1.0f);
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
 
-    m_window.GetGraphics().DrawTriangle();
+    p_renderSystem.Update();
 
-    m_window.GetGraphics().EndFrame();
+    static bool show_demo_window = true;
+    ImGui::Begin("Identity UI Tools");
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-    if (m_window.keyboard.IsKeyDown(Input::Keyboard::D))
-        OutputDebugString("D was pressed\n");
-    else if (m_window.keyboard.IsKeyUp(Input::Keyboard::U))
-        OutputDebugString("U was released\n");
-    else if (m_window.keyboard.IsKeyHeld(Input::Keyboard::H))
-        OutputDebugString("H was held\n");
+    if (show_demo_window)
+    ImGui::ShowDemoWindow(&show_demo_window);
+    ImGui::End();
 
-    if (m_window.mouse.GetState() == Input::Mouse::MOVE)
+    ImGui::Render();
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
-        std::string output = std::to_string(m_window.mouse.GetPosX()) + '\n';
-        OutputDebugString(output.c_str());
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
     }
-    else if (m_window.mouse.GetState() == Input::Mouse::LEAVE)
-        m_window.SetTitle("Left screen\n");
+
+    m_window.GetRenderer().EndFrame();
 }

@@ -2,6 +2,15 @@
 #include <Export.h>
 #include <Rendering/Window.h>
 
+#include <Tools/ImGUI/ImGUIManager.h>
+#include <Managers/ModelManager.h>
+
+namespace Engine {
+    namespace Systems {
+        class RenderSystem;
+    }
+}
+
 namespace Engine::Core
 {
     /*
@@ -17,12 +26,13 @@ namespace Engine::Core
         App(const App&) = delete;
         App& operator=(const App&) = delete;
 
-        int Run();
+        int Run() const;
 
     private:
-        void DoFrame();
+        void DoFrame(Systems::RenderSystem& p_renderSystem) const;
 
     private:
+        Tools::UI::ImGUIManager m_imguiManager;
         Rendering::Window m_window;
         MSG m_msg;
         BOOL m_gResult;

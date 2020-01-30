@@ -5,7 +5,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(c
 {
     Engine::ObjectElements::Model model;
 
-    Assimp::Importer& importer = GetInstance()->m_importer;
+    Assimp::Importer importer;
 
     const aiScene* m_scene = importer.ReadFile(p_file,
         aiProcess_CalcTangentSpace
@@ -15,6 +15,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(c
         | aiProcess_GenNormals
         | aiProcess_FixInfacingNormals
         | aiProcess_GenUVCoords
+        | aiProcess_MakeLeftHanded
         | aiProcess_FlipUVs
     );
 
@@ -36,19 +37,19 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(c
 std::shared_ptr<Engine::ObjectElements::Mesh> Engine::ObjectLoader::LoadMesh(aiMesh* p_assimpMesh)
 {
     std::vector<Engine::Geometry::Vertex> vertices;
-    std::vector<uint32_t> indices;
+    std::vector<unsigned short> indices;
     int offset = 0;
 
     for (unsigned int vertIdx = 0u; vertIdx < p_assimpMesh->mNumVertices; vertIdx++)
     {
         Engine::Geometry::Vertex vertex;
 
-        aiVector3D vert = p_assimpMesh->mVertices[vertIdx];
-        aiVector3D norm = p_assimpMesh->mNormals[vertIdx];
+        const aiVector3D vert = p_assimpMesh->mVertices[vertIdx];
+        const aiVector3D norm = p_assimpMesh->mNormals[vertIdx];
 
         if (p_assimpMesh->HasTextureCoords(0))
         {
-            aiVector3D UV = p_assimpMesh->mTextureCoords[0][vertIdx];
+            const aiVector3D UV = p_assimpMesh->mTextureCoords[0][vertIdx];
             vertex.m_textCoords = GPM::Vector2D(UV.x, UV.y);
         }
 
@@ -71,20 +72,5 @@ std::shared_ptr<Engine::ObjectElements::Mesh> Engine::ObjectLoader::LoadMesh(aiM
     offset += p_assimpMesh->mNumVertices;
 
     return std::make_shared<Engine::ObjectElements::Mesh>(vertices, indices);
-}
-
-Engine::ObjectLoader::~ObjectLoader()
-{
-    delete m_instance;
-}
-
-Engine::ObjectLoader* Engine::ObjectLoader::GetInstance()
-{
-    if (m_instance == nullptr)
-    {
-        m_instance = new ObjectLoader();
-    }
-
-    return m_instance;
 }
 

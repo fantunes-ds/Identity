@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <map>
 
 #include <GPM/GPM.h>
 #include <irrKlang.h>
