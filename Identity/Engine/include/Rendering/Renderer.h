@@ -84,8 +84,6 @@ namespace Engine::Rendering
         void LoadPixelShader(const std::wstring& p_path);
         void LoadVertexShader(const std::wstring& p_path);
 
-        //void GenerateBuffers();
-
         Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
         Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pContext;

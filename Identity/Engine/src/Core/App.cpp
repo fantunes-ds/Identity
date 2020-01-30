@@ -23,7 +23,7 @@ int App::Run()
     Manager::ModelManager::GetInstance()->SetGraphicsDevice(m_window.GetRenderer().m_pDevice);
 
     Systems::RenderSystem renderSystem(&m_window.GetRenderer());
-    renderSystem.AddModel("../Engine/Resources/Lambo.obj", "statue");
+    renderSystem.AddModel("../Engine/Resources/statue.obj", "statue");
 
     while (true)
     {

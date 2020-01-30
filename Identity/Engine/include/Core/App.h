@@ -3,7 +3,7 @@
 #include <Rendering/Window.h>
 
 #include <Tools/ImGUI/ImGUIManager.h>
-#include <3DLoader/Manager/ModelManager.h>
+#include <Managers/ModelManager.h>
 
 namespace Engine {
     namespace Systems {

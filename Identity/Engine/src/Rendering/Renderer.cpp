@@ -6,7 +6,7 @@
 #include <Tools/ImGUI/imgui_impl_dx11.h>
 #include <3DLoader/ObjectElements/Model.h>
 #include <3DLoader/ObjectLoader.h>
-#include <3DLoader/Manager/ModelManager.h>
+#include <Managers/ModelManager.h>
 #include <Tools/DirectX/GraphicsMacros.h>
 #include <Rendering/Light.h>
 

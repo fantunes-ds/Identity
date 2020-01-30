@@ -220,12 +220,13 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\3DLoader\Manager\ModelManager.h" />
+    <ClInclude Include="include\Managers\GameObjectManager.h" />
+    <ClInclude Include="include\Managers\ModelManager.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Transform.h" />
+    <ClInclude Include="include\3DLoader\ObjectLoader.h" />
     <ClInclude Include="include\Core\App.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />
-    <ClInclude Include="include\3DLoader\ObjectLoader.h" />
     <ClInclude Include="include\Systems\IECSSystem.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\Events\Event.h" />
@@ -258,7 +259,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\3DLoader\Manager\ModelManager.cpp" />
+    <ClCompile Include="src\Managers\ModelManager.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Model.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Mesh.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Transform.cpp" />

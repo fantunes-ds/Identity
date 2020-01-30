@@ -50,11 +50,6 @@ namespace Engine::ObjectElements
         inline GPM::Quaternion& GetRotation() { return m_rotation; }
         inline Transform* GetParent() const { return m_parent; }
 
-        inline void bullshit()
-        {
-            m_forward.x += 50;
-        }
-
     private:
         void CalculateAxes();
 

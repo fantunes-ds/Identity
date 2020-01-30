@@ -1,6 +1,6 @@
 #include <stdafx.h>
 #include <Systems/RenderSystem.h>
-#include <3DLoader/Manager/ModelManager.h>
+#include <Managers/ModelManager.h>
 #include "Tools/DirectX/GraphicsMacros.h"
 #include "Rendering/Light.h"
 #include "Tools/ImGUI/imgui.h"
@@ -12,6 +12,16 @@ Engine::Systems::RenderSystem::RenderSystem(Rendering::Renderer* p_renderer): m_
 
 void Engine::Systems::RenderSystem::DrawScene()
 {
+    static float tmp = 0.0f;
+    //tmp += 0.05f;
+
+    if (!m_renderer)
+    {
+        std::string error("in Engine::Systems::RenderSystem::DrawScene(): cannot draw scene because Renderer* m_renderer is nullptr");
+        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+        return;
+    }
+
     HRESULT hr;
     float offset = 0;
 
@@ -32,7 +42,7 @@ void Engine::Systems::RenderSystem::DrawScene()
             };
 
             Vector3D quat{ 0, 1, 0 };
-            Matrix4F model = Matrix4F::CreateTransformation(Vector3F(0.0f, 0.0f, 4.0f),
+            Matrix4F model = Matrix4F::CreateTransformation(Vector3F(tmp, 0.0f, 4.0f),
                 Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(135.0f)),
                 Vector3F{ 0.02f, 0.02f, 0.02f });
 
