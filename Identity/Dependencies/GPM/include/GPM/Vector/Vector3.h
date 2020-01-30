@@ -112,13 +112,7 @@ namespace GPM
         template<typename U>
         constexpr T Dot(const Vector3<U>& p_other) const;
 
-        /**
-         * @brief DotProduct other vector to the current vector
-         * @param p_1 : The first vector you want calculate the Dot with
-         * @param p_2 : The second vector you want calculate the Dot with
-         * @return The dot result
-         */
-        template<typename U>
+	    template<typename U>
         constexpr static T Dot(const Vector3<T>& p_1, const Vector3<U>& p_2);
 
         /**

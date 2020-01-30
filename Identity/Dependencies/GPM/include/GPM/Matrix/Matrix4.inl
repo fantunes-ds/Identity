@@ -1,6 +1,5 @@
 #pragma once
 #include <GPM/Quaternion/Quaternion.h>
-#include <GPM/Vector/Vector3.h>
 #include <stdexcept>
 
 // struct GPM::Quaternion;
@@ -215,11 +214,10 @@ template<typename U>
 constexpr Matrix4<T> Matrix4<T>::CreateTransformation(const Vector3<U>& p_translate, const Quaternion& p_rotation, const Vector3<U>& p_scale)
 {
 	Matrix4<T> tmpTrans = CreateTranslation(p_translate);
-    tmpTrans.Transpose();
 	Matrix4<T> tmpRot = CreateRotation(p_rotation);
 	Matrix4<T> tmpScale = CreateScale(p_scale);
 
-	Matrix4<T> tmpMat = tmpScale * tmpRot * tmpTrans;
+	Matrix4<T> tmpMat = tmpTrans * tmpRot * tmpScale;
 
 	return tmpMat;
 }
@@ -284,11 +282,11 @@ Matrix4<T> Matrix4<T>::LookAt(const Vector3<T>& p_from, const Vector3<T>& p_to, 
     Vector3<T> up = Vector3<T>::Cross(right, forward);
 
     return Matrix4<T>{
-            right.x, up.x, forward.x, 0,
-            right.y, up.y, forward.y, 0,
-            right.z, up.z, forward.z, 0,
-            T{ 0 }, T{ 0 }, T{ 0 }, T{ 1 }
-    } * Matrix4F(1.0f, 0.0f, 0.0f, 0.0f,
+            right.x, up.x, forward.x, T{ 0 },
+            right.y, up.y, forward.y, T{ 0 },
+            right.z, up.z, forward.z, T{ 0 },
+            T{ 0 }, T{ 0 }, T{ 0 },   T{ 1 }
+        } * Matrix4F(1.0f, 0.0f, 0.0f, 0.0f,
                  0.0f, 1.0f, 0.0f, 0.0f,
                  0.0f, 0.0f, 1.0f, 0.0f,
                  -p_from.x, -p_from.y, -p_from.z, 1.0f);
