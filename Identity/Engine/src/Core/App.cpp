@@ -69,9 +69,6 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
     static bool show_demo_window = true;
     ImGui::Begin("Identity UI Tools");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-    if (show_demo_window)
-    ImGui::ShowDemoWindow(&show_demo_window);
     ImGui::End();
 
     ImGui::Render();

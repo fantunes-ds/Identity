@@ -140,7 +140,7 @@ void Engine::Systems::RenderSystem::DrawScene()
             GFX_THROW_INFO(m_renderer->GetDevice()->CreateInputLayout(inputDesc,
                 std::size(inputDesc),
                 m_renderer->GetBlob()->GetBufferPointer(),
-                m_renderer->GetBlob()->GetBufferSize(),
+                (UINT)m_renderer->GetBlob()->GetBufferSize(),
                 &inputLayout));
 
             m_renderer->GetContext()->IASetInputLayout(inputLayout.Get());
