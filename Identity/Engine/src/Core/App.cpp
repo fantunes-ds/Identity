@@ -20,9 +20,9 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 {
 }
 
-int App::Run()
+int App::Run() const
 {
-    Manager::ModelManager::GetInstance()->SetGraphicsDevice(m_window.GetRenderer().m_pDevice);
+    Manager::ModelManager::GetInstance()->SetGraphicsDevice(m_window.GetRenderer().GetDevice());
 
     Systems::RenderSystem renderSystem(&m_window.GetRenderer());
     renderSystem.AddModel("../Engine/Resources/statue.obj", "statue");
@@ -38,11 +38,9 @@ int App::Run()
     }
 }
 
-void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem)
+void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
 {
-    static float angle = 0;
-
-    m_window.GetRenderer().ClearBuffer(1.0f, 1.0f, 1.0f);
+    m_window.GetRenderer().ClearBuffer(0.0f, 0.0f, 0.0f);
     if (_INPUT->keyboard.IsKeyHeld('R'))
         m_window.GetRenderer().ClearBuffer(1.0f, 0.0f, 0.0f);
 
@@ -76,7 +74,5 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem)
         ImGui::RenderPlatformWindowsDefault();
     }
 
-
-    angle += 0.01;
     m_window.GetRenderer().EndFrame();
 }

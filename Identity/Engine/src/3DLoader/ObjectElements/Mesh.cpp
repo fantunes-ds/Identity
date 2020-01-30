@@ -9,13 +9,13 @@ Engine::ObjectElements::Mesh::Mesh(std::vector<Engine::Geometry::Vertex>& p_vert
 Engine::ObjectElements::Mesh::Mesh(const Mesh& p_other):
     m_vertices { p_other.m_vertices }, m_indices { p_other.m_indices } {}
 
-void Engine::ObjectElements::Mesh::GenerateBuffers(Microsoft::WRL::ComPtr<ID3D11Device> p_device)
+void Engine::ObjectElements::Mesh::GenerateBuffers(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device)
 {
     m_vertexBuffer.Generate(p_device, m_vertices);
     m_indexBuffer.Generate(p_device, m_indices);
 }
 
-void Engine::ObjectElements::Mesh::Bind(Microsoft::WRL::ComPtr<ID3D11DeviceContext> p_context)
+void Engine::ObjectElements::Mesh::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
 {
     m_vertexBuffer.Bind(p_context);
     m_indexBuffer.Bind(p_context);

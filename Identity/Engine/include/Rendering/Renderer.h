@@ -74,17 +74,26 @@ namespace Engine::Rendering
         /*
          @brief Switch the front buffer with the back buffer
          */
-        void EndFrame();
+        void EndFrame() const;
         /*
          @brief Reset the base colour of the back buffer
          */
-        void ClearBuffer(float p_red, float p_green, float p_blue);
+        void ClearBuffer(float p_red, float p_green, float p_blue) const;
 
         //---------WIP--------
 
         void LoadPixelShader(const std::wstring& p_path);
         void LoadVertexShader(const std::wstring& p_path);
 
+        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() { return m_pDevice; };
+        [[nodiscard]] Microsoft::WRL::ComPtr<IDXGISwapChain>& GetSwapChain() { return m_pSwapChain; };
+        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() { return m_pContext; };
+        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& GetTarget() { return m_pTarget; };
+        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& GetDepthStencil() { return m_pDepthStencil; };
+        [[nodiscard]] Microsoft::WRL::ComPtr<ID3DBlob>& GetBlob() { return m_blob; };
+
+    private:
+        //should be private / add get function
         Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
         Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pContext;

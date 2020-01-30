@@ -22,7 +22,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Manager::ModelManager::Ad
 {
     if (!m_graphicsDevice)
     {
-        std::string error("ModelManager::AddModel(const std::string& p_path, const std::string& p_name): Could not load model at " + p_path + " because ModelManager was not assigned a Graphics Device");
+        const std::string error("ModelManager::AddModel(const std::string& p_path, const std::string& p_name): Could not load model at " + p_path + " because ModelManager was not assigned a Graphics Device");
         MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
         return nullptr;
     }
@@ -33,11 +33,11 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Manager::ModelManager::Ad
     for (auto& mesh : model->GetMeshes())
         mesh->GenerateBuffers(m_graphicsDevice);
 
-    for (auto existingModel: m_models)
+    for (auto& existingModel: m_models)
     {
         if (*existingModel == *model)
         {
-            std::string error("ModelManager::AddModel(const std::string& p_path, const std::string& p_name): Did not load Model at " + p_path + " because it already has been loaded");
+            const std::string error("ModelManager::AddModel(const std::string& p_path, const std::string& p_name): Did not load Model at " + p_path + " because it already has been loaded");
             MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
             return nullptr;
         }

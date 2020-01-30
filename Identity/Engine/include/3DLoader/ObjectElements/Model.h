@@ -10,7 +10,7 @@ namespace Engine::ObjectElements
         Model() = default;
         ~Model() = default;
 
-        void AddMesh(std::shared_ptr<Mesh> p_mesh);
+        void AddMesh(const std::shared_ptr<Mesh>& p_mesh);
 
         std::vector<std::shared_ptr<Mesh>>& GetMeshes() { return m_meshes; }
         std::string& GetName() { return m_name; }

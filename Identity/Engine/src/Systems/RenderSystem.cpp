@@ -30,7 +30,7 @@ void Engine::Systems::RenderSystem::DrawScene()
     {
         for (auto& mesh : model.second->GetMeshes())
         {
-            mesh->Bind(m_renderer->m_pContext);
+            mesh->Bind(m_renderer->GetContext());
 
             // ********* WIP ********* //
 
@@ -82,10 +82,10 @@ void Engine::Systems::RenderSystem::DrawScene()
             vertexBufferDesc.StructureByteStride = 0u;
             D3D11_SUBRESOURCE_DATA VertexConstantShaderData = {};
             VertexConstantShaderData.pSysMem = &vcb;
-            GFX_THROW_INFO(m_renderer->m_pDevice->CreateBuffer(&vertexBufferDesc, &VertexConstantShaderData, &vertexConstantBuffer));
+            GFX_THROW_INFO(m_renderer->GetDevice()->CreateBuffer(&vertexBufferDesc, &VertexConstantShaderData, &vertexConstantBuffer));
 
             //bind the buffer to the shader
-            m_renderer->m_pContext->VSSetConstantBuffers(0u, 1u, vertexConstantBuffer.GetAddressOf());
+            m_renderer->GetContext()->VSSetConstantBuffers(0u, 1u, vertexConstantBuffer.GetAddressOf());
 
             struct PixelConstantBuffer
             {
@@ -123,18 +123,18 @@ void Engine::Systems::RenderSystem::DrawScene()
 
             D3D11_SUBRESOURCE_DATA PixelConstantShaderData = {};
             PixelConstantShaderData.pSysMem = &pcb;
-            GFX_THROW_INFO(m_renderer->m_pDevice->CreateBuffer(&pixelBufferDesc, &PixelConstantShaderData, &pixelConstantBuffer));
+            GFX_THROW_INFO(m_renderer->GetDevice()->CreateBuffer(&pixelBufferDesc, &PixelConstantShaderData, &pixelConstantBuffer));
 
             //bind the buffer to the shader
-            m_renderer->m_pContext->PSSetConstantBuffers(0u, 1u, pixelConstantBuffer.GetAddressOf());
+            m_renderer->GetContext()->PSSetConstantBuffers(0u, 1u, pixelConstantBuffer.GetAddressOf());
 
             m_renderer->LoadPixelShader(L"../Engine/Resources/Shaders/PixelShader.cso");
             m_renderer->LoadVertexShader(L"../Engine/Resources/Shaders/VertexShader.cso");
 
-            m_renderer->m_pContext->OMSetRenderTargets(1u, m_renderer->m_pTarget.GetAddressOf(), m_renderer->m_pDepthStencil.Get());
+            m_renderer->GetContext()->OMSetRenderTargets(1u, m_renderer->GetTarget().GetAddressOf(), m_renderer->GetDepthStencil().Get());
 
             //set primitive draw
-            m_renderer->m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+            m_renderer->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
             //create input layout
             Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
@@ -144,17 +144,17 @@ void Engine::Systems::RenderSystem::DrawScene()
                 {"TxCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12u, D3D11_INPUT_PER_VERTEX_DATA, 0},
                 {"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20u, D3D11_INPUT_PER_VERTEX_DATA, 0}
             };
-            GFX_THROW_INFO(m_renderer->m_pDevice->CreateInputLayout(inputDesc,
+            GFX_THROW_INFO(m_renderer->GetDevice()->CreateInputLayout(inputDesc,
                 std::size(inputDesc),
-                m_renderer->m_blob->GetBufferPointer(),
-                m_renderer->m_blob->GetBufferSize(),
+                m_renderer->GetBlob()->GetBufferPointer(),
+                m_renderer->GetBlob()->GetBufferSize(),
                 &inputLayout));
 
-            m_renderer->m_pContext->IASetInputLayout(inputLayout.Get());
+            m_renderer->GetContext()->IASetInputLayout(inputLayout.Get());
 
-            ImGui_ImplDX11_Init(m_renderer->m_pDevice.Get(), m_renderer->m_pContext.Get());
+            ImGui_ImplDX11_Init(m_renderer->GetDevice().Get(), m_renderer->GetContext().Get());
 
-            GFX_THROW_INFO_ONLY(m_renderer->m_pContext->DrawIndexed(static_cast<UINT>(mesh->m_indices.size()), 0u, 0u));
+            GFX_THROW_INFO_ONLY(m_renderer->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
         }
         offset += 3.0f;
     }
@@ -169,8 +169,8 @@ uint32_t Engine::Systems::RenderSystem::AddModel(const std::string& p_path, cons
 {
     if (Manager::ModelManager::GetInstance()->FindModel(p_name))
     {
-        std::string error("in Engine::Systems::RenderSystem::AddModel(const std::string& p_path, const std::string& p_name): Could not add model with name " +
-            p_name + " because it already exists");
+        const std::string error("in Engine::Systems::RenderSystem::AddModel(const std::string& p_path, const std::string& p_name): Could not add model with name " +
+                                p_name + " because it already exists");
         MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
         return -1;
     }
