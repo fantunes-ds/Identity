@@ -20,3 +20,25 @@ void Engine::ObjectElements::Mesh::Bind(Microsoft::WRL::ComPtr<ID3D11DeviceConte
     m_vertexBuffer.Bind(p_context);
     m_indexBuffer.Bind(p_context);
 }
+
+bool Engine::ObjectElements::Mesh::operator==(const Mesh& p_other) const
+{
+    if (m_vertices.size() != p_other.m_vertices.size() || m_indices != p_other.m_indices)
+        return false;
+
+    if (m_vertexBuffer == p_other.m_vertexBuffer)
+        return true;
+
+    return false;
+}
+
+bool Engine::ObjectElements::Mesh::operator!=(const Mesh& p_other) const
+{
+    if (m_vertices.size() != p_other.m_vertices.size() || m_indices != p_other.m_indices)
+        return true;
+
+    if (m_vertexBuffer == p_other.m_vertexBuffer)
+        return false;
+
+    return true;
+}

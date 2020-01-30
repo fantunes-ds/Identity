@@ -16,7 +16,7 @@ void Engine::Rendering::Buffers::VertexBuffer::Generate(Microsoft::WRL::ComPtr<I
 
     subData.pSysMem = p_vertices.data();
     GFX_THROW_INFO(p_device->CreateBuffer(&descriptor, &subData, &buffer));
-
+    p_device->CreateBuffer(&descriptor, &subData, &buffer);
     stride = sizeof(Geometry::Vertex);
     offset = 0u;
 }
@@ -24,4 +24,12 @@ void Engine::Rendering::Buffers::VertexBuffer::Generate(Microsoft::WRL::ComPtr<I
 void Engine::Rendering::Buffers::VertexBuffer::Bind(Microsoft::WRL::ComPtr<ID3D11DeviceContext> p_context)
 {
     p_context->IASetVertexBuffers(0u, 1u, buffer.GetAddressOf(), &stride, &offset);
+}
+
+bool Engine::Rendering::Buffers::VertexBuffer::operator==(const VertexBuffer& p_other) const
+{
+    if (stride == p_other.stride && offset == p_other.offset)
+        return true;
+
+    return false;
 }

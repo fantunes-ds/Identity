@@ -7,6 +7,7 @@
 #include <Tools/IdentityException.h>
 #include <wrl.h>
 #include "3DLoader/ObjectElements/Model.h"
+#include "Camera.h"
 
 namespace Engine::Rendering
 {
@@ -79,24 +80,16 @@ namespace Engine::Rendering
          */
         void ClearBuffer(float p_red, float p_green, float p_blue);
 
-        void DrawObject(std::string p_name, float angle, Vector3F p_pos);
-
         //---------WIP--------
-        void CreateVertexBuffer(Engine::ObjectElements::Mesh* p_mesh) const;
-        void CreateIndexBuffer(Engine::ObjectElements::Mesh* p_mesh) const;
 
         void LoadPixelShader(const std::wstring& p_path);
         void LoadVertexShader(const std::wstring& p_path);
 
-        void GenerateBuffers();
-
         Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
-    private:
         Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pContext;
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pTarget;
         Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencil;
         Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
-        // std::shared_ptr<ObjectElements::Model> m_mod;
     };
 }

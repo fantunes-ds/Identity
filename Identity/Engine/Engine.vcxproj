@@ -220,15 +220,21 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\3DLoader\Manager\ModelManager.h" />
+    <ClInclude Include="include\Managers\GameObjectManager.h" />
+    <ClInclude Include="include\Managers\ModelManager.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Transform.h" />
-    <ClInclude Include="include\Core\App.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />
+    <ClInclude Include="include\Systems\IECSSystem.h" />
+    <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\3DLoader\ObjectLoader.h" />
+    <ClInclude Include="include\Core\App.h" />
     <ClInclude Include="include\Events\Event.h" />
     <ClInclude Include="include\Events\IEventCallback.h" />
     <ClInclude Include="include\Export.h" />
+    <ClInclude Include="include\Geometry\Vertex.h" />
+    <ClInclude Include="include\Input\Input.h" />
+    <ClInclude Include="include\Input\Keyboard.h" />
     <ClInclude Include="include\Input\Mouse.h" />
     <ClInclude Include="include\Objects\GameObject.h" />
     <ClInclude Include="include\Rendering\Buffers\IndexBuffer.h" />
@@ -237,8 +243,6 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Rendering\Renderer.h" />
     <ClInclude Include="include\Rendering\Light.h" />
     <ClInclude Include="include\Rendering\Window.h" />
-    <ClInclude Include="include\Geometry\Vertex.h" />
-    <ClInclude Include="include\Input\Keyboard.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\TestDependencies.h" />
     <ClInclude Include="include\Tools\DirectX\dxerr.h" />
@@ -256,20 +260,23 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\3DLoader\Manager\ModelManager.cpp" />
+    <ClCompile Include="src\Core\App.cpp" />
+    <ClCompile Include="src\Managers\ModelManager.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Model.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Mesh.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Transform.cpp" />
     <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
+    <ClInclude Include="src\Core\App.h" />
+    <ClCompile Include="src\Systems\RenderSystem.cpp" />
     <ClCompile Include="src\Events\Event.cpp" />
+    <ClCompile Include="src\Input\Input.cpp" />
+    <ClCompile Include="src\Input\Mouse.cpp" />
+    <ClCompile Include="src\Input\Keyboard.cpp" />
     <ClCompile Include="src\Rendering\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Rendering\Buffers\VertexBuffer.cpp" />
     <ClCompile Include="src\Rendering\Camera.cpp" />
-    <ClCompile Include="src\Input\Mouse.cpp" />
     <ClCompile Include="src\Rendering\Renderer.cpp" />
-    <ClCompile Include="src\Core\App.cpp" />
     <ClCompile Include="src\Rendering\Window.cpp" />
-    <ClCompile Include="src\Input\Keyboard.cpp" />
     <ClCompile Include="src\TestDependencies.cpp" />
     <ClCompile Include="src\Tools\DirectX\dxerr.cpp" />
     <ClCompile Include="src\Tools\IdentityException.cpp" />

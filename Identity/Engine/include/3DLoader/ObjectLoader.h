@@ -14,10 +14,9 @@ namespace Engine
     {
     public:
         ObjectLoader() = delete;
-        ~ObjectLoader();
+        ~ObjectLoader() = delete;
         ObjectLoader(const ObjectLoader&) = delete;
 
-        static ObjectLoader* GetInstance();
         static std::shared_ptr<ObjectElements::Model> LoadModel(const std::string& p_file);
         static std::shared_ptr<ObjectElements::Mesh> LoadMesh(aiMesh* p_assimpMesh);
     };

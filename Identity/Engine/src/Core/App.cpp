@@ -6,11 +6,14 @@
 #include <3DLoader/ObjectElements/Transform.h>
 #include <Events/IEventCallback.h>
 #include "Events/Event.h"
+#include <Systems/RenderSystem.h>
+#include <Input/Input.h>
 
 using namespace Engine::Core;
 
 App::App() : m_window(800, 600, "Engine Window")
 {
+    Input::Input::InitInput();
 }
 
 App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name)
@@ -19,42 +22,48 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 
 int App::Run()
 {
-    Manager::ModelManager::GetInstance()->AddModel("../Engine/Resources/statue.obj", "statue");
-    Manager::ModelManager::GetInstance()->AddModel("../Engine/Resources/cube.obj", "cube");
+    Manager::ModelManager::GetInstance()->SetGraphicsDevice(m_window.GetRenderer().m_pDevice);
 
-    m_window.GetRenderer().GenerateBuffers();
+    Systems::RenderSystem renderSystem(&m_window.GetRenderer());
+    renderSystem.AddModel("../Engine/Resources/statue.obj", "statue");
+
     while (true)
     {
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;
         }
-        DoFrame();
+        
+        DoFrame(renderSystem);
     }
 }
 
-void App::DoFrame()
+void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem)
 {
     static float angle = 0;
 
     m_window.GetRenderer().ClearBuffer(1.0f, 1.0f, 1.0f);
-
-    if (m_window.keyboard.IsKeyHeld('R'))
+    if (_INPUT->keyboard.IsKeyHeld('R'))
         m_window.GetRenderer().ClearBuffer(1.0f, 0.0f, 0.0f);
 
-    if (m_window.keyboard.IsKeyHeld('G'))
+    if (_INPUT->keyboard.IsKeyHeld('G'))
         m_window.GetRenderer().ClearBuffer(0.0f, 1.0f, 0.0f);
 
-    if (m_window.keyboard.IsKeyHeld('B'))
+    if (_INPUT->keyboard.IsKeyHeld('B'))
         m_window.GetRenderer().ClearBuffer(0.0f, 0.0f, 1.0f);
 
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    m_window.GetRenderer().DrawObject("statue", angle, Vector3F(0.0f, 0.0f, 4.0f));
+    p_renderSystem.Update();
+
+    static bool show_demo_window = true;
     ImGui::Begin("Identity UI Tools");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+    if (show_demo_window)
+    ImGui::ShowDemoWindow(&show_demo_window);
     ImGui::End();
 
     ImGui::Render();
@@ -67,7 +76,7 @@ void App::DoFrame()
         ImGui::RenderPlatformWindowsDefault();
     }
 
-    m_window.GetRenderer().EndFrame();
 
     angle += 0.01;
+    m_window.GetRenderer().EndFrame();
 }
