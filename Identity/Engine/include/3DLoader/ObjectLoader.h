@@ -9,7 +9,7 @@
 
 namespace Engine
 {
-    /*
+    /**
      * @brief static class that uses an outside dependency of our choice to load object files
      */
     class API_ENGINE ObjectLoader

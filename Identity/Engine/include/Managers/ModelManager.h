@@ -6,7 +6,7 @@
 
 namespace Engine::Manager
 {
-    /*
+    /**
      * @brief Singleton data holder that stores all loaded Models and Meshes.
      */
     class API_ENGINE ModelManager
@@ -18,14 +18,14 @@ namespace Engine::Manager
 
         static ModelManager* GetInstance();
 
-        /*
+        /**
          *@brief Load a Model and store it in ModelManager.
          *@return Pointer to the newly added Model.
          */
 
         std::shared_ptr<Engine::ObjectElements::Model> AddModel(const std::string& p_path, const std::string& p_name);
 
-        /*
+        /**
          * @brief Finds an already loaded Model according to name.
          * @return Model that has the name mentioned as a parameter.
          */
