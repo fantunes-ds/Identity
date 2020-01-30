@@ -44,7 +44,7 @@ namespace Engine::Rendering
 
         Vector3F m_right;
         Vector3F m_up;
-        Vector3F m_forward{ 0.0f, 0.0f, -1.0f };
+        Vector3F m_forward{ 0.0f, 0.0f, 1.0f };
 
         float m_speed{ 0.05f };
         float m_sensitivity{ 0.05f };
