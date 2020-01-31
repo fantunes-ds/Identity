@@ -13,3 +13,5 @@ Utilisation :
 Bugs connus : 
 • Oui, il y a un objet à l'intérieur de l'autre. Nous n'avons pas encore implémenté notre classe Transform/GameObject, ce sera fait très bientôt.
 • Le slider de lumière est inversé pour la position X.
+
+Alpha Tested
