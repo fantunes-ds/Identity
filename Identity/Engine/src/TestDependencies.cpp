@@ -1,6 +1,6 @@
 #include <stdafx.h>
 #include <TestDependencies.h>
-
+#include <3DLoader/ObjectLoader.h>
 
 void Test::TestIrrKlang()
 {
@@ -11,22 +11,13 @@ void Test::TestIrrKlang()
 void Test::TestGPM()
 {
     GPM::Matrix3F m;
+	GPM::Vector2D e(1, 5);
+	GPM::Vector2D a = e;
+	
     std::cout << m.identity;
 }
 
 void Test::TestAssimp()
-{
-	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile("../Engine/Resources/Box.fbx", 
-		aiProcess_GenSmoothNormals |
-		aiProcess_CalcTangentSpace |
-		aiProcess_Triangulate |
-		aiProcess_JoinIdenticalVertices |
-		aiProcess_SortByPType);
+{	
 
-	if (!scene)
-		std::cout << "Assimp error loading file: " << importer.GetErrorString() << std::endl;
-	else
-		std::cout << "Assimp successfully loaded file " << "\n";
-	
 }

@@ -112,6 +112,9 @@ namespace GPM
         template<typename U>
         constexpr T Dot(const Vector3<U>& p_other) const;
 
+	    template<typename U>
+        constexpr static T Dot(const Vector3<T>& p_1, const Vector3<U>& p_2);
+
         /**
          * @brief Calculate the Angle between other vector and the current vector
          * @param p_other : The other vector you want calculate the Angle with
@@ -302,6 +305,14 @@ namespace GPM
         template<typename U>
         constexpr bool operator!=(const Vector3<U>& p_other) const;
 
+
+        /**
+         * @brief Return the value aliased with index, just like arrays
+         * @param p_index The index to access. 0 = x, 1 = y, 2 = z
+         * @return Return the value associated at the indicated index
+         * @note Vector4 representation is as follow : [x, y, z]
+         */
+        constexpr T operator[](const int p_index) const;
 	};
 
     template <typename T>
