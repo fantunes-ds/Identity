@@ -13,9 +13,6 @@ Engine::Systems::RenderSystem::RenderSystem(Rendering::Renderer* p_renderer): m_
 
 void Engine::Systems::RenderSystem::DrawScene()
 {
-    static float tmp = 0.0f;
-    //tmp += 0.05f;
-
     if (!m_renderer)
     {
         std::string error("in Engine::Systems::RenderSystem::DrawScene(): cannot draw scene because Renderer* m_renderer is nullptr");
@@ -24,7 +21,6 @@ void Engine::Systems::RenderSystem::DrawScene()
     }
 
     HRESULT hr;
-    float offset = 0;
 
     std::shared_ptr<Rendering::Light> light = m_lights.begin()->second;
 
@@ -34,7 +30,14 @@ void Engine::Systems::RenderSystem::DrawScene()
         ImGui::SliderFloat("LightPosX", &light->position.x, -40.0f, 40.0f, "%.1f");
         ImGui::SliderFloat("LightPosY", &light->position.y, -40.0f, 40.0f, "%.1f");
         ImGui::SliderFloat("LightPosZ", &light->position.z, -40.0f, 40.0f, "%.1f");
+        ImGui::SliderFloat("LightColX", &light->color.x, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColY", &light->color.y, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColZ", &light->color.z, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("Ambient LightX", &light->ambient.x, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("Ambient LightY", &light->ambient.y, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("Ambient LightZ", &light->ambient.z, 0.0f, 1.0f, "%.1f");
     }ImGui::End();
+
     for (auto& model : m_models)
     {
         for (auto& mesh : model.second->GetMeshes())
@@ -97,12 +100,17 @@ void Engine::Systems::RenderSystem::DrawScene()
             struct PixelConstantBuffer
             {
                 Rendering::Light lightSource;
-                float lightShininess;
                 Vector3F cameraPos;
-                float padding;
             };  
 
-            const PixelConstantBuffer pcb{ light->position, light->ambient, light->diffuse, light->specular};
+            const PixelConstantBuffer pcb{ light->position,
+                                          light->ambient,
+                                          light->diffuse,
+                                          light->specular,
+                                          light->direction,
+                                          light->color,
+                                          64.0f,
+                                          m_camera.GetPosition()};
 
             Microsoft::WRL::ComPtr<ID3D11Buffer> pixelConstantBuffer;
             D3D11_BUFFER_DESC                    pixelBufferDesc = {};
@@ -148,7 +156,6 @@ void Engine::Systems::RenderSystem::DrawScene()
 
             GFX_THROW_INFO_ONLY(m_renderer->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
         }
-        offset += 3.0f;
     }
 }
 

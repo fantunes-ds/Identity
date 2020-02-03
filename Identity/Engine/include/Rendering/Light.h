@@ -4,10 +4,12 @@ namespace Engine::Rendering
 {
     struct Light
     {
-        Vector3F position;
-        Vector3F ambient;
-        Vector3F diffuse;
-        Vector3F specular;
-        Vector3F direction;
+        Vector4F position;
+        Vector4F ambient;
+        Vector4F diffuse;
+        Vector4F specular;
+        Vector4F direction;
+        Vector4F color;
+        float shininess;
     };
 }
