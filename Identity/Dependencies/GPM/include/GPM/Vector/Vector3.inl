@@ -281,9 +281,9 @@ namespace GPM
     template <typename U>
     constexpr Vector3<T>& Vector3<T>::operator=(const Vector3<U>& p_other)
     {
-        x = static_cast<T>(p_other.x);
-        y = static_cast<T>(p_other.y);
-        z = static_cast<T>(p_other.z);
+        x = p_other.x;
+        y = p_other.y;
+        z = p_other.z;
 
         return *this;
     }

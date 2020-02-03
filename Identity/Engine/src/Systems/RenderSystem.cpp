@@ -53,7 +53,7 @@ void Engine::Systems::RenderSystem::DrawScene()
             };
 
             Vector3D quat{ 0, 1, 0 };
-            Matrix4F model = Matrix4F::CreateTransformation(Vector3F(tmp, 0.0f, 0.0f),
+            Matrix4F model = Matrix4F::CreateTransformation(Vector3F(0.0f, 0.0f, 0.0f),
                 Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(0.0f)),
                 Vector3F{ 0.02f, 0.02f, 0.02f });
 
@@ -65,13 +65,12 @@ void Engine::Systems::RenderSystem::DrawScene()
             if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
                 m_camera.m_position -= m_camera.m_forward * m_camera.m_speed;
             if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
-                m_camera.m_position += Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
-            if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
                 m_camera.m_position -= Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
+            if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
+                m_camera.m_position += Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
 
             Matrix4F view = m_camera.GetViewMatrix();
             Matrix4F perspective = m_camera.GetPerspectiveMatrix();
-
 
             model.Transpose();
             view.Transpose();

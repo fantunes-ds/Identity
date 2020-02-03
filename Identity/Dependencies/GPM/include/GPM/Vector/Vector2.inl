@@ -58,8 +58,8 @@ template<typename T>
 template<typename U>
 inline constexpr GPM::Vector2<T>& GPM::Vector2<T>::operator=(const Vector2<U>& p_other)
 {
-	x = static_cast<T>(p_other.x);
-	y = static_cast<T>(p_other.y);
+	x = p_other.x;
+	y = p_other.y;
 
 	return *this;
 }
