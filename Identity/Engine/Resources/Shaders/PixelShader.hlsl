@@ -35,8 +35,10 @@ float4 main(VS_OUT f_in) : SV_TARGET
     float3 viewDir = normalize(cameraPos - f_in.worldPos);
     float3 reflectDir = reflect(-lightDir, f_in.norm);
     
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), light.shininess);
-    float3 specular = light.specular * spec * light.color;
+    float3 halfwayDir = normalize(lightDir + viewDir);
+    
+    float spec = pow(max(dot(viewDir, halfwayDir), 0.0), light.shininess);
+    float3 specular = spec * light.color;
     
     f_in.vertexColor *= float4(light.ambient + diffuse + specular, 1) * f_in.vertexColor;
     return f_in.vertexColor;
