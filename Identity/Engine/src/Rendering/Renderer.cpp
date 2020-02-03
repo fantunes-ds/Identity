@@ -104,7 +104,7 @@ Renderer::~Renderer()
     ImGui_ImplDX11_Shutdown();
 }
 
-void Renderer::EndFrame()
+void Renderer::EndFrame() const
 {
     HRESULT hr;
 
@@ -121,7 +121,7 @@ void Renderer::EndFrame()
     }
 }
 
-void Renderer::ClearBuffer(float p_red, float p_green, float p_blue)
+void Renderer::ClearBuffer(float p_red, float p_green, float p_blue) const
 {
     const float colour[] = { p_red, p_green, p_blue, 1.0f };
     m_pContext->ClearRenderTargetView(m_pTarget.Get(), colour);

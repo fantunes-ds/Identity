@@ -72,7 +72,7 @@ Renderer& Window::GetRenderer() const
     return *m_renderer;
 }
 
-void Window::SetTitle(const std::string& title)
+void Window::SetTitle(const std::string& title) const
 {
     SetWindowText(m_hwnd, title.c_str());
 }
@@ -95,7 +95,7 @@ std::optional<int> Window::ProcessMessage()
     return {};
 }
 
-LRESULT Window::HandleMsgSetup(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)
+LRESULT Window::HandleMsgSetup(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam)
 {
     if (p_msg == WM_NCCREATE)
     {
@@ -108,14 +108,14 @@ LRESULT Window::HandleMsgSetup(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM 
     return DefWindowProc(p_hwnd, p_msg, p_wParam, p_lParam);
 }
 
-LRESULT Window::HandleMsgThunk(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)
+LRESULT Window::HandleMsgThunk(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam)
 {
     Window* const window = reinterpret_cast<Window*>(GetWindowLongPtr(p_hwnd, GWLP_USERDATA));
     return window->HandleMsg(p_hwnd, p_msg, p_wParam, p_lParam);
 }
 
-extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-LRESULT Window::HandleMsg(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
+LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam) const
 {
     if (ImGui_ImplWin32_WndProcHandler(p_hwnd, p_msg, p_wParam, p_lParam))
         return true;

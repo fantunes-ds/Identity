@@ -38,7 +38,7 @@ namespace Engine::Rendering
          @brief Return the DirectX context of the window
          */
         [[nodiscard]] Engine::Rendering::Renderer& GetRenderer() const;
-        void SetTitle(const std::string& title);
+        void SetTitle(const std::string& title) const;
         /*
          @brief Check if there is a message in the queue
          If there is no message, the method will return an empty optional and continue
@@ -46,9 +46,9 @@ namespace Engine::Rendering
          */
         static std::optional<int> ProcessMessage();
     private:
-        static LRESULT CALLBACK HandleMsgSetup(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
-        static LRESULT CALLBACK HandleMsgThunk(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
-        LRESULT HandleMsg(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
+        static LRESULT CALLBACK HandleMsgSetup(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam);
+        static LRESULT CALLBACK HandleMsgThunk(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam);
+        LRESULT HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam) const;
 
         int m_width;
         int m_height;

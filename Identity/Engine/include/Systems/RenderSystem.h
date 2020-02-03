@@ -17,10 +17,16 @@ namespace Engine::Systems
         void Update() override;
 
         /**
-         * @brief
-         * @return returns the new model's id if successful, -1 if unsuccessful
+         * @brief Adds a model to the model container.
+         * @return returns the new model's id if successful, -1 if unsuccessful.
          */
         uint32_t AddModel(const std::string& p_path, const std::string& p_name);
+
+        /**
+         * @brief Adds a light to the light container.
+         * @return returns the new light's id if successful, -1 if unsuccessful.
+         */
+        uint32_t AddLight(Rendering::Light& p_light);
 
     private:
         std::map<int, std::shared_ptr<ObjectElements::Model>> m_models;

@@ -10,15 +10,22 @@ namespace Engine::Rendering::Buffers
 {
     struct API_ENGINE VertexBuffer
     {
-        void Generate(Microsoft::WRL::ComPtr<ID3D11Device> p_device, std::vector<Geometry::Vertex> p_vertices);
-        void Bind(Microsoft::WRL::ComPtr<ID3D11DeviceContext> p_context);
+        void Generate(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, std::vector<Geometry::Vertex>& p_vertices);
+        void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
 
         bool operator==(const VertexBuffer& p_other) const;
 
-        Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
-        D3D11_SUBRESOURCE_DATA subData;
-        D3D11_BUFFER_DESC descriptor;
-        UINT stride;
-        UINT offset;
+        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11Buffer>& GetBuffer() { return m_buffer; }
+        [[nodiscard]] D3D11_SUBRESOURCE_DATA& GetSubData() { return m_subData; }
+        [[nodiscard]] D3D11_BUFFER_DESC& GetDescriptor() { return m_descriptor; }
+        [[nodiscard]] UINT& GetStrides() { return m_stride; }
+        [[nodiscard]] UINT& GetOffset() { return m_offset; }
+
+    private:
+        Microsoft::WRL::ComPtr<ID3D11Buffer> m_buffer;
+        D3D11_SUBRESOURCE_DATA m_subData;
+        D3D11_BUFFER_DESC m_descriptor;
+        UINT m_stride;
+        UINT m_offset;
     };
 }

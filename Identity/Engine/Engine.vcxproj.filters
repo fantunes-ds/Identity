@@ -132,6 +132,9 @@
     <ClInclude Include="src\Core\App.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Tools\IDCounter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\TestDependencies.cpp">
