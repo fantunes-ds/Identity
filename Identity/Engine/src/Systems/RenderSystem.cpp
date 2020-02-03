@@ -13,9 +13,6 @@ Engine::Systems::RenderSystem::RenderSystem(Rendering::Renderer* p_renderer): m_
 
 void Engine::Systems::RenderSystem::DrawScene()
 {
-    static float tmp = 0.0f;
-    //tmp += 0.05f;
-
     if (!m_renderer)
     {
         std::string error("in Engine::Systems::RenderSystem::DrawScene(): cannot draw scene because Renderer* m_renderer is nullptr");
@@ -24,7 +21,6 @@ void Engine::Systems::RenderSystem::DrawScene()
     }
 
     HRESULT hr;
-    float offset = 0;
 
     std::shared_ptr<Rendering::Light> light = m_lights.begin()->second;
 
@@ -34,7 +30,14 @@ void Engine::Systems::RenderSystem::DrawScene()
         ImGui::SliderFloat("LightPosX", &light->position.x, -40.0f, 40.0f, "%.1f");
         ImGui::SliderFloat("LightPosY", &light->position.y, -40.0f, 40.0f, "%.1f");
         ImGui::SliderFloat("LightPosZ", &light->position.z, -40.0f, 40.0f, "%.1f");
+        ImGui::SliderFloat("LightColX", &light->color.x, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColY", &light->color.y, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColZ", &light->color.z, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("Ambient LightX", &light->ambient.x, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("Ambient LightY", &light->ambient.y, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("Ambient LightZ", &light->ambient.z, 0.0f, 1.0f, "%.1f");
     }ImGui::End();
+
     for (auto& model : m_models)
     {
         for (auto& mesh : model.second->GetMeshes())
@@ -53,7 +56,7 @@ void Engine::Systems::RenderSystem::DrawScene()
             };
 
             Vector3D quat{ 0, 1, 0 };
-            Matrix4F model = Matrix4F::CreateTransformation(Vector3F(tmp, 0.0f, 0.0f),
+            Matrix4F model = Matrix4F::CreateTransformation(Vector3F(0.0f, 0.0f, 0.0f),
                 Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(0.0f)),
                 Vector3F{ 0.02f, 0.02f, 0.02f });
 
@@ -65,13 +68,12 @@ void Engine::Systems::RenderSystem::DrawScene()
             if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
                 m_camera.m_position -= m_camera.m_forward * m_camera.m_speed;
             if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
-                m_camera.m_position += Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
-            if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
                 m_camera.m_position -= Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
+            if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
+                m_camera.m_position += Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
 
             Matrix4F view = m_camera.GetViewMatrix();
             Matrix4F perspective = m_camera.GetPerspectiveMatrix();
-
 
             model.Transpose();
             view.Transpose();
@@ -98,12 +100,17 @@ void Engine::Systems::RenderSystem::DrawScene()
             struct PixelConstantBuffer
             {
                 Rendering::Light lightSource;
-                float lightShininess;
                 Vector3F cameraPos;
-                float padding;
             };  
 
-            const PixelConstantBuffer pcb{ light->position, light->ambient, light->diffuse, light->specular};
+            const PixelConstantBuffer pcb{ light->position,
+                                          light->ambient,
+                                          light->diffuse,
+                                          light->specular,
+                                          light->direction,
+                                          light->color,
+                                          64.0f,
+                                          m_camera.GetPosition()};
 
             Microsoft::WRL::ComPtr<ID3D11Buffer> pixelConstantBuffer;
             D3D11_BUFFER_DESC                    pixelBufferDesc = {};
@@ -140,7 +147,7 @@ void Engine::Systems::RenderSystem::DrawScene()
             GFX_THROW_INFO(m_renderer->GetDevice()->CreateInputLayout(inputDesc,
                 std::size(inputDesc),
                 m_renderer->GetBlob()->GetBufferPointer(),
-                m_renderer->GetBlob()->GetBufferSize(),
+                (UINT)m_renderer->GetBlob()->GetBufferSize(),
                 &inputLayout));
 
             m_renderer->GetContext()->IASetInputLayout(inputLayout.Get());
@@ -149,7 +156,6 @@ void Engine::Systems::RenderSystem::DrawScene()
 
             GFX_THROW_INFO_ONLY(m_renderer->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
         }
-        offset += 3.0f;
     }
 }
 

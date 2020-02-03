@@ -13,8 +13,8 @@ void Engine::Rendering::Camera::UpdateVectors()
 
     m_direction = Vector3F(m_position - m_target).Normalized();
     const Vector3F worldUp = Vector3F(0.0f, 1.0f, 0.0f);
-    m_right = Vector3F(Vector3F::Cross(worldUp, m_direction));
-    m_up = Vector3F::Cross(m_direction, m_right);
+    m_right = Vector3F(Vector3F::Cross(worldUp, m_forward * -1));
+    m_up = Vector3F::Cross(m_forward * - 1, m_right);
 }
 
 Matrix4F Engine::Rendering::Camera::GetPerspectiveMatrix() const noexcept

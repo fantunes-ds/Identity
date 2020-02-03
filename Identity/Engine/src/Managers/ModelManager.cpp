@@ -28,6 +28,12 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Manager::ModelManager::Ad
     }
 
     std::shared_ptr<ObjectElements::Model> model = ObjectLoader::LoadModel(p_path);
+    if (model == nullptr)
+    {
+		const std::string error("ModelManager::AddModel(const std::string& p_path, const std::string& p_name): Could not load model at " + p_path + " because there was no object to be found at that path");
+		MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);       
+		return nullptr;
+    }
     model->SetName(p_name);
 
     for (auto& mesh : model->GetMeshes())

@@ -29,11 +29,13 @@ int App::Run() const
     renderSystem.AddModel("../Engine/Resources/Lambo.obj", "flab");
 
     Rendering::Light dirLight{};
-    dirLight.position = Vector3F(-cos(0.0f) * 40.0f, 40.0f, -40.0f);
-    dirLight.ambient = Vector3F(0.1f, 0.1f, 0.1f);
-    dirLight.diffuse = Vector3F(1.0f, 1.0f, 0.95f);
-    dirLight.specular = Vector3F(1.0f, 1.0f, 0.95f);
-    dirLight.direction = Vector3F(-0.5f, -0.5f, -0.5f).Normalized();
+    dirLight.position = Vector4F(40.0f, 40.0f, -40.0f, 1.0f);
+    dirLight.ambient = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
+    dirLight.diffuse = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
+    dirLight.specular = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
+    dirLight.direction = Vector4F(-0.5f, -0.5f, -0.5f, 1.0f).Normalize();
+    dirLight.color = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
+    dirLight.shininess= 64.0f;
 
     renderSystem.AddLight(dirLight);
 
@@ -69,9 +71,6 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
     static bool show_demo_window = true;
     ImGui::Begin("Identity UI Tools");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-    if (show_demo_window)
-    ImGui::ShowDemoWindow(&show_demo_window);
     ImGui::End();
 
     ImGui::Render();
