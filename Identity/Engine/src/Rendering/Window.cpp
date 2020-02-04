@@ -58,7 +58,8 @@ Window::Window(int p_width, int p_height, const char* p_name) : m_width(p_width)
 
     ImGui_ImplWin32_Init(m_hwnd);
 
-    m_renderer = std::make_unique<Renderer>(m_hwnd);
+    m_renderer = std::make_unique<Renderer>(m_hwnd, m_width, m_height);
+    isSet = true;
 }
 
 Window::~Window()
@@ -115,7 +116,7 @@ LRESULT Window::HandleMsgThunk(const HWND p_hwnd, const UINT p_msg, const WPARAM
 }
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
-LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam) const
+LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam)
 {
     if (ImGui_ImplWin32_WndProcHandler(p_hwnd, p_msg, p_wParam, p_lParam))
         return true;
@@ -123,6 +124,16 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
     // random unknown messages, and we don't need to filter them all.
     switch(p_msg)
     {
+    case WM_SIZE:
+        if (isSet)
+        {
+            RECT rcClient;
+            GetClientRect(m_hwnd, &rcClient);
+            m_width = rcClient.right - rcClient.left;
+            m_height = rcClient.bottom - rcClient.top;
+            m_renderer->Resize(m_width, m_height);
+        }
+        break;
     case WM_CLOSE:
         PostQuitMessage(0);
         return 0;

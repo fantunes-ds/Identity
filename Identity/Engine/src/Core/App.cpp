@@ -18,6 +18,7 @@ App::App() : m_window(800, 600, "Engine Window")
 
 App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name)
 {
+    Input::Input::InitInput();
 }
 
 int App::Run() const

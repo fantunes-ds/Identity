@@ -55,7 +55,7 @@ namespace Engine::Rendering
 
         // Perpsective variables
         float m_width{ 1.0f };
-        float m_height{ 3.0f / 4.0f };
+        float m_height{ 4.0f / 3.0f };
         float m_nearZ{ 0.5f };
         float m_farZ{ 1000.0f };
     };

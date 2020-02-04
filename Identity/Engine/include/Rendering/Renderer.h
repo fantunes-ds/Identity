@@ -66,7 +66,7 @@ namespace Engine::Rendering
         };
 
     public:
-        Renderer(const HWND p_hwnd);
+        Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight);
         Renderer(const Renderer&) = delete;
         Renderer& operator=(const Renderer&) = delete;
         ~Renderer();
@@ -85,6 +85,8 @@ namespace Engine::Rendering
         void LoadPixelShader(const std::wstring& p_path);
         void LoadVertexShader(const std::wstring& p_path);
 
+        void Resize(const int p_width, const int p_height);
+
         [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() { return m_pDevice; };
         [[nodiscard]] Microsoft::WRL::ComPtr<IDXGISwapChain>& GetSwapChain() { return m_pSwapChain; };
         [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() { return m_pContext; };
@@ -99,5 +101,7 @@ namespace Engine::Rendering
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pTarget;
         Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencil;
         Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
+
+        bool m_enable4xMSAA = true;
     };
 }
