@@ -3,7 +3,7 @@
 #include <3DLoader/ObjectElements/Mesh.h>
 #include <3DLoader/ObjectLoader.h>
 
-void Engine::ObjectElements::Model::AddMesh(std::shared_ptr<Engine::ObjectElements::Mesh> p_mesh)
+void Engine::ObjectElements::Model::AddMesh(const std::shared_ptr<Engine::ObjectElements::Mesh>& p_mesh)
 {
     m_meshes.emplace_back(p_mesh);
 }

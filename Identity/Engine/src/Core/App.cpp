@@ -20,12 +20,24 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 {
 }
 
-int App::Run()
+int App::Run() const
 {
-    Manager::ModelManager::GetInstance()->SetGraphicsDevice(m_window.GetRenderer().m_pDevice);
+    Manager::ModelManager::GetInstance()->SetGraphicsDevice(m_window.GetRenderer().GetDevice());
 
     Systems::RenderSystem renderSystem(&m_window.GetRenderer());
     renderSystem.AddModel("../Engine/Resources/statue.obj", "statue");
+    renderSystem.AddModel("../Engine/Resources/Lambo.obj", "flab");
+
+    Rendering::Light dirLight{};
+    dirLight.position = Vector4F(40.0f, 40.0f, -40.0f, 1.0f);
+    dirLight.ambient = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
+    dirLight.diffuse = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
+    dirLight.specular = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
+    dirLight.direction = Vector4F(-0.5f, -0.5f, -0.5f, 1.0f).Normalize();
+    dirLight.color = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
+    dirLight.shininess= 64.0f;
+
+    renderSystem.AddLight(dirLight);
 
     while (true)
     {
@@ -38,11 +50,9 @@ int App::Run()
     }
 }
 
-void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem)
+void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
 {
-    static float angle = 0;
-
-    m_window.GetRenderer().ClearBuffer(1.0f, 1.0f, 1.0f);
+    m_window.GetRenderer().ClearBuffer(0.3f, 0.3f, 0.3f);
     if (_INPUT->keyboard.IsKeyHeld('R'))
         m_window.GetRenderer().ClearBuffer(1.0f, 0.0f, 0.0f);
 
@@ -61,9 +71,6 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem)
     static bool show_demo_window = true;
     ImGui::Begin("Identity UI Tools");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-    if (show_demo_window)
-    ImGui::ShowDemoWindow(&show_demo_window);
     ImGui::End();
 
     ImGui::Render();
@@ -76,7 +83,5 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem)
         ImGui::RenderPlatformWindowsDefault();
     }
 
-
-    angle += 0.01;
     m_window.GetRenderer().EndFrame();
 }

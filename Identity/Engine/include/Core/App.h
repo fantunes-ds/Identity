@@ -26,10 +26,10 @@ namespace Engine::Core
         App(const App&) = delete;
         App& operator=(const App&) = delete;
 
-        int Run();
+        int Run() const;
 
     private:
-        void DoFrame(Systems::RenderSystem& p_renderSystem);
+        void DoFrame(Systems::RenderSystem& p_renderSystem) const;
 
     private:
         Tools::UI::ImGUIManager m_imguiManager;

@@ -44,12 +44,12 @@ std::shared_ptr<Engine::ObjectElements::Mesh> Engine::ObjectLoader::LoadMesh(aiM
     {
         Engine::Geometry::Vertex vertex;
 
-        aiVector3D vert = p_assimpMesh->mVertices[vertIdx];
-        aiVector3D norm = p_assimpMesh->mNormals[vertIdx];
+        const aiVector3D vert = p_assimpMesh->mVertices[vertIdx];
+        const aiVector3D norm = p_assimpMesh->mNormals[vertIdx];
 
         if (p_assimpMesh->HasTextureCoords(0))
         {
-            aiVector3D UV = p_assimpMesh->mTextureCoords[0][vertIdx];
+            const aiVector3D UV = p_assimpMesh->mTextureCoords[0][vertIdx];
             vertex.m_textCoords = GPM::Vector2D(UV.x, UV.y);
         }
 

@@ -2,33 +2,33 @@
 #include <Rendering/Buffers/VertexBuffer.h>
 #include "Tools/DirectX/GraphicsMacros.h"
 
-void Engine::Rendering::Buffers::VertexBuffer::Generate(Microsoft::WRL::ComPtr<ID3D11Device> p_device,
-                                                        std::vector<Geometry::Vertex> p_vertices)
+void Engine::Rendering::Buffers::VertexBuffer::Generate(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device,
+                                                        std::vector<Geometry::Vertex>& p_vertices)
 {
     HRESULT hr;
 
-    descriptor.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    descriptor.Usage = D3D11_USAGE_DEFAULT;
-    descriptor.CPUAccessFlags = 0u;
-    descriptor.MiscFlags = 0u;
-    descriptor.ByteWidth = sizeof(p_vertices[0]) * p_vertices.size();
-    descriptor.StructureByteStride = sizeof(Geometry::Vertex);
+    m_descriptor.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    m_descriptor.Usage = D3D11_USAGE_DEFAULT;
+    m_descriptor.CPUAccessFlags = 0u;
+    m_descriptor.MiscFlags = 0u;
+    m_descriptor.ByteWidth = sizeof(p_vertices[0]) * p_vertices.size();
+    m_descriptor.StructureByteStride = sizeof(Geometry::Vertex);
 
-    subData.pSysMem = p_vertices.data();
-    GFX_THROW_INFO(p_device->CreateBuffer(&descriptor, &subData, &buffer));
-    p_device->CreateBuffer(&descriptor, &subData, &buffer);
-    stride = sizeof(Geometry::Vertex);
-    offset = 0u;
+    m_subData.pSysMem = p_vertices.data();
+    GFX_THROW_INFO(p_device->CreateBuffer(&m_descriptor, &m_subData, &m_buffer));
+    p_device->CreateBuffer(&m_descriptor, &m_subData, &m_buffer);
+    m_stride = sizeof(Geometry::Vertex);
+    m_offset = 0u;
 }
 
-void Engine::Rendering::Buffers::VertexBuffer::Bind(Microsoft::WRL::ComPtr<ID3D11DeviceContext> p_context)
+void Engine::Rendering::Buffers::VertexBuffer::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
 {
-    p_context->IASetVertexBuffers(0u, 1u, buffer.GetAddressOf(), &stride, &offset);
+    p_context->IASetVertexBuffers(0u, 1u, m_buffer.GetAddressOf(), &m_stride, &m_offset);
 }
 
 bool Engine::Rendering::Buffers::VertexBuffer::operator==(const VertexBuffer& p_other) const
 {
-    if (stride == p_other.stride && offset == p_other.offset)
+    if (m_stride == p_other.m_stride && m_offset == p_other.m_offset)
         return true;
 
     return false;

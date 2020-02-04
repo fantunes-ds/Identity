@@ -281,15 +281,15 @@ Matrix4<T> Matrix4<T>::LookAt(const Vector3<T>& p_from, const Vector3<T>& p_to, 
     Vector3<T> right = (Vector3<T>::Cross(forward, p_up)).Normalized();
     Vector3<T> up = Vector3<T>::Cross(right, forward);
 
-    return Matrix4<T>{
-            right.x, up.x, forward.x, T{ 0 },
-            right.y, up.y, forward.y, T{ 0 },
-            right.z, up.z, forward.z, T{ 0 },
-            T{ 0 }, T{ 0 }, T{ 0 },   T{ 1 }
-        } * Matrix4F(1.0f, 0.0f, 0.0f, 0.0f,
-                 0.0f, 1.0f, 0.0f, 0.0f,
-                 0.0f, 0.0f, 1.0f, 0.0f,
-                 -p_from.x, -p_from.y, -p_from.z, 1.0f);
+    return Matrix4F(1.0f, 0.0f, 0.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, 1.0f, 0.0f,
+                    -p_from.x, -p_from.y, -p_from.z, 1.0f)
+       * Matrix4<T>{right.x, up.x, forward.x, T{ 0 },
+                    right.y, up.y, forward.y, T{ 0 },
+                    right.z, up.z, forward.z, T{ 0 },
+                    T{ 0 }, T{ 0 }, T{ 0 }, T{ 1 }
+    };
 }
 
 

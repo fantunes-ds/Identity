@@ -17,12 +17,18 @@ namespace Engine::ObjectElements
         ~Mesh() = default;
         Mesh(const Mesh& p_other);
 
-        void GenerateBuffers(Microsoft::WRL::ComPtr<ID3D11Device> p_device);
-        void Bind(Microsoft::WRL::ComPtr<ID3D11DeviceContext> p_context);
+        void GenerateBuffers(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device);
+        void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
 
         bool operator==(const Mesh& p_other) const;
         bool operator!=(const Mesh& p_other) const;
 
+        Rendering::Buffers::VertexBuffer& GetVertexBuffer() { return m_vertexBuffer; }
+        Rendering::Buffers::IndexBuffer& GetIndexBuffer() { return m_indexBuffer; }
+        std::vector<Geometry::Vertex>& GetVertices() { return m_vertices; }
+        std::vector<unsigned short>& GetIndices() { return m_indices; }
+
+    private:
         Rendering::Buffers::VertexBuffer m_vertexBuffer;
         Rendering::Buffers::IndexBuffer m_indexBuffer;
         std::vector<Geometry::Vertex> m_vertices;
