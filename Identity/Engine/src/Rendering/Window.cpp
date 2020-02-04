@@ -124,7 +124,7 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
     // random unknown messages, and we don't need to filter them all.
     switch(p_msg)
     {
-    case WM_SIZE:
+    case WM_SIZING:
         if (isSet)
         {
             RECT rcClient;

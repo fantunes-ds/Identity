@@ -9,7 +9,7 @@
 
 using namespace Engine::Rendering;
 
-Renderer::Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight)
+Renderer::Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight) : m_width(p_clientWidth), m_height(p_clientHeight)
 {
     HRESULT hr;
 
@@ -34,8 +34,8 @@ Renderer::Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clien
 
     //describe the swap chain
     DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-    swapChainDesc.BufferDesc.Width = p_clientWidth;
-    swapChainDesc.BufferDesc.Height = p_clientHeight;
+    swapChainDesc.BufferDesc.Width = 0;
+    swapChainDesc.BufferDesc.Height = 0;
     swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
     swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
     swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -86,8 +86,8 @@ Renderer::Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clien
     
 
     D3D11_TEXTURE2D_DESC depthStencilDesc;
-    depthStencilDesc.Width = p_clientWidth;
-    depthStencilDesc.Height = p_clientHeight;
+    depthStencilDesc.Width = m_width;
+    depthStencilDesc.Height = m_height;
     depthStencilDesc.MipLevels = 1;
     depthStencilDesc.ArraySize = 1;
     depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -119,8 +119,8 @@ Renderer::Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clien
     D3D11_VIEWPORT viewPort;
     viewPort.TopLeftX = 0;
     viewPort.TopLeftY = 0;
-    viewPort.Width = static_cast<float>(p_clientWidth);
-    viewPort.Height = static_cast<float>(p_clientHeight);
+    viewPort.Width = static_cast<float>(m_width);
+    viewPort.Height = static_cast<float>(m_height);
     viewPort.MinDepth = 0;
     viewPort.MaxDepth = 1;
     m_pContext->RSSetViewports(1u, &viewPort);
@@ -179,30 +179,35 @@ void Renderer::LoadVertexShader(const std::wstring& p_path)
 
 void Renderer::Resize(const int p_width, const int p_height)
 {
-    m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
+    m_width = p_width;
+    m_height = p_height;
 
-    //release alla ref to swap chain buffer
-    m_pTarget->Release();
+    DXGI_MODE_DESC modeDesc = {};
+    modeDesc.Width = 0;
+    modeDesc.Height = 0;
+    modeDesc.RefreshRate.Numerator = 0;
+    modeDesc.RefreshRate.Denominator = 0;
+    modeDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    modeDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+    modeDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
-    HRESULT hr;
-    GFX_THROW_INFO(m_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0));
-
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
-    GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
-    GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
-
-    GFX_THROW_INFO_ONLY(m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencil.Get()));
+    m_pSwapChain->ResizeTarget(&modeDesc);
 
     D3D11_VIEWPORT viewPort;
     viewPort.TopLeftX = 0;
     viewPort.TopLeftY = 0;
-    viewPort.Width = static_cast<float>(p_width);
-    viewPort.Height = static_cast<float>(p_height);
+    viewPort.Width = static_cast<float>(m_width);
+    viewPort.Height = static_cast<float>(m_height);
     viewPort.MinDepth = 0;
     viewPort.MaxDepth = 1;
     m_pContext->RSSetViewports(1u, &viewPort);
 }
 
+void Renderer::GetResolution(int& p_width, int& p_height)
+{
+    p_width = m_width;
+    p_height = m_height;
+}
 
 #pragma region ExceptionsClass
 

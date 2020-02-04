@@ -86,6 +86,7 @@ namespace Engine::Rendering
         void LoadVertexShader(const std::wstring& p_path);
 
         void Resize(const int p_width, const int p_height);
+        void GetResolution(int& p_width, int& p_height);
 
         [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() { return m_pDevice; };
         [[nodiscard]] Microsoft::WRL::ComPtr<IDXGISwapChain>& GetSwapChain() { return m_pSwapChain; };
@@ -102,6 +103,9 @@ namespace Engine::Rendering
         Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencil;
         Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
 
+
+        int m_width;
+        int m_height;
         bool m_enable4xMSAA = true;
     };
 }
