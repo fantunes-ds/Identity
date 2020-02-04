@@ -135,6 +135,18 @@
     <ClInclude Include="include\Tools\IDCounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Managers\TransformManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Components\IComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Components\ModelComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Components\CameraComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\TestDependencies.cpp">
@@ -213,6 +225,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\App.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Managers\TransformManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Objects\GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Managers\GameObjectManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\ModelComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
