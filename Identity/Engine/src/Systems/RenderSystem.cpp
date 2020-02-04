@@ -30,9 +30,9 @@ void Engine::Systems::RenderSystem::DrawScene()
         ImGui::SliderFloat("LightPosX", &light->position.x, -40.0f, 40.0f, "%.1f");
         ImGui::SliderFloat("LightPosY", &light->position.y, -40.0f, 40.0f, "%.1f");
         ImGui::SliderFloat("LightPosZ", &light->position.z, -40.0f, 40.0f, "%.1f");
-        ImGui::SliderFloat("LightColX", &light->color.x, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("LightColY", &light->color.y, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("LightColZ", &light->color.z, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColR", &light->color.x, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColG", &light->color.y, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColB", &light->color.z, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("Ambient LightX", &light->ambient.x, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("Ambient LightY", &light->ambient.y, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("Ambient LightZ", &light->ambient.z, 0.0f, 1.0f, "%.1f");
@@ -56,12 +56,11 @@ void Engine::Systems::RenderSystem::DrawScene()
             };
 
             Vector3D quat{ 0, 1, 0 };
-            Matrix4F model = Matrix4F::CreateTransformation(Vector3F(0.0f, 0.0f, 0.0f),
+            Matrix4F model = Matrix4F::CreateTransformation(Vector3F(3.0f, 0.0f, 0.0f),
                 Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(0.0f)),
                 Vector3F{ 0.02f, 0.02f, 0.02f });
 
             Matrix4F normalModel = Matrix4F::Inverse(model);
-
 
             if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
                 m_camera.m_position += m_camera.m_forward * m_camera.m_speed;
@@ -101,9 +100,11 @@ void Engine::Systems::RenderSystem::DrawScene()
             {
                 Rendering::Light lightSource;
                 Vector3F cameraPos;
-            };  
+            };
 
-            const PixelConstantBuffer pcb{ light->position,
+            const Vector4F invertedXLightPos{ -light->position.x, light->position.y, light->position.z, light->position.w };
+
+            const PixelConstantBuffer pcb{ invertedXLightPos,
                                           light->ambient,
                                           light->diffuse,
                                           light->specular,

@@ -34,7 +34,8 @@ Matrix4F Engine::Rendering::Camera::GetPerspectiveMatrix() const noexcept
 
 Matrix4F Engine::Rendering::Camera::GetViewMatrix() const noexcept
 {
-    return { Matrix4F::LookAt(m_position,
-                              m_position + m_forward,
+    const Vector3F invertedXCamPos { -m_position.x, m_position.y, m_position.z};
+    return { Matrix4F::LookAt(invertedXCamPos,
+                              invertedXCamPos + m_forward,
                               m_up) };
 }
