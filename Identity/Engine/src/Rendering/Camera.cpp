@@ -2,6 +2,10 @@
 #include <Rendering/Camera.h>
 #include <Tools/ImGUI/imgui.h>
 
+Engine::Rendering::Camera::Camera(const int p_width, const int p_height) : m_height(p_width / p_height)
+{
+}
+
 void Engine::Rendering::Camera::UpdateVectors()
 {
     if (ImGui::Begin("Camera Tool"))
@@ -15,6 +19,12 @@ void Engine::Rendering::Camera::UpdateVectors()
     const Vector3F worldUp = Vector3F(0.0f, 1.0f, 0.0f);
     m_right = Vector3F(Vector3F::Cross(worldUp, m_forward * -1));
     m_up = Vector3F::Cross(m_forward * - 1, m_right);
+}
+
+
+void Engine::Rendering::Camera::UpdateResolution(const int p_width, const int p_height)
+{
+    m_height = static_cast<float>(static_cast<float>(p_height) / static_cast<float>(p_width));
 }
 
 Matrix4F Engine::Rendering::Camera::GetPerspectiveMatrix() const noexcept

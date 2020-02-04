@@ -14,9 +14,11 @@ namespace Engine::Rendering
         friend class Systems::RenderSystem;
     public:
         Camera() = default;
+        Camera(const int p_width, const int p_height);
         ~Camera() = default;
 
         void UpdateVectors();
+        void UpdateResolution(const int p_width, const int p_height);
 
         [[nodiscard]] Matrix4F GetPerspectiveMatrix() const noexcept;
         [[nodiscard]] Matrix4F GetViewMatrix() const noexcept;
@@ -55,7 +57,7 @@ namespace Engine::Rendering
 
         // Perpsective variables
         float m_width{ 1.0f };
-        float m_height{ 4.0f / 3.0f };
+        float m_height{ 9.0f / 16.0f };
         float m_nearZ{ 0.5f };
         float m_farZ{ 1000.0f };
     };

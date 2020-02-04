@@ -67,6 +67,7 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
+    p_renderSystem.UpdateCamera();
     p_renderSystem.Update();
 
     static bool show_demo_window = true;

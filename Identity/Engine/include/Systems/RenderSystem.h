@@ -15,6 +15,7 @@ namespace Engine::Systems
 
         void DrawScene();
         void Update() override;
+        void UpdateCamera();
 
         /**
          * @brief Adds a model to the model container.
