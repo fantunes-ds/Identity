@@ -220,6 +220,9 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Components\CameraComponent.h" />
+    <ClInclude Include="include\Components\IComponent.h" />
+    <ClInclude Include="include\Components\ModelComponent.h" />
     <ClInclude Include="include\Managers\GameObjectManager.h" />
     <ClInclude Include="include\Managers\ModelManager.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Transform.h" />
@@ -262,6 +265,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\ModelComponent.cpp" />
     <ClCompile Include="src\Core\App.cpp" />
     <ClCompile Include="src\Managers\GameObjectManager.cpp" />
     <ClCompile Include="src\Managers\ModelManager.cpp" />

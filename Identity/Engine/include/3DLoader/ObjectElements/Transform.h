@@ -40,6 +40,7 @@ namespace Engine::ObjectElements
             m_rotation = p_rotation;
             CalculateAxes();
         }
+
         inline void SetTransformMatrix(const Matrix4F& p_transform) { m_transform = p_transform; }
 
         inline void SetParent(Transform& p_parent) { m_parent = std::make_shared<Transform>(p_parent); }

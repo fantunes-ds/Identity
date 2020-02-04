@@ -2,6 +2,15 @@
 #include <Objects/GameObject.h>
 #include <Managers/ModelManager.h>
 #include <Managers/TransformManager.h>
+#include "Components/ModelComponent.h"
+#include "Managers/GameObjectManager.h"
+
+Engine::Objects::GameObject::GameObject()
+{
+    ObjectElements::Transform transform{};
+    m_transform = Managers::TransformManager::AddTransform(transform);
+    Managers::GameObjectManager::AddGameObject(this);
+}
 
 std::shared_ptr<Engine::ObjectElements::Transform> Engine::Objects::GameObject::GetTransform() const
 {
@@ -10,10 +19,16 @@ std::shared_ptr<Engine::ObjectElements::Transform> Engine::Objects::GameObject::
 
 std::shared_ptr<Engine::ObjectElements::Model> Engine::Objects::GameObject::GetModel() const
 {
-    return Managers::ModelManager::GetInstance()->FindModel(m_model);
+    for (auto& component: m_components)
+    {
+        if (Components::ModelComponent * modelComp = dynamic_cast<Components::ModelComponent*>(component))
+            return Managers::ModelManager::GetInstance()->FindModel(modelComp->m_model);
+    }
+
+    return nullptr;
 }
 
-void Engine::Objects::GameObject::SetModel(const std::string& p_name)
+/*void Engine::Objects::GameObject::SetModel(const std::string& p_name)
 {
     int32_t id = Managers::ModelManager::FindModel(p_name);
 
@@ -25,11 +40,12 @@ void Engine::Objects::GameObject::SetModel(const std::string& p_name)
     }
 
     m_model = id;
-}
+}*/
 
 bool Engine::Objects::GameObject::operator==(GameObject& p_other) const
 {
-    if (m_model == p_other.m_model && m_transform == p_other.m_transform)
+    //TODO: make this work once the rest works
+    if (m_transform == p_other.m_transform && false)
         return true;
 
     return false;

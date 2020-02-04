@@ -24,7 +24,7 @@ int32_t Engine::Managers::TransformManager::AddTransform(ObjectElements::Transfo
     //TODO: Fix this stupidity
     Matrix4F& matrix = p_transform.GetTransformMatrix();
     GetInstance()->m_transforms.insert_or_assign(id, std::make_shared<ObjectElements::Transform>(p_transform));
-    GetInstance()->FindTransform(id)->SetTransformMatrix(matrix);
+    FindTransform(id)->SetTransformMatrix(matrix);
 
     return id;
 }

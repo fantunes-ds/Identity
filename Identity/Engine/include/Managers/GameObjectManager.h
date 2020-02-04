@@ -14,10 +14,12 @@ namespace Engine::Managers
         GameObjectManager(const GameObjectManager&) = delete;
         GameObjectManager(const GameObjectManager&&) = delete;
 
-        static int32_t AddGameObject(Objects::GameObject& p_gameObject);
+        //static int32_t AddGameObject(Objects::GameObject& p_gameObject);
+        static int32_t AddGameObject(Objects::GameObject* p_gameObject);
 
         static GameObjectManager* GetInstance();
         static std::map<int, std::shared_ptr<Objects::GameObject>>& GetAllGameObjects() { return GetInstance()->m_gameObjects; }
+
     private:
         GameObjectManager() = default;
 
