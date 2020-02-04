@@ -11,6 +11,7 @@
 #include <Objects/GameObject.h>
 #include "Managers/GameObjectManager.h"
 #include <Managers/TransformManager.h>
+#include "Components/ModelComponent.h"
 
 using namespace Engine::Core;
 
@@ -28,17 +29,9 @@ int App::Run() const
     Managers::ModelManager::GetInstance()->SetGraphicsDevice(m_window.GetRenderer().GetDevice());
 
     Systems::RenderSystem renderSystem(&m_window.GetRenderer());
-    renderSystem.AddModel("../Engine/Resources/statue.obj", "statue");
-    renderSystem.AddModel("../Engine/Resources/Lambo.obj", "flab");
 
     Objects::GameObject gameObject;
-    ObjectElements::Transform transform{};
-
-    int32_t transformID = Managers::TransformManager::AddTransform(transform);
-
-    gameObject.SetTransform(transformID);
-    gameObject.SetModel("statue");
-    Managers::GameObjectManager::AddGameObject(gameObject);
+    gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
 
     Rendering::Light dirLight{};
 
