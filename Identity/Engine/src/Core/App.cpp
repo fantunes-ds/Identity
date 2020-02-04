@@ -8,6 +8,9 @@
 #include "Events/Event.h"
 #include <Systems/RenderSystem.h>
 #include <Input/Input.h>
+#include <Objects/GameObject.h>
+#include "Managers/GameObjectManager.h"
+#include <Managers/TransformManager.h>
 
 using namespace Engine::Core;
 
@@ -22,13 +25,23 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 
 int App::Run() const
 {
-    Manager::ModelManager::GetInstance()->SetGraphicsDevice(m_window.GetRenderer().GetDevice());
+    Managers::ModelManager::GetInstance()->SetGraphicsDevice(m_window.GetRenderer().GetDevice());
 
     Systems::RenderSystem renderSystem(&m_window.GetRenderer());
     renderSystem.AddModel("../Engine/Resources/statue.obj", "statue");
     renderSystem.AddModel("../Engine/Resources/Lambo.obj", "flab");
 
+    Objects::GameObject gameObject;
+    ObjectElements::Transform transform{};
+
+    int32_t transformID = Managers::TransformManager::AddTransform(transform);
+
+    gameObject.SetTransform(transformID);
+    gameObject.SetModel("statue");
+    Managers::GameObjectManager::AddGameObject(gameObject);
+
     Rendering::Light dirLight{};
+
     dirLight.position = Vector4F(40.0f, 40.0f, -40.0f, 1.0f);
     dirLight.ambient = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
     dirLight.diffuse = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);

@@ -11,7 +11,7 @@ namespace Engine::Tools
         ~IDCounter() = delete;
 
         IDCounter(IDCounter& p_other) = delete;
-        static inline uint32_t GetID()
+        static inline uint32_t GetNewID()
         {
             uint32_t tmp = m_id;
             ++m_id;

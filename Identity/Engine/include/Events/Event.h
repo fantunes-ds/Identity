@@ -26,9 +26,9 @@ namespace Engine
                     return -1;
             }
 
-            m_actions.insert_or_assign(newCallback.get()->GetID(), newCallback);
+            m_actions.insert_or_assign(newCallback.get()->GetNewID(), newCallback);
 
-            return newCallback.get()->GetID();
+            return newCallback.get()->GetNewID();
         }
 
         //@warning DO NOT USE, not functional yet
@@ -44,9 +44,9 @@ namespace Engine
                     return -1;
             }
 
-            m_actions.insert_or_assign(newCallback.get()->GetID(), newCallback);
+            m_actions.insert_or_assign(newCallback.get()->GetNewID(), newCallback);
 
-            return newCallback.get()->GetID();
+            return newCallback.get()->GetNewID();
         }
 
         void RemoveListener(const int32_t p_id)

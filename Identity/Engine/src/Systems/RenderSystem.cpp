@@ -6,6 +6,8 @@
 #include "Tools/ImGUI/imgui.h"
 #include "Tools/ImGUI/imgui_impl_dx11.h"
 #include <Input/Input.h>
+#include <Managers/GameObjectManager.h>
+#include "Managers/TransformManager.h"
 
 Engine::Systems::RenderSystem::RenderSystem(Rendering::Renderer* p_renderer): m_renderer(p_renderer)
 {
@@ -38,9 +40,10 @@ void Engine::Systems::RenderSystem::DrawScene()
         ImGui::SliderFloat("Ambient LightZ", &light->ambient.z, 0.0f, 1.0f, "%.1f");
     }ImGui::End();
 
-    for (auto& model : m_models)
+    
+    for (auto& gameObject : Managers::GameObjectManager::GetAllGameObjects())
     {
-        for (auto& mesh : model.second->GetMeshes())
+        for (auto& mesh : gameObject.second->GetModel()->GetMeshes())
         {
             mesh->Bind(m_renderer->GetContext());
 
@@ -55,10 +58,7 @@ void Engine::Systems::RenderSystem::DrawScene()
                 Matrix4F projection;
             };
 
-            Vector3D quat{ 0, 1, 0 };
-            Matrix4F model = Matrix4F::CreateTransformation(Vector3F(0.0f, 0.0f, 0.0f),
-                Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(0.0f)),
-                Vector3F{ 0.02f, 0.02f, 0.02f });
+            Matrix4F model = Managers::TransformManager::FindTransform(gameObject.second->GetTransformID())->GetTransformMatrix();
 
             Matrix4F normalModel = Matrix4F::Inverse(model);
 
@@ -167,7 +167,7 @@ void Engine::Systems::RenderSystem::Update()
 
 uint32_t Engine::Systems::RenderSystem::AddModel(const std::string& p_path, const std::string& p_name)
 {
-    if (Manager::ModelManager::GetInstance()->FindModel(p_name))
+    if (Managers::ModelManager::FindModel(p_name) >= 0)
     {
         const std::string error("in Engine::Systems::RenderSystem::AddModel(const std::string& p_path, const std::string& p_name): Could not add model with name " +
                                 p_name + " because it already exists");
@@ -176,13 +176,11 @@ uint32_t Engine::Systems::RenderSystem::AddModel(const std::string& p_path, cons
     }
 
 
-    std::shared_ptr newModel = Manager::ModelManager::GetInstance()->AddModel(p_path, p_name);
+    std::shared_ptr newModel = Managers::ModelManager::AddModel(p_path, p_name);
 
     if (newModel)
-    {
-        
-        const uint32_t tmpId = Tools::IDCounter::GetID();
-        m_models.insert_or_assign(tmpId, newModel);
+    {     
+        const uint32_t tmpId = Tools::IDCounter::GetNewID();
         return tmpId;
     }
     else
@@ -191,11 +189,12 @@ uint32_t Engine::Systems::RenderSystem::AddModel(const std::string& p_path, cons
 
 uint32_t Engine::Systems::RenderSystem::AddLight(Rendering::Light& p_light)
 {
+    //TODO: create lightManager and load light into it rather than into rendersystem
     std::shared_ptr newLight = std::make_shared<Rendering::Light>(p_light);
 
     if (newLight)
     {
-        const uint32_t tmpId = Tools::IDCounter::GetID();
+        const uint32_t tmpId = Tools::IDCounter::GetNewID();
         m_lights.insert_or_assign(tmpId, newLight);
         return tmpId;
     }
