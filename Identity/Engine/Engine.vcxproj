@@ -229,6 +229,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\3DLoader\ObjectElements\Transform.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />
+    <ClInclude Include="include\Rendering\Buffers\InputLayout.h" />
     <ClInclude Include="include\Containers\TransformContainer.h" />
     <ClInclude Include="include\Systems\IECSSystem.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
@@ -276,6 +277,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\3DLoader\ObjectElements\Transform.cpp" />
     <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
     <ClInclude Include="src\Core\App.h" />
+    <ClCompile Include="src\Rendering\Buffers\InputLayout.cpp" />
     <ClCompile Include="src\Containers\TransformContainer.cpp" />
     <ClCompile Include="src\Objects\GameObject.cpp" />
     <ClCompile Include="src\Systems\RenderSystem.cpp" />

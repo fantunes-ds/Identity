@@ -6,6 +6,7 @@
 #include <d3d11.h>
 #include <Rendering/Buffers/VertexBuffer.h>
 #include <Rendering/Buffers/IndexBuffer.h>
+#include <Rendering/Buffers/InputLayout.h>
 
 namespace Engine::ObjectElements
 {
@@ -28,9 +29,32 @@ namespace Engine::ObjectElements
         std::vector<Geometry::Vertex>& GetVertices() { return m_vertices; }
         std::vector<unsigned short>& GetIndices() { return m_indices; }
 
+        //--WIP--
+        void LoadPixelShader(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
+        void LoadVertexShader(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
+        void BindShader(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
+
+        Matrix4F& GetTransform() { return transform; }
+        //-------
+
     private:
+        //buffers
         Rendering::Buffers::VertexBuffer m_vertexBuffer;
         Rendering::Buffers::IndexBuffer m_indexBuffer;
+
+        //--WIP--
+        Rendering::Buffers::InputLayout m_inputLayout;
+
+        //---SHADER---
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
+        Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
+        Microsoft::WRL::ComPtr<ID3DBlob> blob_test;
+        //------------
+
+        Matrix4F transform;
+        //-------
+
+        //data
         std::vector<Geometry::Vertex> m_vertices;
         std::vector<unsigned short> m_indices;
     };

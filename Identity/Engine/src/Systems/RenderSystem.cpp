@@ -55,7 +55,6 @@ void Engine::Systems::RenderSystem::DrawScene()
                 {
                     mesh->Bind(m_renderer->GetContext());
 
-                    // ********* WIP ********* //
 
                     // create constant buffer for transform matrix
                     struct VertexConstantBuffer
@@ -136,35 +135,7 @@ void Engine::Systems::RenderSystem::DrawScene()
                     //bind the buffer to the shader
                     m_renderer->GetContext()->PSSetConstantBuffers(0u, 1u, pixelConstantBuffer.GetAddressOf());
 
-                    m_renderer->LoadPixelShader(L"../Engine/Resources/Shaders/PixelShader.cso");
-                    m_renderer->LoadVertexShader(L"../Engine/Resources/Shaders/VertexShader.cso");
-
-                    m_renderer->GetContext()->OMSetRenderTargets(1u, m_renderer->GetTarget().GetAddressOf(), m_renderer->GetDepthStencil().Get());
-
-                    //set primitive draw
-                    m_renderer->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-                    //create input layout
-                    Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
-                    const D3D11_INPUT_ELEMENT_DESC            inputDesc[] =
-                    {
-                        {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-                        {"TxCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12u, D3D11_INPUT_PER_VERTEX_DATA, 0},
-                        {"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20u, D3D11_INPUT_PER_VERTEX_DATA, 0}
-                    };
-                    GFX_THROW_INFO(m_renderer->GetDevice()->CreateInputLayout(inputDesc,
-                        std::size(inputDesc),
-                        m_renderer->GetBlob()->GetBufferPointer(),
-                        (UINT)m_renderer->GetBlob()->GetBufferSize(),
-                        &inputLayout));
-
-                    m_renderer->GetContext()->IASetInputLayout(inputLayout.Get());
-
-                    ImGui_ImplDX11_Init(m_renderer->GetDevice().Get(), m_renderer->GetContext().Get());
-
                     GFX_THROW_INFO_ONLY(m_renderer->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
-                }
-            }
         }
     }
 }
