@@ -5,7 +5,6 @@
 #include "Rendering/Light.h"
 #include "Tools/ImGUI/imgui.h"
 #include "Tools/ImGUI/imgui_impl_dx11.h"
-#include <Input/Input.h>
 #include <Managers/GameObjectManager.h>
 #include "Managers/TransformManager.h"
 #include "Components/ModelComponent.h"
@@ -70,16 +69,6 @@ void Engine::Systems::RenderSystem::DrawScene()
 
                     Matrix4F normalModel = Matrix4F::Inverse(model);
 
-
-                    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
-                        m_camera.m_position += m_camera.m_forward * m_camera.m_speed;
-                    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
-                        m_camera.m_position -= m_camera.m_forward * m_camera.m_speed;
-                    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
-                        m_camera.m_position -= Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
-                    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
-                        m_camera.m_position += Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
-
                     Matrix4F view = m_camera.GetViewMatrix();
                     Matrix4F perspective = m_camera.GetPerspectiveMatrix();
 
@@ -105,9 +94,15 @@ void Engine::Systems::RenderSystem::DrawScene()
                     //bind the buffer to the shader
                     m_renderer->GetContext()->VSSetConstantBuffers(0u, 1u, vertexConstantBuffer.GetAddressOf());
 
-            const Vector4F invertedXLightPos{ -light->position.x, light->position.y, light->position.z, light->position.w };
+                    struct PixelConstantBuffer
+                    {
+                        Rendering::Light lightSource;
+                        Vector3F cameraPos;
+                    };
 
-                    const PixelConstantBuffer pcb{ light->position,
+                    const Vector4F invertedXLightPos{ -light->position.x, light->position.y, light->position.z, light->position.w };
+
+                    const PixelConstantBuffer pcb{ invertedXLightPos,
                                                   light->ambient,
                                                   light->diffuse,
                                                   light->specular,
@@ -167,7 +162,7 @@ void Engine::Systems::RenderSystem::DrawScene()
 
 void Engine::Systems::RenderSystem::Update()
 {
-    m_camera.UpdateVectors();
+    m_camera.UpdateCamera();
     DrawScene();
 }
 

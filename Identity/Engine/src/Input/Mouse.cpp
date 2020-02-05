@@ -1,5 +1,6 @@
 #include <stdafx.h>
 #include <Input/Mouse.h>
+#include <WinSetup.h>
 
 using namespace Engine::Input;
 
@@ -101,4 +102,19 @@ void Mouse::OnWheelUp() noexcept
 void Mouse::OnWheelDown() noexcept
 {
     m_mouseMap.first = WHEEL_DOWN;
+}
+
+void Mouse::OnWheelDelta(int p_delta) noexcept
+{
+    m_wheelDelta += p_delta;
+    while(m_wheelDelta >= WHEEL_DELTA)
+    {
+        m_wheelDelta -= WHEEL_DELTA;
+        OnWheelUp();
+    }
+    while (m_wheelDelta <= -WHEEL_DELTA)
+    {
+        m_wheelDelta += WHEEL_DELTA;
+        OnWheelDown();
+    }
 }

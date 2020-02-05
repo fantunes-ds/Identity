@@ -16,9 +16,12 @@ namespace Engine::Rendering
         Camera() = default;
         ~Camera() = default;
 
+        void UpdateCamera();
         void UpdateVectors();
 
         [[nodiscard]] Matrix4F GetPerspectiveMatrix() const noexcept;
+        void UpdateCameraPosition();
+        void UpdateCameraRotation();
         [[nodiscard]] Matrix4F GetViewMatrix() const noexcept;
 
         [[nodiscard]] const Vector3F& GetPosition() const noexcept { return m_position; }
@@ -49,14 +52,17 @@ namespace Engine::Rendering
         float m_speed{ 0.05f };
         float m_sensitivity{ 0.05f };
 
-        float m_zoom{ 45.0f };
-        float m_yaw{ -90.0f };
-        float m_pitch{ 0.00f };
-
         // Perpsective variables
         float m_width{ 1.0f };
         float m_height{ 3.0f / 4.0f };
         float m_nearZ{ 0.5f };
         float m_farZ{ 1000.0f };
+
+        float m_zoom{ 45.0f };
+        float m_yaw{ -90.0f };
+        float m_pitch{ 0.00f };
+        float m_lastX{ m_width * 0.5f };
+        float m_lastY{ m_height * 0.5f };
+        bool m_firstMouse;
     };
 }

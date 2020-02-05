@@ -53,7 +53,7 @@ Window::Window(int p_width, int p_height, const char* p_name) : m_width(p_width)
 
     m_hwnd = CreateWindow(WindowClass::GetName(), p_name, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 
         wr.right - wr.left, wr.bottom - wr.top, nullptr, nullptr, WindowClass::GetInstance(), this);
-
+    
     ShowWindow(m_hwnd, SW_SHOWDEFAULT);
 
     ImGui_ImplWin32_Init(m_hwnd);
@@ -75,6 +75,56 @@ Renderer& Window::GetRenderer() const
 void Window::SetTitle(const std::string& title) const
 {
     SetWindowText(m_hwnd, title.c_str());
+}
+
+void Window::EnableCursor() noexcept
+{
+    m_isCursorEnabled = true;
+    ShowCursor();
+    EnableImGUIMouse();
+    FreeCursor();
+}
+
+void Window::DisableCursor() noexcept
+{
+    m_isCursorEnabled = false;
+    HideCursor();
+    DisableImGUIMouse();
+    ConfineCursor();
+}
+
+void Window::ConfineCursor() const noexcept
+{
+    RECT rect;
+    GetClientRect(m_hwnd, &rect);
+    MapWindowPoints(m_hwnd, nullptr, reinterpret_cast<POINT*>(&rect), 2);
+    ClipCursor(&rect);
+}
+
+void Window::FreeCursor() const noexcept
+{
+    ClipCursor(nullptr);
+}
+
+void Window::HideCursor() const noexcept
+{
+    while (::ShowCursor(FALSE) >= 0);
+}
+
+void Window::ShowCursor() const noexcept
+{
+    while (::ShowCursor(TRUE) < 0);
+}
+
+void Window::EnableImGUIMouse() const noexcept
+{
+    ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+}
+
+void Window::DisableImGUIMouse() const noexcept
+{
+    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
+
 }
 
 std::optional<int> Window::ProcessMessage()
@@ -115,7 +165,7 @@ LRESULT Window::HandleMsgThunk(const HWND p_hwnd, const UINT p_msg, const WPARAM
 }
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
-LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam) const
+LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam)
 {
     if (ImGui_ImplWin32_WndProcHandler(p_hwnd, p_msg, p_wParam, p_lParam))
         return true;
@@ -129,9 +179,24 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
 
         // clear keystate when window loses focus to prevent input getting "stuck"
     case WM_KILLFOCUS:
-        Input::Input::GetInstance().get()->keyboard.ClearStates();
+        Input::Input::GetInstance()->keyboard.ClearStates();
         break;
 
+    case WM_ACTIVATE:
+        if(!m_isCursorEnabled)
+        {
+            if(p_wParam & WA_ACTIVE || p_wParam & WA_CLICKACTIVE)
+            {
+                ConfineCursor();
+                HideCursor();
+            }
+            else
+            {
+                FreeCursor();
+                ShowCursor();
+            }
+        }
+        break;
         /*********** KEYBOARD MESSAGES ***********/
     case WM_KEYDOWN:
         // sys-key commands need to be handled to track ALT key (VK_MENU) and F10
@@ -179,12 +244,16 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
     }
     case WM_LBUTTONDOWN:
     {
-        _INPUT->mouse.OnLeftPressed();
         break;
+        _INPUT->mouse.OnLeftPressed();
     }
     case WM_RBUTTONDOWN:
     {
         _INPUT->mouse.OnRightPressed();
+        if (m_isCursorEnabled)
+        {
+            DisableCursor();
+        }
         break;
     }
     case WM_LBUTTONUP:
@@ -194,19 +263,17 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
     }
     case WM_RBUTTONUP:
     {
+        if (!m_isCursorEnabled)
+        {
+            EnableCursor();
+        }
         _INPUT->mouse.OnRightReleased();
         break;
     }
     case WM_MOUSEWHEEL:
     {
-        if (GET_WHEEL_DELTA_WPARAM(p_wParam) > 0)
-        {
-            _INPUT->mouse.OnWheelUp();
-        }
-        else if (GET_WHEEL_DELTA_WPARAM(p_wParam) < 0)
-        {
-            _INPUT->mouse.OnWheelDown();
-        }
+        const int delta = GET_WHEEL_DELTA_WPARAM(p_wParam);
+        _INPUT->mouse.OnWheelDelta(delta);
         break;
     }
     /************** END MOUSE MESSAGES **************/
