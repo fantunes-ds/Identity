@@ -767,6 +767,23 @@ namespace GPM
 		return Lerp(p_start, p_end, p_interpolationCoefficient).Normalize();
 	}
 
+	template <typename T>
+	constexpr T Vector4<T>::operator[](const int p_index) const
+	{
+		if (p_index < 0 || p_index > 3)
+			throw std::out_of_range("Out of range access with index:" + std::to_string(p_index) + " in Vector4");
+
+		switch (p_index)
+		{
+		case 0: return x;
+		case 1: return y;
+		case 2: return z;
+		case 3: return w;
+		default: return static_cast<T>(1.0);
+		}
+	}
+
+
 #pragma endregion
 #pragma region Conversions
 

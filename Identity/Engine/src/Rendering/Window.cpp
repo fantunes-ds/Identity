@@ -1,5 +1,7 @@
 #include <stdafx.h>
 #include <Rendering/Window.h>
+#include <Tools/ImGUI/imgui.h>
+#include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Input/Input.h>
 
 using namespace Engine::Rendering;
@@ -51,25 +53,79 @@ Window::Window(int p_width, int p_height, const char* p_name) : m_width(p_width)
 
     m_hwnd = CreateWindow(WindowClass::GetName(), p_name, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 
         wr.right - wr.left, wr.bottom - wr.top, nullptr, nullptr, WindowClass::GetInstance(), this);
-
+    
     ShowWindow(m_hwnd, SW_SHOWDEFAULT);
 
-    m_graphics = std::make_unique<Graphics>(m_hwnd);
+    ImGui_ImplWin32_Init(m_hwnd);
+
+    m_renderer = std::make_unique<Renderer>(m_hwnd, m_width, m_height);
+    isSet = true;
 }
 
 Window::~Window()
 {
+    ImGui_ImplWin32_Shutdown();
     DestroyWindow(m_hwnd);
 }
 
-Graphics& Window::GetGraphics() const
+Renderer& Window::GetRenderer() const
 {
-    return *m_graphics;
+    return *m_renderer;
 }
 
-void Window::SetTitle(const std::string& title)
+void Window::SetTitle(const std::string& title) const
 {
     SetWindowText(m_hwnd, title.c_str());
+}
+
+void Window::EnableCursor() noexcept
+{
+    m_isCursorEnabled = true;
+    ShowCursor();
+    EnableImGUIMouse();
+    FreeCursor();
+}
+
+void Window::DisableCursor() noexcept
+{
+    m_isCursorEnabled = false;
+    HideCursor();
+    DisableImGUIMouse();
+    ConfineCursor();
+}
+
+void Window::ConfineCursor() const noexcept
+{
+    RECT rect;
+    GetClientRect(m_hwnd, &rect);
+    MapWindowPoints(m_hwnd, nullptr, reinterpret_cast<POINT*>(&rect), 2);
+    ClipCursor(&rect);
+}
+
+void Window::FreeCursor() const noexcept
+{
+    ClipCursor(nullptr);
+}
+
+void Window::HideCursor() const noexcept
+{
+    while (::ShowCursor(FALSE) >= 0);
+}
+
+void Window::ShowCursor() const noexcept
+{
+    while (::ShowCursor(TRUE) < 0);
+}
+
+void Window::EnableImGUIMouse() const noexcept
+{
+    ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+}
+
+void Window::DisableImGUIMouse() const noexcept
+{
+    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
+
 }
 
 std::optional<int> Window::ProcessMessage()
@@ -90,7 +146,7 @@ std::optional<int> Window::ProcessMessage()
     return {};
 }
 
-LRESULT Window::HandleMsgSetup(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)
+LRESULT Window::HandleMsgSetup(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam)
 {
     if (p_msg == WM_NCCREATE)
     {
@@ -103,27 +159,55 @@ LRESULT Window::HandleMsgSetup(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM 
     return DefWindowProc(p_hwnd, p_msg, p_wParam, p_lParam);
 }
 
-LRESULT Window::HandleMsgThunk(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)
+LRESULT Window::HandleMsgThunk(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam)
 {
     Window* const window = reinterpret_cast<Window*>(GetWindowLongPtr(p_hwnd, GWLP_USERDATA));
     return window->HandleMsg(p_hwnd, p_msg, p_wParam, p_lParam);
 }
 
-LRESULT Window::HandleMsg(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam)
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
+LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam)
 {
+    if (ImGui_ImplWin32_WndProcHandler(p_hwnd, p_msg, p_wParam, p_lParam))
+        return true;
     // no default switch case because windows sends a lot of different
     // random unknown messages, and we don't need to filter them all.
     switch(p_msg)
     {
+    case WM_SIZING:
+        if (isSet)
+        {
+            RECT rcClient;
+            GetClientRect(m_hwnd, &rcClient);
+            m_width = rcClient.right - rcClient.left;
+            m_height = rcClient.bottom - rcClient.top;
+            m_renderer->Resize(m_width, m_height);
+        }
+        break;
     case WM_CLOSE:
         PostQuitMessage(0);
         return 0;
 
         // clear keystate when window loses focus to prevent input getting "stuck"
     case WM_KILLFOCUS:
-        _INPUT->keyboard.ClearStates();
+        Input::Input::GetInstance()->keyboard.ClearStates();
         break;
 
+    case WM_ACTIVATE:
+        if(!m_isCursorEnabled)
+        {
+            if(p_wParam & WA_ACTIVE || p_wParam & WA_CLICKACTIVE)
+            {
+                ConfineCursor();
+                HideCursor();
+            }
+            else
+            {
+                FreeCursor();
+                ShowCursor();
+            }
+        }
+        break;
         /*********** KEYBOARD MESSAGES ***********/
     case WM_KEYDOWN:
         // sys-key commands need to be handled to track ALT key (VK_MENU) and F10
@@ -171,12 +255,16 @@ LRESULT Window::HandleMsg(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lPa
     }
     case WM_LBUTTONDOWN:
     {
-        _INPUT->mouse.OnLeftPressed();
         break;
+        _INPUT->mouse.OnLeftPressed();
     }
     case WM_RBUTTONDOWN:
     {
         _INPUT->mouse.OnRightPressed();
+        if (m_isCursorEnabled)
+        {
+            DisableCursor();
+        }
         break;
     }
     case WM_LBUTTONUP:
@@ -186,19 +274,17 @@ LRESULT Window::HandleMsg(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lPa
     }
     case WM_RBUTTONUP:
     {
+        if (!m_isCursorEnabled)
+        {
+            EnableCursor();
+        }
         _INPUT->mouse.OnRightReleased();
         break;
     }
     case WM_MOUSEWHEEL:
     {
-        if (GET_WHEEL_DELTA_WPARAM(p_wParam) > 0)
-        {
-            _INPUT->mouse.OnWheelUp();
-        }
-        else if (GET_WHEEL_DELTA_WPARAM(p_wParam) < 0)
-        {
-            _INPUT->mouse.OnWheelDown();
-        }
+        const int delta = GET_WHEEL_DELTA_WPARAM(p_wParam);
+        _INPUT->mouse.OnWheelDelta(delta);
         break;
     }
     /************** END MOUSE MESSAGES **************/

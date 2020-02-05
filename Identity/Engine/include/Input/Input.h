@@ -3,6 +3,8 @@
 #include <Input/Keyboard.h>
 #include <Input/Mouse.h>
 
+#define _INPUT Input::Input::GetInstance()
+
 namespace Engine::Input
 {
     class API_ENGINE Input

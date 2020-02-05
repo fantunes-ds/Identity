@@ -51,13 +51,15 @@ namespace Engine::Input
         void OnRightReleased() noexcept;
         void OnWheelUp() noexcept;
         void OnWheelDown() noexcept;
+        void OnWheelDelta(int p_delta) noexcept;
     private:
-        static constexpr unsigned int buffer_size = 16u;
-        int                           m_x{0};
-        int                           m_y{0};
-        bool                          m_leftIsPressed = false;
-        bool                          m_rightIsPressed = false;
-        bool                          m_isInWindow = false;
+        static constexpr unsigned int   buffer_size = 16u;
+        int                             m_x{0};
+        int                             m_y{0};
+        bool                            m_leftIsPressed{false};
+        bool                            m_rightIsPressed{false};
+        bool                            m_isInWindow{false};
+        int                             m_wheelDelta{0};
         std::pair<MouseState, Vector2I> m_mouseMap;
     };
 }
