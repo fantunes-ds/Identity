@@ -1,9 +1,10 @@
 #pragma once
 #include <Export.h>
+#include <Objects/IObject.h>
 
 namespace Engine::Components
 {
-    class API_ENGINE IComponent
+    class API_ENGINE IComponent : public Objects::IObject
     {
     public:
         virtual bool IsWellInitialized() = 0;

@@ -52,7 +52,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContaine
         }
     }
 
-    ModelContainer->m_models.insert_or_assign(Tools::IDCounter::GetNewID(), model);
+    ModelContainer->m_models.insert_or_assign(model->GetID(), model);
     return model;
 }
 

@@ -11,6 +11,7 @@
 #include <Objects/GameObject.h>
 #include "Components/ModelComponent.h"
 #include "Components/CameraComponent.h"
+#include "Containers/CameraContainer.h"
 
 using namespace Engine::Core;
 
@@ -31,7 +32,23 @@ int App::Run() const
     Systems::RenderSystem renderSystem(&m_window.GetRenderer());
 
     Objects::GameObject gameObject;
+    Objects::GameObject gameObject2;
+    gameObject2.GetTransform()->SetTransformMatrix(GPM::Matrix4F::CreateTransformation(
+        Vector3F{ 4.0f, 4.0f, 0.0f },
+        Quaternion{ 0.0f, 1.0f, 0.0f, 1.0f },
+        Vector3F{ 0.02f, 0.02f, 0.02f }
+    ));
+
     gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
+    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+   // gameObject3.AddComponent<Components::ModelComponent>("statue");
+
+    bool same = gameObject == gameObject2;
+    //bool same2 = gameObject == gameObject3;
+
+    int a = gameObject.GetID();
+    int b = gameObject.GetTransform()->GetID();
+    int c = Containers::ModelContainer::GetAllModels().size();
 
     Rendering::Light dirLight{};
 

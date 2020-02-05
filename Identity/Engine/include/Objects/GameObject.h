@@ -9,7 +9,7 @@
 
 namespace Engine::Objects
 {
-    class API_ENGINE GameObject
+    class API_ENGINE GameObject : public IObject
     {
     public:
         GameObject();

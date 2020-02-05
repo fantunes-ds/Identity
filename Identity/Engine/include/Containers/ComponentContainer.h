@@ -14,7 +14,6 @@ namespace Engine::Containers
         ComponentContainer(const ComponentContainer&) = delete;
         ComponentContainer(const ComponentContainer&&) = delete;
 
-
         template <class T, typename ...Args>
         static int32_t AddComponent(Args& ... p_args)
         {
@@ -31,7 +30,6 @@ namespace Engine::Containers
 
         static ComponentContainer* GetInstance();
         static std::map<int, std::shared_ptr<Components::IComponent>>& GetAllComponents() { return GetInstance()->m_components; }
-
         static std::shared_ptr<Components::IComponent> FindComponent(int32_t p_id);
 
         template<class T>

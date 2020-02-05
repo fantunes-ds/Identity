@@ -33,9 +33,9 @@ namespace Engine::Containers
          */
         static int32_t FindModel(const std::string& p_name);
         static std::shared_ptr<ObjectElements::Model> FindModel(uint32_t p_id);
-        inline std::map<int, std::shared_ptr<ObjectElements::Model>>& GetAllModels() { return m_models; }
+        static inline std::map<int, std::shared_ptr<ObjectElements::Model>>& GetAllModels() { return GetInstance()->m_models; }
 
-        inline void SetGraphicsDevice(Microsoft::WRL::ComPtr<ID3D11Device> p_device) { m_graphicsDevice = p_device; }
+        static inline void SetGraphicsDevice(Microsoft::WRL::ComPtr<ID3D11Device> p_device) { GetInstance()->m_graphicsDevice = p_device; }
 
     private:
         ModelContainer() = default;

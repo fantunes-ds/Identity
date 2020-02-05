@@ -28,24 +28,9 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Objects::GameObject::GetM
     return nullptr;
 }
 
-/*void Engine::Objects::GameObject::SetModel(const std::string& p_name)
-{
-    int32_t id = Containers::ModelContainer::FindModel(p_name);
-
-    if (id < 0)
-    {
-        const std::string error("GameObject::SetModel(const std::string& p_name): Could not find model with name " + p_name + "\n");
-        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
-        return;
-    }
-
-    m_model = id;
-}*/
-
 bool Engine::Objects::GameObject::operator==(GameObject& p_other) const
 {
-    //TODO: make this work once the rest works
-    if (m_transform == p_other.m_transform && false)
+    if (m_transform == p_other.m_transform && m_components == p_other.m_components)
         return true;
 
     return false;

@@ -18,16 +18,15 @@ int32_t Engine::Containers::ComponentContainer::AddComponent(Components::ICompon
             if (*component.second == p_component)
             {
                 std::string type = typeid(*p_component).name();
-                const std::string error("ComponentContainer::AddComponent<" + type + ">(Components::IComponent* p_component): Failed to add Component because it already exists");
+                const std::string error("ComponentContainer::AddComponent<" + type + ">(Components::IComponent* p_component): Tried to add a Component that already exists");
                 MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
-                return -1;
+                return component.first;
             }
         }
     }
 
-    int32_t id = Tools::IDCounter::GetNewID();
-    GetInstance()->m_components.insert_or_assign(id, std::shared_ptr<Engine::Components::IComponent>(p_component));
-    return id;
+    GetInstance()->m_components.insert_or_assign(p_component->GetID(), std::shared_ptr<Engine::Components::IComponent>(p_component));
+    return p_component->GetID();
 }
 
 Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::GetInstance()

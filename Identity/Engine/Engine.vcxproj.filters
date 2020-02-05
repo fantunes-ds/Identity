@@ -150,6 +150,12 @@
     <ClInclude Include="include\Containers\TransformContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Containers\CameraContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Objects\IObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\TestDependencies.cpp">
@@ -243,6 +249,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Containers\TransformContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Containers\CameraContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\CameraComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Objects\IObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -19,9 +19,8 @@ int32_t Engine::Containers::GameObjectContainer::AddGameObject(Objects::GameObje
         }
     }
 
-    int32_t id = Tools::IDCounter::GetNewID();
-    GetInstance()->m_gameObjects.insert_or_assign(id, std::shared_ptr<Engine::Objects::GameObject>(p_gameObject));
-    return id;
+    GetInstance()->m_gameObjects.insert_or_assign(p_gameObject->GetID(), std::shared_ptr<Engine::Objects::GameObject>(p_gameObject));
+    return p_gameObject->GetID();
 }
 
 Engine::Containers::GameObjectContainer* Engine::Containers::GameObjectContainer::GetInstance()

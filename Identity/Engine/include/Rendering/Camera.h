@@ -1,6 +1,7 @@
 #pragma once
 #include <Export.h>
 #include <GPM/GPM.h>
+#include <Objects/IObject.h>
 
 namespace Engine::Systems
 {
@@ -9,7 +10,7 @@ namespace Engine::Systems
 
 namespace Engine::Rendering
 {
-    class API_ENGINE Camera
+    class API_ENGINE Camera : public Objects::IObject
     {
         friend class Systems::RenderSystem;
     public:

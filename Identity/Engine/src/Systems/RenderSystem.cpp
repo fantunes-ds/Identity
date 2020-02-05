@@ -44,10 +44,9 @@ void Engine::Systems::RenderSystem::DrawScene()
     
     for (auto& gameObject : Containers::GameObjectContainer::GetAllGameObjects())
     {
-        for (auto component : gameObject.second->GetAllComponents())
+        for (auto& component : gameObject.second->GetAllComponents())
         {
-            Containers::ComponentContainer::GetInstance();
-            if (Components::ModelComponent* modelComp = dynamic_cast<Components::ModelComponent*>(&*Containers::ComponentContainer::FindComponent(component)))
+            if (std::shared_ptr<Components::ModelComponent> modelComp = std::dynamic_pointer_cast<Components::ModelComponent>(Containers::ComponentContainer::FindComponent(component)))
             {
                 auto& meshes = Containers::ModelContainer::FindModel(modelComp->m_model)->GetMeshes();
 

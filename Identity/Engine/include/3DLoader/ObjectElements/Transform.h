@@ -1,10 +1,11 @@
 #pragma once
 #include <Export.h>
 #include <GPM/GPM.h>
+#include <Objects/IObject.h>
 
 namespace Engine::ObjectElements
 {
-    class API_ENGINE Transform
+    class API_ENGINE Transform : public Objects::IObject
     {
     public:
         Transform();
