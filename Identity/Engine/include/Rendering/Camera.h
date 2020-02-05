@@ -27,9 +27,7 @@ namespace Engine::Rendering
         [[nodiscard]] Matrix4F GetViewMatrix() const noexcept;
 
         [[nodiscard]] const Vector3F& GetPosition() const noexcept { return m_position; }
-        [[nodiscard]] const Vector3F& GetFront() const noexcept { return m_forward; }
-        [[nodiscard]] const Vector3F& GetUp() const noexcept { return m_up; }
-        [[nodiscard]] const Vector3F& GetRight() const noexcept { return m_right; }
+        [[nodiscard]] const Quaternion& GetOrientation() const noexcept { return m_orientation; }
 
         [[nodiscard]] const float& GetYaw() const noexcept { return m_yaw; }
         [[nodiscard]] const float& GetPitch() const noexcept { return m_pitch; }
@@ -44,13 +42,8 @@ namespace Engine::Rendering
 
     private:
         Vector3F m_position{ 0.0f, 0.0f, -10.0f };
-        Vector3F m_target;
-        Vector3F m_direction;
-
-        Vector3F m_right;
-        Vector3F m_up{0.0f, 1.0f, 0.0f};
-        Vector3F m_forward{ 0.0f, 0.0f, 1.0f };
-
+        Quaternion m_orientation{ 0.0f, 0.0f, 0.0f, -1.0f };
+        
         float m_speed{ 0.05f };
         float m_sensitivity{ 0.05f };
 
@@ -62,10 +55,9 @@ namespace Engine::Rendering
         float m_farZ{ 1000.0f };
 
         float m_zoom{ 45.0f };
-        float m_yaw{ -90.0f };
+        float m_yaw{ 180.0f };
         float m_pitch{ 0.00f };
         float m_lastX{ m_width * 0.5f };
         float m_lastY{ m_height * 0.5f };
-        bool m_firstMouse;
     };
 }

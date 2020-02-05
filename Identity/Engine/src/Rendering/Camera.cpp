@@ -17,10 +17,9 @@ Engine::Rendering::Camera::Camera(const int p_width, const int p_height) : m_wid
 
 void Engine::Rendering::Camera::UpdateVectors()
 {
-    m_direction = Vector3F(m_position - m_target).Normalized();
-    const Vector3F worldUp = Vector3F(0.0f, 1.0f, 0.0f);
-    m_right = Vector3F(Vector3F::Cross(worldUp, m_direction * -1));
-    m_up = Vector3F::Cross(m_direction * -1, m_right);
+    const Quaternion yaw = Quaternion(Vector3F(0.0f, 1.0f, 0.0f), Tools::Utils::ToRadians(-m_yaw));
+    const Quaternion pitch = Quaternion(Vector3F(1.0f, 0.0f, 0.0f), Tools::Utils::ToRadians(m_pitch));
+    m_orientation = yaw * pitch;
 }
 
 void Engine::Rendering::Camera::UpdateCameraPosition()
@@ -33,50 +32,39 @@ void Engine::Rendering::Camera::UpdateCameraPosition()
         ImGui::SliderFloat("Camera FOV", &angle, 10.f, 180.f, "%1.f");
     }ImGui::End();
 
+    const Quaternion quaternionForward = m_orientation * Quaternion(m_position, 0.0f) * Quaternion::Conjugate(m_orientation);
+    const Vector3F forward{ quaternionForward.GetRotationAxis() };
+    const Vector3F right{ Vector3F::Cross(forward, Vector3F(0.0f, 1.0f, 0.0f)).Normalized() };
+
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
-        m_position += m_forward * m_speed;
+        m_position += forward * m_speed;
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
-        m_position -= m_forward * m_speed;
+        m_position -= forward * m_speed;
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
-        m_position += Vector3F::Cross(m_forward, m_up).Normalized() * m_speed;
+        m_position -= right * m_speed;
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
-        m_position -= Vector3F::Cross(m_forward, m_up).Normalized() * m_speed;
+        m_position += right * m_speed;
 }
 
 void Engine::Rendering::Camera::UpdateCameraRotation()
 {
-    const float xPos { static_cast<float>(_INPUT->mouse.GetPosX())};
-    const float yPos { static_cast<float>(_INPUT->mouse.GetPosY())};
+    float xPos{ static_cast<float>(_INPUT->mouse.GetRawDelta()->x) };
+    float yPos{ static_cast<float>(_INPUT->mouse.GetRawDelta()->y) };
 
-    if (m_firstMouse) // initially set to true
+    const float sensitivity{ 0.1f };
+    xPos *= sensitivity;
+    yPos *= sensitivity;
+
+    m_yaw += xPos;
+    m_pitch += yPos;
+
+    if (ImGui::Begin("Camera Tool"))
     {
-        m_lastX = xPos;
-        m_lastY = yPos;
-        m_firstMouse = false;
-    }
+        ImGui::SliderFloat("CameraYaw", &m_yaw, -180.0f, 180.0f, "%.1f");
+        ImGui::SliderFloat("CameraPitch", &m_pitch, -180.0f, 180.0f, "%.1f");
+    }ImGui::End();
 
-    float xOffset{ xPos - m_lastX };
-    float yOffset{ m_lastY - yPos }; // reversed since y-coordinates range from bottom to top
-    m_lastX = xPos;
-    m_lastY = yPos;
-
-    const float sensitivity{ 0.05f };
-    xOffset *= sensitivity;
-    yOffset *= sensitivity;
-
-    m_yaw += xOffset;
-    m_pitch += yOffset;
-
-    if (m_pitch > 89.0f)
-        m_pitch = 89.0f;
-    if (m_pitch < -89.0f)
-        m_pitch = -89.0f;
-
-    Vector3F direction;
-    direction.x = cos(Tools::Utils::ToRadians(m_yaw)) * cos(Tools::Utils::ToRadians(m_pitch));
-    direction.y = sin(Tools::Utils::ToRadians(m_pitch));
-    direction.z = sin(Tools::Utils::ToRadians(m_yaw)) * cos(Tools::Utils::ToRadians(m_pitch));
-    m_forward = direction.Normalized();
+    UpdateVectors();
 }
 
 
@@ -93,9 +81,9 @@ Matrix4F Engine::Rendering::Camera::GetPerspectiveMatrix() const noexcept
     const float twoNearZ = m_nearZ + m_nearZ;
     const float fRange = m_farZ / (m_farZ - m_nearZ);
 
-    float radAngle = GPM::Tools::Utils::ToRadians(angle);
+    float radAngle = Tools::Utils::ToRadians(angle);
 
-    float yScale = GPM::Tools::Utils::Tan(radAngle / 2);
+    float yScale = Tools::Utils::Tan(radAngle / 2);
     yScale = 1 / yScale;
 
     float AspectRatio = m_width / m_height;
@@ -111,8 +99,13 @@ Matrix4F Engine::Rendering::Camera::GetPerspectiveMatrix() const noexcept
 
 Matrix4F Engine::Rendering::Camera::GetViewMatrix() const noexcept
 {
-    const Vector3F invertedXCamPos { -m_position.x, m_position.y, m_position.z};
-    return { Matrix4F::LookAt(invertedXCamPos,
-                              invertedXCamPos + m_forward,
-                              m_up) };
+    const Quaternion reversedOrientation = Quaternion::Conjugate(m_orientation);
+    Matrix4F rotation = reversedOrientation.ToMatrix4();
+
+    rotation.m_data[12] = (rotation.m_data[0] * m_position.x + rotation.m_data[4] * m_position.y + rotation.m_data[8] * m_position.z);
+    rotation.m_data[13] = -(rotation.m_data[1] * m_position.x + rotation.m_data[5] * m_position.y + rotation.m_data[9] * m_position.z);
+    rotation.m_data[14] = (rotation.m_data[2] * m_position.x + rotation.m_data[6] * m_position.y + rotation.m_data[10] * m_position.z);
+    rotation.m_data[15] = 1;
+
+    return rotation;
 }
