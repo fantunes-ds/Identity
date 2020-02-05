@@ -63,6 +63,12 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
     if (_INPUT->keyboard.IsKeyHeld('B'))
         m_window.GetRenderer().ClearBuffer(0.0f, 0.0f, 1.0f);
 
+
+    if (_INPUT->keyboard.IsKeyDown('F'))
+    {
+        m_window.GetRenderer().SetFullscreen(!m_window.GetRenderer().GetFullscreenState());
+    }
+
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
