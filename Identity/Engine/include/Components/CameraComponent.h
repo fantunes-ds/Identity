@@ -14,6 +14,6 @@ namespace Engine::Components
         bool operator==(IComponent* p_other) override { return false; }
 
     private:
-
+        int32_t m_id = -1;
     };
 }

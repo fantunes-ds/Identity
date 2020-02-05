@@ -14,16 +14,17 @@ namespace Engine::Containers
         ComponentContainer(const ComponentContainer&) = delete;
         ComponentContainer(const ComponentContainer&&) = delete;
 
-        static int32_t AddComponent(Components::IComponent* p_component);
 
         template <class T, typename ...Args>
         static int32_t AddComponent(Args& ... p_args)
         {
             int32_t id = -1;
+
+            //TODO: Possible memory leak here
             T* newComp = new T(p_args...);
 
             if (dynamic_cast<Components::IComponent*>(newComp)->IsWellInitialized())
-                id = Containers::ComponentContainer::AddComponent(newComp);
+                id = ComponentContainer::AddComponent(newComp);
 
             return id;
         }
@@ -33,10 +34,25 @@ namespace Engine::Containers
 
         static std::shared_ptr<Components::IComponent> FindComponent(int32_t p_id);
 
+        template<class T>
+        static std::vector<std::shared_ptr<T>> FindAllComponentsOfType()
+        {
+            std::vector<std::shared_ptr<T>> foundComps;
+
+            for (const auto component : GetInstance()->m_components)
+            {
+                if (std::shared_ptr<T> foundComp = std::dynamic_pointer_cast<std::shared_ptr<T>>(FindComponent(component.first)))
+                    foundComps.push_back(foundComp);
+            }
+
+            return foundComps;
+        }
+
     private:
         ComponentContainer() = default;
+        static int32_t AddComponent(Components::IComponent* p_component);
 
         inline static ComponentContainer* m_instance = nullptr;
-        std::map<int, std::shared_ptr<Components::IComponent>> m_components;
+        std::map<int32_t, std::shared_ptr<Components::IComponent>> m_components;
     };
 }

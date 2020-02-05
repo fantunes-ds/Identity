@@ -10,6 +10,7 @@
 #include <Input/Input.h>
 #include <Objects/GameObject.h>
 #include "Components/ModelComponent.h"
+#include "Components/CameraComponent.h"
 
 using namespace Engine::Core;
 
@@ -31,7 +32,6 @@ int App::Run() const
 
     Objects::GameObject gameObject;
     gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
-    gameObject.AddComponent<Components::ModelComponent>("statue");
 
     Rendering::Light dirLight{};
 
