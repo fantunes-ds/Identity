@@ -22,6 +22,7 @@ App::App() : m_window(800, 600, "Engine Window")
 
 App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name)
 {
+    Input::Input::InitInput();
 }
 
 int App::Run() const
@@ -72,6 +73,7 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
+    p_renderSystem.UpdateCamera();
     p_renderSystem.Update();
 
     static bool show_demo_window = true;

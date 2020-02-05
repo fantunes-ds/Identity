@@ -174,6 +174,14 @@ void Engine::Systems::RenderSystem::Update()
     DrawScene();
 }
 
+
+void Engine::Systems::RenderSystem::UpdateCamera()
+{
+    int width, height;
+    m_renderer->GetResolution(width, height);
+    m_camera.UpdateResolution(width, height);
+}
+
 uint32_t Engine::Systems::RenderSystem::AddModel(const std::string& p_path, const std::string& p_name)
 {
     if (Managers::ModelManager::FindModel(p_name) >= 0)

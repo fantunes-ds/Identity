@@ -48,12 +48,13 @@ namespace Engine::Rendering
     private:
         static LRESULT CALLBACK HandleMsgSetup(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam);
         static LRESULT CALLBACK HandleMsgThunk(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam);
-        LRESULT HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam) const;
+        LRESULT HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam);
 
         int m_width;
         int m_height;
         HWND m_hwnd;
 
+        bool isSet = false;
         std::unique_ptr<Renderer> m_renderer;
     };
 }
