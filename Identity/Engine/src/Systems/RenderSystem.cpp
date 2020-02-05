@@ -43,10 +43,10 @@ void Engine::Systems::RenderSystem::DrawScene()
         for (auto& mesh : model.second->GetMeshes())
         {
             mesh->Bind(m_renderer->GetContext());
+            m_renderer->SetRenderTarget();
 
-            // ********* WIP ********* //
-
-            // create constant buffer for transform matrix
+            //------------SHADERS----------------
+            //----------VERTEX CONSTANT----------
             struct VertexConstantBuffer
             {
                 Matrix4F model;
@@ -55,14 +55,9 @@ void Engine::Systems::RenderSystem::DrawScene()
                 Matrix4F projection;
             };
 
-            Vector3D quat{ 0, 1, 0 };
-            Matrix4F model = Matrix4F::CreateTransformation(Vector3F(0.0f, 0.0f, 0.0f),
-                Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(0.0f)),
-                Vector3F{ 0.02f, 0.02f, 0.02f });
+            Matrix4F normalModel = Matrix4F::Inverse(mesh->GetTransform());
 
-            Matrix4F normalModel = Matrix4F::Inverse(model);
-
-
+            //----------INPUT------------
             if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
                 m_camera.m_position += m_camera.m_forward * m_camera.m_speed;
             if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
@@ -71,16 +66,17 @@ void Engine::Systems::RenderSystem::DrawScene()
                 m_camera.m_position -= Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
             if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
                 m_camera.m_position += Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
+            //---------------------------
 
             Matrix4F view = m_camera.GetViewMatrix();
             Matrix4F perspective = m_camera.GetPerspectiveMatrix();
 
-            model.Transpose();
+            Matrix4F Tmodel = mesh->GetTransform().Transpose();
             view.Transpose();
             normalModel.Transpose();
             perspective.Transpose();
 
-            const VertexConstantBuffer vcb{ model, view, normalModel,perspective };
+            const VertexConstantBuffer vcb{ Tmodel, view, normalModel,perspective };
 
             Microsoft::WRL::ComPtr<ID3D11Buffer> vertexConstantBuffer;
             D3D11_BUFFER_DESC                    vertexBufferDesc = {};
@@ -88,20 +84,23 @@ void Engine::Systems::RenderSystem::DrawScene()
             vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
             vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
             vertexBufferDesc.MiscFlags = 0u;
-            vertexBufferDesc.ByteWidth = sizeof(vcb);
+            vertexBufferDesc.ByteWidth = sizeof(VertexConstantBuffer);
             vertexBufferDesc.StructureByteStride = 0u;
+
             D3D11_SUBRESOURCE_DATA VertexConstantShaderData = {};
             VertexConstantShaderData.pSysMem = &vcb;
             GFX_THROW_INFO(m_renderer->GetDevice()->CreateBuffer(&vertexBufferDesc, &VertexConstantShaderData, &vertexConstantBuffer));
 
             //bind the buffer to the shader
             m_renderer->GetContext()->VSSetConstantBuffers(0u, 1u, vertexConstantBuffer.GetAddressOf());
+            //--------------------------------
 
+            //--------PIXEL CONSTANT----------
             struct PixelConstantBuffer
             {
                 Rendering::Light lightSource;
                 Vector3F cameraPos;
-            };  
+            };
 
             const PixelConstantBuffer pcb{ light->position,
                                           light->ambient,
@@ -110,7 +109,7 @@ void Engine::Systems::RenderSystem::DrawScene()
                                           light->direction,
                                           light->color,
                                           64.0f,
-                                          m_camera.GetPosition()};
+                                          m_camera.GetPosition() };
 
             Microsoft::WRL::ComPtr<ID3D11Buffer> pixelConstantBuffer;
             D3D11_BUFFER_DESC                    pixelBufferDesc = {};
@@ -125,34 +124,13 @@ void Engine::Systems::RenderSystem::DrawScene()
             PixelConstantShaderData.pSysMem = &pcb;
             GFX_THROW_INFO(m_renderer->GetDevice()->CreateBuffer(&pixelBufferDesc, &PixelConstantShaderData, &pixelConstantBuffer));
 
+
             //bind the buffer to the shader
             m_renderer->GetContext()->PSSetConstantBuffers(0u, 1u, pixelConstantBuffer.GetAddressOf());
+            //---------------------------------------
+            //---------------------------------------
 
-            m_renderer->LoadPixelShader(L"../Engine/Resources/Shaders/PixelShader.cso");
-            m_renderer->LoadVertexShader(L"../Engine/Resources/Shaders/VertexShader.cso");
-
-            m_renderer->GetContext()->OMSetRenderTargets(1u, m_renderer->GetTarget().GetAddressOf(), m_renderer->GetDepthStencil().Get());
-
-            //set primitive draw
-            m_renderer->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-            //create input layout
-            Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
-            const D3D11_INPUT_ELEMENT_DESC            inputDesc[] =
-            {
-                {"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-                {"TxCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12u, D3D11_INPUT_PER_VERTEX_DATA, 0},
-                {"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20u, D3D11_INPUT_PER_VERTEX_DATA, 0}
-            };
-            GFX_THROW_INFO(m_renderer->GetDevice()->CreateInputLayout(inputDesc,
-                std::size(inputDesc),
-                m_renderer->GetBlob()->GetBufferPointer(),
-                (UINT)m_renderer->GetBlob()->GetBufferSize(),
-                &inputLayout));
-
-            m_renderer->GetContext()->IASetInputLayout(inputLayout.Get());
-
-            ImGui_ImplDX11_Init(m_renderer->GetDevice().Get(), m_renderer->GetContext().Get());
+            // ImGui_ImplDX11_Init(m_renderer->GetDevice().Get(), m_renderer->GetContext().Get());
 
             GFX_THROW_INFO_ONLY(m_renderer->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
         }

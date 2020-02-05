@@ -82,6 +82,8 @@ namespace Engine::Rendering
 
         //---------WIP--------
 
+        void SetRenderTarget();
+
         void LoadPixelShader(const std::wstring& p_path);
         void LoadVertexShader(const std::wstring& p_path);
 

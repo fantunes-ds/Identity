@@ -113,7 +113,9 @@ Renderer::Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clien
     GFX_THROW_INFO(m_pDevice->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer));
     GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(depthStencilBuffer.Get(), 0, &m_pDepthStencil));
 
-    m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
+    // m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
+    SetRenderTarget();
+    m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     D3D11_VIEWPORT viewPort;
     viewPort.TopLeftX = 0;
@@ -154,6 +156,12 @@ void Renderer::ClearBuffer(float p_red, float p_green, float p_blue) const
     const float colour[] = { p_red, p_green, p_blue, 1.0f };
     m_pContext->ClearRenderTargetView(m_pTarget.Get(), colour);
     m_pContext->ClearDepthStencilView(m_pDepthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
+}
+
+
+void Renderer::SetRenderTarget()
+{
+    m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
 }
 
 void Renderer::LoadPixelShader(const std::wstring& p_path)
@@ -254,7 +262,8 @@ void Renderer::Resize(const int p_width, const int p_height)
     GFX_THROW_INFO(m_pDevice->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer));
     GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(depthStencilBuffer.Get(), 0, &m_pDepthStencil));
 
-    m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
+    // m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
+    SetRenderTarget();
 
     D3D11_VIEWPORT viewPort;
     viewPort.TopLeftX = 0;
