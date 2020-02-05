@@ -3,6 +3,7 @@
 #include <3DLoader/ObjectElements/Transform.h>
 #include <3DLoader/ObjectElements/Model.h>
 #include <Containers/ModelContainer.h>
+#include <Containers/ComponentContainer.h>
 #include <Components/IComponent.h>
 
 namespace Engine::Objects
@@ -17,11 +18,7 @@ namespace Engine::Objects
         [[nodiscard]] inline uint32_t GetTransformID() const { return m_transform; }
         [[nodiscard]] std::shared_ptr<ObjectElements::Model> GetModel() const;
 
-        inline std::vector<Components::IComponent*>& GetAllComponents() { return m_components; }
-        //[[nodiscard]] uint32_t GetModelID() const { return m_model; };
-
-        /*void SetModel(const std::string& p_name);
-        inline void SetModel(uint32_t p_model) { m_model = p_model; }*/
+        inline std::vector<uint32_t>& GetAllComponents() { return m_components; }
         inline void SetTransform(uint32_t p_transform) { m_transform = p_transform; }
 
         bool operator==(GameObject& p_other) const;
@@ -29,14 +26,14 @@ namespace Engine::Objects
         template <class T, typename ...Args>
         void AddComponent(Args& ... p_args)
         {
-            T* newComp = new T(p_args...);
+            int32_t id = Containers::ComponentContainer::AddComponent<T>(p_args...);
 
-            if (dynamic_cast<Components::IComponent*>(newComp)->IsWellInitialized())
-                m_components.emplace_back(newComp);
+            if (id > 0)
+                m_components.emplace_back(id);
         }
 
     private:
         uint32_t m_transform = -1;
-        std::vector<Components::IComponent*> m_components;
+        std::vector<uint32_t> m_components;
     };
 }

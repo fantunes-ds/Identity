@@ -14,7 +14,8 @@ int32_t Engine::Containers::ComponentContainer::AddComponent(Components::ICompon
     for (auto& component : GetInstance()->m_components)
     {
         if (typeid(*component.second) == typeid(*p_component))
-        {          
+        {
+            
             if (*component.second == p_component)
             {
                 const std::string error("ComponentContainer::AddComponent(Components::IComponent* p_component): Failed to add Component because it already exists");

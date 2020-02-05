@@ -44,9 +44,10 @@ void Engine::Systems::RenderSystem::DrawScene()
     
     for (auto& gameObject : Containers::GameObjectContainer::GetAllGameObjects())
     {
-        for (auto& component : gameObject.second->GetAllComponents())
+        for (auto component : gameObject.second->GetAllComponents())
         {
-            if (Components::ModelComponent* modelComp = dynamic_cast<Components::ModelComponent*>(component))
+            Containers::ComponentContainer::GetInstance();
+            if (Components::ModelComponent* modelComp = dynamic_cast<Components::ModelComponent*>(&*Containers::ComponentContainer::FindComponent(component)))
             {
                 auto& meshes = Containers::ModelContainer::FindModel(modelComp->m_model)->GetMeshes();
 
