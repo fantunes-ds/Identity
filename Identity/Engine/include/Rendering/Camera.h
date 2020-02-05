@@ -56,6 +56,7 @@ namespace Engine::Rendering
         float m_pitch{ 0.00f };
 
         // Perpsective variables
+        float angle = 90.0f;
         float m_width{ 1.0f };
         float m_height{ 9.0f / 16.0f };
         float m_nearZ{ 0.5f };
