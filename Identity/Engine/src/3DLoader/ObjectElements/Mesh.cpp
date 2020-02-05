@@ -18,12 +18,6 @@ void Engine::ObjectElements::Mesh::GenerateBuffers(const Microsoft::WRL::ComPtr<
     m_vertexBuffer.Generate(p_device, m_vertices);
     m_indexBuffer.Generate(p_device, m_indices);
     m_inputLayout.Generate(p_device, blob_test);
-
-    Vector3D quat{ 0, 1, 0 };
-    transform = Matrix4F::CreateTransformation(Vector3F(0.0f, 0.0f, 0.0f),
-        Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(0.0f)),
-        Vector3F{ 0.02f, 0.02f, 0.02f });
-
 }
 
 void Engine::ObjectElements::Mesh::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)

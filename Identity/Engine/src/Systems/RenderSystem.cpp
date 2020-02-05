@@ -41,13 +41,13 @@ void Engine::Systems::RenderSystem::DrawScene()
         ImGui::SliderFloat("Ambient LightZ", &light->ambient.z, 0.0f, 1.0f, "%.1f");
     }ImGui::End();
 
-    
+
     for (auto& gameObject : Containers::GameObjectContainer::GetAllGameObjects())
     {
         for (auto component : gameObject.second->GetAllComponents())
         {
             Containers::ComponentContainer::GetInstance();
-            if (Components::ModelComponent* modelComp = dynamic_cast<Components::ModelComponent*>(&*Containers::ComponentContainer::FindComponent(component)))
+            if (Components::ModelComponent * modelComp = dynamic_cast<Components::ModelComponent*>(&*Containers::ComponentContainer::FindComponent(component)))
             {
                 auto& meshes = Containers::ModelContainer::FindModel(modelComp->m_model)->GetMeshes();
 
@@ -136,6 +136,8 @@ void Engine::Systems::RenderSystem::DrawScene()
                     m_renderer->GetContext()->PSSetConstantBuffers(0u, 1u, pixelConstantBuffer.GetAddressOf());
 
                     GFX_THROW_INFO_ONLY(m_renderer->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
+                }
+            }
         }
     }
 }

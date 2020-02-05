@@ -34,7 +34,7 @@ namespace Engine::ObjectElements
         void LoadVertexShader(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
         void BindShader(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
 
-        Matrix4F& GetTransform() { return transform; }
+        // Matrix4F& GetTransform() { return transform; }
         //-------
 
     private:
@@ -51,7 +51,7 @@ namespace Engine::ObjectElements
         Microsoft::WRL::ComPtr<ID3DBlob> blob_test;
         //------------
 
-        Matrix4F transform;
+        // Matrix4F transform;
         //-------
 
         //data
