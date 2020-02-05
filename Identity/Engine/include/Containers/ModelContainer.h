@@ -5,22 +5,22 @@
 #include <3DLoader/ObjectElements/Model.h>
 
 
-namespace Engine::Managers
+namespace Engine::Containers
 {
     /**
      * @brief Singleton data holder that stores all loaded Models and Meshes.
      */
-    class API_ENGINE ModelManager
+    class API_ENGINE ModelContainer
     {
     public:
-        ~ModelManager();
-        ModelManager(const ModelManager&) = delete;
-        ModelManager(const ModelManager&&) = delete;
+        ~ModelContainer();
+        ModelContainer(const ModelContainer&) = delete;
+        ModelContainer(const ModelContainer&&) = delete;
 
-        static ModelManager* GetInstance();
+        static ModelContainer* GetInstance();
 
         /**
-         *@brief Load a Model and store it in ModelManager.
+         *@brief Load a Model and store it in ModelContainer.
          *@return Pointer to the newly added Model.
          */
 
@@ -38,9 +38,9 @@ namespace Engine::Managers
         inline void SetGraphicsDevice(Microsoft::WRL::ComPtr<ID3D11Device> p_device) { m_graphicsDevice = p_device; }
 
     private:
-        ModelManager() = default;
+        ModelContainer() = default;
 
-        inline static ModelManager* m_instance = nullptr;
+        inline static ModelContainer* m_instance = nullptr;
         Microsoft::WRL::ComPtr<ID3D11Device> m_graphicsDevice;
         std::map<int, std::shared_ptr<ObjectElements::Model>> m_models;
     };

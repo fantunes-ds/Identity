@@ -8,10 +8,12 @@ namespace Engine::Components
     {
     public:
         CameraComponent() = default;
+        virtual ~CameraComponent() = default;
 
-        void foo() override {}
+        bool IsWellInitialized() override { return true; }
+        bool operator==(IComponent* p_other) override { return false; }
 
     private:
-
+        int32_t m_id = -1;
     };
 }

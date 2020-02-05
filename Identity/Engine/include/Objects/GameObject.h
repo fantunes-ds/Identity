@@ -2,8 +2,10 @@
 #include <Export.h>
 #include <3DLoader/ObjectElements/Transform.h>
 #include <3DLoader/ObjectElements/Model.h>
-#include "Managers/ModelManager.h"
+#include <Containers/ModelContainer.h>
+#include <Containers/ComponentContainer.h>
 #include <Components/IComponent.h>
+#include <Components/ModelComponent.h>
 
 namespace Engine::Objects
 {
@@ -17,26 +19,51 @@ namespace Engine::Objects
         [[nodiscard]] inline uint32_t GetTransformID() const { return m_transform; }
         [[nodiscard]] std::shared_ptr<ObjectElements::Model> GetModel() const;
 
-        inline std::vector<Components::IComponent*>& GetAllComponents() { return m_components; }
-        //[[nodiscard]] uint32_t GetModelID() const { return m_model; };
-
-        /*void SetModel(const std::string& p_name);
-        inline void SetModel(uint32_t p_model) { m_model = p_model; }*/
-        inline void SetTransform(uint32_t p_transform) { m_transform = p_transform; }
+        inline std::vector<int32_t>& GetAllComponents() { return m_components; }
+        inline void SetTransform(int32_t p_transform) { m_transform = p_transform; }
 
         bool operator==(GameObject& p_other) const;
 
         template <class T, typename ...Args>
-        void AddComponent(Args&... p_args)
+        void AddComponent(Args& ... p_args)
         {
-            T* newComp = new T( p_args... );
+            int32_t id = Containers::ComponentContainer::AddComponent<T>(p_args...);
 
-            m_components.emplace_back(newComp);
+            if (id > 0)
+                m_components.emplace_back(id);
+        }
+
+        /**
+         * @return The first instance of the desired component type
+         */
+        template <class T>
+        std::shared_ptr<T> FindComponent(int32_t p_id = -1) const
+        {
+            for (auto component : m_components)
+            {
+                if (std::shared_ptr<T> foundComp = std::dynamic_pointer_cast<T>(Containers::ComponentContainer::FindComponent(component)))
+                return foundComp;
+            }
+
+            return nullptr;
+        }
+
+        template <class T>
+        std::vector<std::shared_ptr<T>> FindAllComponentsOfType() const
+        {
+            std::vector<std::shared_ptr<T>> foundComps;
+
+            for (auto component : m_components)
+            {
+                if (std::shared_ptr<T> foundComp = std::dynamic_pointer_cast<T>(Containers::ComponentContainer::FindComponent(component)))
+                    foundComps.push_back(foundComp);
+            }
+
+            return foundComps;
         }
 
     private:
-        //TODO:make this into a vector of components
-        uint32_t m_transform = -1;
-        std::vector<Components::IComponent*> m_components;
+        int32_t m_transform = -1;
+        std::vector<int32_t> m_components;
     };
 }

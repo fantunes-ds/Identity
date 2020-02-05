@@ -2,26 +2,21 @@
 #include <Export.h>
 #include <Components/IComponent.h>
 #include "3DLoader/ObjectElements/Model.h"
-#include "Managers/ModelManager.h"
+#include <Containers/ModelContainer.h>
 
 namespace Engine::Components
 {
     class API_ENGINE ModelComponent: public IComponent
     {
     public:
-        void foo() override {}
+        ModelComponent(const std::string& p_name);
+        ModelComponent(const std::string& p_file, const std::string& p_name);
+        virtual ~ModelComponent() = default;
 
-        ModelComponent(const std::string& p_name)
-        {
-            m_model = Managers::ModelManager::FindModel(p_name);
-        }
+        bool IsWellInitialized() override;
 
-        ModelComponent(const std::string& p_file, const std::string& p_name)
-        {
-            Managers::ModelManager::AddModel(p_file, p_name);
-            m_model = Managers::ModelManager::FindModel(p_name);
-        }
+        bool operator==(IComponent* p_other) override;
 
-        uint32_t m_model;
+        int32_t m_model;
     };
 }

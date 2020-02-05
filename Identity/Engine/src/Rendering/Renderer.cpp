@@ -9,29 +9,13 @@
 
 using namespace Engine::Rendering;
 
-Renderer::Renderer(const HWND p_hwnd)
+Renderer::Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight) : m_width(p_clientWidth), m_height(p_clientHeight)
 {
-    DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-    swapChainDesc.BufferDesc.Width = 0;
-    swapChainDesc.BufferDesc.Height = 0;
-    swapChainDesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-    swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-    swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
-    swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-    swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-    swapChainDesc.SampleDesc.Count = 1;     //will change for antialiasing
-    swapChainDesc.SampleDesc.Quality = 0;
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDesc.BufferCount = 1;
-    swapChainDesc.OutputWindow = p_hwnd;
-    swapChainDesc.Windowed = TRUE;
-    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-    swapChainDesc.Flags = 0;
-
     HRESULT hr;
 
-    //create the device and swap chain
-    GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(
+    //create the device
+    GFX_THROW_INFO(
+    D3D11CreateDevice(
         nullptr,
         D3D_DRIVER_TYPE_HARDWARE,
         nullptr,
@@ -39,61 +23,105 @@ Renderer::Renderer(const HWND p_hwnd)
         nullptr,
         0,
         D3D11_SDK_VERSION,
-        &swapChainDesc,
-        &m_pSwapChain,
         &m_pDevice,
         nullptr,
         &m_pContext
     ));
 
-    //get access to back buffer
-    Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
-    GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer));
+    //check for msaa quality support
+    GFX_THROW_INFO(m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m_4xMsaaQuality));
+
+    //describe the swap chain
+    DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
+    swapChainDesc.BufferDesc.Width = 0;
+    swapChainDesc.BufferDesc.Height = 0;
+    swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
+    swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
+    swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+    swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+
+    //with 4x msaa
+    if (m_enable4xMSAA)
+    {
+        swapChainDesc.SampleDesc.Count = 4;
+        swapChainDesc.SampleDesc.Quality = m_4xMsaaQuality - 1;
+    }
+    //without
+    else
+    {
+        swapChainDesc.SampleDesc.Count = 1;
+        swapChainDesc.SampleDesc.Quality = 0;
+    }
+
+    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    swapChainDesc.BufferCount = 1;
+    swapChainDesc.OutputWindow = p_hwnd;
+    swapChainDesc.Windowed = TRUE;
+    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+    swapChainDesc.Flags = 0;
+
+    //Get the factory to generate the swapChain
+    Microsoft::WRL::ComPtr<IDXGIDevice> dxgiDevice;
+    GFX_THROW_INFO(m_pDevice->QueryInterface(__uuidof(IDXGIDevice), &dxgiDevice));
+
+    Microsoft::WRL::ComPtr<IDXGIAdapter> dxgiAdapter;
+    GFX_THROW_INFO(dxgiDevice->GetParent(__uuidof(IDXGIAdapter), &dxgiAdapter));
+
+    Microsoft::WRL::ComPtr<IDXGIFactory> dxgiFactory;
+    GFX_THROW_INFO(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), &dxgiFactory));
+
+    GFX_THROW_INFO(dxgiFactory->CreateSwapChain(m_pDevice.Get(), &swapChainDesc, &m_pSwapChain));
+
+    dxgiDevice->Release();
+    dxgiAdapter->Release();
+    dxgiFactory->Release();
+
+
+    //create render target view
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
+    GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
     GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
+    
 
+    D3D11_TEXTURE2D_DESC depthStencilDesc;
+    depthStencilDesc.Width = m_width;
+    depthStencilDesc.Height = m_height;
+    depthStencilDesc.MipLevels = 1;
+    depthStencilDesc.ArraySize = 1;
+    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
-    //Depth stencil state
-    D3D11_DEPTH_STENCIL_DESC depthDesc = {};
-    depthDesc.DepthEnable = TRUE;
-    depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-    depthDesc.DepthFunc = D3D11_COMPARISON_LESS;
-    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
-    GFX_THROW_INFO(m_pDevice->CreateDepthStencilState(&depthDesc, &depthStencilState));
+    //with 4x msaa
+    if (m_enable4xMSAA)
+    {
+        depthStencilDesc.SampleDesc.Count = 4;
+        depthStencilDesc.SampleDesc.Quality = m_4xMsaaQuality - 1;
+    }
+    //without
+    else
+    {
+        depthStencilDesc.SampleDesc.Count = 1;
+        depthStencilDesc.SampleDesc.Quality = 0;
+    }
 
-    m_pContext->OMSetDepthStencilState(depthStencilState.Get(), 1u);
+    depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depthStencilDesc.CPUAccessFlags = 0;
+    depthStencilDesc.MiscFlags = 0;
 
-    //create depth stencil texture
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
-    D3D11_TEXTURE2D_DESC descDepth = {};
-    descDepth.Width = 800u;
-    descDepth.Height = 600u;
-    descDepth.MipLevels = 1u;
-    descDepth.ArraySize = 1u;
-    descDepth.Format = DXGI_FORMAT_D32_FLOAT;
-    descDepth.SampleDesc.Count = 1u;        //will change for antialiasing
-    descDepth.SampleDesc.Quality = 0u;
-    descDepth.Usage = D3D11_USAGE_DEFAULT;
-    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&descDepth, nullptr, &depthStencil));
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
+    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer));
+    GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(depthStencilBuffer.Get(), 0, &m_pDepthStencil));
 
-    //create depth stencil view
-    D3D11_DEPTH_STENCIL_VIEW_DESC depthViewDesc = {};
-    depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
-    depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    depthViewDesc.Texture2D.MipSlice = 0u;
-    GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(depthStencil.Get(), &depthViewDesc, &m_pDepthStencil));
+    m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
 
-    //bind the depth stencil view
-    //m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
-
-    //add viewport here so we dont create it every frame
     D3D11_VIEWPORT viewPort;
-    viewPort.Width = 800;
-    viewPort.Height = 600;
-    viewPort.MinDepth = 0;
-    viewPort.MaxDepth = 1;
     viewPort.TopLeftX = 0;
     viewPort.TopLeftY = 0;
+    viewPort.Width = static_cast<float>(m_width);
+    viewPort.Height = static_cast<float>(m_height);
+    viewPort.MinDepth = 0;
+    viewPort.MaxDepth = 1;
     m_pContext->RSSetViewports(1u, &viewPort);
 
     ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
@@ -146,6 +174,78 @@ void Renderer::LoadVertexShader(const std::wstring& p_path)
     GFX_THROW_INFO(D3DReadFileToBlob(p_path.c_str(), &m_blob));
     GFX_THROW_INFO(m_pDevice->CreateVertexShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), nullptr, &vertexShader));
     m_pContext->VSSetShader(vertexShader.Get(), nullptr, 0u);
+}
+
+void Renderer::Resize(const int p_width, const int p_height)
+{
+    m_width = p_width;
+    m_height = p_height;
+
+    HRESULT hr;
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> nullView;
+    m_pContext->OMSetRenderTargets(0, nullView.GetAddressOf(), nullptr);
+
+    m_pTarget.Reset();
+    m_pDepthStencil.Reset();
+    m_pContext->Flush();
+
+    GFX_THROW_INFO(m_pSwapChain->ResizeBuffers(
+        0,
+        m_width,
+        m_height,
+        DXGI_FORMAT_UNKNOWN,
+        0
+    ));
+
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
+    GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
+    GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
+
+    D3D11_TEXTURE2D_DESC depthStencilDesc;
+    depthStencilDesc.Width = m_width;
+    depthStencilDesc.Height = m_height;
+    depthStencilDesc.MipLevels = 1;
+    depthStencilDesc.ArraySize = 1;
+    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+    //with 4x msaa
+    if (m_enable4xMSAA)
+    {
+        depthStencilDesc.SampleDesc.Count = 4;
+        depthStencilDesc.SampleDesc.Quality = m_4xMsaaQuality - 1;
+    }
+    //without
+    else
+    {
+        depthStencilDesc.SampleDesc.Count = 1;
+        depthStencilDesc.SampleDesc.Quality = 0;
+    }
+
+    depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depthStencilDesc.CPUAccessFlags = 0;
+    depthStencilDesc.MiscFlags = 0;
+
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
+    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer));
+    GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(depthStencilBuffer.Get(), 0, &m_pDepthStencil));
+
+    m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
+
+    D3D11_VIEWPORT viewPort;
+    viewPort.TopLeftX = 0;
+    viewPort.TopLeftY = 0;
+    viewPort.Width = static_cast<float>(m_width);
+    viewPort.Height = static_cast<float>(m_height);
+    viewPort.MinDepth = 0;
+    viewPort.MaxDepth = 1;
+    m_pContext->RSSetViewports(1u, &viewPort);
+}
+
+void Renderer::GetResolution(int& p_width, int& p_height) const
+{
+    p_width = m_width;
+    p_height = m_height;
 }
 
 #pragma region ExceptionsClass

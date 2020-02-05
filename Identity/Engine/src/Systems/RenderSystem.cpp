@@ -1,13 +1,13 @@
 #include <stdafx.h>
 #include <Systems/RenderSystem.h>
-#include <Managers/ModelManager.h>
+#include <Containers/ModelContainer.h>
 #include "Tools/DirectX/GraphicsMacros.h"
 #include "Rendering/Light.h"
 #include "Tools/ImGUI/imgui.h"
 #include "Tools/ImGUI/imgui_impl_dx11.h"
 #include <Input/Input.h>
-#include <Managers/GameObjectManager.h>
-#include "Managers/TransformManager.h"
+#include <Containers/GameObjectContainer.h>
+#include <Containers/TransformContainer.h>
 #include "Components/ModelComponent.h"
 
 Engine::Systems::RenderSystem::RenderSystem(Rendering::Renderer* p_renderer): m_renderer(p_renderer)
@@ -42,13 +42,14 @@ void Engine::Systems::RenderSystem::DrawScene()
     }ImGui::End();
 
     
-    for (auto& gameObject : Managers::GameObjectManager::GetAllGameObjects())
+    for (auto& gameObject : Containers::GameObjectContainer::GetAllGameObjects())
     {
-        for (auto& component : gameObject.second->GetAllComponents())
+        for (auto component : gameObject.second->GetAllComponents())
         {
-            if (Components::ModelComponent* modelComp = dynamic_cast<Components::ModelComponent*>(component))
+            Containers::ComponentContainer::GetInstance();
+            if (Components::ModelComponent* modelComp = dynamic_cast<Components::ModelComponent*>(&*Containers::ComponentContainer::FindComponent(component)))
             {
-                auto& meshes = Managers::ModelManager::FindModel(modelComp->m_model)->GetMeshes();
+                auto& meshes = Containers::ModelContainer::FindModel(modelComp->m_model)->GetMeshes();
 
                 for (auto mesh : meshes)
                 {
@@ -65,7 +66,7 @@ void Engine::Systems::RenderSystem::DrawScene()
                         Matrix4F projection;
                     };
 
-                    Matrix4F model = Managers::TransformManager::FindTransform(gameObject.second->GetTransformID())->GetTransformMatrix();
+                    Matrix4F model = Containers::TransformContainer::FindTransform(gameObject.second->GetTransformID())->GetTransformMatrix();
 
                     Matrix4F normalModel = Matrix4F::Inverse(model);
 
@@ -174,9 +175,17 @@ void Engine::Systems::RenderSystem::Update()
     DrawScene();
 }
 
+
+void Engine::Systems::RenderSystem::UpdateCamera()
+{
+    int width, height;
+    m_renderer->GetResolution(width, height);
+    m_camera.UpdateResolution(width, height);
+}
+
 uint32_t Engine::Systems::RenderSystem::AddModel(const std::string& p_path, const std::string& p_name)
 {
-    if (Managers::ModelManager::FindModel(p_name) >= 0)
+    if (Containers::ModelContainer::FindModel(p_name) >= 0)
     {
         const std::string error("in Engine::Systems::RenderSystem::AddModel(const std::string& p_path, const std::string& p_name): Could not add model with name " +
                                 p_name + " because it already exists");
@@ -185,7 +194,7 @@ uint32_t Engine::Systems::RenderSystem::AddModel(const std::string& p_path, cons
     }
 
 
-    std::shared_ptr newModel = Managers::ModelManager::AddModel(p_path, p_name);
+    std::shared_ptr newModel = Containers::ModelContainer::AddModel(p_path, p_name);
 
     if (newModel)
     {     
