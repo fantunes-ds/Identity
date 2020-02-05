@@ -17,7 +17,8 @@ int32_t Engine::Containers::ComponentContainer::AddComponent(Components::ICompon
         {          
             if (*component.second == p_component)
             {
-                const std::string error("ComponentContainer::AddComponent(Components::IComponent* p_component): Failed to add Component because it already exists");
+                std::string type = typeid(*p_component).name();
+                const std::string error("ComponentContainer::AddComponent<" + type + ">(Components::IComponent* p_component): Failed to add Component because it already exists");
                 MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
                 return -1;
             }

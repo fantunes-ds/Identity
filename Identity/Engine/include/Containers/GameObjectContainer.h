@@ -13,7 +13,6 @@ namespace Engine::Containers
         GameObjectContainer(const GameObjectContainer&) = delete;
         GameObjectContainer(const GameObjectContainer&&) = delete;
 
-        //static int32_t AddGameObject(Objects::GameObject& p_gameObject);
         static int32_t AddGameObject(Objects::GameObject* p_gameObject);
 
         static GameObjectContainer* GetInstance();

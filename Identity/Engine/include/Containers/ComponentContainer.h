@@ -14,7 +14,6 @@ namespace Engine::Containers
         ComponentContainer(const ComponentContainer&) = delete;
         ComponentContainer(const ComponentContainer&&) = delete;
 
-        //static int32_t AddGameObject(Objects::GameObject& p_gameObject);
         static int32_t AddComponent(Components::IComponent* p_component);
 
         template <class T, typename ...Args>
@@ -26,7 +25,6 @@ namespace Engine::Containers
             if (dynamic_cast<Components::IComponent*>(newComp)->IsWellInitialized())
                 id = Containers::ComponentContainer::AddComponent(newComp);
 
-            //GetInstance()->m_components.insert_or_assign(id, std::shared_ptr<Engine::Components::IComponent>(newComp));
             return id;
         }
 
