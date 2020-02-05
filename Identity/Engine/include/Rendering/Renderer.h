@@ -106,6 +106,7 @@ namespace Engine::Rendering
 
         int m_width;
         int m_height;
+        UINT m_4xMsaaQuality;
         bool m_enable4xMSAA = true;
     };
 }
