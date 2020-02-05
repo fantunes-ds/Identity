@@ -153,6 +153,12 @@
     <ClInclude Include="include\Containers\TransformContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Rendering\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Rendering\Materials\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\TestDependencies.cpp">
