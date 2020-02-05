@@ -86,7 +86,7 @@ namespace Engine::Rendering
         void LoadVertexShader(const std::wstring& p_path);
 
         void Resize(const int p_width, const int p_height);
-        void GetResolution(int& p_width, int& p_height);
+        void GetResolution(int& p_width, int& p_height) const;
 
         [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() { return m_pDevice; };
         [[nodiscard]] Microsoft::WRL::ComPtr<IDXGISwapChain>& GetSwapChain() { return m_pSwapChain; };
