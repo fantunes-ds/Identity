@@ -1,28 +1,28 @@
 #include <stdafx.h>
-#include <Managers/ModelManager.h>
+#include <Containers/ModelContainer.h>
 #include <3DLoader/ObjectElements/Model.h>
 #include <3DLoader/ObjectLoader.h>
 
-Engine::Managers::ModelManager::~ModelManager()
+Engine::Containers::ModelContainer::~ModelContainer()
 {
     delete m_instance;
 }
 
-Engine::Managers::ModelManager* Engine::Managers::ModelManager::GetInstance()
+Engine::Containers::ModelContainer* Engine::Containers::ModelContainer::GetInstance()
 {
     if (m_instance == nullptr)
     {
-        m_instance = new ModelManager();
+        m_instance = new ModelContainer();
     }
 
     return m_instance;
 }
 
-std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ModelManager::AddModel(const std::string& p_path, const std::string& p_name)
+std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContainer::AddModel(const std::string& p_path, const std::string& p_name)
 {
-    ModelManager* modelManager = ModelManager::GetInstance();
+    ModelContainer* ModelContainer = ModelContainer::GetInstance();
 
-    if (!modelManager->m_graphicsDevice)
+    if (!ModelContainer->m_graphicsDevice)
     {
         const std::string error("ModelManager::AddModel(const std::string& p_path, const std::string& p_name): Could not load model at " + p_path + " because ModelManager was not assigned a Graphics Device");
         MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
@@ -40,9 +40,9 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ModelManager::A
     model->SetName(p_name);
 
     for (auto& mesh : model->GetMeshes())
-        mesh->GenerateBuffers(modelManager->m_graphicsDevice);
+        mesh->GenerateBuffers(ModelContainer->m_graphicsDevice);
 
-    for (auto& existingModel: modelManager->m_models)
+    for (auto& existingModel: ModelContainer->m_models)
     {
         if (*existingModel.second == *model)
         {
@@ -52,11 +52,11 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ModelManager::A
         }
     }
 
-    modelManager->m_models.insert_or_assign(Tools::IDCounter::GetNewID(), model);
+    ModelContainer->m_models.insert_or_assign(Tools::IDCounter::GetNewID(), model);
     return model;
 }
 
-int32_t Engine::Managers::ModelManager::FindModel(const std::string& p_name)
+int32_t Engine::Containers::ModelContainer::FindModel(const std::string& p_name)
 {
     for (const auto& model: GetInstance()->GetAllModels())
     {
@@ -67,7 +67,7 @@ int32_t Engine::Managers::ModelManager::FindModel(const std::string& p_name)
     return -1;
 }
 
-std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ModelManager::FindModel(uint32_t p_id)
+std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContainer::FindModel(uint32_t p_id)
 {
     return GetInstance()->GetAllModels().at(p_id);
 }

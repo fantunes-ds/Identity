@@ -66,6 +66,7 @@ namespace Engine::Rendering
         bool m_isCursorEnabled;
         HWND m_hwnd;
 
+        bool isSet = false;
         std::unique_ptr<Renderer> m_renderer;
     };
 }
