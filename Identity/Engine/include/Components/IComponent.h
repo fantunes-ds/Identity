@@ -7,6 +7,6 @@ namespace Engine::Components
     {
     public:
         //Temporary function to make class abstract
-        virtual void foo() = 0;
+        virtual bool IsWellInitialized() = 0;
     };
 }

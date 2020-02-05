@@ -9,8 +9,6 @@
 #include <Systems/RenderSystem.h>
 #include <Input/Input.h>
 #include <Objects/GameObject.h>
-#include "Managers/GameObjectManager.h"
-#include <Managers/TransformManager.h>
 #include "Components/ModelComponent.h"
 
 using namespace Engine::Core;
@@ -27,7 +25,7 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 
 int App::Run() const
 {
-    Managers::ModelManager::GetInstance()->SetGraphicsDevice(m_window.GetRenderer().GetDevice());
+    Containers::ModelContainer::GetInstance()->SetGraphicsDevice(m_window.GetRenderer().GetDevice());
 
     Systems::RenderSystem renderSystem(&m_window.GetRenderer());
 

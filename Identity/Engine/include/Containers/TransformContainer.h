@@ -2,16 +2,16 @@
 #include <Export.h>
 #include <3DLoader/ObjectElements/Transform.h>
 
-namespace Engine::Managers
+namespace Engine::Containers
 {
-    class API_ENGINE TransformManager
+    class API_ENGINE TransformContainer
     {
     public:
-        ~TransformManager();
-        TransformManager(const TransformManager&) = delete;
-        TransformManager(const TransformManager&&) = delete;
+        ~TransformContainer();
+        TransformContainer(const TransformContainer&) = delete;
+        TransformContainer(const TransformContainer&&) = delete;
 
-        static TransformManager* GetInstance();
+        static TransformContainer* GetInstance();
 
         static int32_t AddTransform(ObjectElements::Transform& p_transform);
 
@@ -20,8 +20,8 @@ namespace Engine::Managers
         static std::shared_ptr<ObjectElements::Transform> GetTransform(uint32_t p_id);
 
     private:
-        TransformManager() = default;
-        inline static TransformManager* m_instance = nullptr;
+        TransformContainer() = default;
+        inline static TransformContainer* m_instance = nullptr;
         std::map<int, std::shared_ptr<ObjectElements::Transform>> m_transforms;
     };
 }

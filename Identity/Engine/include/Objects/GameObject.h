@@ -2,7 +2,7 @@
 #include <Export.h>
 #include <3DLoader/ObjectElements/Transform.h>
 #include <3DLoader/ObjectElements/Model.h>
-#include "Managers/ModelManager.h"
+#include <Containers/ModelContainer.h>
 #include <Components/IComponent.h>
 
 namespace Engine::Objects
@@ -27,15 +27,15 @@ namespace Engine::Objects
         bool operator==(GameObject& p_other) const;
 
         template <class T, typename ...Args>
-        void AddComponent(Args&... p_args)
+        void AddComponent(Args& ... p_args)
         {
-            T* newComp = new T( p_args... );
+            T* newComp = new T(p_args...);
 
-            m_components.emplace_back(newComp);
+            if (dynamic_cast<Components::IComponent*>(newComp)->IsWellInitialized())
+                m_components.emplace_back(newComp);
         }
 
     private:
-        //TODO:make this into a vector of components
         uint32_t m_transform = -1;
         std::vector<Components::IComponent*> m_components;
     };
