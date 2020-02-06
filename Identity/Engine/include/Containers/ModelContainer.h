@@ -42,6 +42,6 @@ namespace Engine::Containers
 
         inline static ModelContainer* m_instance = nullptr;
         Microsoft::WRL::ComPtr<ID3D11Device> m_graphicsDevice;
-        std::map<int, std::shared_ptr<ObjectElements::Model>> m_models;
+        std::map<int32_t, std::shared_ptr<ObjectElements::Model>> m_models;
     };
 }

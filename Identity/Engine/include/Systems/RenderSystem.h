@@ -4,6 +4,7 @@
 #include <3DLoader/ObjectElements/Model.h>
 #include <Rendering/Renderer.h>
 #include <Rendering/Light.h>
+#include "Events/Event.h"
 
 namespace Engine::Systems
 {
@@ -29,12 +30,15 @@ namespace Engine::Systems
          */
         uint32_t AddLight(Rendering::Light& p_light);
 
+        void SetActiveCamera();
+
     private:
         //std::map<int, std::shared_ptr<ObjectElements::Model>> m_models;
         std::map<int, std::shared_ptr<Rendering::Light>> m_lights;
 
-        Rendering::Camera m_camera;
+        //Rendering::Camera m_camera;
 
         Rendering::Renderer* m_renderer;
+        std::shared_ptr<Rendering::Camera> m_activeCamera;
     };
 }

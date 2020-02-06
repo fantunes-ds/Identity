@@ -156,6 +156,9 @@
     <ClInclude Include="include\Objects\IObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Containers\EventContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\TestDependencies.cpp">
@@ -258,6 +261,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Objects\IObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Containers\EventContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -9,9 +9,14 @@
 #include <Containers/GameObjectContainer.h>
 #include <Containers/TransformContainer.h>
 #include "Components/ModelComponent.h"
+#include "Containers/CameraContainer.h"
+#include <Containers/EventContainer.h>
 
 Engine::Systems::RenderSystem::RenderSystem(Rendering::Renderer* p_renderer): m_renderer(p_renderer)
 {
+    Containers::EventContainer::AddEvent("ChangeActiveCamera");
+    Event& event = Containers::EventContainer::GetEvent("ChangeActiveCamera");
+    event.AddListener(this, &RenderSystem::SetActiveCamera);
 }
 
 void Engine::Systems::RenderSystem::DrawScene()
@@ -26,6 +31,7 @@ void Engine::Systems::RenderSystem::DrawScene()
     HRESULT hr;
 
     std::shared_ptr<Rendering::Light> light = m_lights.begin()->second;
+    std::shared_ptr<Rendering::Camera> camera = m_activeCamera;
 
     //TODO: Light will be moved soon
     if (ImGui::Begin("Lighting Tool"))
@@ -71,16 +77,16 @@ void Engine::Systems::RenderSystem::DrawScene()
 
 
                     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
-                        m_camera.m_position += m_camera.m_forward * m_camera.m_speed;
+                        camera->SetPosition(camera->GetPosition() + camera->GetFront() * camera->GetMovementSpeed());
                     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
-                        m_camera.m_position -= m_camera.m_forward * m_camera.m_speed;
+                        camera->SetPosition(camera->GetPosition() - camera->GetFront() * camera->GetMovementSpeed());
                     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
-                        m_camera.m_position -= Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
+                        camera->SetPosition(camera->GetPosition() - Vector3F::Cross(camera->GetFront(), camera->GetUp()).Normalized() * camera->GetMovementSpeed());
                     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
-                        m_camera.m_position += Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
+                        camera->SetPosition(camera->GetPosition() + Vector3F::Cross(camera->GetFront(), camera->GetUp()).Normalized() * camera->GetMovementSpeed());
 
-                    Matrix4F view = m_camera.GetViewMatrix();
-                    Matrix4F perspective = m_camera.GetPerspectiveMatrix();
+                    Matrix4F view = camera->GetViewMatrix();
+                    Matrix4F perspective = camera->GetPerspectiveMatrix();
 
                     model.Transpose();
                     view.Transpose();
@@ -110,14 +116,8 @@ void Engine::Systems::RenderSystem::DrawScene()
                         Vector3F cameraPos;
                     };
 
-                    const PixelConstantBuffer pcb{ light->position,
-                                                  light->ambient,
-                                                  light->diffuse,
-                                                  light->specular,
-                                                  light->direction,
-                                                  light->color,
-                                                  64.0f,
-                                                  m_camera.GetPosition() };
+                    const PixelConstantBuffer pcb{ *light,
+                                                   };
 
                     Microsoft::WRL::ComPtr<ID3D11Buffer> pixelConstantBuffer;
                     D3D11_BUFFER_DESC                    pixelBufferDesc = {};
@@ -170,7 +170,8 @@ void Engine::Systems::RenderSystem::DrawScene()
 
 void Engine::Systems::RenderSystem::Update()
 {
-    m_camera.UpdateVectors();
+    UpdateCamera();
+    m_activeCamera->UpdateVectors();
     DrawScene();
 }
 
@@ -179,7 +180,7 @@ void Engine::Systems::RenderSystem::UpdateCamera()
 {
     int width, height;
     m_renderer->GetResolution(width, height);
-    m_camera.UpdateResolution(width, height);
+    m_activeCamera->UpdateResolution(width, height);
 }
 
 uint32_t Engine::Systems::RenderSystem::AddModel(const std::string& p_path, const std::string& p_name)
@@ -217,4 +218,9 @@ uint32_t Engine::Systems::RenderSystem::AddLight(Rendering::Light& p_light)
     }
     else
         return -1;
+}
+
+void Engine::Systems::RenderSystem::SetActiveCamera()
+{
+    m_activeCamera = Containers::CameraContainer::GetActiveCamera();
 }

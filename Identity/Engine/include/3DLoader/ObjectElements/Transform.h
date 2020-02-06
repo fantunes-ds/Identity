@@ -60,14 +60,13 @@ namespace Engine::ObjectElements
         void CalculateAxes();
 
         std::shared_ptr<Transform> m_parent = nullptr;
+        GPM::Vector3D m_position;
         GPM::Vector3D m_forward;
         GPM::Vector3D m_right;
         GPM::Vector3D m_up;
         GPM::Vector3D m_scale;
-        GPM::Vector3D m_position;
         GPM::Quaternion m_rotation;
 
-        GPM::Matrix4F m_axes;
         GPM::Matrix4F m_transform;
     };
 }

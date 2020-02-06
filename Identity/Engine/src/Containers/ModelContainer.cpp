@@ -20,7 +20,7 @@ Engine::Containers::ModelContainer* Engine::Containers::ModelContainer::GetInsta
 
 std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContainer::AddModel(const std::string& p_path, const std::string& p_name)
 {
-    ModelContainer* ModelContainer = ModelContainer::GetInstance();
+    ModelContainer* ModelContainer = GetInstance();
 
     if (!ModelContainer->m_graphicsDevice)
     {

@@ -33,12 +33,17 @@ int App::Run() const
 
     Objects::GameObject gameObject;
     Objects::GameObject gameObject2;
+    Objects::GameObject camera;
     gameObject2.GetTransform()->SetTransformMatrix(GPM::Matrix4F::CreateTransformation(
         Vector3F{ 4.0f, 4.0f, 0.0f },
         Quaternion{ 0.0f, 1.0f, 0.0f, 1.0f },
         Vector3F{ 0.02f, 0.02f, 0.02f }
     ));
 
+    int width = 1024;
+    int height = 768;
+
+    camera.AddComponent<Components::CameraComponent>(width, height);
     gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
     gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
    // gameObject3.AddComponent<Components::ModelComponent>("statue");
@@ -89,7 +94,6 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    p_renderSystem.UpdateCamera();
     p_renderSystem.Update();
 
     static bool show_demo_window = true;

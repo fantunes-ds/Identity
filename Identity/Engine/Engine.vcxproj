@@ -225,6 +225,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Components\ModelComponent.h" />
     <ClInclude Include="include\Containers\CameraContainer.h" />
     <ClInclude Include="include\Containers\ComponentContainer.h" />
+    <ClInclude Include="include\Containers\EventContainer.h" />
     <ClInclude Include="include\Containers\GameObjectContainer.h" />
     <ClInclude Include="include\Containers\ModelContainer.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Transform.h" />
@@ -268,6 +269,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Containers\EventContainer.cpp" />
     <ClCompile Include="src\Objects\IObject.cpp" />
     <ClCompile Include="src\Components\CameraComponent.cpp" />
     <ClCompile Include="src\Components\ModelComponent.cpp" />
