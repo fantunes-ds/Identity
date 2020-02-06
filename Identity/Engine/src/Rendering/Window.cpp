@@ -263,8 +263,8 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
             }
         case WM_LBUTTONDOWN:
             {
-                break;
                 _INPUT->mouse.OnLeftPressed();
+                break;
             }
         case WM_RBUTTONDOWN:
             {
