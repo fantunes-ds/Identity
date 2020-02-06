@@ -37,12 +37,12 @@ namespace Engine::Rendering
         /*
          @brief Return the DirectX context of the window
          */
-        [[nodiscard]] Engine::Rendering::Renderer& GetRenderer() const;
+        [[nodiscard]] Renderer& GetRenderer() const;
         void SetTitle(const std::string& title) const;
 
         void EnableCursor() noexcept;
         void DisableCursor() noexcept ;
-
+        [[nodiscard]] bool GetIsCursorEnabled() const noexcept { return m_isCursorEnabled; }
         /*
          @brief Check if there is a message in the queue
          If there is no message, the meth od will return an empty optional and continue
@@ -65,6 +65,8 @@ namespace Engine::Rendering
         int m_height;
         bool m_isCursorEnabled;
         HWND m_hwnd;
+
+        std::vector<char> m_rawBuffer;
 
         bool isSet = false;
         std::unique_ptr<Renderer> m_renderer;

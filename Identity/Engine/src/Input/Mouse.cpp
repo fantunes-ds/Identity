@@ -14,6 +14,16 @@ Vector2I Mouse::GetPos() const noexcept
     return m_mouseMap.second;
 }
 
+std::optional<Mouse::RawDelta> Mouse::GetRawDelta() noexcept
+{
+    if (m_rawDeltaBuffer.empty())
+        return std::nullopt;
+
+    const RawDelta rd = m_rawDeltaBuffer.front();
+    m_rawDeltaBuffer.pop();
+    return rd;
+}
+
 int Mouse::GetPosX() const noexcept
 {
     return m_mouseMap.second.x;
@@ -42,6 +52,16 @@ bool Mouse::RightIsPressed() const noexcept
 void Mouse::Flush() noexcept
 {
     m_mouseMap = std::pair<MouseState, Vector2I>();
+}
+
+void Mouse::EnableRawInput() noexcept
+{
+    m_isRawInputEnabled = true;
+}
+
+void Mouse::DisableRawInput() noexcept
+{
+    m_isRawInputEnabled = false;
 }
 
 void Mouse::OnMouseMove(const int p_x, const int p_y) noexcept
@@ -116,5 +136,19 @@ void Mouse::OnWheelDelta(int p_delta) noexcept
     {
         m_wheelDelta += WHEEL_DELTA;
         OnWheelDown();
+    }
+}
+
+void Mouse::OnRawDelta(int p_deltaX, int p_deltaY) noexcept
+{
+    m_rawDeltaBuffer.push({ p_deltaX, p_deltaY });
+    TrimRawDeltaBuffer();
+}
+
+void Mouse::TrimRawDeltaBuffer() noexcept
+{
+    while (m_rawDeltaBuffer.size() > buffer_size)
+    {
+        m_rawDeltaBuffer.pop();
     }
 }
