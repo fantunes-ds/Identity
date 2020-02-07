@@ -39,6 +39,11 @@ void Engine::Rendering::Camera::UpdateCameraPosition()
     const Vector3F forwardAxis = forward.GetRotationAxis() * - 1;
     const Vector3 rightAxis = Vector3F::Cross(forwardAxis, Vector3D::up) * -1;
 
+    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::Space))
+        m_speed = 0.2f;
+    else
+        m_speed = 0.05f;
+
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
         m_position += forwardAxis.Normalized() * m_speed;
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
