@@ -304,8 +304,6 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
             {
             if (!_INPUT->mouse.m_isRawInputEnabled)
                 break;
-            else
-                OutputDebugString("using ri");
 
                 UINT size{};
 
