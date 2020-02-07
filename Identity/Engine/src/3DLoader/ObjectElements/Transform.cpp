@@ -7,6 +7,11 @@ Engine::ObjectElements::Transform::Transform() :
     m_forward = GPM::Vector3D::forward;
     m_right = GPM::Vector3D::right;
     m_up = GPM::Vector3D::up;
+
+    Vector3D quat{ 0, 1, 0 };
+    m_transform = Matrix4F::CreateTransformation(Vector3F(0.0f, 0.0f, 0.0f),
+        Quaternion::CreateFromAxisAngle(quat, GPM::Tools::Utils::ToRadians(0.0f)),
+        Vector3F{ 0.02f, 0.02f, 0.02f });
 }
 
 Engine::ObjectElements::Transform::Transform(GPM::Vector3D& p_position) :

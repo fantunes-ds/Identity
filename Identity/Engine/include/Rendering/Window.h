@@ -37,22 +37,36 @@ namespace Engine::Rendering
         /*
          @brief Return the DirectX context of the window
          */
-        [[nodiscard]] Engine::Rendering::Renderer& GetRenderer() const;
+        [[nodiscard]] Renderer& GetRenderer() const;
         void SetTitle(const std::string& title) const;
+
+        void EnableCursor() noexcept;
+        void DisableCursor() noexcept ;
+        [[nodiscard]] bool GetIsCursorEnabled() const noexcept { return m_isCursorEnabled; }
         /*
          @brief Check if there is a message in the queue
-         If there is no message, the method will return an empty optional and continue
+         If there is no message, the meth od will return an empty optional and continue
          If there is a message, the method will return the message
          */
         static std::optional<int> ProcessMessage();
     private:
+        void ConfineCursor() const noexcept;
+        void FreeCursor() const noexcept;
+        void HideCursor() const noexcept;
+        void ShowCursor() const noexcept;
+        void EnableImGUIMouse() const noexcept;
+        void DisableImGUIMouse() const noexcept;
+
         static LRESULT CALLBACK HandleMsgSetup(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam);
         static LRESULT CALLBACK HandleMsgThunk(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam);
-        LRESULT HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam);
+        LRESULT HandleMsg(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
 
         int m_width;
         int m_height;
+        bool m_isCursorEnabled;
         HWND m_hwnd;
+
+        std::vector<char> m_rawBuffer;
 
         bool isSet = false;
         std::unique_ptr<Renderer> m_renderer;

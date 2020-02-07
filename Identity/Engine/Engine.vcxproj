@@ -220,11 +220,16 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\Managers\GameObjectManager.h" />
-    <ClInclude Include="include\Managers\ModelManager.h" />
+    <ClInclude Include="include\Components\CameraComponent.h" />
+    <ClInclude Include="include\Components\IComponent.h" />
+    <ClInclude Include="include\Components\ModelComponent.h" />
+    <ClInclude Include="include\Containers\ComponentContainer.h" />
+    <ClInclude Include="include\Containers\GameObjectContainer.h" />
+    <ClInclude Include="include\Containers\ModelContainer.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Transform.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />
+    <ClInclude Include="include\Containers\TransformContainer.h" />
     <ClInclude Include="include\Rendering\Buffers\InputLayout.h" />
     <ClInclude Include="include\Systems\IECSSystem.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
@@ -262,13 +267,18 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\ModelComponent.cpp" />
     <ClCompile Include="src\Core\App.cpp" />
-    <ClCompile Include="src\Managers\ModelManager.cpp" />
+    <ClCompile Include="src\Containers\ComponentContainer.cpp" />
+    <ClCompile Include="src\Containers\GameObjectContainer.cpp" />
+    <ClCompile Include="src\Containers\ModelContainer.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Model.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Mesh.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Transform.cpp" />
     <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
     <ClInclude Include="src\Core\App.h" />
+    <ClCompile Include="src\Containers\TransformContainer.cpp" />
+    <ClCompile Include="src\Objects\GameObject.cpp" />
     <ClCompile Include="src\Rendering\Buffers\InputLayout.cpp" />
     <ClCompile Include="src\Systems\RenderSystem.cpp" />
     <ClCompile Include="src\Events\Event.cpp" />

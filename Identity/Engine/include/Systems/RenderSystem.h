@@ -30,7 +30,7 @@ namespace Engine::Systems
         uint32_t AddLight(Rendering::Light& p_light);
 
     private:
-        std::map<int, std::shared_ptr<ObjectElements::Model>> m_models;
+        //std::map<int, std::shared_ptr<ObjectElements::Model>> m_models;
         std::map<int, std::shared_ptr<Rendering::Light>> m_lights;
 
         Rendering::Camera m_camera;

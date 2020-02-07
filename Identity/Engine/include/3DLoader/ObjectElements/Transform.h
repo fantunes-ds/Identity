@@ -40,6 +40,9 @@ namespace Engine::ObjectElements
             m_rotation = p_rotation;
             CalculateAxes();
         }
+
+        inline void SetTransformMatrix(const Matrix4F& p_transform) { m_transform = p_transform; }
+
         inline void SetParent(Transform& p_parent) { m_parent = std::make_shared<Transform>(p_parent); }
 
         [[nodiscard]] GPM::Vector3D GetEuler() const;
@@ -50,6 +53,7 @@ namespace Engine::ObjectElements
         inline GPM::Vector3D& GetScale() { return m_scale; }
         inline GPM::Quaternion& GetRotation() { return m_rotation; }
         inline std::shared_ptr<Transform> GetParent() const { return m_parent; }
+        inline GPM::Matrix4F& GetTransformMatrix() { return m_transform; }
 
     private:
         void CalculateAxes();
@@ -57,7 +61,7 @@ namespace Engine::ObjectElements
         std::shared_ptr<Transform> m_parent = nullptr;
         GPM::Vector3D m_forward;
         GPM::Vector3D m_right;
-        GPM::Vector3D m_up{};
+        GPM::Vector3D m_up;
         GPM::Vector3D m_scale;
         GPM::Vector3D m_position;
         GPM::Quaternion m_rotation;
