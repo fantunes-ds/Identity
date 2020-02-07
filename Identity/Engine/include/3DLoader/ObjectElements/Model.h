@@ -4,7 +4,7 @@
 
 namespace Engine::ObjectElements
 {
-    class API_ENGINE Model
+    class API_ENGINE Model : public Objects::IObject
     {
     public:
         Model() = default;

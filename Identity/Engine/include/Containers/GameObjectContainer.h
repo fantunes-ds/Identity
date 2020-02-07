@@ -22,6 +22,6 @@ namespace Engine::Containers
         GameObjectContainer() = default;
 
         inline static GameObjectContainer* m_instance = nullptr;
-        std::map<int, std::shared_ptr<Objects::GameObject>> m_gameObjects;
+        std::map<int32_t, std::shared_ptr<Objects::GameObject>> m_gameObjects;
     };
 }

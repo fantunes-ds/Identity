@@ -20,7 +20,7 @@ Engine::Containers::ModelContainer* Engine::Containers::ModelContainer::GetInsta
 
 std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContainer::AddModel(const std::string& p_path, const std::string& p_name)
 {
-    ModelContainer* ModelContainer = ModelContainer::GetInstance();
+    ModelContainer* ModelContainer = GetInstance();
 
     if (!ModelContainer->m_graphicsDevice)
     {
@@ -52,8 +52,20 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContaine
         }
     }
 
-    ModelContainer->m_models.insert_or_assign(Tools::IDCounter::GetNewID(), model);
+    ModelContainer->m_models.insert_or_assign(model->GetID(), model);
     return model;
+}
+
+bool Engine::Containers::ModelContainer::RemoveModel(int32_t p_id)
+{
+    size_t sizeBefore = GetInstance()->m_models.size();
+    GetInstance()->m_models.erase(p_id);
+    size_t sizeAfter = GetInstance()->m_models.size();
+
+    if (sizeBefore == sizeAfter)
+        return false;
+
+    return true;
 }
 
 int32_t Engine::Containers::ModelContainer::FindModel(const std::string& p_name)

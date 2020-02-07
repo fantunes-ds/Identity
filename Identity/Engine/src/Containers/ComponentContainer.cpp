@@ -18,16 +18,25 @@ int32_t Engine::Containers::ComponentContainer::AddComponent(Components::ICompon
             if (*component.second == p_component)
             {
                 std::string type = typeid(*p_component).name();
-                const std::string error("ComponentContainer::AddComponent<" + type + ">(Components::IComponent* p_component): Failed to add Component because it already exists");
+                const std::string error("ComponentContainer::AddComponent<" + type + ">(Components::IComponent* p_component): Tried to add a Component that already exists");
                 MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
-                return -1;
+                return component.first;
             }
         }
     }
 
-    int32_t id = Tools::IDCounter::GetNewID();
-    GetInstance()->m_components.insert_or_assign(id, std::shared_ptr<Engine::Components::IComponent>(p_component));
-    return id;
+    GetInstance()->m_components.insert_or_assign(p_component->GetID(), std::shared_ptr<Engine::Components::IComponent>(p_component));
+    return p_component->GetID();
+}
+
+void Engine::Containers::ComponentContainer::RemoveComponent(int32_t p_id, bool p_deleteFromMemory)
+{
+    if (p_deleteFromMemory)
+    {
+        GetInstance()->m_components.at(p_id)->DeleteFromMemory();
+    }
+
+    GetInstance()->m_components.erase(p_id);
 }
 
 Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::GetInstance()
@@ -42,5 +51,5 @@ Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::
 
 std::shared_ptr<Engine::Components::IComponent> Engine::Containers::ComponentContainer::FindComponent(int32_t p_id)
 {
-    return GetInstance()->GetAllComponents().at(p_id);
+    return GetAllComponents().at(p_id);
 }

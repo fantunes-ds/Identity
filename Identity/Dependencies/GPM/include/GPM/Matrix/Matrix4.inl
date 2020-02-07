@@ -213,11 +213,11 @@ template<typename T>
 template<typename U>
 constexpr Matrix4<T> Matrix4<T>::CreateTransformation(const Vector3<U>& p_translate, const Quaternion& p_rotation, const Vector3<U>& p_scale)
 {
-	Matrix4<T> tmpTrans = CreateTranslation(p_translate);
+	Matrix4<T> tmpTrans = CreateTranslation(p_translate).Transpose();
 	Matrix4<T> tmpRot = CreateRotation(p_rotation);
 	Matrix4<T> tmpScale = CreateScale(p_scale);
 
-	Matrix4<T> tmpMat = tmpTrans * tmpRot * tmpScale;
+	Matrix4<T> tmpMat = tmpScale * tmpRot * tmpTrans;
 
 	return tmpMat;
 }

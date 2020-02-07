@@ -221,16 +221,20 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Components\CameraComponent.h" />
-    <ClInclude Include="include\Components\IComponent.h" />
     <ClInclude Include="include\Components\ModelComponent.h" />
+    <ClInclude Include="include\Containers\CameraContainer.h" />
     <ClInclude Include="include\Containers\ComponentContainer.h" />
+    <ClInclude Include="include\Containers\EventContainer.h" />
     <ClInclude Include="include\Containers\GameObjectContainer.h" />
+    <ClInclude Include="include\Containers\IContainer.h" />
+    <ClInclude Include="include\Containers\LightContainer.h" />
     <ClInclude Include="include\Containers\ModelContainer.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Transform.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />
     <ClInclude Include="include\Rendering\Buffers\InputLayout.h" />
     <ClInclude Include="include\Containers\TransformContainer.h" />
+    <ClInclude Include="include\Objects\IObject.h" />
     <ClInclude Include="include\Systems\IECSSystem.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\3DLoader\ObjectLoader.h" />
@@ -267,7 +271,12 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Containers\EventContainer.cpp" />
+    <ClCompile Include="src\Containers\LightContainer.cpp" />
+    <ClCompile Include="src\Objects\IObject.cpp" />
+    <ClCompile Include="src\Components\CameraComponent.cpp" />
     <ClCompile Include="src\Components\ModelComponent.cpp" />
+    <ClCompile Include="src\Containers\CameraContainer.cpp" />
     <ClCompile Include="src\Core\App.cpp" />
     <ClCompile Include="src\Containers\ComponentContainer.cpp" />
     <ClCompile Include="src\Containers\GameObjectContainer.cpp" />

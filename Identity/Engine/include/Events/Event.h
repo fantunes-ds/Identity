@@ -26,13 +26,15 @@ namespace Engine
                     return -1;
             }
 
-            m_actions.insert_or_assign(newCallback.get()->GetNewID(), newCallback);
+            int32_t id = Engine::Tools::IDCounter::GetNewID();
 
-            return newCallback.get()->GetNewID();
+            m_actions.insert_or_assign(id, newCallback);
+
+            return id;
         }
 
         //@warning DO NOT USE, not functional yet
-        template<typename T, typename ...Args, typename ...funcArgs>
+        /*template<typename T, typename ...Args, typename ...funcArgs>
         const uint32_t AddListener(T* p_instance, void(T::* p_function)(funcArgs...), Args&&... p_args)
         {
             auto newCallback = std::make_shared<EventCallback<T>>(p_instance, p_function, &p_args...);
@@ -47,7 +49,7 @@ namespace Engine
             m_actions.insert_or_assign(newCallback.get()->GetNewID(), newCallback);
 
             return newCallback.get()->GetNewID();
-        }
+        }*/
 
         void RemoveListener(const int32_t p_id)
         {
