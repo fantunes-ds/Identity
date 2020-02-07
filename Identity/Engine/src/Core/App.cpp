@@ -43,17 +43,11 @@ int App::Run() const
     int width = 1024;
     int height = 768;
 
-    camera.AddComponent<Components::CameraComponent>(width, height);
+    int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(width, height);
     gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
-    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
-   // gameObject3.AddComponent<Components::ModelComponent>("statue");
+     gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
 
-    bool same = gameObject == gameObject2;
-    //bool same2 = gameObject == gameObject3;
-
-    int a = gameObject.GetID();
-    int b = gameObject.GetTransform()->GetID();
-    int c = Containers::ModelContainer::GetAllModels().size();
+    renderSystem.SetActiveCamera(camera.FindComponent<Components::CameraComponent>()->GetCamera()->GetID());
 
     Rendering::Light dirLight{};
 
@@ -65,6 +59,7 @@ int App::Run() const
     dirLight.color = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
     dirLight.shininess= 64.0f;
 
+    //TODO: move to LightContainer once class is finalized.
     renderSystem.AddLight(dirLight);
 
     while (true)

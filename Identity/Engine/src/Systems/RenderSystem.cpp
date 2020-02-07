@@ -12,11 +12,12 @@
 #include "Containers/CameraContainer.h"
 #include <Containers/EventContainer.h>
 
-Engine::Systems::RenderSystem::RenderSystem(Rendering::Renderer* p_renderer): m_renderer(p_renderer)
+//Example of how to use events
+Engine::Systems::RenderSystem::RenderSystem(Rendering::Renderer* p_renderer) : m_renderer(p_renderer)
 {
-    Containers::EventContainer::AddEvent("ChangeActiveCamera");
-    Event& event = Containers::EventContainer::GetEvent("ChangeActiveCamera");
-    event.AddListener(this, &RenderSystem::SetActiveCamera);
+    /*Containers::EventContainer::AddEvent("NoActiveCamera");
+    Event& event = Containers::EventContainer::GetEvent("NoActiveCamera");
+    event.AddListener(this, &RenderSystem::ResetActiveCamera);*/
 }
 
 void Engine::Systems::RenderSystem::DrawScene()
@@ -31,7 +32,7 @@ void Engine::Systems::RenderSystem::DrawScene()
     HRESULT hr;
 
     std::shared_ptr<Rendering::Light> light = m_lights.begin()->second;
-    std::shared_ptr<Rendering::Camera> camera = m_activeCamera;
+    std::shared_ptr<Rendering::Camera> camera = Containers::CameraContainer::GetCamera(m_activeCamera);
 
     //TODO: Light will be moved soon
     if (ImGui::Begin("Lighting Tool"))
@@ -47,14 +48,14 @@ void Engine::Systems::RenderSystem::DrawScene()
         ImGui::SliderFloat("Ambient LightZ", &light->ambient.z, 0.0f, 1.0f, "%.1f");
     }ImGui::End();
 
-    
+
     for (auto& gameObject : Containers::GameObjectContainer::GetAllGameObjects())
     {
         for (auto& component : gameObject.second->GetAllComponents())
         {
             if (std::shared_ptr<Components::ModelComponent> modelComp = std::dynamic_pointer_cast<Components::ModelComponent>(Containers::ComponentContainer::FindComponent(component)))
             {
-                auto& meshes = Containers::ModelContainer::FindModel(modelComp->m_model)->GetMeshes();
+                auto& meshes = Containers::ModelContainer::FindModel(modelComp->GetModel())->GetMeshes();
 
                 for (auto mesh : meshes)
                 {
@@ -117,7 +118,7 @@ void Engine::Systems::RenderSystem::DrawScene()
                     };
 
                     const PixelConstantBuffer pcb{ *light,
-                                                   };
+                    camera->GetPosition()};
 
                     Microsoft::WRL::ComPtr<ID3D11Buffer> pixelConstantBuffer;
                     D3D11_BUFFER_DESC                    pixelBufferDesc = {};
@@ -170,39 +171,21 @@ void Engine::Systems::RenderSystem::DrawScene()
 
 void Engine::Systems::RenderSystem::Update()
 {
-    UpdateCamera();
-    m_activeCamera->UpdateVectors();
+    if (Containers::CameraContainer::GetCamera(m_activeCamera))
+    {
+        UpdateCamera();
+        Containers::CameraContainer::GetCamera(m_activeCamera)->UpdateVectors();
+    }
+
     DrawScene();
 }
 
 
-void Engine::Systems::RenderSystem::UpdateCamera()
+void Engine::Systems::RenderSystem::UpdateCamera() const
 {
     int width, height;
     m_renderer->GetResolution(width, height);
-    m_activeCamera->UpdateResolution(width, height);
-}
-
-uint32_t Engine::Systems::RenderSystem::AddModel(const std::string& p_path, const std::string& p_name)
-{
-    if (Containers::ModelContainer::FindModel(p_name) >= 0)
-    {
-        const std::string error("in Engine::Systems::RenderSystem::AddModel(const std::string& p_path, const std::string& p_name): Could not add model with name " +
-                                p_name + " because it already exists");
-        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
-        return -1;
-    }
-
-
-    std::shared_ptr newModel = Containers::ModelContainer::AddModel(p_path, p_name);
-
-    if (newModel)
-    {     
-        const uint32_t tmpId = Tools::IDCounter::GetNewID();
-        return tmpId;
-    }
-    else
-        return -1;
+    Containers::CameraContainer::GetCamera(m_activeCamera)->UpdateResolution(width, height);
 }
 
 uint32_t Engine::Systems::RenderSystem::AddLight(Rendering::Light& p_light)
@@ -220,7 +203,12 @@ uint32_t Engine::Systems::RenderSystem::AddLight(Rendering::Light& p_light)
         return -1;
 }
 
-void Engine::Systems::RenderSystem::SetActiveCamera()
+void Engine::Systems::RenderSystem::ResetActiveCamera()
 {
-    m_activeCamera = Containers::CameraContainer::GetActiveCamera();
+    m_activeCamera = -1;
+}
+
+void Engine::Systems::RenderSystem::SetActiveCamera(int32_t p_id)
+{
+    m_activeCamera = p_id;
 }

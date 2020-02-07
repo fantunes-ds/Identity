@@ -29,6 +29,16 @@ int32_t Engine::Containers::ComponentContainer::AddComponent(Components::ICompon
     return p_component->GetID();
 }
 
+void Engine::Containers::ComponentContainer::RemoveComponent(int32_t p_id, bool p_deleteFromMemory)
+{
+    if (p_deleteFromMemory)
+    {
+        GetInstance()->m_components.at(p_id)->DeleteFromMemory();
+    }
+
+    GetInstance()->m_components.erase(p_id);
+}
+
 Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::GetInstance()
 {
     if (m_instance == nullptr)
@@ -41,5 +51,5 @@ Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::
 
 std::shared_ptr<Engine::Components::IComponent> Engine::Containers::ComponentContainer::FindComponent(int32_t p_id)
 {
-    return GetInstance()->GetAllComponents().at(p_id);
+    return GetAllComponents().at(p_id);
 }

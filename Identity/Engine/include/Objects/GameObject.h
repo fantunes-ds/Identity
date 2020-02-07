@@ -23,14 +23,17 @@ namespace Engine::Objects
         inline void SetTransform(int32_t p_transform) { m_transform = p_transform; }
 
         bool operator==(GameObject& p_other) const;
+        bool RemoveComponent(int32_t p_id);
 
         template <class T, typename ...Args>
-        void AddComponent(Args& ... p_args)
+        int32_t AddComponent(Args& ... p_args)
         {
             int32_t id = Containers::ComponentContainer::AddComponent<T>(p_args...);
 
             if (id > 0)
                 m_components.emplace_back(id);
+
+            return id;
         }
 
         /**

@@ -129,9 +129,6 @@
     <ClInclude Include="include\Tools\IDCounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Components\IComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Components\ModelComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -157,6 +154,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Containers\EventContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Containers\LightContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Containers\IContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -264,6 +267,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Containers\EventContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Containers\LightContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

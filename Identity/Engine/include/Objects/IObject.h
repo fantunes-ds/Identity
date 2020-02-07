@@ -9,7 +9,7 @@ namespace Engine::Objects
         IObject();
         virtual ~IObject() = default;
 
-        int32_t GetID() const { return m_id; }
+        [[nodiscard]] int32_t GetID() const { return m_id; }
 
     protected:
         int32_t m_id = -1;

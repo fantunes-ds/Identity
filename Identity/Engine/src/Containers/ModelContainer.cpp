@@ -56,6 +56,18 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContaine
     return model;
 }
 
+bool Engine::Containers::ModelContainer::RemoveModel(int32_t p_id)
+{
+    size_t sizeBefore = GetInstance()->m_models.size();
+    GetInstance()->m_models.erase(p_id);
+    size_t sizeAfter = GetInstance()->m_models.size();
+
+    if (sizeBefore == sizeAfter)
+        return false;
+
+    return true;
+}
+
 int32_t Engine::Containers::ModelContainer::FindModel(const std::string& p_name)
 {
     for (const auto& model: GetInstance()->GetAllModels())
