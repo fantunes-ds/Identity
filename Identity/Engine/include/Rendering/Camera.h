@@ -24,7 +24,7 @@ namespace Engine::Rendering
         [[nodiscard]] Matrix4F GetPerspectiveMatrix() const noexcept;
         void UpdateCameraPosition();
         void UpdateCameraRotation();
-        [[nodiscard]] Matrix4F GetViewMatrix() const noexcept;
+        [[nodiscard]] Matrix4F GetViewMatrix() noexcept;
 
         [[nodiscard]] const Vector3F& GetPosition() const noexcept { return m_position; }
         [[nodiscard]] const Quaternion& GetOrientation() const noexcept { return m_orientation; }
@@ -48,7 +48,7 @@ namespace Engine::Rendering
         float m_sensitivity{ 0.05f };
 
         // Perpsective variables
-        float angle = 90.0f;
+        float m_angle = 90.0f;
         float m_width{ 1.0f };
         float m_height{ 9.0f / 16.0f };
         float m_nearZ{ 0.5f };
