@@ -22,10 +22,10 @@ void Engine::ObjectElements::Mesh::GenerateBuffers(const Microsoft::WRL::ComPtr<
 
 void Engine::ObjectElements::Mesh::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
 {
-    BindShader(p_context);
     m_vertexBuffer.Bind(p_context);
     m_indexBuffer.Bind(p_context);
     m_inputLayout.Bind(p_context);
+    BindShader(p_context);
 }
 
 bool Engine::ObjectElements::Mesh::operator==(const Mesh& p_other) const

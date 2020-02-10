@@ -9,6 +9,7 @@ void Engine::Rendering::Camera::UpdateCamera()
     UpdateCameraPosition();
     UpdateCameraRotation();
     UpdateVectors();
+    UpdateViewMatrix();
 }
 
 Engine::Rendering::Camera::Camera(const int p_width, const int p_height) : m_width(static_cast<float>(p_width)), m_height(static_cast<float>(p_height))
@@ -74,6 +75,15 @@ void Engine::Rendering::Camera::UpdateCameraRotation()
 }
 
 
+void Engine::Rendering::Camera::UpdateViewMatrix()
+{
+    const Quaternion reversedOrientation = m_orientation.Conjugate();
+    const Matrix4F rotation = reversedOrientation.ToMatrix4();
+
+    const Matrix4F translation = Matrix4F::CreateTranslation(Vector3F(m_position.x * -1, m_position.y, m_position.z)).Transpose();
+    m_viewMatrix = translation * rotation;
+}
+
 void Engine::Rendering::Camera::UpdateResolution(const int p_width, const int p_height)
 {
     m_width = static_cast<float>(p_width);
@@ -99,13 +109,4 @@ Matrix4F Engine::Rendering::Camera::GetPerspectiveMatrix() const noexcept
         0.0f, 0.0f, fRange, 1.0f,
         0.0f, 0.0f, -m_nearZ * fRange, 0.0f
     };
-}
-
-Matrix4F Engine::Rendering::Camera::GetViewMatrix() noexcept
-{
-    const Quaternion reversedOrientation = m_orientation.Conjugate();
-    const Matrix4F rotation = reversedOrientation.ToMatrix4();
-
-    const Matrix4F translation = Matrix4F::CreateTranslation(Vector3F(m_position.x*-1, m_position.y, m_position.z)).Transpose();
-    return translation * rotation;
 }

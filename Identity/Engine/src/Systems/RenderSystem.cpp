@@ -61,8 +61,6 @@ void Engine::Systems::RenderSystem::DrawScene()
                 {
                     mesh->Bind(m_renderer->GetContext());
 
-
-            Vector3D quat{ 0, 1, 0 };
                     // create constant buffer for transform matrix
                     struct VertexConstantBuffer
                     {
@@ -76,8 +74,8 @@ void Engine::Systems::RenderSystem::DrawScene()
 
                     Matrix4F normalModel = Matrix4F::Inverse(model);
 
-                    Matrix4F view = m_camera.GetViewMatrix();
-                    Matrix4F perspective = m_camera.GetPerspectiveMatrix();
+                    Matrix4F view = camera->GetViewMatrix();
+                    Matrix4F perspective = camera->GetPerspectiveMatrix();
 
                     model.Transpose();
                     view.Transpose();
@@ -135,12 +133,12 @@ void Engine::Systems::RenderSystem::DrawScene()
 
 void Engine::Systems::RenderSystem::Update()
 {
+    DrawScene();
+
     if (Containers::CameraContainer::GetCamera(m_activeCamera))
     {
-        Containers::CameraContainer::GetCamera(m_activeCamera)->UpdateVectors();
+        Containers::CameraContainer::GetCamera(m_activeCamera)->UpdateCamera();
     }
-
-    DrawScene();
 }
 
 

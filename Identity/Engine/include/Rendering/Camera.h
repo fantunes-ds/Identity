@@ -19,13 +19,9 @@ namespace Engine::Rendering
         ~Camera() = default;
 
         void UpdateCamera();
-        void UpdateVectors();
-        void UpdateResolution(const int p_width, const int p_height);
 
         [[nodiscard]] Matrix4F GetPerspectiveMatrix() const noexcept;
-        void UpdateCameraPosition();
-        void UpdateCameraRotation();
-        [[nodiscard]] Matrix4F GetViewMatrix() noexcept;
+        [[nodiscard]] const Matrix4F& GetViewMatrix() const noexcept { return m_viewMatrix; };
 
         [[nodiscard]] const Vector3F& GetPosition() const noexcept { return m_position; }
         [[nodiscard]] const Quaternion& GetOrientation() const noexcept { return m_orientation; }
@@ -37,13 +33,19 @@ namespace Engine::Rendering
         [[nodiscard]] const float& GetMouseSensitivity() const noexcept { return m_sensitivity; }
         [[nodiscard]] const float& GetZoom() const noexcept { return m_zoom; }
 
+
         void SetPosition(const Vector3F& p_position) { m_position = p_position; }
         void SetYaw(const float& p_yaw) { m_yaw = p_yaw; }
         void SetPitch(const float& p_pitch) { m_pitch = p_pitch; }
 
     private:
-        Vector3F m_position{ 0.0f, 0.0f, -10.0f };
-        Quaternion m_orientation{ 0.0f, 0.0f, 0.0f, -1.0f };
+        void UpdateViewMatrix();
+        void UpdateResolution(const int p_width, const int p_height);
+        void UpdateVectors();
+        void UpdateCameraPosition();
+        void UpdateCameraRotation();
+
+
         
         float m_speed{ 0.05f };
         float m_sensitivity{ 0.05f };
@@ -60,5 +62,10 @@ namespace Engine::Rendering
         float m_pitch{ 0.00f };
         float m_lastX{ m_width * 0.5f };
         float m_lastY{ m_height * 0.5f };
+
+        Vector3F m_position{ 0.0f, 0.0f, -10.0f };
+        Quaternion m_orientation{ 0.0f, 0.0f, 0.0f, -1.0f };
+
+        Matrix4F m_viewMatrix;
     };
 }
