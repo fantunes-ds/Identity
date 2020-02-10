@@ -9,6 +9,7 @@
 
 using namespace Engine::Rendering;
 
+std::unique_ptr<Renderer> Renderer::instance;
 Renderer::Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight) : m_width(p_clientWidth), m_height(p_clientHeight)
 {
     HRESULT hr;
@@ -132,6 +133,14 @@ Renderer::Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clien
 Renderer::~Renderer()
 {
     ImGui_ImplDX11_Shutdown();
+}
+
+void Renderer::InitRenderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight)
+{
+    if (instance != nullptr)
+        MessageBox(p_hwnd, "ERROR : Singleton duplication !?", "An instance was already found for Renderer. It is forbidden to have two singletons.", MB_OK | MB_ICONERROR);
+    else
+        instance = std::make_unique<Renderer>(p_hwnd, p_clientWidth, p_clientHeight);
 }
 
 void Renderer::EndFrame() const

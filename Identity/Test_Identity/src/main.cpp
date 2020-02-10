@@ -1,4 +1,5 @@
 #include <Core/App.h>
+#include <Tools/IdentityException.h>
 
 int CALLBACK WinMain(
     HINSTANCE hInstance,

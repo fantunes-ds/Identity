@@ -2,8 +2,6 @@
 
 #include <3DLoader/ObjectElements/Mesh.h>
 #include <Tools/DirectX/GraphicsMacros.h>
-#include <WinSetup.h>
-#include <d3dcompiler.h>
 
 Engine::ObjectElements::Mesh::Mesh(std::vector<Engine::Geometry::Vertex>& p_vertices, std::vector<unsigned short>& p_indices) :
     m_vertices { p_vertices }, m_indices { p_indices } {}

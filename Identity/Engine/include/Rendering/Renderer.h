@@ -71,6 +71,8 @@ namespace Engine::Rendering
         Renderer& operator=(const Renderer&) = delete;
         ~Renderer();
 
+        static void InitRenderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight);
+        static const std::unique_ptr<Renderer>& GetInstance() noexcept { return instance; }
         /**
          @brief Switch the front buffer with the back buffer
          */
@@ -115,5 +117,6 @@ namespace Engine::Rendering
         int m_fullHeight = 1080;
         UINT m_4xMsaaQuality;
         bool m_enable4xMSAA = true;
+        static std::unique_ptr<Renderer> instance;
     };
 }

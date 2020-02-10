@@ -27,9 +27,9 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 
 int App::Run() const
 {
-    Containers::ModelContainer::GetInstance()->SetGraphicsDevice(m_window.GetRenderer().GetDevice());
+    Containers::ModelContainer::GetInstance()->SetGraphicsDevice(Rendering::Renderer::GetInstance()->GetDevice());
 
-    Systems::RenderSystem renderSystem(&m_window.GetRenderer());
+    Systems::RenderSystem renderSystem(&*Rendering::Renderer::GetInstance());
 
     Objects::GameObject gameObject;
     Objects::GameObject gameObject2;
@@ -75,20 +75,20 @@ int App::Run() const
 
 void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
 {
-    m_window.GetRenderer().ClearBuffer(0.3f, 0.3f, 0.3f);
+    Rendering::Renderer::GetInstance()->ClearBuffer(0.3f, 0.3f, 0.3f);
     if (_INPUT->keyboard.IsKeyHeld('R'))
-        m_window.GetRenderer().ClearBuffer(1.0f, 0.0f, 0.0f);
+        Rendering::Renderer::GetInstance()->ClearBuffer(1.0f, 0.0f, 0.0f);
 
     if (_INPUT->keyboard.IsKeyHeld('G'))
-        m_window.GetRenderer().ClearBuffer(0.0f, 1.0f, 0.0f);
+        Rendering::Renderer::GetInstance()->ClearBuffer(0.0f, 1.0f, 0.0f);
 
     if (_INPUT->keyboard.IsKeyHeld('B'))
-        m_window.GetRenderer().ClearBuffer(0.0f, 0.0f, 1.0f);
+        Rendering::Renderer::GetInstance()->ClearBuffer(0.0f, 0.0f, 1.0f);
 
 
     if (_INPUT->keyboard.IsKeyDown('F'))
     {
-        m_window.GetRenderer().SetFullscreen(!m_window.GetRenderer().GetFullscreenState());
+        Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());
     }
 
     ImGui_ImplDX11_NewFrame();
@@ -112,5 +112,5 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
         ImGui::RenderPlatformWindowsDefault();
     }
 
-    m_window.GetRenderer().EndFrame();
+    Rendering::Renderer::GetInstance()->EndFrame();
 }

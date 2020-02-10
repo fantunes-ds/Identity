@@ -22,8 +22,14 @@ void Engine::Rendering::Materials::Shader::LoadVertexShader(const Microsoft::WRL
     GFX_THROW_INFO(p_device->CreateVertexShader(blob_test->GetBufferPointer(), blob_test->GetBufferSize(), nullptr, &vertexShader));
 }
 
-void Engine::Rendering::Materials::Shader::BindShader(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
+void Engine::Rendering::Materials::Shader::BindShader(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const
 {
     p_context->PSSetShader(pixelShader.Get(), nullptr, 0u);
     p_context->VSSetShader(vertexShader.Get(), nullptr, 0u);
+}
+
+void Engine::Rendering::Materials::Shader::GenConstantBuffers()
+{
+    m_vcb.GenBuffers();
+    m_pcb.GenBuffers();
 }
