@@ -40,9 +40,9 @@ void Engine::Systems::RenderSystem::DrawScene()
         ImGui::SliderFloat("LightPosX", &light->position.x, -40.0f, 40.0f, "%.1f");
         ImGui::SliderFloat("LightPosY", &light->position.y, -40.0f, 40.0f, "%.1f");
         ImGui::SliderFloat("LightPosZ", &light->position.z, -40.0f, 40.0f, "%.1f");
-        ImGui::SliderFloat("LightColX", &light->color.x, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("LightColY", &light->color.y, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("LightColZ", &light->color.z, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColR", &light->color.x, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColG", &light->color.y, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColB", &light->color.z, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("Ambient LightX", &light->ambient.x, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("Ambient LightY", &light->ambient.y, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("Ambient LightZ", &light->ambient.z, 0.0f, 1.0f, "%.1f");
@@ -62,6 +62,7 @@ void Engine::Systems::RenderSystem::DrawScene()
                     mesh->Bind(m_renderer->GetContext());
 
 
+            Vector3D quat{ 0, 1, 0 };
                     // create constant buffer for transform matrix
                     struct VertexConstantBuffer
                     {
@@ -75,18 +76,8 @@ void Engine::Systems::RenderSystem::DrawScene()
 
                     Matrix4F normalModel = Matrix4F::Inverse(model);
 
-
-                    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
-                        camera->SetPosition(camera->GetPosition() + camera->GetFront() * camera->GetMovementSpeed());
-                    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
-                        camera->SetPosition(camera->GetPosition() - camera->GetFront() * camera->GetMovementSpeed());
-                    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
-                        camera->SetPosition(camera->GetPosition() - Vector3F::Cross(camera->GetFront(), camera->GetUp()).Normalized() * camera->GetMovementSpeed());
-                    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
-                        camera->SetPosition(camera->GetPosition() + Vector3F::Cross(camera->GetFront(), camera->GetUp()).Normalized() * camera->GetMovementSpeed());
-
-                    Matrix4F view = camera->GetViewMatrix();
-                    Matrix4F perspective = camera->GetPerspectiveMatrix();
+                    Matrix4F view = m_camera.GetViewMatrix();
+                    Matrix4F perspective = m_camera.GetPerspectiveMatrix();
 
                     model.Transpose();
                     view.Transpose();
@@ -146,7 +137,6 @@ void Engine::Systems::RenderSystem::Update()
 {
     if (Containers::CameraContainer::GetCamera(m_activeCamera))
     {
-        UpdateCamera();
         Containers::CameraContainer::GetCamera(m_activeCamera)->UpdateVectors();
     }
 

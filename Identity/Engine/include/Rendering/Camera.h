@@ -18,16 +18,17 @@ namespace Engine::Rendering
         Camera(const int p_width, const int p_height);
         ~Camera() = default;
 
+        void UpdateCamera();
         void UpdateVectors();
         void UpdateResolution(const int p_width, const int p_height);
 
         [[nodiscard]] Matrix4F GetPerspectiveMatrix() const noexcept;
-        [[nodiscard]] Matrix4F GetViewMatrix() const noexcept;
+        void UpdateCameraPosition();
+        void UpdateCameraRotation();
+        [[nodiscard]] Matrix4F GetViewMatrix() noexcept;
 
         [[nodiscard]] const Vector3F& GetPosition() const noexcept { return m_position; }
-        [[nodiscard]] const Vector3F& GetFront() const noexcept { return m_forward; }
-        [[nodiscard]] const Vector3F& GetUp() const noexcept { return m_up; }
-        [[nodiscard]] const Vector3F& GetRight() const noexcept { return m_right; }
+        [[nodiscard]] const Quaternion& GetOrientation() const noexcept { return m_orientation; }
 
         [[nodiscard]] const float& GetYaw() const noexcept { return m_yaw; }
         [[nodiscard]] const float& GetPitch() const noexcept { return m_pitch; }
@@ -42,25 +43,22 @@ namespace Engine::Rendering
 
     private:
         Vector3F m_position{ 0.0f, 0.0f, -10.0f };
-        Vector3F m_target;
-        Vector3F m_direction;
-
-        Vector3F m_right;
-        Vector3F m_up;
-        Vector3F m_forward{ 0.0f, 0.0f, 1.0f };
-
+        Quaternion m_orientation{ 0.0f, 0.0f, 0.0f, -1.0f };
+        
         float m_speed{ 0.05f };
         float m_sensitivity{ 0.05f };
 
-        float m_zoom{ 45.0f };
-        float m_yaw{ -90.0f };
-        float m_pitch{ 0.00f };
-
         // Perpsective variables
-        float angle = 90.0f;
+        float m_angle = 90.0f;
         float m_width{ 1.0f };
         float m_height{ 9.0f / 16.0f };
         float m_nearZ{ 0.5f };
         float m_farZ{ 1000.0f };
+
+        float m_zoom{ 45.0f };
+        float m_yaw{ 180.0f };
+        float m_pitch{ 0.00f };
+        float m_lastX{ m_width * 0.5f };
+        float m_lastY{ m_height * 0.5f };
     };
 }
