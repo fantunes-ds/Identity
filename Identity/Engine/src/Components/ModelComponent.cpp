@@ -1,14 +1,6 @@
 #include <stdafx.h>
 #include <Components/ModelComponent.h>
 
-bool Engine::Components::ModelComponent::IsWellInitialized()
-{
-    if (m_model >= 0)
-        return true;
-
-    return false;
-}
-
 Engine::Components::ModelComponent::ModelComponent(const std::string& p_name)
 {
     m_model = Containers::ModelContainer::FindModel(p_name);
@@ -40,4 +32,9 @@ bool Engine::Components::ModelComponent::operator==(IComponent* p_other)
     }
 
     return false;
+}
+
+bool Engine::Components::ModelComponent::DeleteFromMemory()
+{
+    return Containers::ModelContainer::RemoveModel(m_model);
 }

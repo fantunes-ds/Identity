@@ -11,6 +11,7 @@
 #include <Objects/GameObject.h>
 #include "Components/ModelComponent.h"
 #include "Components/CameraComponent.h"
+#include "Containers/CameraContainer.h"
 
 using namespace Engine::Core;
 
@@ -31,18 +32,34 @@ int App::Run() const
     Systems::RenderSystem renderSystem(&m_window.GetRenderer());
 
     Objects::GameObject gameObject;
+    Objects::GameObject gameObject2;
+    Objects::GameObject camera;
+
+    gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
+    gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
+    gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+
+    int width  = 1024;
+    int height = 768;
+
+    int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(width, height);
     gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
+    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+
+    renderSystem.SetActiveCamera(camera.FindComponent<Components::CameraComponent>()->GetCamera()->GetID());
 
     Rendering::Light dirLight{};
 
-    dirLight.position = Vector4F(40.0f, 40.0f, -40.0f, 1.0f);
-    dirLight.ambient = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
-    dirLight.diffuse = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
-    dirLight.specular = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
+    dirLight.position  = Vector4F(40.0f, 40.0f, -40.0f, 1.0f);
+    dirLight.ambient   = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
+    dirLight.diffuse   = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
+    dirLight.specular  = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
     dirLight.direction = Vector4F(-0.5f, -0.5f, -0.5f, 1.0f).Normalize();
-    dirLight.color = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
-    dirLight.shininess= 64.0f;
+    dirLight.color     = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
+    dirLight.shininess = 64.0f;
 
+    //TODO: move to LightContainer once class is finalized.
     renderSystem.AddLight(dirLight);
 
     while (true)
@@ -51,7 +68,7 @@ int App::Run() const
         {
             return *eCode;
         }
-        
+
         DoFrame(renderSystem);
     }
 }
@@ -78,7 +95,6 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    p_renderSystem.UpdateCamera();
     p_renderSystem.Update();
 
     static bool show_demo_window = true;

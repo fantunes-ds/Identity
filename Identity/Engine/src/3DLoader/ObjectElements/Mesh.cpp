@@ -26,6 +26,7 @@ void Engine::ObjectElements::Mesh::Bind(const Microsoft::WRL::ComPtr<ID3D11Devic
     m_vertexBuffer.Bind(p_context);
     m_indexBuffer.Bind(p_context);
     m_inputLayout.Bind(p_context);
+    BindShader(p_context);
 }
 
 bool Engine::ObjectElements::Mesh::operator==(const Mesh& p_other) const

@@ -13,10 +13,14 @@ namespace Engine::Components
         ModelComponent(const std::string& p_file, const std::string& p_name);
         virtual ~ModelComponent() = default;
 
-        bool IsWellInitialized() override;
-
         bool operator==(IComponent* p_other) override;
 
+        inline void SetModel(int32_t p_id) { m_model = p_id; }
+        inline int32_t GetModel() const { return m_model; }
+
+        bool DeleteFromMemory() override;
+
+    private:
         int32_t m_model;
     };
 }

@@ -22,6 +22,6 @@ namespace Engine::Containers
     private:
         TransformContainer() = default;
         inline static TransformContainer* m_instance = nullptr;
-        std::map<int, std::shared_ptr<ObjectElements::Transform>> m_transforms;
+        std::map<int32_t, std::shared_ptr<ObjectElements::Transform>> m_transforms;
     };
 }

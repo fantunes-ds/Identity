@@ -1,19 +1,24 @@
 #pragma once
 #include <Export.h>
 #include <Components/IComponent.h>
+#include <Rendering/Camera.h>
+#include <Containers/CameraContainer.h>
 
 namespace Engine::Components
 {
     class API_ENGINE CameraComponent: public IComponent
     {
     public:
-        CameraComponent() = default;
+        CameraComponent(int p_width, int p_height);
         virtual ~CameraComponent() = default;
 
-        bool IsWellInitialized() override { return true; }
-        bool operator==(IComponent* p_other) override { return false; }
+        bool operator==(IComponent* p_other) override;
+
+        bool DeleteFromMemory() override;
+
+        [[nodiscard]] inline std::shared_ptr<Rendering::Camera> GetCamera() const { return Containers::CameraContainer::GetCamera(m_camera); }
 
     private:
-        int32_t m_id = -1;
+        int32_t m_camera = -1;
     };
 }

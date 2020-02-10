@@ -6,13 +6,14 @@
 #include <d3d11.h>
 #include <Rendering/Buffers/VertexBuffer.h>
 #include <Rendering/Buffers/IndexBuffer.h>
+#include <Objects/IObject.h>
 #include <Rendering/Buffers/InputLayout.h>
 
 #include "Rendering/Material.h"
 
 namespace Engine::ObjectElements
 {
-    class API_ENGINE Mesh
+    class API_ENGINE Mesh : public Objects::IObject
     {
     public:
         Mesh() = default;

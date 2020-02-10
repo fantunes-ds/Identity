@@ -14,7 +14,6 @@ namespace Engine::Containers
         ComponentContainer(const ComponentContainer&) = delete;
         ComponentContainer(const ComponentContainer&&) = delete;
 
-
         template <class T, typename ...Args>
         static int32_t AddComponent(Args& ... p_args)
         {
@@ -23,15 +22,15 @@ namespace Engine::Containers
             //TODO: Possible memory leak here
             T* newComp = new T(p_args...);
 
-            if (dynamic_cast<Components::IComponent*>(newComp)->IsWellInitialized())
+            if (dynamic_cast<Components::IComponent*>(newComp)->GetID() >= 0)
                 id = ComponentContainer::AddComponent(newComp);
 
             return id;
         }
 
+        static void RemoveComponent(int32_t p_id, bool p_deleteFromMemory = true);
         static ComponentContainer* GetInstance();
-        static std::map<int, std::shared_ptr<Components::IComponent>>& GetAllComponents() { return GetInstance()->m_components; }
-
+        static std::map<int32_t, std::shared_ptr<Components::IComponent>>& GetAllComponents() { return GetInstance()->m_components; }
         static std::shared_ptr<Components::IComponent> FindComponent(int32_t p_id);
 
         template<class T>

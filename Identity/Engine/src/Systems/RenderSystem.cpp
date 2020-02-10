@@ -9,9 +9,15 @@
 #include <Containers/GameObjectContainer.h>
 #include <Containers/TransformContainer.h>
 #include "Components/ModelComponent.h"
+#include "Containers/CameraContainer.h"
+#include <Containers/EventContainer.h>
 
-Engine::Systems::RenderSystem::RenderSystem(Rendering::Renderer* p_renderer): m_renderer(p_renderer)
+//Example of how to use events
+Engine::Systems::RenderSystem::RenderSystem(Rendering::Renderer* p_renderer) : m_renderer(p_renderer)
 {
+    /*Containers::EventContainer::AddEvent("NoActiveCamera");
+    Event& event = Containers::EventContainer::GetEvent("NoActiveCamera");
+    event.AddListener(this, &RenderSystem::ResetActiveCamera);*/
 }
 
 void Engine::Systems::RenderSystem::DrawScene()
@@ -26,6 +32,7 @@ void Engine::Systems::RenderSystem::DrawScene()
     HRESULT hr;
 
     std::shared_ptr<Rendering::Light> light = m_lights.begin()->second;
+    std::shared_ptr<Rendering::Camera> camera = Containers::CameraContainer::GetCamera(m_activeCamera);
 
     //TODO: Light will be moved soon
     if (ImGui::Begin("Lighting Tool"))
@@ -33,9 +40,9 @@ void Engine::Systems::RenderSystem::DrawScene()
         ImGui::SliderFloat("LightPosX", &light->position.x, -40.0f, 40.0f, "%.1f");
         ImGui::SliderFloat("LightPosY", &light->position.y, -40.0f, 40.0f, "%.1f");
         ImGui::SliderFloat("LightPosZ", &light->position.z, -40.0f, 40.0f, "%.1f");
-        ImGui::SliderFloat("LightColX", &light->color.x, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("LightColY", &light->color.y, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("LightColZ", &light->color.z, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColR", &light->color.x, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColG", &light->color.y, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColB", &light->color.z, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("Ambient LightX", &light->ambient.x, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("Ambient LightY", &light->ambient.y, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("Ambient LightZ", &light->ambient.z, 0.0f, 1.0f, "%.1f");
@@ -44,17 +51,15 @@ void Engine::Systems::RenderSystem::DrawScene()
 
     for (auto& gameObject : Containers::GameObjectContainer::GetAllGameObjects())
     {
-        for (auto component : gameObject.second->GetAllComponents())
+        for (auto& component : gameObject.second->GetAllComponents())
         {
-            Containers::ComponentContainer::GetInstance();
-            if (Components::ModelComponent * modelComp = dynamic_cast<Components::ModelComponent*>(&*Containers::ComponentContainer::FindComponent(component)))
+            if (std::shared_ptr<Components::ModelComponent> modelComp = std::dynamic_pointer_cast<Components::ModelComponent>(Containers::ComponentContainer::FindComponent(component)))
             {
-                auto& meshes = Containers::ModelContainer::FindModel(modelComp->m_model)->GetMeshes();
+                auto& meshes = Containers::ModelContainer::FindModel(modelComp->GetModel())->GetMeshes();
 
                 for (auto mesh : meshes)
                 {
                     mesh->Bind(m_renderer->GetContext());
-
 
                     // create constant buffer for transform matrix
                     struct VertexConstantBuffer
@@ -69,18 +74,8 @@ void Engine::Systems::RenderSystem::DrawScene()
 
                     Matrix4F normalModel = Matrix4F::Inverse(model);
 
-
-                    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
-                        m_camera.m_position += m_camera.m_forward * m_camera.m_speed;
-                    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
-                        m_camera.m_position -= m_camera.m_forward * m_camera.m_speed;
-                    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
-                        m_camera.m_position -= Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
-                    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
-                        m_camera.m_position += Vector3F::Cross(m_camera.m_forward, m_camera.m_up).Normalized() * m_camera.m_speed;
-
-                    Matrix4F view = m_camera.GetViewMatrix();
-                    Matrix4F perspective = m_camera.GetPerspectiveMatrix();
+                    Matrix4F view = camera->GetViewMatrix();
+                    Matrix4F perspective = camera->GetPerspectiveMatrix();
 
                     model.Transpose();
                     view.Transpose();
@@ -110,14 +105,8 @@ void Engine::Systems::RenderSystem::DrawScene()
                         Vector3F cameraPos;
                     };
 
-                    const PixelConstantBuffer pcb{ light->position,
-                                                  light->ambient,
-                                                  light->diffuse,
-                                                  light->specular,
-                                                  light->direction,
-                                                  light->color,
-                                                  64.0f,
-                                                  m_camera.GetPosition() };
+                    const PixelConstantBuffer pcb{ *light,
+                    camera->GetPosition()};
 
                     Microsoft::WRL::ComPtr<ID3D11Buffer> pixelConstantBuffer;
                     D3D11_BUFFER_DESC                    pixelBufferDesc = {};
@@ -144,38 +133,20 @@ void Engine::Systems::RenderSystem::DrawScene()
 
 void Engine::Systems::RenderSystem::Update()
 {
-    m_camera.UpdateVectors();
     DrawScene();
+
+    if (Containers::CameraContainer::GetCamera(m_activeCamera))
+    {
+        Containers::CameraContainer::GetCamera(m_activeCamera)->UpdateCamera();
+    }
 }
 
 
-void Engine::Systems::RenderSystem::UpdateCamera()
+void Engine::Systems::RenderSystem::UpdateCamera() const
 {
     int width, height;
     m_renderer->GetResolution(width, height);
-    m_camera.UpdateResolution(width, height);
-}
-
-uint32_t Engine::Systems::RenderSystem::AddModel(const std::string& p_path, const std::string& p_name)
-{
-    if (Containers::ModelContainer::FindModel(p_name) >= 0)
-    {
-        const std::string error("in Engine::Systems::RenderSystem::AddModel(const std::string& p_path, const std::string& p_name): Could not add model with name " +
-                                p_name + " because it already exists");
-        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
-        return -1;
-    }
-
-
-    std::shared_ptr newModel = Containers::ModelContainer::AddModel(p_path, p_name);
-
-    if (newModel)
-    {     
-        const uint32_t tmpId = Tools::IDCounter::GetNewID();
-        return tmpId;
-    }
-    else
-        return -1;
+    Containers::CameraContainer::GetCamera(m_activeCamera)->UpdateResolution(width, height);
 }
 
 uint32_t Engine::Systems::RenderSystem::AddLight(Rendering::Light& p_light)
@@ -191,4 +162,14 @@ uint32_t Engine::Systems::RenderSystem::AddLight(Rendering::Light& p_light)
     }
     else
         return -1;
+}
+
+void Engine::Systems::RenderSystem::ResetActiveCamera()
+{
+    m_activeCamera = -1;
+}
+
+void Engine::Systems::RenderSystem::SetActiveCamera(int32_t p_id)
+{
+    m_activeCamera = p_id;
 }
