@@ -14,6 +14,7 @@ void Engine::Rendering::Camera::UpdateCamera()
 
 Engine::Rendering::Camera::Camera(const int p_width, const int p_height) : m_width(static_cast<float>(p_width)), m_height(static_cast<float>(p_height))
 {
+    UpdatePerspectiveMatrix();
 }
 
 void Engine::Rendering::Camera::UpdateVectors()
@@ -88,9 +89,10 @@ void Engine::Rendering::Camera::UpdateResolution(const int p_width, const int p_
 {
     m_width = static_cast<float>(p_width);
     m_height = static_cast<float>(p_height);
+    UpdatePerspectiveMatrix();
 }
 
-Matrix4F Engine::Rendering::Camera::GetPerspectiveMatrix() const noexcept
+void Engine::Rendering::Camera::UpdatePerspectiveMatrix() noexcept
 {
     const float twoNearZ = m_nearZ + m_nearZ;
     const float fRange = m_farZ / (m_farZ - m_nearZ);
@@ -103,10 +105,10 @@ Matrix4F Engine::Rendering::Camera::GetPerspectiveMatrix() const noexcept
     const float aspectRatio = m_width / m_height;
     const float xScale = yScale / aspectRatio;
 
-    return {
-        xScale, 0.0f, 0.0f, 0.0f,
-        0.0f, yScale, 0.0f, 0.0f,
-        0.0f, 0.0f, fRange, 1.0f,
-        0.0f, 0.0f, -m_nearZ * fRange, 0.0f
-    };
+    
+
+    m_perspectiveMatrix = Matrix4F{xScale, 0.0f, 0.0f, 0.0f,
+                                        0.0f, yScale, 0.0f, 0.0f,
+                                        0.0f, 0.0f, fRange, 1.0f,
+                                        0.0f, 0.0f, -m_nearZ * fRange, 0.0f};
 }

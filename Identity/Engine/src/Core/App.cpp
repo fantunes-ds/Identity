@@ -35,12 +35,12 @@ int App::Run() const
     Objects::GameObject gameObject2;
     Objects::GameObject camera;
 
-    gameObject.GetTransform()->Translate(Vector3F{ 3.0f, 0.0f, 4.0f });
-    gameObject2.GetTransform()->Translate(Vector3F{ 6.0f, 0.0f, -4.0f });
-    gameObject.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
-    gameObject2.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
+    gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
+    gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
+    gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
 
-    int width = 1024;
+    int width  = 1024;
     int height = 768;
 
     int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(width, height);
@@ -51,13 +51,13 @@ int App::Run() const
 
     Rendering::Light dirLight{};
 
-    dirLight.position = Vector4F(40.0f, 40.0f, -40.0f, 1.0f);
-    dirLight.ambient = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
-    dirLight.diffuse = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
-    dirLight.specular = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
+    dirLight.position  = Vector4F(40.0f, 40.0f, -40.0f, 1.0f);
+    dirLight.ambient   = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
+    dirLight.diffuse   = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
+    dirLight.specular  = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
     dirLight.direction = Vector4F(-0.5f, -0.5f, -0.5f, 1.0f).Normalize();
-    dirLight.color = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
-    dirLight.shininess= 64.0f;
+    dirLight.color     = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
+    dirLight.shininess = 64.0f;
 
     //TODO: move to LightContainer once class is finalized.
     renderSystem.AddLight(dirLight);
@@ -68,7 +68,7 @@ int App::Run() const
         {
             return *eCode;
         }
-        
+
         DoFrame(renderSystem);
     }
 }

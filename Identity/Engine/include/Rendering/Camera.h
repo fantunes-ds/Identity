@@ -20,8 +20,8 @@ namespace Engine::Rendering
 
         void UpdateCamera();
 
-        [[nodiscard]] Matrix4F GetPerspectiveMatrix() const noexcept;
-        [[nodiscard]] const Matrix4F& GetViewMatrix() const noexcept { return m_viewMatrix; };
+        [[nodiscard]] const Matrix4F& GetPerspectiveMatrix() const noexcept { return m_perspectiveMatrix; }
+        [[nodiscard]] const Matrix4F& GetViewMatrix() const noexcept { return m_viewMatrix; }
 
         [[nodiscard]] const Vector3F& GetPosition() const noexcept { return m_position; }
         [[nodiscard]] const Quaternion& GetOrientation() const noexcept { return m_orientation; }
@@ -41,6 +41,7 @@ namespace Engine::Rendering
     private:
         void UpdateViewMatrix();
         void UpdateResolution(const int p_width, const int p_height);
+        void UpdatePerspectiveMatrix() noexcept;
         void UpdateVectors();
         void UpdateCameraPosition();
         void UpdateCameraRotation();
@@ -67,5 +68,6 @@ namespace Engine::Rendering
         Quaternion m_orientation{ 0.0f, 0.0f, 0.0f, -1.0f };
 
         Matrix4F m_viewMatrix;
+        Matrix4F m_perspectiveMatrix;
     };
 }
