@@ -82,7 +82,11 @@ namespace Engine::Rendering
 
         //---------WIP--------
 
+        void ResetContext();
         void SetRenderTarget();
+        void CreateSwapChain(const HWND p_hwnd);
+        void SetDepthStencilBuffer();
+        void SetViewPort(const float& p_width, const float& p_height) const;
 
         void LoadPixelShader(const std::wstring& p_path);
         void LoadVertexShader(const std::wstring& p_path);
@@ -91,14 +95,15 @@ namespace Engine::Rendering
         void GetResolution(int& p_width, int& p_height);
         void SetFullscreen(const bool& p_state);
         void ChangeResolution();
-        const bool& GetFullscreenState() const { return isFullscreen; }
 
-        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() { return m_pDevice; };
-        [[nodiscard]] Microsoft::WRL::ComPtr<IDXGISwapChain>& GetSwapChain() { return m_pSwapChain; };
-        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() { return m_pContext; };
-        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& GetTarget() { return m_pTarget; };
-        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& GetDepthStencil() { return m_pDepthStencil; };
-        [[nodiscard]] Microsoft::WRL::ComPtr<ID3DBlob>& GetBlob() { return m_blob; };
+        [[nodiscard]] const bool& GetFullscreenState() const { return isFullscreen; }
+
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() const { return m_pDevice; };
+        [[nodiscard]] const Microsoft::WRL::ComPtr<IDXGISwapChain>& GetSwapChain() const { return m_pSwapChain; };
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() const { return m_pContext; };
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& GetTarget() const { return m_pTarget; };
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& GetDepthStencil() const { return m_pDepthStencil; };
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3DBlob>& GetBlob() const { return m_blob; };
 
     private:
         Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
