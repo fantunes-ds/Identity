@@ -23,8 +23,10 @@ void PixelConstantBuffer::GenBuffers()
     Renderer::GetInstance()->GetContext()->PSSetConstantBuffers(0u, 1u, m_buffer.GetAddressOf());
 }
 
-template <typename T>
-void PixelConstantBuffer::Update(const T& p_filledBuffer)
+void PixelConstantBuffer::Update(const PCB& p_filledBuffer) const
 {
-
+    D3D11_MAPPED_SUBRESOURCE msr;
+    Renderer::GetInstance()->GetContext()->Map(m_buffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &msr);
+    memcpy(msr.pData, &p_filledBuffer, sizeof(p_filledBuffer));
+    Renderer::GetInstance()->GetContext()->Unmap(m_buffer.Get(), 0u);
 }

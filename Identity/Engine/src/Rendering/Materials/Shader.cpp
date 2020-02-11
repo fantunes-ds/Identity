@@ -4,6 +4,11 @@
 #include <Tools/DirectX/GraphicsMacros.h>
 #include <d3dcompiler.h>
 
+Engine::Rendering::Materials::Shader::Shader()
+{
+    GenConstantBuffers();
+}
+
 void Engine::Rendering::Materials::Shader::LoadPixelShader(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device,
                                                            const std::wstring& p_path)
 {

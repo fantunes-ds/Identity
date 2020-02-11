@@ -49,31 +49,6 @@ void Engine::Systems::RenderSystem::DrawScene()
         ImGui::SliderFloat("Ambient LightZ", &light->ambient.z, 0.0f, 1.0f, "%.1f");
     }ImGui::End();
 
-  /*  struct VertexConstantBuffer
-    {
-        Matrix4F model;
-        Matrix4F view;
-        Matrix4F normalModel;
-        Matrix4F projection;
-    };
-
-    VertexConstantBuffer vcb;*/
-
-    //Microsoft::WRL::ComPtr<ID3D11Buffer> vertexConstantBuffer;
-    //D3D11_BUFFER_DESC                    vertexBufferDesc = {};
-    //vertexBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    //vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
-    //vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    //vertexBufferDesc.MiscFlags = 0u;
-    //vertexBufferDesc.ByteWidth = sizeof(vcb);
-    //vertexBufferDesc.StructureByteStride = 0u;
-    //D3D11_SUBRESOURCE_DATA VertexConstantShaderData = {};
-    //VertexConstantShaderData.pSysMem = &vcb;
-    //GFX_THROW_INFO(m_renderer->GetDevice()->CreateBuffer(&vertexBufferDesc, &VertexConstantShaderData, &vertexConstantBuffer));
-
-    //bind the buffer to the shader
-    //m_renderer->GetContext()->VSSetConstantBuffers(0u, 1u, vertexConstantBuffer.GetAddressOf());
-
     for (auto& gameObject : Containers::GameObjectContainer::GetAllGameObjects())
     {
         for (auto& component : gameObject.second->GetAllComponents())
@@ -85,8 +60,6 @@ void Engine::Systems::RenderSystem::DrawScene()
                 for (auto mesh : meshes)
                 {
                     mesh->Bind(m_renderer->GetContext());
-
-                    // create constant buffer for transform matrix
                     
                     Matrix4F model = Containers::TransformContainer::FindTransform(gameObject.second->GetTransformID())->GetTransformMatrix();
 
@@ -100,39 +73,15 @@ void Engine::Systems::RenderSystem::DrawScene()
                     normalModel.Transpose();
                     perspective.Transpose();
 
+                    const Rendering::Buffers::VCB vcb { model, view, normalModel,perspective };
+                    mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
 
-                    Rendering::Buffers::VCB vcb { model, view, normalModel,perspective };
-                    D3D11_MAPPED_SUBRESOURCE msr;
-                    m_renderer->GetContext()->Map(mesh->GetMaterial().GetShader().GetVCB().GetBuffer().Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &msr);
-                    memcpy(msr.pData, &vcb, sizeof(vcb));
-                    m_renderer->GetContext()->Unmap(mesh->GetMaterial().GetShader().GetVCB().GetBuffer().Get(), 0u);
-                    //
-
-                    //struct PixelConstantBuffer
-                    //{
-                    //    Rendering::Light lightSource;
-                    //    Vector3F cameraPos;
-                    //};
-
-                    //const PixelConstantBuffer pcb{ *light,
-                    //camera->GetPosition()};
-
-                    //Microsoft::WRL::ComPtr<ID3D11Buffer> pixelConstantBuffer;
-                    //D3D11_BUFFER_DESC                    pixelBufferDesc = {};
-                    //pixelBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-                    //pixelBufferDesc.Usage = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
-                    //pixelBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-                    //pixelBufferDesc.MiscFlags = 0u;
-                    //pixelBufferDesc.ByteWidth = sizeof(pcb);
-                    //pixelBufferDesc.StructureByteStride = 0u;
-
-                    //D3D11_SUBRESOURCE_DATA PixelConstantShaderData = {};
-                    //PixelConstantShaderData.pSysMem = &pcb;
-                    //GFX_THROW_INFO(m_renderer->GetDevice()->CreateBuffer(&pixelBufferDesc, &PixelConstantShaderData, &pixelConstantBuffer));
-
-                    ////bind the buffer to the shader
-                    //m_renderer->GetContext()->PSSetConstantBuffers(0u, 1u, pixelConstantBuffer.GetAddressOf());
-
+                    const Vector4F reversedXLightPos = Vector4F(light->position.x * -1, light->position.y, light->position.z, 1.0f);
+                    const Rendering::Buffers::PCB pcb { reversedXLightPos, light->ambient, light->diffuse,
+                                                        light->specular ,light->direction, light->color,
+                                                                        light->shininess,camera->GetPosition()};
+                    mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
+                    
                     GFX_THROW_INFO_ONLY(m_renderer->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
                 }
             }

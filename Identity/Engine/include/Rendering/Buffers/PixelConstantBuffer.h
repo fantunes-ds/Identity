@@ -21,8 +21,7 @@ namespace Engine::Rendering::Buffers
 
         const PCB& GetVCB() const { return m_pcb; }
 
-        template <typename T>
-        void Update(const T& p_filledBuffer);
+        void Update(const PCB& p_filledBuffer) const;
 
     private:
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_buffer;

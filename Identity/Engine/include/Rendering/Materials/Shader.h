@@ -10,6 +10,8 @@ namespace Engine::Rendering::Materials
     class Shader
     {
     public:
+        Shader();
+        ~Shader() = default;
         void LoadPixelShader(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
         void LoadVertexShader(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
         void BindShader(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const;

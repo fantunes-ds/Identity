@@ -21,11 +21,10 @@ namespace Engine::Rendering::Buffers
 
         void GenBuffers();
 
-        const VCB& GetVCB() const { return m_vcb; }
-        const Microsoft::WRL::ComPtr<ID3D11Buffer>& GetBuffer() const { return m_buffer; }
+        [[nodiscard]] const VCB& GetVCB() const { return m_vcb; }
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11Buffer>& GetBuffer() const { return m_buffer; }
 
-        template <typename T>
-        void Update(const T& p_filledBuffer);
+        void Update(const VCB& p_filledBuffer) const;
 
     private:
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_buffer;

@@ -22,8 +22,10 @@ void VertexConstantBuffer::GenBuffers()
     Renderer::GetInstance()->GetContext()->VSSetConstantBuffers(0u, 1u, m_buffer.GetAddressOf());
 }
 
-template <typename T>
-void VertexConstantBuffer::Update(const T& p_filledBuffer)
+void VertexConstantBuffer::Update(const VCB& p_filledBuffer) const
 {
-
+    D3D11_MAPPED_SUBRESOURCE msr;
+    Renderer::GetInstance()->GetContext()->Map(m_buffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &msr);
+    memcpy(msr.pData, &p_filledBuffer, sizeof(p_filledBuffer));
+    Renderer::GetInstance()->GetContext()->Unmap(m_buffer.Get(), 0u);
 }
