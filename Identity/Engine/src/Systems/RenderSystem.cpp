@@ -84,7 +84,7 @@ void Engine::Systems::RenderSystem::DrawScene()
 
                 for (auto mesh : meshes)
                 {
-                    mesh->Bind();
+                    mesh->Bind(m_renderer->GetContext());
 
                     // create constant buffer for transform matrix
                     
@@ -103,9 +103,9 @@ void Engine::Systems::RenderSystem::DrawScene()
 
                     Rendering::Buffers::VCB vcb { model, view, normalModel,perspective };
                     D3D11_MAPPED_SUBRESOURCE msr;
-                    m_renderer->GetContext()->Map(mesh->GetVertexBuffer().GetBuffer().Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &msr);
+                    m_renderer->GetContext()->Map(mesh->GetMaterial().GetShader().GetVCB().GetBuffer().Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &msr);
                     memcpy(msr.pData, &vcb, sizeof(vcb));
-                    m_renderer->GetContext()->Unmap(mesh->GetVertexBuffer().GetBuffer().Get(), 0u);
+                    m_renderer->GetContext()->Unmap(mesh->GetMaterial().GetShader().GetVCB().GetBuffer().Get(), 0u);
                     //
 
                     //struct PixelConstantBuffer

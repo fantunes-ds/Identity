@@ -22,6 +22,7 @@ namespace Engine::Rendering::Buffers
         void GenBuffers();
 
         const VCB& GetVCB() const { return m_vcb; }
+        const Microsoft::WRL::ComPtr<ID3D11Buffer>& GetBuffer() const { return m_buffer; }
 
         template <typename T>
         void Update(const T& p_filledBuffer);

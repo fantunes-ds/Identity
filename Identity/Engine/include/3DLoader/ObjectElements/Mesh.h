@@ -28,6 +28,7 @@ namespace Engine::ObjectElements
         bool operator!=(const Mesh& p_other) const;
 
         Rendering::Buffers::VertexBuffer& GetVertexBuffer() { return m_vertexBuffer; }
+        Rendering::Material& GetMaterial() { return m_material; }
         Rendering::Buffers::IndexBuffer& GetIndexBuffer() { return m_indexBuffer; }
         std::vector<Geometry::Vertex>& GetVertices() { return m_vertices; }
         std::vector<unsigned short>& GetIndices() { return m_indices; }

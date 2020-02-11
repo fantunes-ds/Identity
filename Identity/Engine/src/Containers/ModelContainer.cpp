@@ -40,7 +40,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContaine
     model->SetName(p_name);
 
     for (auto& mesh : model->GetMeshes())
-        mesh->GenerateBuffers();
+        mesh->GenerateBuffers(ModelContainer->m_graphicsDevice);
 
     for (auto& existingModel: ModelContainer->m_models)
     {
