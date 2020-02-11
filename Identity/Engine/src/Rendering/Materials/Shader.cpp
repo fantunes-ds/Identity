@@ -6,7 +6,7 @@
 
 Engine::Rendering::Materials::Shader::Shader()
 {
-    GenConstantBuffers();
+    //GenConstantBuffers();
 }
 
 void Engine::Rendering::Materials::Shader::LoadPixelShader(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device,

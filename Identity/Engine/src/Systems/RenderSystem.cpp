@@ -60,7 +60,9 @@ void Engine::Systems::RenderSystem::DrawScene()
                 for (auto mesh : meshes)
                 {
                     mesh->Bind(m_renderer->GetContext());
-                    
+
+                    mesh->GetMaterial().GetShader().GenConstantBuffers();
+
                     Matrix4F model = Containers::TransformContainer::FindTransform(gameObject.second->GetTransformID())->GetTransformMatrix();
 
                     Matrix4F normalModel = Matrix4F::Inverse(model);
@@ -73,8 +75,13 @@ void Engine::Systems::RenderSystem::DrawScene()
                     normalModel.Transpose();
                     perspective.Transpose();
 
-                    const Rendering::Buffers::VCB vcb { model, view, normalModel,perspective };
-                    mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
+                    Rendering::Buffers::VCB vcb { model, view, normalModel,perspective };
+
+                    D3D11_MAPPED_SUBRESOURCE msr;
+                    Rendering::Renderer::GetInstance()->GetContext()->Map(mesh->GetMaterial().GetShader().GetVCB().GetBuffer().Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &msr);
+                    memcpy(msr.pData, &vcb, sizeof(vcb));
+                    Rendering::Renderer::GetInstance()->GetContext()->Unmap(mesh->GetMaterial().GetShader().GetVCB().GetBuffer().Get(), 0u);
+                    //mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
 
                     const Vector4F reversedXLightPos = Vector4F(light->position.x * -1, light->position.y, light->position.z, 1.0f);
                     const Rendering::Buffers::PCB pcb { reversedXLightPos, light->ambient, light->diffuse,
