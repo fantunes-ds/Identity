@@ -16,7 +16,6 @@ namespace Engine::Systems
 
         void DrawScene();
         void Update() override;
-        void UpdateCamera() const;
 
         /**
          * @brief As soon as we have a LightContainer, this method should be deleted.

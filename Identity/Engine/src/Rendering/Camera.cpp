@@ -4,12 +4,13 @@
 #include <Input/Input.h>
 
 
-void Engine::Rendering::Camera::UpdateCamera()
+void Engine::Rendering::Camera::UpdateCamera(const float& p_width, const float& p_height)
 {
     UpdateCameraPosition();
     UpdateCameraRotation();
     UpdateVectors();
     UpdateViewMatrix();
+    UpdateResolution(p_width, p_height);
 }
 
 Engine::Rendering::Camera::Camera(const int p_width, const int p_height) : m_width(static_cast<float>(p_width)), m_height(static_cast<float>(p_height))
@@ -85,10 +86,10 @@ void Engine::Rendering::Camera::UpdateViewMatrix()
     m_viewMatrix = translation * rotation;
 }
 
-void Engine::Rendering::Camera::UpdateResolution(const int p_width, const int p_height)
+void Engine::Rendering::Camera::UpdateResolution(const float p_width, const float p_height)
 {
-    m_width = static_cast<float>(p_width);
-    m_height = static_cast<float>(p_height);
+    m_width = p_width;
+    m_height = p_height;
     UpdatePerspectiveMatrix();
 }
 

@@ -18,7 +18,7 @@ namespace Engine::Rendering
         Camera(const int p_width, const int p_height);
         ~Camera() = default;
 
-        void UpdateCamera();
+        void UpdateCamera(const float& p_width, const float& p_height);
 
         [[nodiscard]] const Matrix4F& GetPerspectiveMatrix() const noexcept { return m_perspectiveMatrix; }
         [[nodiscard]] const Matrix4F& GetViewMatrix() const noexcept { return m_viewMatrix; }
@@ -40,7 +40,7 @@ namespace Engine::Rendering
 
     private:
         void UpdateViewMatrix();
-        void UpdateResolution(const int p_width, const int p_height);
+        void UpdateResolution(const float p_width, const float p_height);
         void UpdatePerspectiveMatrix() noexcept;
         void UpdateVectors();
         void UpdateCameraPosition();

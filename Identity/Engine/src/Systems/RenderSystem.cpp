@@ -88,12 +88,14 @@ void Engine::Systems::RenderSystem::DrawScene()
                                                         light->specular ,light->direction, light->color,
                                                                         light->shininess,camera->GetPosition()};
                     mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
+                    Rendering::Renderer::GetInstance()->SetRenderTarget();
                     
                     GFX_THROW_INFO_ONLY(m_renderer->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
                 }
             }
         }
     }
+
 }
 
 void Engine::Systems::RenderSystem::Update()
@@ -102,16 +104,10 @@ void Engine::Systems::RenderSystem::Update()
 
     if (Containers::CameraContainer::GetCamera(m_activeCamera))
     {
-        Containers::CameraContainer::GetCamera(m_activeCamera)->UpdateCamera();
+        int width, height;
+        m_renderer->GetResolution(width, height);
+        Containers::CameraContainer::GetCamera(m_activeCamera)->UpdateCamera(width, height);
     }
-}
-
-
-void Engine::Systems::RenderSystem::UpdateCamera() const
-{
-    int width, height;
-    m_renderer->GetResolution(width, height);
-    Containers::CameraContainer::GetCamera(m_activeCamera)->UpdateResolution(width, height);
 }
 
 uint32_t Engine::Systems::RenderSystem::AddLight(Rendering::Light& p_light)
