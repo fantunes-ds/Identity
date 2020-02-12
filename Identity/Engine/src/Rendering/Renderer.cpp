@@ -130,11 +130,6 @@ Renderer::Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clien
     ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
 }
 
-Renderer::~Renderer()
-{
-    ImGui_ImplDX11_Shutdown();
-}
-
 void Renderer::InitRenderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight)
 {
     if (instance != nullptr)

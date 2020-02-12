@@ -4,6 +4,7 @@
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Input/Input.h>
+#include <Tools/ImGUI/imgui_impl_dx11.h>
 
 using namespace Engine::Rendering;
 
@@ -73,6 +74,7 @@ Window::Window(int p_width, int p_height, const char* p_name) : m_width(p_width)
 
 Window::~Window()
 {
+    ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     DestroyWindow(m_hwnd);
 }

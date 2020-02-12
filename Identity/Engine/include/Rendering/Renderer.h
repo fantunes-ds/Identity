@@ -69,7 +69,7 @@ namespace Engine::Rendering
         Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight);
         Renderer(const Renderer&) = delete;
         Renderer& operator=(const Renderer&) = delete;
-        ~Renderer();
+        ~Renderer() = default;
 
         static void InitRenderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight);
         static const std::unique_ptr<Renderer>& GetInstance() noexcept { return instance; }
