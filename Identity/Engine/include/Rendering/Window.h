@@ -1,8 +1,6 @@
 #pragma once
 #include <Export.h>
 #include <WinSetup.h>
-#include <Rendering/Renderer.h>
-#include <memory>
 #include <Input/Keyboard.h>
 #include <optional>
 #include <Input/Mouse.h>
@@ -34,10 +32,6 @@ namespace Engine::Rendering
         ~Window();
         Window() = delete;
 
-        /*
-         @brief Return the DirectX context of the window
-         */
-        [[nodiscard]] Renderer& GetRenderer() const;
         void SetTitle(const std::string& title) const;
 
         void EnableCursor() noexcept;
@@ -69,6 +63,5 @@ namespace Engine::Rendering
         std::vector<char> m_rawBuffer;
 
         bool isSet = false;
-        std::unique_ptr<Renderer> m_renderer;
     };
 }

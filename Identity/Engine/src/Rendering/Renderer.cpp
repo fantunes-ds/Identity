@@ -9,6 +9,7 @@
 
 using namespace Engine::Rendering;
 
+std::unique_ptr<Renderer> Renderer::instance;
 Renderer::Renderer(const HWND& p_hwnd, const int& p_clientWidth, const int& p_clientHeight) :
     m_width(static_cast<float>(p_clientWidth)), m_height(static_cast<float>(p_clientHeight))
 {
@@ -181,6 +182,13 @@ void Renderer::SetViewPort(const float& p_width, const float& p_height) const
     m_pContext->RSSetViewports(1u, &viewPort);
 }
 
+void Renderer::InitRenderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight)
+{
+    if (instance != nullptr)
+        MessageBox(p_hwnd, "ERROR : Singleton duplication !?", "An instance was already found for Renderer. It is forbidden to have two singletons.", MB_OK | MB_ICONERROR);
+    else
+        instance = std::make_unique<Renderer>(p_hwnd, p_clientWidth, p_clientHeight);
+}
 
 void Renderer::SetBackBuffer()
 {

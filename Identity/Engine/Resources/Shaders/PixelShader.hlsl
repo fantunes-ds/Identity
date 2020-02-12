@@ -27,7 +27,7 @@ struct VS_OUT
 float4 main(VS_OUT f_in) : SV_TARGET
 {
     f_in.norm = normalize(f_in.norm);
-    float3 lightDir = normalize(light.position - f_in.worldPos);
+    float3 lightDir = normalize(light.position.rgb - f_in.worldPos);
     
     float diff = max(dot(f_in.norm, lightDir), 0.0);
     float3 diffuse = diff * light.color;
@@ -38,6 +38,6 @@ float4 main(VS_OUT f_in) : SV_TARGET
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), light.shininess);
     float3 specular = light.specular * spec * light.color;
     
-    f_in.vertexColor *= float4(light.ambient + diffuse + specular, 1) * f_in.vertexColor;
+    f_in.vertexColor *= float4(light.ambient.rgb + diffuse + specular, 1) * f_in.vertexColor;
     return f_in.vertexColor;
 }

@@ -235,6 +235,10 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Rendering\Buffers\InputLayout.h" />
     <ClInclude Include="include\Containers\TransformContainer.h" />
     <ClInclude Include="include\Objects\IObject.h" />
+    <ClInclude Include="include\Rendering\Buffers\PixelConstantBuffer.h" />
+    <ClInclude Include="include\Rendering\Buffers\VertexConstantBuffer.h" />
+    <ClInclude Include="include\Rendering\Material.h" />
+    <ClInclude Include="include\Rendering\Materials\Shader.h" />
     <ClInclude Include="include\Systems\IECSSystem.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\3DLoader\ObjectLoader.h" />
@@ -289,6 +293,10 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Rendering\Buffers\InputLayout.cpp" />
     <ClCompile Include="src\Containers\TransformContainer.cpp" />
     <ClCompile Include="src\Objects\GameObject.cpp" />
+    <ClCompile Include="src\Rendering\Buffers\PixelConstantBuffer.cpp" />
+    <ClCompile Include="src\Rendering\Buffers\VertexConstantBuffer.cpp" />
+    <ClCompile Include="src\Rendering\Material.cpp" />
+    <ClCompile Include="src\Rendering\Materials\Shader.cpp" />
     <ClCompile Include="src\Systems\RenderSystem.cpp" />
     <ClCompile Include="src\Events\Event.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />

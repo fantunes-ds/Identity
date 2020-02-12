@@ -69,8 +69,10 @@ namespace Engine::Rendering
         Renderer(const HWND& p_hwnd, const int& p_clientWidth, const int& p_clientHeight);
         Renderer(const Renderer&) = delete;
         Renderer& operator=(const Renderer&) = delete;
-        ~Renderer();
+        ~Renderer() = default;
 
+        static void InitRenderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight);
+        static const std::unique_ptr<Renderer>& GetInstance() noexcept { return instance; }
         /**
          @brief Switch the front buffer with the back buffer
          */
@@ -115,12 +117,13 @@ namespace Engine::Rendering
         Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencil;
         Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
 
-        bool isFullscreen{ false };
-        bool m_enable4xMSAA{ true };
+        bool isFullscreen = false;
+        bool m_enable4xMSAA = true;
         UINT m_4xMsaaQuality{ 0 };
         float m_width{ 0 };
         float m_height{ 0 };
         float m_fullWidth{ 1920.f };
         float m_fullHeight{ 1080.f };
+        static std::unique_ptr<Renderer> instance;
     };
 }

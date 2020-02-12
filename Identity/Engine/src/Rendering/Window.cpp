@@ -1,8 +1,10 @@
 #include <stdafx.h>
 #include <Rendering/Window.h>
+#include <Rendering/Renderer.h>
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Input/Input.h>
+#include <Tools/ImGUI/imgui_impl_dx11.h>
 
 using namespace Engine::Rendering;
 
@@ -66,19 +68,15 @@ Window::Window(int p_width, int p_height, const char* p_name) : m_width(p_width)
     if (RegisterRawInputDevices(&rid, 1, sizeof(rid)) == FALSE)
         MessageBox(nullptr, "RAW INPUT ERROR", "Raw Input Device failed to initialize on Window.cpp", MB_OK | MB_ICONERROR);
 
-    m_renderer = std::make_unique<Renderer>(m_hwnd, m_width, m_height);
+    Renderer::InitRenderer(m_hwnd, m_width, m_height);
     isSet      = true;
 }
 
 Window::~Window()
 {
+    ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     DestroyWindow(m_hwnd);
-}
-
-Renderer& Window::GetRenderer() const
-{
-    return *m_renderer;
 }
 
 void Window::SetTitle(const std::string& title) const
@@ -189,7 +187,7 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
             GetClientRect(m_hwnd, &rcClient);
             m_width = rcClient.right - rcClient.left;
             m_height = rcClient.bottom - rcClient.top;
-            m_renderer->Resize(m_width, m_height);
+            Renderer::GetInstance()->Resize(m_width, m_height);
         }
         break;
     case WM_CLOSE:
