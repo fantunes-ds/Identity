@@ -14,7 +14,7 @@ Vector2I Mouse::GetPos() const noexcept
     return m_mouseMap.second;
 }
 
-std::optional<Mouse::RawDelta> Mouse::GetRawDelta() noexcept
+std::optional<Mouse::RawDelta> Mouse::GetRawPosition() noexcept
 {
     if (m_rawDeltaBuffer.empty())
         return std::nullopt;
@@ -52,6 +52,7 @@ bool Mouse::RightIsPressed() const noexcept
 void Mouse::Flush() noexcept
 {
     m_mouseMap = std::pair<MouseState, Vector2I>();
+    m_rawDeltaBuffer = std::queue<RawDelta>();
 }
 
 void Mouse::EnableRawInput() noexcept
