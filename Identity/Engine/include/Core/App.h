@@ -36,5 +36,7 @@ namespace Engine::Core
         Rendering::Window m_window;
         MSG m_msg;
         BOOL m_gResult;
+        int m_width;
+        int m_height;
     };
 }
