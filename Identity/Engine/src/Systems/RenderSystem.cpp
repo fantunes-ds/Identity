@@ -14,7 +14,7 @@
 #include <Rendering/Buffers/VertexConstantBuffer.h>
 
 //Example of how to use events
-Engine::Systems::RenderSystem::RenderSystem(Rendering::Renderer* p_renderer) : m_renderer(p_renderer)
+Engine::Systems::RenderSystem::RenderSystem()
 {
     /*Containers::EventContainer::AddEvent("NoActiveCamera");
     Event& event = Containers::EventContainer::GetEvent("NoActiveCamera");
@@ -23,13 +23,6 @@ Engine::Systems::RenderSystem::RenderSystem(Rendering::Renderer* p_renderer) : m
 
 void Engine::Systems::RenderSystem::DrawScene()
 {
-    if (!m_renderer)
-    {
-        std::string error("in Engine::Systems::RenderSystem::DrawScene(): cannot draw scene because Renderer* m_renderer is nullptr");
-        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
-        return;
-    }
-
     HRESULT hr;
 
     std::shared_ptr<Rendering::Light> light = m_lights.begin()->second;
@@ -59,7 +52,7 @@ void Engine::Systems::RenderSystem::DrawScene()
 
                 for (auto mesh : meshes)
                 {
-                    mesh->Bind(m_renderer->GetContext());
+                    mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
 
                     mesh->GetMaterial().GetShader().GenConstantBuffers();
 
@@ -90,7 +83,7 @@ void Engine::Systems::RenderSystem::DrawScene()
                     mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
                     Rendering::Renderer::GetInstance()->SetRenderTarget();
                     
-                    GFX_THROW_INFO_ONLY(m_renderer->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
+                    GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
                 }
             }
         }
@@ -105,7 +98,7 @@ void Engine::Systems::RenderSystem::Update()
     if (Containers::CameraContainer::GetCamera(m_activeCamera))
     {
         int width, height;
-        m_renderer->GetResolution(width, height);
+        Rendering::Renderer::GetInstance()->GetResolution(width, height);
         Containers::CameraContainer::GetCamera(m_activeCamera)->UpdateCamera(width, height);
     }
 }

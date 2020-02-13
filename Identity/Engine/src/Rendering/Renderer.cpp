@@ -194,26 +194,6 @@ void Renderer::SetBackBuffer()
     GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
 }
 
-void Renderer::LoadPixelShader(const std::wstring& p_path)
-{
-    HRESULT hr;
-
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
-    GFX_THROW_INFO(D3DReadFileToBlob(p_path.c_str(), &m_blob));
-    GFX_THROW_INFO(m_pDevice->CreatePixelShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), nullptr, &pixelShader));
-    m_pContext->PSSetShader(pixelShader.Get(), nullptr, 0u);
-}
-
-void Renderer::LoadVertexShader(const std::wstring& p_path)
-{
-    HRESULT hr;
-
-    Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
-    GFX_THROW_INFO(D3DReadFileToBlob(p_path.c_str(), &m_blob));
-    GFX_THROW_INFO(m_pDevice->CreateVertexShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), nullptr, &vertexShader));
-    m_pContext->VSSetShader(vertexShader.Get(), nullptr, 0u);
-}
-
 void Renderer::Resize(const float& p_width, const float& p_height)
 {
     HRESULT hr;

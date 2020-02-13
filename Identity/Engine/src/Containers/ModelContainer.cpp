@@ -2,6 +2,7 @@
 #include <Containers/ModelContainer.h>
 #include <3DLoader/ObjectElements/Model.h>
 #include <3DLoader/ObjectLoader.h>
+#include <Rendering/Renderer.h>
 
 Engine::Containers::ModelContainer::~ModelContainer()
 {
@@ -22,13 +23,6 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContaine
 {
     ModelContainer* ModelContainer = GetInstance();
 
-    if (!ModelContainer->m_graphicsDevice)
-    {
-        const std::string error("ModelManager::AddModel(const std::string& p_path, const std::string& p_name): Could not load model at " + p_path + " because ModelManager was not assigned a Graphics Device");
-        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
-        return nullptr;
-    }
-
     std::shared_ptr<ObjectElements::Model> model = ObjectLoader::LoadModel(p_path);
 
     if (model == nullptr)
@@ -40,7 +34,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContaine
     model->SetName(p_name);
 
     for (auto& mesh : model->GetMeshes())
-        mesh->GenerateBuffers(ModelContainer->m_graphicsDevice);
+        mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
 
     for (auto& existingModel: ModelContainer->m_models)
     {
@@ -58,9 +52,9 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContaine
 
 bool Engine::Containers::ModelContainer::RemoveModel(int32_t p_id)
 {
-    size_t sizeBefore = GetInstance()->m_models.size();
+    const size_t sizeBefore = GetInstance()->m_models.size();
     GetInstance()->m_models.erase(p_id);
-    size_t sizeAfter = GetInstance()->m_models.size();
+    const size_t sizeAfter = GetInstance()->m_models.size();
 
     if (sizeBefore == sizeAfter)
         return false;
