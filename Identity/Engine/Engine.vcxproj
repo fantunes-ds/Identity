@@ -70,26 +70,26 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\STB;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
     <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\STB;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
     <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\STB;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
     <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\STB;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
     <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
@@ -239,6 +239,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Rendering\Buffers\VertexConstantBuffer.h" />
     <ClInclude Include="include\Rendering\Material.h" />
     <ClInclude Include="include\Rendering\Materials\Shader.h" />
+    <ClInclude Include="include\Rendering\Materials\Texture.h" />
     <ClInclude Include="include\Systems\IECSSystem.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\3DLoader\ObjectLoader.h" />
@@ -297,6 +298,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Rendering\Buffers\VertexConstantBuffer.cpp" />
     <ClCompile Include="src\Rendering\Material.cpp" />
     <ClCompile Include="src\Rendering\Materials\Shader.cpp" />
+    <ClCompile Include="src\Rendering\Materials\Texture.cpp" />
     <ClCompile Include="src\Systems\RenderSystem.cpp" />
     <ClCompile Include="src\Events\Event.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
