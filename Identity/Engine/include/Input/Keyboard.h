@@ -21,6 +21,9 @@ namespace Engine::Input
      */
     class API_ENGINE Keyboard
     {
+   /**
+    * Friending class Window so it can access private functions and members and give input
+    */
     friend class Rendering::Window;
 
     public:
