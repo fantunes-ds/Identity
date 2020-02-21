@@ -1,6 +1,7 @@
 #pragma once
 #include <Export.h>
 #include <Events/IEventCallback.h>
+#include <Tools/IDCounter.h>
 
 namespace Engine
 {
@@ -26,7 +27,7 @@ namespace Engine
                     return -1;
             }
 
-            int32_t id = Engine::Tools::IDCounter::GetNewID();
+            int32_t id = Tools::IDCounter::GetNewID();
 
             m_actions.insert_or_assign(id, newCallback);
 
