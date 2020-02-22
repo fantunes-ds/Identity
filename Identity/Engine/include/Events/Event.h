@@ -1,6 +1,7 @@
 #pragma once
 #include <Export.h>
 #include <Events/IEventCallback.h>
+#include <Tools/IDCounter.h>
 
 namespace Engine
 {
@@ -26,13 +27,15 @@ namespace Engine
                     return -1;
             }
 
-            m_actions.insert_or_assign(newCallback.get()->GetID(), newCallback);
+            int32_t id = Tools::IDCounter::GetNewID();
 
-            return newCallback.get()->GetID();
+            m_actions.insert_or_assign(id, newCallback);
+
+            return id;
         }
 
         //@warning DO NOT USE, not functional yet
-        template<typename T, typename ...Args, typename ...funcArgs>
+        /*template<typename T, typename ...Args, typename ...funcArgs>
         const uint32_t AddListener(T* p_instance, void(T::* p_function)(funcArgs...), Args&&... p_args)
         {
             auto newCallback = std::make_shared<EventCallback<T>>(p_instance, p_function, &p_args...);
@@ -44,10 +47,10 @@ namespace Engine
                     return -1;
             }
 
-            m_actions.insert_or_assign(newCallback.get()->GetID(), newCallback);
+            m_actions.insert_or_assign(newCallback.get()->GetNewID(), newCallback);
 
-            return newCallback.get()->GetID();
-        }
+            return newCallback.get()->GetNewID();
+        }*/
 
         void RemoveListener(const int32_t p_id)
         {

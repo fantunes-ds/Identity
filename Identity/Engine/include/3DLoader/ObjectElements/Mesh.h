@@ -6,10 +6,14 @@
 #include <d3d11.h>
 #include <Rendering/Buffers/VertexBuffer.h>
 #include <Rendering/Buffers/IndexBuffer.h>
+#include <Objects/IObject.h>
+#include <Rendering/Buffers/InputLayout.h>
+
+#include "Rendering/Material.h"
 
 namespace Engine::ObjectElements
 {
-    class API_ENGINE Mesh
+    class API_ENGINE Mesh : public Objects::IObject
     {
     public:
         Mesh() = default;
@@ -24,13 +28,22 @@ namespace Engine::ObjectElements
         bool operator!=(const Mesh& p_other) const;
 
         Rendering::Buffers::VertexBuffer& GetVertexBuffer() { return m_vertexBuffer; }
+        Rendering::Material& GetMaterial() { return m_material; }
         Rendering::Buffers::IndexBuffer& GetIndexBuffer() { return m_indexBuffer; }
         std::vector<Geometry::Vertex>& GetVertices() { return m_vertices; }
         std::vector<unsigned short>& GetIndices() { return m_indices; }
 
     private:
+        //buffers
         Rendering::Buffers::VertexBuffer m_vertexBuffer;
         Rendering::Buffers::IndexBuffer m_indexBuffer;
+
+        //--WIP--
+        Rendering::Buffers::InputLayout m_inputLayout;
+        Rendering::Material m_material;
+        //-------
+
+        //data
         std::vector<Geometry::Vertex> m_vertices;
         std::vector<unsigned short> m_indices;
     };

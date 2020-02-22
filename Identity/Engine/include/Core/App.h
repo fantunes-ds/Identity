@@ -3,7 +3,7 @@
 #include <Rendering/Window.h>
 
 #include <Tools/ImGUI/ImGUIManager.h>
-#include <Managers/ModelManager.h>
+#include <Containers/ModelContainer.h>
 
 namespace Engine {
     namespace Systems {
@@ -36,5 +36,7 @@ namespace Engine::Core
         Rendering::Window m_window;
         MSG m_msg;
         BOOL m_gResult;
+        int m_width;
+        int m_height;
     };
 }
