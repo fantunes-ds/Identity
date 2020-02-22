@@ -37,8 +37,8 @@ float4 main(VS_OUT f_in) : SV_TARGET
     
     float3 halfwayDir = normalize(lightDir + viewDir);
     
-    float spec = pow(max(dot(viewDir, halfwayDir), 0.0), light.shininess);
-    float3 specular = spec * light.color;
+    float spec = pow(max(dot(f_in.norm, halfwayDir), 0.0), light.shininess);
+    float3 specular = spec * light.specular;
     
     f_in.vertexColor *= float4(light.ambient.rgb + diffuse + specular, 1) * f_in.vertexColor;
     return f_in.vertexColor;
