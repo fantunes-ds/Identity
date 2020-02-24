@@ -15,21 +15,19 @@
 
 using namespace Engine::Core;
 
-App::App() : m_window(800, 600, "Engine Window")
+App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
     Input::Input::InitInput();
 }
 
-App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name)
+App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name), m_width(p_width), m_height(p_height)
 {
     Input::Input::InitInput();
 }
 
 int App::Run() const
 {
-    Containers::ModelContainer::GetInstance()->SetGraphicsDevice(Rendering::Renderer::GetInstance()->GetDevice());
-
-    Systems::RenderSystem renderSystem(&*Rendering::Renderer::GetInstance());
+    Systems::RenderSystem renderSystem;
 
     Objects::GameObject gameObject;
     Objects::GameObject gameObject2;
@@ -40,10 +38,7 @@ int App::Run() const
     gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
     gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
 
-    int width  = 1024;
-    int height = 768;
-
-    int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(width, height);
+    int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(m_width, m_height);
     gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
     gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
 
@@ -85,11 +80,8 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
     if (_INPUT->keyboard.IsKeyHeld('B'))
         Rendering::Renderer::GetInstance()->ClearBuffer(0.0f, 0.0f, 1.0f);
 
-
     if (_INPUT->keyboard.IsKeyDown('F'))
-    {
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());
-    }
 
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();

@@ -11,7 +11,7 @@ namespace Engine::Systems
     class API_ENGINE RenderSystem: public IECSSystem
     {
     public:
-        RenderSystem(Rendering::Renderer* p_renderer);
+        RenderSystem();
         virtual ~RenderSystem() = default;
 
         void DrawScene();
@@ -30,7 +30,6 @@ namespace Engine::Systems
     private:
         std::map<int, std::shared_ptr<Rendering::Light>> m_lights;
 
-        Rendering::Renderer* m_renderer;
         int32_t m_activeCamera = -1;
     };
 }

@@ -60,8 +60,8 @@ void Engine::Rendering::Camera::UpdateCameraPosition()
 void Engine::Rendering::Camera::UpdateCameraRotation()
 {
     const float sensitivity{ 0.1f };
-    float xPos{ static_cast<float>(_INPUT->mouse.GetRawDelta()->x) };
-    float yPos{ static_cast<float>(_INPUT->mouse.GetRawDelta()->y) };
+    float xPos{ static_cast<float>(_INPUT->mouse.GetRawPosition()->x) };
+    float yPos{ static_cast<float>(_INPUT->mouse.GetRawPosition()->y) };
 
     xPos *= sensitivity;
     yPos *= sensitivity;

@@ -11,7 +11,7 @@
 
 namespace Engine::Rendering
 {
-    /**
+    /*
      @brief Contains the DirectX API
      */
     class API_ENGINE Renderer
@@ -22,8 +22,8 @@ namespace Engine::Rendering
         {
             using IdentityException::IdentityException;
         };
-
-        /**
+        
+        /*
          @brief Get the exceptions for the functions wich returns an HRESULT
          */
         class HrException : public Exception
@@ -40,7 +40,7 @@ namespace Engine::Rendering
             HRESULT m_hr;
             std::string m_info;
         };
-        /**
+        /*
          @brief Get the information when the functions return a void
          */
         class InfoException : public Exception
@@ -53,7 +53,7 @@ namespace Engine::Rendering
         private:
             std::string m_info;
         };
-        /**
+        /*
          @brief Get the exceptions for the Renderer driver
          */
         class DeviceException : public HrException
@@ -66,43 +66,72 @@ namespace Engine::Rendering
         };
 
     public:
-        Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight);
+        Renderer(const HWND& p_hwnd, const int& p_clientWidth, const int& p_clientHeight);
         Renderer(const Renderer&) = delete;
         Renderer& operator=(const Renderer&) = delete;
         ~Renderer() = default;
 
         static void InitRenderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight);
         static const std::unique_ptr<Renderer>& GetInstance() noexcept { return instance; }
-        /**
+        /*
          @brief Switch the front buffer with the back buffer
          */
         void EndFrame() const;
-        /**
+        /*
          @brief Reset the base colour of the back buffer
          */
-        void ClearBuffer(float p_red, float p_green, float p_blue) const;
-
-        //---------WIP--------
-
+        void ClearBuffer(const float& p_red, const float& p_green, const float& p_blue) const;
+        /*
+         @brief Set the Render Target to the window. Need to be done before every draw
+        */
         void SetRenderTarget();
 
-        void LoadPixelShader(const std::wstring& p_path);
-        void LoadVertexShader(const std::wstring& p_path);
-
-        void Resize(const int p_width, const int p_height);
-        void GetResolution(int& p_width, int& p_height);
+        /*
+        @brief Set the renderer to fullscreen and call the Resize method
+        */
         void SetFullscreen(const bool& p_state);
-        void ChangeResolution();
-        const bool& GetFullscreenState() const { return isFullscreen; }
+        /*
+         @brief Resize the renderer using new resolution.
+        */
+        void Resize(const float& p_width, const float& p_height);
 
-        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() { return m_pDevice; };
-        [[nodiscard]] Microsoft::WRL::ComPtr<IDXGISwapChain>& GetSwapChain() { return m_pSwapChain; };
-        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() { return m_pContext; };
-        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& GetTarget() { return m_pTarget; };
-        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& GetDepthStencil() { return m_pDepthStencil; };
-        [[nodiscard]] Microsoft::WRL::ComPtr<ID3DBlob>& GetBlob() { return m_blob; };
+        void GetResolution(int& p_width, int& p_height);
+
+        [[nodiscard]] const bool& GetFullscreenState() const { return isFullscreen; }
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() const { return m_pDevice; };
+        [[nodiscard]] const Microsoft::WRL::ComPtr<IDXGISwapChain>& GetSwapChain() const { return m_pSwapChain; };
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() const { return m_pContext; };
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& GetTarget() const { return m_pTarget; };
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& GetDepthStencil() const { return m_pDepthStencil; };
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3DBlob>& GetBlob() const { return m_blob; };
 
     private:
+        /*
+         @brief Reset the context so we can resize it
+         */
+        void ResetContext();
+        /*
+         @brief Create the SwapChain using the handle to the window
+         */
+        void CreateSwapChain(const HWND& p_hwnd);
+        /*
+         @brief Set the Depth and the Stencil buffers. Need to be done when resizing
+         */
+        void SetDepthStencilBuffer();
+        /*
+         @brief Set the viewport of the renderer
+         */
+        void SetViewPort(const float& p_width, const float& p_height) const;
+        /*
+         @brief Initialize the back buffer and link it to the SwapChain
+         */
+        void SetBackBuffer();
+
+        /*
+         @brief Change the fullscreen resolution
+         */
+        void ChangeResolution();
+
         Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
         Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pContext;
@@ -111,12 +140,12 @@ namespace Engine::Rendering
         Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
 
         bool isFullscreen = false;
-        int m_width;
-        int m_height;
-        int m_fullWidth = 1920;
-        int m_fullHeight = 1080;
-        UINT m_4xMsaaQuality;
         bool m_enable4xMSAA = true;
+        UINT m_4xMsaaQuality{ 0 };
+        float m_width{ 0 };
+        float m_height{ 0 };
+        float m_fullWidth{ 1920.f };
+        float m_fullHeight{ 1080.f };
         static std::unique_ptr<Renderer> instance;
     };
 }
