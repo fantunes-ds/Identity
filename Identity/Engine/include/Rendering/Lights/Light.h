@@ -16,6 +16,7 @@ namespace Engine::Rendering::Lights
             Vector4F direction;
             Vector4F color;
             float shininess;
+            Vector3F padding;
         };
 
         Light() = default;

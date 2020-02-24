@@ -7,6 +7,7 @@ struct lightSource
     float4 direction;
     float4 color;
     float shininess;
+    float3 padding;
 };
 cbuffer CBuf
 {

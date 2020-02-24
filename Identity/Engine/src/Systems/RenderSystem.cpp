@@ -76,17 +76,12 @@ void Engine::Systems::RenderSystem::DrawScene()
                     perspective.Transpose();
 
                     Rendering::Buffers::VCB vcb { model, view, normalModel,perspective };
-
-                    D3D11_MAPPED_SUBRESOURCE msr;
-                    Rendering::Renderer::GetInstance()->GetContext()->Map(mesh->GetMaterial().GetShader().GetVCB().GetBuffer().Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &msr);
-                    memcpy(msr.pData, &vcb, sizeof(vcb));
-                    Rendering::Renderer::GetInstance()->GetContext()->Unmap(mesh->GetMaterial().GetShader().GetVCB().GetBuffer().Get(), 0u);
-                    //mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
+                    mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
 
                     const Vector4F reversedXLightPos = Vector4F(light.position.x * -1, light.position.y, light.position.z, 1.0f);
                     const Rendering::Buffers::PCB pcb { reversedXLightPos, light.ambient, light.diffuse,
                                                         light.specular ,light.direction, light.color,
-                                                                        light.shininess,camera->GetPosition()};
+                                                                        light.shininess,Vector3F{},camera->GetPosition(), 0.0f };
                     mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
                     Rendering::Renderer::GetInstance()->SetRenderTarget();
                     

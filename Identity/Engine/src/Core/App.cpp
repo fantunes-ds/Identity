@@ -40,12 +40,14 @@ int App::Run() const
 
     gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
     gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
+    light.GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
+    light.GetTransform()->Scale(Vector3F{0.1f, 0.1f, 0.1f});
     gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    //gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
 
     Rendering::Lights::Light::LightData dirLight;
 
-    dirLight.position  = Vector4F(40.0f, 40.0f, -40.0f, 1.0f);
+    dirLight.position  = Vector4F(light.GetTransform()->GetPosition().x * -1, light.GetTransform()->GetPosition().y, light.GetTransform()->GetPosition().z * -1, 1.0f);
     dirLight.ambient   = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
     dirLight.diffuse   = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
     dirLight.specular  = Vector4F(0.5f, 0.5f ,0.5f, 1.0f);
@@ -55,7 +57,8 @@ int App::Run() const
 
     int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(m_width, m_height);
     gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
-    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
+    light.AddComponent<Components::ModelComponent>("cube");
     light.AddComponent<Components::LightComponent>(dirLight);
 
     renderSystem.SetActiveCamera(camera.FindComponent<Components::CameraComponent>()->GetCamera()->GetID());
