@@ -1,5 +1,7 @@
 #include <stdafx.h>
 #include <3DLoader/ObjectLoader.h>
+#include <3DLoader/ObjectElements/Transform.h>
+#include "Containers/TransformContainer.h"
 
 std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(const std::string& p_file)
 {
@@ -31,7 +33,32 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(c
         model.AddMesh(LoadMesh(m_scene->mMeshes[i]));
     }
 
+    ParseTransforms(model, m_scene->mRootNode);
+
     return std::make_shared<Engine::ObjectElements::Model>(model);
+}
+
+void Engine::ObjectLoader::ParseTransforms(ObjectElements::Model& p_model, aiNode* p_node)
+{
+    ObjectElements::Transform transform{};
+
+    GPM::Matrix4F mat
+    {
+        p_node->mTransformation.a1, p_node->mTransformation.a2, p_node->mTransformation.a3, p_node->mTransformation.a4,
+        p_node->mTransformation.b1, p_node->mTransformation.b2, p_node->mTransformation.b3, p_node->mTransformation.b4,
+        p_node->mTransformation.c1, p_node->mTransformation.c2, p_node->mTransformation.c3, p_node->mTransformation.c4,
+        p_node->mTransformation.d1, p_node->mTransformation.d2, p_node->mTransformation.d3, p_node->mTransformation.d4
+    };
+
+    transform.SetTransformMatrix(mat);
+
+    int32_t id = Containers::TransformContainer::AddTransform(transform);
+    p_model.GetMeshes()[p_node->mMeshes[0]]->SetTransform(id);
+
+    for (size_t i = 0; i < p_node->mNumChildren; ++i)
+    {
+        ParseTransforms(p_model, p_node->mChildren[i]);
+    }
 }
 
 std::shared_ptr<Engine::ObjectElements::Mesh> Engine::ObjectLoader::LoadMesh(aiMesh* p_assimpMesh)

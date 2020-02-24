@@ -1,5 +1,6 @@
 #include <stdafx.h>
 #include <Containers/TransformContainer.h>
+#include <3DLoader/ObjectElements/Transform.h>
 #include <Tools/IDCounter.h>
 
 Engine::Containers::TransformContainer::~TransformContainer()
@@ -15,6 +16,14 @@ Engine::Containers::TransformContainer* Engine::Containers::TransformContainer::
     }
 
     return m_instance;
+}
+
+int32_t Engine::Containers::TransformContainer::AddTransform()
+{
+    ObjectElements::Transform transform{};
+    GetInstance()->m_transforms.insert_or_assign(transform.GetID(), std::make_shared<ObjectElements::Transform>(transform));
+
+    return transform.GetID();
 }
 
 int32_t Engine::Containers::TransformContainer::AddTransform(ObjectElements::Transform& p_transform)

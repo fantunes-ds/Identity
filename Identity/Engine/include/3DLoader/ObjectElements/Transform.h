@@ -14,7 +14,7 @@ namespace Engine::ObjectElements
         ~Transform() = default;
 
         Transform(const Transform& p_other);
-        Transform(const Transform&& p_other) noexcept;
+        //Transform(const Transform&& p_other) noexcept;
 
         /** 
          * @brief Adds the given vector to the current position.
@@ -45,7 +45,7 @@ namespace Engine::ObjectElements
         inline void SetTransformMatrix(const Matrix4F& p_transform) { m_transform = p_transform; }
         void UpdateTransformMatrix();
 
-        inline void SetParent(Transform& p_parent) { m_parent = std::make_shared<Transform>(p_parent); }
+        inline void SetParent(int32_t p_parent) { m_parent = p_parent; }
 
         [[nodiscard]] Vector3D GetEuler() const;
         inline Vector3D& GetPosition() { return m_position; }
@@ -54,13 +54,13 @@ namespace Engine::ObjectElements
         inline Vector3D& GetUp() { return m_up; }
         inline Vector3D& GetScale() { return m_scale; }
         inline Quaternion& GetRotation() { return m_rotation; }
-        inline std::shared_ptr<Transform> GetParent() const { return m_parent; }
+        inline std::shared_ptr<Transform> GetParent() const;
         inline Matrix4F& GetTransformMatrix() { return m_transform; }
 
     private:
         void CalculateAxes();
 
-        std::shared_ptr<Transform> m_parent = nullptr;
+        int32_t m_parent = -1;
         Vector3D m_position;
         Vector3D m_forward;
         Vector3D m_right;

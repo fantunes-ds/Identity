@@ -2,12 +2,16 @@
 
 #include <3DLoader/ObjectElements/Mesh.h>
 #include <Tools/DirectX/GraphicsMacros.h>
+#include <Containers/TransformContainer.h>
 
 Engine::ObjectElements::Mesh::Mesh(std::vector<Engine::Geometry::Vertex>& p_vertices, std::vector<unsigned short>& p_indices) :
-    m_vertices { p_vertices }, m_indices { p_indices } {}
+    m_vertices { p_vertices }, m_indices { p_indices }
+{
+    m_transform = Containers::TransformContainer::AddTransform();
+}
 
 Engine::ObjectElements::Mesh::Mesh(const Mesh& p_other):
-    m_vertices { p_other.m_vertices }, m_indices { p_other.m_indices } {}
+    m_vertices{ p_other.m_vertices }, m_indices{ p_other.m_indices }, m_transform{ p_other.m_transform } {}
 
 void Engine::ObjectElements::Mesh::GenerateBuffers(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device)
 {

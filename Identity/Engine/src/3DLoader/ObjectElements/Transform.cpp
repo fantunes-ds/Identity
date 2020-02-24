@@ -1,5 +1,6 @@
 #include <stdafx.h>
 #include <3DLoader/ObjectElements/Transform.h>
+#include <Containers/TransformContainer.h>
 
 Engine::ObjectElements::Transform::Transform() :
     m_position{ Vector3D::zero }, m_scale{ Vector3D::one }, m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} }
@@ -8,6 +9,8 @@ Engine::ObjectElements::Transform::Transform() :
     m_right = Vector3D::right;
     m_up = Vector3D::up;
     UpdateTransformMatrix();
+
+
 }
 
 Engine::ObjectElements::Transform::Transform(Vector3D& p_position) :
@@ -23,9 +26,9 @@ Engine::ObjectElements::Transform::Transform(const Transform& p_other) :
     m_parent{ p_other.m_parent }, m_forward{ p_other.m_forward }, m_right{ p_other.m_right }, m_up{ p_other.m_up },
     m_scale{ p_other.m_scale }, m_position{ p_other.m_position }, m_rotation{ p_other.m_rotation } {}
 
-Engine::ObjectElements::Transform::Transform(const Transform&& p_other) noexcept :
+/*Engine::ObjectElements::Transform::Transform(const Transform&& p_other) noexcept :
     m_parent{ p_other.m_parent }, m_forward{ p_other.m_forward }, m_right{ p_other.m_right }, m_up{ p_other.m_up },
-    m_scale{ p_other.m_scale }, m_position{ p_other.m_position }, m_rotation{ p_other.m_rotation } {}
+    m_scale{ p_other.m_scale }, m_position{ p_other.m_position }, m_rotation{ p_other.m_rotation } {}*/
 
 void Engine::ObjectElements::Transform::Translate(const Vector3D& p_vector)
 {
@@ -60,6 +63,11 @@ void Engine::ObjectElements::Transform::UpdateTransformMatrix()
 Vector3D Engine::ObjectElements::Transform::GetEuler() const
 {
     return m_rotation.ToEuler();
+}
+
+std::shared_ptr<Engine::ObjectElements::Transform> Engine::ObjectElements::Transform::GetParent() const
+{
+    return Containers::TransformContainer::FindTransform(m_parent);
 }
 
 void Engine::ObjectElements::Transform::CalculateAxes()

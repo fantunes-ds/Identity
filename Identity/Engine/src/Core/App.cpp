@@ -39,8 +39,8 @@ int App::Run() const
     gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
 
     int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
     gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+    gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
 
     renderSystem.SetActiveCamera(camera.FindComponent<Components::CameraComponent>()->GetCamera()->GetID());
 

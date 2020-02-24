@@ -10,6 +10,7 @@
 #include <Rendering/Buffers/InputLayout.h>
 
 #include "Rendering/Material.h"
+#include <3DLoader/ObjectElements/Transform.h>
 
 namespace Engine::ObjectElements
 {
@@ -33,6 +34,8 @@ namespace Engine::ObjectElements
         std::vector<Geometry::Vertex>& GetVertices() { return m_vertices; }
         std::vector<unsigned short>& GetIndices() { return m_indices; }
 
+        void SetTransform(int32_t p_transform) { m_transform = p_transform; }
+
     private:
         //buffers
         Rendering::Buffers::VertexBuffer m_vertexBuffer;
@@ -46,5 +49,7 @@ namespace Engine::ObjectElements
         //data
         std::vector<Geometry::Vertex> m_vertices;
         std::vector<unsigned short> m_indices;
+
+        int32_t m_transform;
     };
 }
