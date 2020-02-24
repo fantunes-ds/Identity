@@ -5,6 +5,7 @@
 #include <Rendering/Renderer.h>
 #include <Rendering/Light.h>
 #include "Events/Event.h"
+#include "Rendering/Materials/Texture.h"
 
 namespace Engine::Systems
 {
@@ -29,7 +30,7 @@ namespace Engine::Systems
 
     private:
         std::map<int, std::shared_ptr<Rendering::Light>> m_lights;
-
+        Rendering::Materials::Texture myText;
         int32_t m_activeCamera = -1;
     };
 }

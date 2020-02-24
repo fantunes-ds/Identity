@@ -13,12 +13,16 @@
 #include <Containers/EventContainer.h>
 #include <Rendering/Buffers/VertexConstantBuffer.h>
 
+//WIP
+
 //Example of how to use events
 Engine::Systems::RenderSystem::RenderSystem()
 {
     /*Containers::EventContainer::AddEvent("NoActiveCamera");
     Event& event = Containers::EventContainer::GetEvent("NoActiveCamera");
     event.AddListener(this, &RenderSystem::ResetActiveCamera);*/
+
+    myText.LoadTexture(L"../Engine/Resources/link.png");
 }
 
 void Engine::Systems::RenderSystem::DrawScene()
@@ -82,7 +86,13 @@ void Engine::Systems::RenderSystem::DrawScene()
                                                                         light->shininess,camera->GetPosition()};
                     mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
                     Rendering::Renderer::GetInstance()->SetRenderTarget();
+
+                    //WIP
+                    Rendering::Renderer::GetInstance()->GetContext()->PSSetShaderResources(0, 1, myText.GetTexture().GetAddressOf());
+                    Rendering::Renderer::GetInstance()->GetContext()->PSSetSamplers(0, 1, myText.GetSampleState().GetAddressOf());
                     
+                    //
+
                     GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
                 }
             }

@@ -323,6 +323,7 @@
     <None Include="include\Tools\DirectX\DXTrace.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\PixelShader.hlsl" />

@@ -2,8 +2,10 @@
 #include <Rendering/Materials/Texture.h>
 #include "Tools/DirectX/GraphicsMacros.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+#include <WICTextureLoader.h>
+
+// #define STB_IMAGE_IMPLEMENTATION
+// #include <stb_image.h>
 
 using namespace Engine::Rendering::Materials;
 
@@ -15,27 +17,17 @@ Texture::~Texture()
 {
 }
 
-void Texture::LoadTexture(const std::string& p_path)
+void Texture::LoadTexture(const wchar_t* p_path)
 {
-    int width, height, nrChannels;
-    stbi_uc* data = stbi_load("../Engine/Resources/rock.jpg", &width, &height, &nrChannels, 0);
+    HRESULT hr;
 
-    D3D11_TEXTURE2D_DESC textDesc = {};
-    textDesc.Width = width;
-    textDesc.Height = height;
-    textDesc.MipLevels = 1u;
-    textDesc.ArraySize = 1u;
-    textDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-    textDesc.SampleDesc.Count = 1;
-    textDesc.SampleDesc.Quality = 0;
-    textDesc.Usage = D3D11_USAGE_DEFAULT;
-    textDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-    textDesc.CPUAccessFlags = 0;
-    textDesc.MiscFlags = 0;
+    GFX_THROW_INFO(DirectX::CreateWICTextureFromFile(Renderer::GetInstance()->GetDevice().Get(), p_path, m_text.GetAddressOf(), m_texture.GetAddressOf()));
 
-    D3D11_SUBRESOURCE_DATA subData = {};
-    subData.pSysMem = data;
-    subData.SysMemPitch = sizeof(data);
+    D3D11_SAMPLER_DESC samplerDesc = {};
+    samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 
-    Renderer::GetInstance()->GetDevice()->CreateTexture2D(&textDesc, &subData, m_text.GetAddressOf());
+    Renderer::GetInstance()->GetDevice()->CreateSamplerState(&samplerDesc, &m_samplerState);
 }

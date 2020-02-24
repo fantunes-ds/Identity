@@ -30,17 +30,17 @@ int App::Run() const
     Systems::RenderSystem renderSystem;
 
     Objects::GameObject gameObject;
-    Objects::GameObject gameObject2;
+    // Objects::GameObject gameObject2;
     Objects::GameObject camera;
 
-    gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
-    gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
+    // gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
+    // gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
     gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    // gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
 
     int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
-    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+    gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
+    // gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
 
     renderSystem.SetActiveCamera(camera.FindComponent<Components::CameraComponent>()->GetCamera()->GetID());
 
