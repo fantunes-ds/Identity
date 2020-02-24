@@ -1,5 +1,6 @@
 #include <stdafx.h>
 #include <Containers/LightContainer.h>
+#include <Rendering/Lights/Light.h>
 
 Engine::Containers::LightContainer::~LightContainer()
 {
@@ -16,11 +17,22 @@ Engine::Containers::LightContainer* Engine::Containers::LightContainer::GetInsta
     return m_instance;
 }
 
-void Engine::Containers::LightContainer::AddLight(Rendering::ILight* p_light)
+int32_t Engine::Containers::LightContainer::AddLight(Rendering::Lights::ILight* p_light)
 {
-    /*int32_t id = p_light->GetID();
+    /*for (auto& light : GetInstance()->m_lights)
+    {
+        if (typeid(*light.second) == typeid(*p_light))
+        {
+            if (*light.second == p_light)
+            {
+                std::string type = typeid(*p_light).name();
+                const std::string error("ComponentContainer::AddComponent<" + type + ">(Components::IComponent* p_component): Tried to add a Component that already exists");
+                MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+                return light.first;
+            }
+        }
+    }*/
 
-    GetInstance()->m_lights.insert_or_assign(id, std::make_shared<Rendering::ILight>(*p_light));
-
-    return id;*/
+    GetInstance()->m_lights.insert_or_assign(p_light->GetID(), std::shared_ptr<Engine::Rendering::Lights::ILight>(p_light));
+    return p_light->GetID();
 }

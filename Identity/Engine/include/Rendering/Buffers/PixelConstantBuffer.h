@@ -2,13 +2,13 @@
 #include <wrl/client.h>
 #include <WinSetup.h>
 #include <d3d11.h>
-#include <Rendering/Light.h>
+#include <Rendering/Lights/Light.h>
 
 namespace Engine::Rendering::Buffers
 {
     struct PCB
     {
-        Rendering::Light lightSource;
+        Rendering::Lights::Light::LightData lightSource;
         Vector3F cameraPos;
     };
     class PixelConstantBuffer

@@ -221,6 +221,8 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Components\CameraComponent.h" />
+    <ClInclude Include="include\Components\IComponent.h" />
+    <ClInclude Include="include\Components\LightComponent.h" />
     <ClInclude Include="include\Components\ModelComponent.h" />
     <ClInclude Include="include\Containers\CameraContainer.h" />
     <ClInclude Include="include\Containers\ComponentContainer.h" />
@@ -237,6 +239,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Objects\IObject.h" />
     <ClInclude Include="include\Rendering\Buffers\PixelConstantBuffer.h" />
     <ClInclude Include="include\Rendering\Buffers\VertexConstantBuffer.h" />
+    <ClInclude Include="include\Rendering\Lights\ILight.h" />
     <ClInclude Include="include\Rendering\Material.h" />
     <ClInclude Include="include\Rendering\Materials\Shader.h" />
     <ClInclude Include="include\Rendering\Materials\Texture.h" />
@@ -256,7 +259,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Rendering\Buffers\VertexBuffer.h" />
     <ClInclude Include="include\Rendering\Camera.h" />
     <ClInclude Include="include\Rendering\Renderer.h" />
-    <ClInclude Include="include\Rendering\Light.h" />
+    <ClInclude Include="include\Rendering\Lights\Light.h" />
     <ClInclude Include="include\Rendering\Window.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\TestDependencies.h" />
@@ -276,6 +279,8 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Rendering\Lights\Light.cpp" />
+    <ClCompile Include="src\Components\LightComponent.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
     <ClCompile Include="src\Containers\LightContainer.cpp" />
     <ClCompile Include="src\Objects\IObject.cpp" />

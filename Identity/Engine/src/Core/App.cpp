@@ -11,6 +11,7 @@
 #include <Objects/GameObject.h>
 #include "Components/ModelComponent.h"
 #include "Components/CameraComponent.h"
+#include "Components/LightComponent.h"
 #include "Containers/CameraContainer.h"
 
 using namespace Engine::Core;
@@ -32,19 +33,17 @@ int App::Run() const
     Objects::GameObject gameObject;
     Objects::GameObject gameObject2;
     Objects::GameObject camera;
+    Objects::GameObject light;
+
+
+    Containers::LightContainer* test = Containers::LightContainer::GetInstance();
 
     gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
     gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
     gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    //gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
 
-    int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
-    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
-
-    renderSystem.SetActiveCamera(camera.FindComponent<Components::CameraComponent>()->GetCamera()->GetID());
-
-    Rendering::Light dirLight{};
+    Rendering::Lights::Light::LightData dirLight;
 
     dirLight.position  = Vector4F(40.0f, 40.0f, -40.0f, 1.0f);
     dirLight.ambient   = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
@@ -54,8 +53,14 @@ int App::Run() const
     dirLight.color     = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
     dirLight.shininess = 32.0f;
 
-    //TODO: move to LightContainer once class is finalized.
-    renderSystem.AddLight(dirLight);
+    int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(m_width, m_height);
+    gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
+    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+    light.AddComponent<Components::LightComponent>(dirLight);
+
+    renderSystem.SetActiveCamera(camera.FindComponent<Components::CameraComponent>()->GetCamera()->GetID());
+
+
 
     while (true)
     {
