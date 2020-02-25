@@ -37,6 +37,7 @@ int App::Run() const
 
     gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
     gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
+    gameObject2.GetTransform()->RotateWithEulerAngles(Vector3F{45.0f, 55.0f, -4.0f});
     light.GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
     light.GetTransform()->Scale(Vector3F{0.1f, 0.1f, 0.1f});
     gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
@@ -74,15 +75,15 @@ int App::Run() const
 
 void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
 {
-    Rendering::Renderer::GetInstance()->ClearBuffer(0.3f, 0.3f, 0.3f);
+    Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
     if (_INPUT->keyboard.IsKeyHeld('R'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(1.0f, 0.0f, 0.0f);
+        Rendering::Renderer::GetInstance()->ClearBuffers(1.0f, 0.0f, 0.0f);
 
     if (_INPUT->keyboard.IsKeyHeld('G'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(0.0f, 1.0f, 0.0f);
+        Rendering::Renderer::GetInstance()->ClearBuffers(0.0f, 1.0f, 0.0f);
 
     if (_INPUT->keyboard.IsKeyHeld('B'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(0.0f, 0.0f, 1.0f);
+        Rendering::Renderer::GetInstance()->ClearBuffers(0.0f, 0.0f, 1.0f);
 
     if (_INPUT->keyboard.IsKeyDown('F'))
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());

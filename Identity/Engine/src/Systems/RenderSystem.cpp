@@ -83,7 +83,6 @@ void Engine::Systems::RenderSystem::DrawScene()
                                                         light.specular , light.color,
                                                                         light.shininess,Vector3F{},camera->GetPosition(), 0.0f };
                     mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
-                    Rendering::Renderer::GetInstance()->SetRenderTarget();
                     
                     GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
                 }

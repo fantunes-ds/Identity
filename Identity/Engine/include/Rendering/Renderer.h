@@ -80,11 +80,7 @@ namespace Engine::Rendering
         /*
          @brief Reset the base colour of the back buffer
          */
-        void ClearBuffer(const float& p_red, const float& p_green, const float& p_blue) const;
-        /*
-         @brief Set the Render Target to the window. Need to be done before every draw
-        */
-        void SetRenderTarget();
+        void ClearBuffers(const float& p_red, const float& p_green, const float& p_blue) const;
 
         /*
         @brief Set the renderer to fullscreen and call the Resize method
@@ -102,7 +98,7 @@ namespace Engine::Rendering
         [[nodiscard]] const Microsoft::WRL::ComPtr<IDXGISwapChain>& GetSwapChain() const { return m_pSwapChain; };
         [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() const { return m_pContext; };
         [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& GetTarget() const { return m_pTarget; };
-        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& GetDepthStencil() const { return m_pDepthStencil; };
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& GetDepthStencil() const { return m_pDepthStencilView; };
         [[nodiscard]] const Microsoft::WRL::ComPtr<ID3DBlob>& GetBlob() const { return m_blob; };
 
     private:
@@ -117,7 +113,7 @@ namespace Engine::Rendering
         /*
          @brief Set the Depth and the Stencil buffers. Need to be done when resizing
          */
-        void SetDepthStencilBuffer();
+        void SetDepthStencilBuffers();
         /*
          @brief Set the viewport of the renderer
          */
@@ -136,11 +132,11 @@ namespace Engine::Rendering
         Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pContext;
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pTarget;
-        Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencil;
+        Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
         Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
 
         bool isFullscreen = false;
-        bool m_enable4xMSAA = true;
+        bool m_enable4xMSAA = false;
         UINT m_4xMsaaQuality{ 0 };
         float m_width{ 0 };
         float m_height{ 0 };
