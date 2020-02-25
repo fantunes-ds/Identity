@@ -28,19 +28,37 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 int App::Run() const
 {
     Systems::RenderSystem renderSystem;
-
     Objects::GameObject gameObject;
-    // Objects::GameObject gameObject2;
+    Objects::GameObject gameObject2;
     Objects::GameObject camera;
-
-    // gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
-    // gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
-    gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    // gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-
     int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(m_width, m_height);
+
+    gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
+    gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
     gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
-    // gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+
+    gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
+    gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+
+    Rendering::Material linkMat;
+    linkMat.AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/link.png");
+    linkMat.AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
+    linkMat.AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
+
+    Rendering::Material lamboMat;
+    lamboMat.AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/lambo_text.jpeg");
+    lamboMat.AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
+    lamboMat.AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
+
+    gameObject.GetModel()->GetMeshes()[0]->SetMaterial(linkMat);
+
+    gameObject2.GetModel()->GetMeshes()[0]->SetMaterial(lamboMat);
+    gameObject2.GetModel()->GetMeshes()[1]->SetMaterial(lamboMat);
+    gameObject2.GetModel()->GetMeshes()[2]->SetMaterial(lamboMat);
+    gameObject2.GetModel()->GetMeshes()[3]->SetMaterial(lamboMat);
+    gameObject2.GetModel()->GetMeshes()[4]->SetMaterial(lamboMat);
+    gameObject2.GetModel()->GetMeshes()[5]->SetMaterial(lamboMat);
 
     renderSystem.SetActiveCamera(camera.FindComponent<Components::CameraComponent>()->GetCamera()->GetID());
 
