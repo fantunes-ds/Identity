@@ -61,11 +61,11 @@ namespace Engine::ObjectElements
         void CalculateAxes();
 
         int32_t m_parent = -1;
-        Vector3D m_position;
-        Vector3D m_forward;
-        Vector3D m_right;
-        Vector3D m_up;
-        Vector3D m_scale;
+        Vector3F m_position;
+        Vector3F m_forward;
+        Vector3F m_right;
+        Vector3F m_up;
+        Vector3F m_scale;
         Quaternion m_rotation;
 
         Matrix4F m_transform;
