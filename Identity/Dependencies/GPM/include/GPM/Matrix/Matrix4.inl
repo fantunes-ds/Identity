@@ -193,7 +193,7 @@ constexpr Matrix4<T> Matrix4<T>::CreateTranslation(const Vector3<U>& p_translate
 {
 	Matrix4<T> tmpTrans = identity;
 
-	tmpTrans.m_data[3] = -p_translate.x;
+	tmpTrans.m_data[3] = p_translate.x;
 	tmpTrans.m_data[7] = p_translate.y;
 	tmpTrans.m_data[11] = p_translate.z;
 

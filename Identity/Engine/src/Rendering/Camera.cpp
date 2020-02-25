@@ -82,7 +82,7 @@ void Engine::Rendering::Camera::UpdateViewMatrix()
     const Quaternion reversedOrientation = m_orientation.Conjugate();
     const Matrix4F rotation = reversedOrientation.ToMatrix4();
 
-    const Matrix4F translation = Matrix4F::CreateTranslation(Vector3F(m_position.x * -1, m_position.y, m_position.z)).Transpose();
+    const Matrix4F translation = Matrix4F::CreateTranslation(Vector3F(m_position.x, m_position.y, m_position.z)).Transpose();
     m_viewMatrix = translation * rotation;
 }
 

@@ -21,11 +21,6 @@ namespace Engine
 
         static std::shared_ptr<ObjectElements::Model> LoadModel(const std::string& p_file);
 
-        /**
-         * @warning Has not been tested with Nodes that have a deep Mesh child / parent hierarchy.
-         */
-        static void ParseTransforms(ObjectElements::Model& p_model, aiNode* p_node);
-
     private:
         static std::shared_ptr<ObjectElements::Mesh> LoadMesh(aiMesh* p_assimpMesh);
     };

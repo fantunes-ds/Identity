@@ -1,10 +1,6 @@
 #pragma once
 #include <Export.h>
-
-namespace Engine::Rendering
-{
-    class ILight;
-}
+#include <Rendering/Lights/ILight.h>
 
 namespace Engine::Containers
 {
@@ -18,12 +14,16 @@ namespace Engine::Containers
 
         static LightContainer* GetInstance();
 
-        static void AddLight(Rendering::ILight* p_light);
+        /**
+         * @brief NON_FUNCTIONAL: Decomment code once ILight class is functional.
+         */
+        static int32_t AddLight(Rendering::Lights::ILight* p_light);
+        static std::map<int32_t, std::shared_ptr<Rendering::Lights::ILight>>& GetLights() { return GetInstance()->m_lights; }
 
     private:
         LightContainer() = default;
 
         inline static LightContainer* m_instance = nullptr;
-        std::map<int32_t, std::shared_ptr<Rendering::ILight>> m_lights;
+        std::map<int32_t, std::shared_ptr<Rendering::Lights::ILight>> m_lights;
     };
 }

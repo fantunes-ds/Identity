@@ -4,14 +4,12 @@
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
 #include <3DLoader/ObjectElements/Transform.h>
-#include <Events/IEventCallback.h>
-#include "Events/Event.h"
 #include <Systems/RenderSystem.h>
 #include <Input/Input.h>
 #include <Objects/GameObject.h>
-#include "Components/ModelComponent.h"
-#include "Components/CameraComponent.h"
-#include "Containers/CameraContainer.h"
+#include <Components/ModelComponent.h>
+#include <Components/CameraComponent.h>
+#include <Components/LightComponent.h>
 
 using namespace Engine::Core;
 
@@ -32,30 +30,36 @@ int App::Run() const
     Objects::GameObject gameObject;
     Objects::GameObject gameObject2;
     Objects::GameObject camera;
+    Objects::GameObject light;
+
+
+    Containers::LightContainer* test = Containers::LightContainer::GetInstance();
 
     gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
     gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
+    light.GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
+    light.GetTransform()->Scale(Vector3F{0.1f, 0.1f, 0.1f});
     gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    //gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+
+    Rendering::Lights::Light::LightData dirLight;
+
+    dirLight.position  = Vector4F(light.GetTransform()->GetPosition().x * -1, light.GetTransform()->GetPosition().y, light.GetTransform()->GetPosition().z * -1, 1.0f);
+    dirLight.ambient   = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
+    dirLight.diffuse   = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
+    dirLight.specular  = Vector4F(0.5f, 0.5f ,0.5f, 1.0f);
+    dirLight.color     = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
+    dirLight.shininess = 32.0f;
 
     int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
     gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
+    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
+    light.AddComponent<Components::ModelComponent>("cube");
+    light.AddComponent<Components::LightComponent>(dirLight);
 
     renderSystem.SetActiveCamera(camera.FindComponent<Components::CameraComponent>()->GetCamera()->GetID());
 
-    Rendering::Light dirLight{};
 
-    dirLight.position  = Vector4F(40.0f, 40.0f, -40.0f, 1.0f);
-    dirLight.ambient   = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
-    dirLight.diffuse   = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
-    dirLight.specular  = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
-    dirLight.direction = Vector4F(-0.5f, -0.5f, -0.5f, 1.0f).Normalize();
-    dirLight.color     = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
-    dirLight.shininess = 64.0f;
-
-    //TODO: move to LightContainer once class is finalized.
-    renderSystem.AddLight(dirLight);
 
     while (true)
     {
