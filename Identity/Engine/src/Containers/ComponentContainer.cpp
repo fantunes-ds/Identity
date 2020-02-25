@@ -18,8 +18,12 @@ int32_t Engine::Containers::ComponentContainer::AddComponent(Components::ICompon
             if (*component.second == p_component)
             {
                 std::string type = typeid(*p_component).name();
-                const std::string error("ComponentContainer::AddComponent<" + type + ">(Components::IComponent* p_component): Tried to add a Component that already exists");
-                MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+
+                if (component.first == p_component->GetID())
+                {
+                    const std::string error("ComponentContainer::AddComponent<" + type + ">(Components::IComponent* p_component): Tried to add a Component that already exists");
+                    MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+                }
                 return component.first;
             }
         }
