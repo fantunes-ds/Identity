@@ -13,6 +13,7 @@ namespace Engine::Rendering
     class API_ENGINE Camera : public Objects::IObject
     {
         friend class Systems::RenderSystem;
+
     public:
         Camera() = default;
         Camera(const int p_width, const int p_height);

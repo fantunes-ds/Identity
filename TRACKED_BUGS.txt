@@ -1,3 +1,7 @@
 Sys_keys don't seem to work as intended.
 
 Shader buffers, how can we fix them.
+
+Event::AddListener: checker for if event has already subscribed sometimes crashes (dynamic cast is nullptr).
+
+Changing camera's m_speed does not change its movement speed.

@@ -17,6 +17,6 @@ bool Engine::Components::CameraComponent::DeleteFromMemory()
 
 Engine::Components::CameraComponent::CameraComponent(const int p_width, const int p_height)
 {
-    Rendering::Camera camera(p_width, p_height);
-    m_camera = Containers::CameraContainer::AddCamera(&camera);
+    auto camera = std::make_shared<Rendering::Camera>(p_width, p_height);
+    m_camera = Containers::CameraContainer::AddCamera(camera);
 }

@@ -7,7 +7,7 @@ Engine::Containers::GameObjectContainer::~GameObjectContainer()
     delete m_instance;
 }
 
-int32_t Engine::Containers::GameObjectContainer::AddGameObject(Objects::GameObject* p_gameObject)
+int32_t Engine::Containers::GameObjectContainer::AddGameObject(std::shared_ptr<Objects::GameObject> p_gameObject)
 {
     for (auto& gameObject : GetInstance()->m_gameObjects)
     {

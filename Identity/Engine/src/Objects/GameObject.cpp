@@ -7,9 +7,8 @@
 
 Engine::Objects::GameObject::GameObject()
 {
-    ObjectElements::Transform transform{};
-    m_transform = Containers::TransformContainer::AddTransform(transform);
-    Containers::GameObjectContainer::AddGameObject(this);
+    m_transform = Containers::TransformContainer::AddTransform(std::make_shared<ObjectElements::Transform>());
+    Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
 }
 
 std::shared_ptr<Engine::ObjectElements::Transform> Engine::Objects::GameObject::GetTransform() const

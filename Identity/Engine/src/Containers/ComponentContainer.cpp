@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <Containers/ComponentContainer.h>
 #include <Tools/IDCounter.h>
+#include "Containers/EventContainer.h"
 
 Engine::Containers::ComponentContainer::~ComponentContainer()
 {

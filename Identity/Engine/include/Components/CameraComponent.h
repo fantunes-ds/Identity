@@ -10,7 +10,7 @@ namespace Engine::Components
     {
     public:
         CameraComponent(int p_width, int p_height);
-        virtual ~CameraComponent() = default;
+        ~CameraComponent() = default;
 
         bool operator==(IComponent* p_other) override;
 

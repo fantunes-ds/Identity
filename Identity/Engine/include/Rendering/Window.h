@@ -28,6 +28,7 @@ namespace Engine::Rendering
         };
 
     public:
+
         Window(int p_width, int p_height, const char* p_name);
         ~Window();
         Window() = delete;

@@ -20,9 +20,9 @@ Engine::Rendering::Camera::Camera(const int p_width, const int p_height) : m_wid
 
 void Engine::Rendering::Camera::UpdateVectors()
 {
-    const Quaternion pitch = Quaternion(Vector3F(-1.0f, 0.0f, 0.0f), Tools::Utils::ToRadians(m_pitch));
-    const Quaternion yaw   = Quaternion(Vector3F(0.0f, 1.0f, 0.0f), Tools::Utils::ToRadians(-m_yaw));
-    const Quaternion roll  = Quaternion(Vector3F(0.0f, 0.0f, 1.0f), Tools::Utils::ToRadians(0.0f));
+    const Quaternion pitch = Quaternion(Vector3F(-1.0f, 0.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_pitch));
+    const Quaternion yaw   = Quaternion(Vector3F(0.0f, 1.0f, 0.0f), GPM::Tools::Utils::ToRadians(-m_yaw));
+    const Quaternion roll  = Quaternion(Vector3F(0.0f, 0.0f, 1.0f), GPM::Tools::Utils::ToRadians(0.0f));
 
     m_orientation = pitch * yaw * roll;
     m_orientation = m_orientation.Normalize();
@@ -98,9 +98,9 @@ void Engine::Rendering::Camera::UpdatePerspectiveMatrix() noexcept
     const float twoNearZ = m_nearZ + m_nearZ;
     const float fRange = m_farZ / (m_farZ - m_nearZ);
 
-    const float radAngle = Tools::Utils::ToRadians(m_angle);
+    const float radAngle = GPM::Tools::Utils::ToRadians(m_angle);
 
-    float yScale = static_cast<float>(Tools::Utils::Tan(radAngle / 2));
+    float yScale = static_cast<float>(GPM::Tools::Utils::Tan(radAngle / 2));
     yScale = 1 / yScale;
 
     const float aspectRatio = m_width / m_height;

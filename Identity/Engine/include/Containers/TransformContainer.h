@@ -14,7 +14,7 @@ namespace Engine::Containers
         static TransformContainer* GetInstance();
 
         static int32_t AddTransform();
-        static int32_t AddTransform(ObjectElements::Transform& p_transform);
+        static int32_t AddTransform(std::shared_ptr<ObjectElements::Transform> p_transform);
 
         static std::shared_ptr<ObjectElements::Transform> FindTransform(uint32_t p_id);
         static std::map<int32_t, std::shared_ptr<ObjectElements::Transform>>& GetAllTransforms() { return GetInstance()->m_transforms; }

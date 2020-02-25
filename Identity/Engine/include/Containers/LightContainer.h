@@ -18,9 +18,6 @@ namespace Engine::Containers
 
         static LightContainer* GetInstance();
 
-        /**
-         * @brief NON_FUNCTIONAL: Decomment code once ILight class is functional.
-         */
         static void AddLight(Rendering::ILight* p_light);
 
     private:

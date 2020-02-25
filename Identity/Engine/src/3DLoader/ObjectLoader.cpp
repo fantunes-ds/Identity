@@ -52,7 +52,7 @@ void Engine::ObjectLoader::ParseTransforms(ObjectElements::Model& p_model, aiNod
 
     transform.SetTransformMatrix(mat);
 
-    int32_t id = Containers::TransformContainer::AddTransform(transform);
+    int32_t id = Containers::TransformContainer::AddTransform(std::make_shared<ObjectElements::Transform>(transform));
     p_model.GetMeshes()[p_node->mMeshes[0]]->SetTransform(id);
 
     for (size_t i = 0; i < p_node->mNumChildren; ++i)
