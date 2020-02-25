@@ -2,7 +2,7 @@
 #include <Rendering/Lights/Light.h>
 
 Engine::Rendering::Lights::Light::Light(const Vector4F& p_position, const Vector4F& p_ambient, const Vector4F& p_diffuse, const Vector4F& p_specular,
-    const Vector4F& p_direction, const Vector4F& p_color, const float& p_shininess) : m_lightData{ p_position,p_ambient,p_diffuse, p_specular, p_direction, p_color, p_shininess }
+    const Vector4F& p_direction, const Vector4F& p_color, const float& p_shininess) : m_lightData{ p_position,p_ambient,p_diffuse, p_specular,  p_color, p_shininess }
 {
 }
 
@@ -20,7 +20,6 @@ bool Engine::Rendering::Lights::Light::operator==(Rendering::Lights::ILight* p_o
 
 
         if (thisData.shininess == otherData.shininess &&
-            thisData.direction == otherData.direction &&
             thisData.color == otherData.color &&
             thisData.ambient == otherData.ambient &&
             thisData.diffuse == otherData.diffuse &&
