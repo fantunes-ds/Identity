@@ -80,7 +80,7 @@ void Engine::Systems::RenderSystem::DrawScene()
 
                     const Vector4F reversedXLightPos = Vector4F(light.position.x * -1, light.position.y, light.position.z, 1.0f);
                     const Rendering::Buffers::PCB pcb { reversedXLightPos, light.ambient, light.diffuse,
-                                                        light.specular ,light.direction, light.color,
+                                                        light.specular , light.color,
                                                                         light.shininess,Vector3F{},camera->GetPosition(), 0.0f };
                     mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
                     Rendering::Renderer::GetInstance()->SetRenderTarget();

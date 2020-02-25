@@ -4,15 +4,12 @@
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
 #include <3DLoader/ObjectElements/Transform.h>
-#include <Events/IEventCallback.h>
-#include "Events/Event.h"
 #include <Systems/RenderSystem.h>
 #include <Input/Input.h>
 #include <Objects/GameObject.h>
-#include "Components/ModelComponent.h"
-#include "Components/CameraComponent.h"
-#include "Components/LightComponent.h"
-#include "Containers/CameraContainer.h"
+#include <Components/ModelComponent.h>
+#include <Components/CameraComponent.h>
+#include <Components/LightComponent.h>
 
 using namespace Engine::Core;
 
@@ -51,7 +48,6 @@ int App::Run() const
     dirLight.ambient   = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
     dirLight.diffuse   = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
     dirLight.specular  = Vector4F(0.5f, 0.5f ,0.5f, 1.0f);
-    dirLight.direction = Vector4F(-0.5f, -0.5f, -0.5f, 1.0f).Normalize();
     dirLight.color     = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
     dirLight.shininess = 32.0f;
 

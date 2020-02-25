@@ -13,7 +13,6 @@ namespace Engine::Rendering::Lights
             Vector4F ambient;
             Vector4F diffuse;
             Vector4F specular;
-            Vector4F direction;
             Vector4F color;
             float shininess;
             Vector3F padding;
