@@ -243,6 +243,8 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Rendering\Material.h" />
     <ClInclude Include="include\Rendering\Materials\Shader.h" />
     <ClInclude Include="include\Rendering\Materials\Texture.h" />
+    <ClInclude Include="include\Scene\SceneGraph\SceneGraph.h" />
+    <ClInclude Include="include\Scene\SceneGraph\SceneNode.h" />
     <ClInclude Include="include\Systems\IECSSystem.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\3DLoader\ObjectLoader.h" />
@@ -259,7 +261,6 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Rendering\Buffers\VertexBuffer.h" />
     <ClInclude Include="include\Rendering\Camera.h" />
     <ClInclude Include="include\Rendering\Renderer.h" />
-    <ClInclude Include="include\Rendering\Lights\Light.h" />
     <ClInclude Include="include\Rendering\Window.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\TestDependencies.h" />
@@ -304,6 +305,8 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Rendering\Material.cpp" />
     <ClCompile Include="src\Rendering\Materials\Shader.cpp" />
     <ClCompile Include="src\Rendering\Materials\Texture.cpp" />
+    <ClCompile Include="src\Scene\SceneGraph\SceneGraph.cpp" />
+    <ClCompile Include="src\Scene\SceneGraph\SceneNode.cpp" />
     <ClCompile Include="src\Systems\RenderSystem.cpp" />
     <ClCompile Include="src\Events\Event.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />

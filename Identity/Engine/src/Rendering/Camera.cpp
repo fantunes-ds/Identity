@@ -2,6 +2,7 @@
 #include <Rendering/Camera.h>
 #include <Tools/ImGUI/imgui.h>
 #include <Input/Input.h>
+#include "Containers/EventContainer.h"
 
 
 void Engine::Rendering::Camera::UpdateCamera(const float& p_width, const float& p_height)
