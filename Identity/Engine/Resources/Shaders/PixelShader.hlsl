@@ -4,7 +4,6 @@ struct lightSource
     float4 ambient;
     float4 diffuse;
     float4 specular;
-    float4 direction;
     float4 color;
     float shininess;
     float3 padding;
