@@ -10,7 +10,7 @@ namespace Engine::ObjectElements
     public:
         Transform();
 
-        Transform(Vector3D& p_position);
+        Transform(Vector3F& p_position);
         ~Transform() = default;
 
         Transform(const Transform& p_other);
@@ -19,23 +19,23 @@ namespace Engine::ObjectElements
         /** 
          * @brief Adds the given vector to the current position.
          */
-        void Translate(const Vector3D& p_vector);
+        void Translate(const Vector3F& p_vector);
 
         /**
          *@brief Rotates transform by a vector of Euler angles.
          *@warning: may contain error at m_rotation *= quat
          */
-        void RotateWithEulerAngles(const Vector3D& p_euler);
+        void RotateWithEulerAngles(const Vector3F& p_euler);
 
         /**
          *@brief Multiplies the Transform's current scale by the given vector.
           
          */
-        void Scale(const Vector3D& p_scale);
+        void Scale(const Vector3F& p_scale);
 
 
-        inline void SetPosition(const Vector3D& p_position) { m_position = p_position; }
-        inline void SetScale(const Vector3D& p_scale) { m_scale = p_scale; }
+        inline void SetPosition(const Vector3F& p_position) { m_position = p_position; }
+        inline void SetScale(const Vector3F& p_scale) { m_scale = p_scale; }
         inline void SetRotation(const Quaternion& p_rotation)
         {
             m_rotation = p_rotation;
@@ -47,12 +47,12 @@ namespace Engine::ObjectElements
 
         inline void SetParent(int32_t p_parent) { m_parent = p_parent; }
 
-        [[nodiscard]] Vector3D GetEuler() const;
-        inline Vector3D& GetPosition() { return m_position; }
-        inline Vector3D& GetForward() { return m_forward; }
-        inline Vector3D& GetRight() { return m_right; }
-        inline Vector3D& GetUp() { return m_up; }
-        inline Vector3D& GetScale() { return m_scale; }
+        [[nodiscard]] Vector3F GetEuler() const;
+        inline Vector3F& GetPosition() { return m_position; }
+        inline Vector3F& GetForward() { return m_forward; }
+        inline Vector3F& GetRight() { return m_right; }
+        inline Vector3F& GetUp() { return m_up; }
+        inline Vector3F& GetScale() { return m_scale; }
         inline Quaternion& GetRotation() { return m_rotation; }
         inline std::shared_ptr<Transform> GetParent() const;
         inline Matrix4F& GetTransformMatrix() { return m_transform; }

@@ -2,7 +2,7 @@
 #include <Systems/RenderSystem.h>
 #include <Containers/ModelContainer.h>
 #include "Tools/DirectX/GraphicsMacros.h"
-#include "Rendering/Light.h"
+#include "Rendering/Lights/Light.h"
 #include "Tools/ImGUI/imgui.h"
 #include "Tools/ImGUI/imgui_impl_dx11.h"
 #include <Input/Input.h>
@@ -12,6 +12,7 @@
 #include "Containers/CameraContainer.h"
 #include <Containers/EventContainer.h>
 #include <Rendering/Buffers/VertexConstantBuffer.h>
+#include <Containers/LightContainer.h>
 
 //Example of how to use events
 Engine::Systems::RenderSystem::RenderSystem()
@@ -25,21 +26,27 @@ void Engine::Systems::RenderSystem::DrawScene()
 {
     HRESULT hr;
 
-    std::shared_ptr<Rendering::Light> light = m_lights.begin()->second;
+    if (Containers::LightContainer::GetLights().begin()->second)
+        std::cout << "be";
+
+    std::shared_ptr<Rendering::Lights::ILight> ILight = Containers::LightContainer::GetLights().begin()->second;
+    std::shared_ptr<Rendering::Lights::Light> light1 = std::dynamic_pointer_cast<Rendering::Lights::Light>(Containers::LightContainer::GetLights().begin()->second);
+    Rendering::Lights::Light::LightData& light = light1->GetLightData();
+
     std::shared_ptr<Rendering::Camera> camera = Containers::CameraContainer::GetCamera(m_activeCamera);
 
     //TODO: Light will be moved soon
     if (ImGui::Begin("Lighting Tool"))
     {
-        ImGui::SliderFloat("LightPosX", &light->position.x, -40.0f, 40.0f, "%.1f");
-        ImGui::SliderFloat("LightPosY", &light->position.y, -40.0f, 40.0f, "%.1f");
-        ImGui::SliderFloat("LightPosZ", &light->position.z, -40.0f, 40.0f, "%.1f");
-        ImGui::SliderFloat("LightColR", &light->color.x, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("LightColG", &light->color.y, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("LightColB", &light->color.z, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("Ambient LightX", &light->ambient.x, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("Ambient LightY", &light->ambient.y, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("Ambient LightZ", &light->ambient.z, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightPosX", &light.position.x, -40.0f, 40.0f, "%.1f");
+        ImGui::SliderFloat("LightPosY", &light.position.y, -40.0f, 40.0f, "%.1f");
+        ImGui::SliderFloat("LightPosZ", &light.position.z, -40.0f, 40.0f, "%.1f");
+        ImGui::SliderFloat("LightColR", &light.color.x, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColG", &light.color.y, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("LightColB", &light.color.z, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("Ambient LightX", &light.ambient.x, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("Ambient LightY", &light.ambient.y, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("Ambient LightZ", &light.ambient.z, 0.0f, 1.0f, "%.1f");
     }ImGui::End();
 
     for (auto& gameObject : Containers::GameObjectContainer::GetAllGameObjects())
@@ -69,17 +76,12 @@ void Engine::Systems::RenderSystem::DrawScene()
                     perspective.Transpose();
 
                     Rendering::Buffers::VCB vcb { model, view, normalModel,perspective };
+                    mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
 
-                    D3D11_MAPPED_SUBRESOURCE msr;
-                    Rendering::Renderer::GetInstance()->GetContext()->Map(mesh->GetMaterial().GetShader().GetVCB().GetBuffer().Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &msr);
-                    memcpy(msr.pData, &vcb, sizeof(vcb));
-                    Rendering::Renderer::GetInstance()->GetContext()->Unmap(mesh->GetMaterial().GetShader().GetVCB().GetBuffer().Get(), 0u);
-                    //mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
-
-                    const Vector4F reversedXLightPos = Vector4F(light->position.x * -1, light->position.y, light->position.z, 1.0f);
-                    const Rendering::Buffers::PCB pcb { reversedXLightPos, light->ambient, light->diffuse,
-                                                        light->specular ,light->direction, light->color,
-                                                                        light->shininess,camera->GetPosition()};
+                    const Vector4F reversedXLightPos = Vector4F(light.position.x * -1, light.position.y, light.position.z, 1.0f);
+                    const Rendering::Buffers::PCB pcb { reversedXLightPos, light.ambient, light.diffuse,
+                                                        light.specular , light.color,
+                                                                        light.shininess,Vector3F{},camera->GetPosition(), 0.0f };
                     mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
                     Rendering::Renderer::GetInstance()->SetRenderTarget();
                     
@@ -103,10 +105,10 @@ void Engine::Systems::RenderSystem::Update()
     }
 }
 
-uint32_t Engine::Systems::RenderSystem::AddLight(Rendering::Light& p_light)
+uint32_t Engine::Systems::RenderSystem::AddLight(Rendering::Lights::Light& p_light)
 {
     //TODO: create lightManager and load light into it rather than into rendersystem
-    std::shared_ptr newLight = std::make_shared<Rendering::Light>(p_light);
+    std::shared_ptr newLight = std::make_shared<Rendering::Lights::Light>(p_light);
 
     if (newLight)
     {
