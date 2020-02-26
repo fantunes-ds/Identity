@@ -11,23 +11,23 @@ Engine::ObjectElements::Mesh::Mesh(const Mesh& p_other):
 
 void Engine::ObjectElements::Mesh::GenerateBuffers(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device)
 {
-    m_material.AddPixelShader(p_device, L"../Engine/Resources/Shaders/PixelShader.cso");
-    m_material.AddVertexShader(p_device, L"../Engine/Resources/Shaders/VertexShader.cso");
-    m_material.AddTexture(p_device, L"../Engine/Resources/missing.png");
+    if (m_material < 0)
+        SetMaterial(Containers::MaterialContainer::FindMaterial("missing"));
+
     m_vertexBuffer.Generate(p_device, m_vertices);
     m_indexBuffer.Generate(p_device, m_indices);
-    m_inputLayout.Generate(p_device, m_material.GetShader().GetBlob());
+    m_inputLayout.Generate(p_device, GetMaterial().GetShader().GetBlob());
 }
 
 void Engine::ObjectElements::Mesh::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
 {
-    m_material.Bind(p_context);
+    GetMaterial().Bind(p_context);
     m_vertexBuffer.Bind(p_context);
     m_indexBuffer.Bind(p_context);
     m_inputLayout.Bind(p_context);
 }
 
-void Engine::ObjectElements::Mesh::SetMaterial(const Rendering::Material& p_material)
+void Engine::ObjectElements::Mesh::SetMaterial(const int32_t p_material)
 {
     m_material = p_material;
 }
