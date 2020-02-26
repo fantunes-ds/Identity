@@ -15,7 +15,7 @@ int32_t Engine::Containers::ComponentContainer::AddComponent(Components::ICompon
     for (auto& component : GetInstance()->m_components)
     {
         if (typeid(*component.second) == typeid(*p_component))
-        {          
+        {
             if (*component.second == p_component)
             {
                 std::string type = typeid(*p_component).name();
@@ -24,8 +24,9 @@ int32_t Engine::Containers::ComponentContainer::AddComponent(Components::ICompon
                 {
                     const std::string error("ComponentContainer::AddComponent<" + type + ">(Components::IComponent* p_component): Tried to add a Component that already exists");
                     MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+                    return component.first;
                 }
-                return component.first;
+                //GetInstance()->m_components.insert_or_assign(p_component->GetID(), std::shared_ptr<Engine::Components::IComponent>(p_component));
             }
         }
     }
