@@ -13,11 +13,14 @@ namespace Engine::Rendering::Materials
         Texture();
         ~Texture();
 
-        void LoadTexture(const std::string& p_path);
+        void LoadTexture(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
+        void BindTexture(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
         [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTexture() const { return m_texture; }
+        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11SamplerState> GetSampleState() const { return m_samplerState; }
 
     private:
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
-        Microsoft::WRL::ComPtr<ID3D11Texture2D> m_text;
+        Microsoft::WRL::ComPtr<ID3D11SamplerState> m_samplerState;
+        Microsoft::WRL::ComPtr<ID3D11Resource> m_text;
     };
 }

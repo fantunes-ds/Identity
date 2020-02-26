@@ -5,6 +5,7 @@
 #include <Rendering/Renderer.h>
 #include <Rendering/Lights/Light.h>
 #include "Events/Event.h"
+#include "Rendering/Materials/Texture.h"
 
 namespace Engine::Systems
 {

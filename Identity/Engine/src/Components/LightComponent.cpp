@@ -4,11 +4,12 @@
 
 Engine::Components::LightComponent::LightComponent()
 {
+
     Rendering::Lights::Light* light = new Rendering::Lights::Light();
     Containers::LightContainer::AddLight(light);
 }
 
-Engine::Components::LightComponent::LightComponent(Rendering::Lights::Light::LightData p_lightData)
+Engine::Components::LightComponent::LightComponent(Rendering::Lights::Light::LightData& p_lightData)
 {
     Rendering::Lights::Light* light = new Rendering::Lights::Light(p_lightData);
     Containers::LightContainer::AddLight(light);

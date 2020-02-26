@@ -11,7 +11,7 @@ namespace Engine::Components
     {
     public:
         LightComponent();
-        LightComponent(Rendering::Lights::Light::LightData p_lightData);
+        LightComponent(Rendering::Lights::Light::LightData& p_lightData);
         bool operator==(IComponent* p_other) override;
         bool DeleteFromMemory() override;
 
