@@ -9,8 +9,8 @@
 #include <Objects/IObject.h>
 #include <Rendering/Buffers/InputLayout.h>
 
-#include "Rendering/Material.h"
-#include <3DLoader/ObjectElements/Transform.h>
+#include <Rendering/Material.h>
+#include <Containers/MaterialContainer.h>
 
 namespace Engine::ObjectElements
 {
@@ -24,15 +24,16 @@ namespace Engine::ObjectElements
 
         void GenerateBuffers(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device);
         void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
+        void SetMaterial(const int32_t p_material);
 
         bool operator==(const Mesh& p_other) const;
         bool operator!=(const Mesh& p_other) const;
 
         Rendering::Buffers::VertexBuffer& GetVertexBuffer() { return m_vertexBuffer; }
-        Rendering::Material& GetMaterial() { return m_material; }
-        Rendering::Buffers::IndexBuffer& GetIndexBuffer() { return m_indexBuffer; }
-        std::vector<Geometry::Vertex>& GetVertices() { return m_vertices; }
-        std::vector<unsigned short>& GetIndices() { return m_indices; }
+        [[nodiscard]] Rendering::Material& GetMaterial() { return *Containers::MaterialContainer::GetMaterial(m_material); }
+        [[nodiscard]] Rendering::Buffers::IndexBuffer& GetIndexBuffer() { return m_indexBuffer; }
+        [[nodiscard]] std::vector<Geometry::Vertex>& GetVertices() { return m_vertices; }
+        [[nodiscard]] std::vector<unsigned short>& GetIndices() { return m_indices; }
 
         void SetTransform(int32_t p_transform) { m_transform = p_transform; }
 
@@ -40,10 +41,11 @@ namespace Engine::ObjectElements
         //buffers
         Rendering::Buffers::VertexBuffer m_vertexBuffer;
         Rendering::Buffers::IndexBuffer m_indexBuffer;
+        Rendering::Buffers::InputLayout m_inputLayout;
 
         //--WIP--
-        Rendering::Buffers::InputLayout m_inputLayout;
-        Rendering::Material m_material;
+        // Rendering::Material m_material;
+        int32_t m_material;
         //-------
 
         //data

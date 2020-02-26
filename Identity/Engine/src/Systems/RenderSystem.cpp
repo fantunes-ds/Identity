@@ -14,6 +14,8 @@
 #include <Rendering/Buffers/VertexConstantBuffer.h>
 #include <Containers/LightContainer.h>
 
+//WIP
+
 //Example of how to use events
 Engine::Systems::RenderSystem::RenderSystem()
 {
@@ -84,7 +86,13 @@ void Engine::Systems::RenderSystem::DrawScene()
                                                                         light.shininess,Vector3F{},camera->GetPosition(), 0.0f };
                     mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
                     Rendering::Renderer::GetInstance()->SetRenderTarget();
+
+                    //WIP
+                    // Rendering::Renderer::GetInstance()->GetContext()->PSSetShaderResources(0, 1, myText.GetTexture().GetAddressOf());
+                    // Rendering::Renderer::GetInstance()->GetContext()->PSSetSamplers(0, 1, myText.GetSampleState().GetAddressOf());
                     
+                    //
+
                     GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
                 }
             }

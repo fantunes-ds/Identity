@@ -1,3 +1,6 @@
+Texture2D shaderTexture;
+SamplerState SampleType;
+
 struct lightSource
 {
     float4 position;
@@ -8,6 +11,7 @@ struct lightSource
     float shininess;
     float3 padding;
 };
+
 cbuffer CBuf
 {
     lightSource light;
@@ -22,6 +26,7 @@ struct VS_OUT
     float3 pos : Position;
     float3 worldPos : WPos;
     float3 norm : Normal;
+    float2 tex : TxCoord;
 };
 
 static bool blinn = true;
@@ -49,6 +54,7 @@ float4 main(VS_OUT f_in) : SV_TARGET
         spec = pow(max(dot(cameraPos, reflectDir), 0.0f), light.shininess);
     }
     float3 specular = light.specular * spec * light.color;
+    f_in.vertexColor = shaderTexture.Sample(SampleType, f_in.tex);
     f_in.vertexColor = float4(ambient + diffuse + specular, 1) * f_in.vertexColor;
     return f_in.vertexColor;
 }
