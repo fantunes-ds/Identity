@@ -94,7 +94,7 @@ int App::Run() const
         mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LamboTexture"));
     }
 
-    renderSystem.SetActiveCamera(camera.FindComponent<Components::CameraComponent>()->GetCamera()->GetID());
+    renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::CameraComponent>()->GetCamera()->GetID());
 
 
 
