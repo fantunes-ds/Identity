@@ -49,8 +49,8 @@ int App::Run() const
     Containers::MaterialContainer::GetMaterial("LamboTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
     Containers::MaterialContainer::GetMaterial("LamboTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
 
-    Containers::ModelContainer::AddModel("../Engine/Resources/YoungLink.obj", "statue");
-    Containers::ModelContainer::AddModel("../Engine/Resources/Lambo.obj", "lambo");
+    // Containers::ModelContainer::AddModel("../Engine/Resources/YoungLink.obj", "statue");
+    // Containers::ModelContainer::AddModel("../Engine/Resources/Lambo.obj", "lambo");
 
     camera.AddComponent<Components::CameraComponent>(m_width, m_height);
 
@@ -59,15 +59,15 @@ int App::Run() const
 
     gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
     gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    gameObject.AddComponent<Components::ModelComponent>("statue");
+    gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
 
     gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
     gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    gameObject2.AddComponent<Components::ModelComponent>("lambo");
+    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+
+
     light.GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
     light.GetTransform()->Scale(Vector3F{0.1f, 0.1f, 0.1f});
-    gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    //gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
 
     Rendering::Lights::Light::LightData dirLight;
 
@@ -79,9 +79,9 @@ int App::Run() const
     dirLight.shininess = 32.0f;
 
     int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
-    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
-    light.AddComponent<Components::ModelComponent>("cube");
+    // gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
+    // gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
+    light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
     light.AddComponent<Components::LightComponent>(dirLight);
 
     for (auto& mesh : gameObject.GetModel()->GetMeshes())
