@@ -57,14 +57,16 @@ int App::Run() const
 
     Containers::LightContainer* test = Containers::LightContainer::GetInstance();
 
-    gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
+    gameObject.GetTransform()->Translate(Vector3F{3.0f, -5.0f, 4.0f});
     gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
     gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
 
-    gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
+    gameObject2.GetTransform()->Translate(Vector3F{6.0f, 5.0f, -4.0f});
     gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    gameObject2.GetTransform()->RotateWithEulerAngles(Vector3F{ 45.f, 45.f, 0.f });
     gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
 
+    camera.GetTransform()->Translate(Vector3F{ 0.0f, 0.0f, -10.0f });
 
     light.GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
     light.GetTransform()->Scale(Vector3F{0.1f, 0.1f, 0.1f});
@@ -78,7 +80,7 @@ int App::Run() const
     dirLight.color     = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
     dirLight.shininess = 32.0f;
 
-    int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(m_width, m_height);
+    camera.AddComponent<Components::CameraComponent>(m_width, m_height);
     // gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
     // gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
     light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");

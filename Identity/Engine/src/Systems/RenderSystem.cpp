@@ -72,18 +72,20 @@ void Engine::Systems::RenderSystem::DrawScene()
                     Matrix4F view = camera->GetViewMatrix();
                     Matrix4F perspective = camera->GetPerspectiveMatrix();
 
-                    model.Transpose();
-                    view.Transpose();
+                    /*model.Transpose();
+                    view.Transpose();*/
                     normalModel.Transpose();
                     perspective.Transpose();
 
                     Rendering::Buffers::VCB vcb { model, view, normalModel,perspective };
                     mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
 
+                    const Vector3F cameraPos = camera->GetPosition();
+
                     const Vector4F reversedXLightPos = Vector4F(light.position.x * -1, light.position.y, light.position.z, 1.0f);
                     const Rendering::Buffers::PCB pcb { reversedXLightPos, light.ambient, light.diffuse,
                                                         light.specular , light.color,
-                                                                        light.shininess,Vector3F{},camera->GetPosition(), 0.0f };
+                                                                        light.shininess,Vector3F{},cameraPos, 0.0f };
                     mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
                     Rendering::Renderer::GetInstance()->SetRenderTarget();
 

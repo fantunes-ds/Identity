@@ -1,7 +1,7 @@
 #include <stdafx.h>
 #include <Components/CameraComponent.h>
 #include <Containers/CameraContainer.h>
-#include <Objects\GameObject.h>
+#include <Objects/GameObject.h>
 
 bool Engine::Components::CameraComponent::operator==(IComponent* p_other)
 {
@@ -18,6 +18,7 @@ bool Engine::Components::CameraComponent::DeleteFromMemory()
 
 Engine::Components::CameraComponent::CameraComponent(Objects::GameObject* p_gameObject, const int p_width, const int p_height): IComponent{ p_gameObject }
 {
-    auto camera = std::make_shared<Rendering::Camera>(p_width, p_height);
+    int32_t id = m_gameObject->GetTransformID();
+    auto camera = std::make_shared<Rendering::Camera>(id, p_width, p_height);
     m_camera = Containers::CameraContainer::AddCamera(camera);
 }
