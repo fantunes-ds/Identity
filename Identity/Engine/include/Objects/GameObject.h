@@ -36,11 +36,10 @@ namespace Engine::Objects
                 return -1;
             }
 
-            int32_t id = Containers::ComponentContainer::AddComponent<T>(p_args...);
+            int32_t id = Containers::ComponentContainer::AddComponent<T>(this, p_args...);
 
             if (id > 0)
             {
-                Containers::ComponentContainer::FindComponent(id)->SetGameObject(this);
                 m_components.emplace_back(id);
             }
 

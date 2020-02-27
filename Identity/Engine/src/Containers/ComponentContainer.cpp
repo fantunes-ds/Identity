@@ -51,7 +51,7 @@ Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::
     {
         m_instance = new ComponentContainer();
     }
-
+    
     return m_instance;
 }
 

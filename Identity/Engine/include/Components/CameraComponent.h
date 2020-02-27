@@ -9,7 +9,7 @@ namespace Engine::Components
     class API_ENGINE CameraComponent: public IComponent
     {
     public:
-        CameraComponent(int p_width, int p_height);
+        CameraComponent(Objects::GameObject* p_gameObject, int p_width, int p_height);
         ~CameraComponent() = default;
 
         bool operator==(IComponent* p_other) override;
