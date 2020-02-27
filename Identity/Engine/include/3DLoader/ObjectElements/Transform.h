@@ -42,8 +42,9 @@ namespace Engine::ObjectElements
             CalculateAxes();
         }
 
-        inline void SetTransformMatrix(const Matrix4F& p_transform) { m_transform = p_transform; }
-        void UpdateTransformMatrix();
+        inline void SetWorldTransformMatrix(const Matrix4F& p_transform) { m_worldTransform = p_transform; }
+        inline void SetLocalTransformMatrix(const Matrix4F& p_transform) { m_localTransform = p_transform; }
+        void UpdateWorldTransformMatrix();
 
         inline void SetParent(int32_t p_parent) { m_parent = p_parent; }
 
@@ -55,7 +56,8 @@ namespace Engine::ObjectElements
         inline Vector3F& GetScale() { return m_scale; }
         inline Quaternion& GetRotation() { return m_rotation; }
         inline std::shared_ptr<Transform> GetParent() const;
-        inline Matrix4F& GetTransformMatrix() { return m_transform; }
+        inline Matrix4F& GetWorldTransformMatrix() { return m_worldTransform; }
+        inline Matrix4F& GetLocalTransformMatrix() { return m_localTransform; }
 
     private:
         void CalculateAxes();
@@ -68,6 +70,7 @@ namespace Engine::ObjectElements
         Vector3F m_scale;
         Quaternion m_rotation;
 
-        Matrix4F m_transform;
+        Matrix4F m_worldTransform;
+        Matrix4F m_localTransform;
     };
 }

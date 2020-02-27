@@ -30,9 +30,9 @@ int App::Run() const
 {
     Systems::RenderSystem renderSystem;
     Objects::GameObject gameObject;
-    Objects::GameObject gameObject2;
-    Objects::GameObject camera;
-    Objects::GameObject light;
+    Objects::GameObject gameObject2("car");
+    Objects::GameObject camera("Camera");
+    Objects::GameObject light("Light");
 
     Containers::MaterialContainer::AddMaterial("missing");
     Containers::MaterialContainer::GetMaterial("missing")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/missing.png");
@@ -49,9 +49,6 @@ int App::Run() const
     Containers::MaterialContainer::GetMaterial("LamboTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
     Containers::MaterialContainer::GetMaterial("LamboTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
 
-    // Containers::ModelContainer::AddModel("../Engine/Resources/YoungLink.obj", "statue");
-    // Containers::ModelContainer::AddModel("../Engine/Resources/Lambo.obj", "lambo");
-
     camera.AddComponent<Components::CameraComponent>(m_width, m_height);
 
 
@@ -59,15 +56,13 @@ int App::Run() const
 
     gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
     gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
 
     gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
     gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
 
 
     light.GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
-    light.GetTransform()->Scale(Vector3F{0.1f, 0.1f, 0.1f});
+    light.GetTransform()->Scale(Vector3F{0.01f, 0.01f, 0.01f});
 
     Rendering::Lights::Light::LightData dirLight;
 
@@ -80,14 +75,16 @@ int App::Run() const
 
     int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(m_width, m_height);
     // gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
-    // gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
-    light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
+     gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+    //light.AddComponent<Components::ModelComponent>("../Engine/Resources/Wood_Box.fbx", "cube");
     light.AddComponent<Components::LightComponent>(dirLight);
 
-    for (auto& mesh : gameObject.GetModel()->GetMeshes())
+
+    
+    /*for (auto& mesh : gameObject.GetModel()->GetMeshes())
     {
         mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LinkTexture"));
-    }
+    }*/
 
     for (auto& mesh : gameObject2.GetModel()->GetMeshes())
     {
@@ -100,6 +97,7 @@ int App::Run() const
 
     while (true)
     {
+        gameObject2.GetTransform()->RotateWithEulerAngles(GPM::Vector3F(0.0f, 0.5f, 0.0f));
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;

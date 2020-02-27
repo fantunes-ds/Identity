@@ -8,7 +8,7 @@ Engine::ObjectElements::Transform::Transform() :
     m_forward = Vector3F::forward;
     m_right = Vector3F::right;
     m_up = Vector3F::up;
-    UpdateTransformMatrix();
+    UpdateWorldTransformMatrix();
 
 
 }
@@ -19,7 +19,7 @@ Engine::ObjectElements::Transform::Transform(Vector3F& p_position) :
     m_forward = Vector3F::forward;
     m_right = Vector3F::Cross(Vector3F::up, m_forward);
     m_up = Vector3F::Cross(m_forward, Vector3F::right);
-    UpdateTransformMatrix();
+    UpdateWorldTransformMatrix();
 }
 
 Engine::ObjectElements::Transform::Transform(const Transform& p_other) :
@@ -34,7 +34,7 @@ void Engine::ObjectElements::Transform::Translate(const Vector3F& p_vector)
 {
 
     m_position += Vector3F{ p_vector.x * - 1.0f, p_vector.y, p_vector.z * - 1.0f };
-    UpdateTransformMatrix();
+    UpdateWorldTransformMatrix();
 }
 
 
@@ -45,18 +45,18 @@ void Engine::ObjectElements::Transform::RotateWithEulerAngles(const Vector3F& p_
     quat.MakeFromEuler(p_euler);
     m_rotation *= quat;
     CalculateAxes();
-    UpdateTransformMatrix();
+    UpdateWorldTransformMatrix();
 }
 
 void Engine::ObjectElements::Transform::Scale(const Vector3F& p_scale)
 {
     m_scale *= p_scale;
-    UpdateTransformMatrix();
+    UpdateWorldTransformMatrix();
 }
 
-void Engine::ObjectElements::Transform::UpdateTransformMatrix()
+void Engine::ObjectElements::Transform::UpdateWorldTransformMatrix()
 {
-    m_transform = Matrix4F::CreateTransformation(m_position,
+    m_worldTransform = Matrix4F::CreateTransformation(m_position,
                                                           m_rotation,
                                                           m_scale);
 }

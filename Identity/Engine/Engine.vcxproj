@@ -265,6 +265,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Rendering\Window.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\TestDependencies.h" />
+    <ClInclude Include="include\Tools\ASSIMP\ASSIMPConversion.h" />
     <ClInclude Include="include\Tools\DirectX\dxerr.h" />
     <ClInclude Include="include\Tools\DirectX\GraphicsMacros.h" />
     <ClInclude Include="include\Tools\IDCounter.h" />
@@ -281,6 +282,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\IComponent.cpp" />
     <ClCompile Include="src\Rendering\Lights\Light.cpp" />
     <ClCompile Include="src\Components\LightComponent.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
@@ -320,6 +322,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Rendering\Renderer.cpp" />
     <ClCompile Include="src\Rendering\Window.cpp" />
     <ClCompile Include="src\TestDependencies.cpp" />
+    <ClCompile Include="src\Tools\ASSIMP\AssimpConversion.cpp" />
     <ClCompile Include="src\Tools\DirectX\dxerr.cpp" />
     <ClCompile Include="src\Tools\IdentityException.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui.cpp" />

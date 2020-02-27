@@ -4,8 +4,10 @@
 #include <3DLoader/ObjectElements/Model.h>
 #include <Containers/ModelContainer.h>
 #include <Containers/ComponentContainer.h>
+#include <Containers/ModelContainer.h>
 #include <Components/IComponent.h>
 #include <Components/ModelComponent.h>
+#include <Scene/SceneGraph/SceneNode.h>
 
 namespace Engine::Objects
 {
@@ -36,7 +38,14 @@ namespace Engine::Objects
                 return -1;
             }
 
+
             int32_t id = Containers::ComponentContainer::AddComponent<T>(this, p_args...);
+
+            if (std::is_same_v<T, Components::ModelComponent>)
+            {
+                std::shared_ptr<Components::ModelComponent> modelComp = std::dynamic_pointer_cast<Components::ModelComponent>(Containers::ComponentContainer::FindComponent(id));
+                Containers::ModelContainer::FindModel(modelComp->GetModel())->GetRootNode()->SetTransform(m_transform);
+            }
 
             if (id > 0)
             {
