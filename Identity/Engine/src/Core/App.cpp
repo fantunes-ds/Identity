@@ -113,15 +113,15 @@ int App::Run() const
 
 void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
 {
-    Rendering::Renderer::GetInstance()->ClearBuffer(0.3f, 0.3f, 0.3f);
+    Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
     if (_INPUT->keyboard.IsKeyHeld('R'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(1.0f, 0.0f, 0.0f);
+        Rendering::Renderer::GetInstance()->ClearBuffers(1.0f, 0.0f, 0.0f);
 
     if (_INPUT->keyboard.IsKeyHeld('G'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(0.0f, 1.0f, 0.0f);
+        Rendering::Renderer::GetInstance()->ClearBuffers(0.0f, 1.0f, 0.0f);
 
     if (_INPUT->keyboard.IsKeyHeld('B'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(0.0f, 0.0f, 1.0f);
+        Rendering::Renderer::GetInstance()->ClearBuffers(0.0f, 0.0f, 1.0f);
 
     if (_INPUT->keyboard.IsKeyDown('F'))
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());

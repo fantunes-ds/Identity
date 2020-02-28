@@ -35,8 +35,7 @@ Renderer::Renderer(const HWND& p_hwnd, const int& p_clientWidth, const int& p_cl
 
     CreateSwapChain(p_hwnd);
     SetBackBuffer();
-    SetDepthStencilBuffer();
-    SetRenderTarget();
+    SetDepthStencilBuffers();
 
     m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -59,11 +58,11 @@ void Renderer::EndFrame() const
     }
 }
 
-void Renderer::ClearBuffer(const float& p_red, const float& p_green, const float& p_blue) const
+void Renderer::ClearBuffers(const float& p_red, const float& p_green, const float& p_blue) const
 {
     const float colour[] = { p_red, p_green, p_blue, 1.0f };
     m_pContext->ClearRenderTargetView(m_pTarget.Get(), colour);
-    m_pContext->ClearDepthStencilView(m_pDepthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
+    m_pContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
 }
 
 void Renderer::ResetContext()
@@ -72,15 +71,9 @@ void Renderer::ResetContext()
     m_pContext->OMSetRenderTargets(0, nullView.GetAddressOf(), nullptr);
 
     m_pTarget.Reset();
-    m_pDepthStencil.Reset();
+    m_pDepthStencilView.Reset();
     m_pContext->Flush();
 }
-
-void Renderer::SetRenderTarget()
-{
-    m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
-}
-
 
 void Renderer::CreateSwapChain(const HWND& p_hwnd)
 {
@@ -129,39 +122,55 @@ void Renderer::CreateSwapChain(const HWND& p_hwnd)
     GFX_THROW_INFO(dxgiFactory->CreateSwapChain(m_pDevice.Get(), &swapChainDesc, &m_pSwapChain));
 }
 
-
-void Renderer::SetDepthStencilBuffer()
+void Renderer::SetDepthStencilBuffers()
 {
     HRESULT hr;
 
-    D3D11_TEXTURE2D_DESC depthStencilDesc;
-    depthStencilDesc.Width = m_width;
-    depthStencilDesc.Height = m_height;
-    depthStencilDesc.MipLevels = 1;
-    depthStencilDesc.ArraySize = 1;
-    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+    dsDesc.DepthEnable = TRUE;
+    dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDSState;
+    GFX_THROW_INFO(m_pDevice->CreateDepthStencilState(&dsDesc, &pDSState));
+
+    m_pContext->OMSetDepthStencilState(pDSState.Get(), 1u);
+
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
+    D3D11_TEXTURE2D_DESC descDepth;
+    descDepth.Width = m_width;
+    descDepth.Height = m_height;
+    descDepth.MipLevels = 1;
+    descDepth.ArraySize = 1;
+    descDepth.Format = DXGI_FORMAT_D32_FLOAT;
 
     //with 4x msaa
     if (m_enable4xMSAA)
     {
-        depthStencilDesc.SampleDesc.Count = 4;
-        depthStencilDesc.SampleDesc.Quality = m_4xMsaaQuality - 1;
+        descDepth.SampleDesc.Count = 4;
+        descDepth.SampleDesc.Quality = m_4xMsaaQuality - 1;
     }
     //without
     else
     {
-        depthStencilDesc.SampleDesc.Count = 1;
-        depthStencilDesc.SampleDesc.Quality = 0;
+        descDepth.SampleDesc.Count = 1;
+        descDepth.SampleDesc.Quality = 0;
     }
 
-    depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthStencilDesc.CPUAccessFlags = 0;
-    depthStencilDesc.MiscFlags = 0;
+    descDepth.Usage = D3D11_USAGE_DEFAULT;
+    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    descDepth.CPUAccessFlags = 0;
+    descDepth.MiscFlags = 0;
 
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
-    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer));
-    GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(depthStencilBuffer.Get(), nullptr, &m_pDepthStencil));
+    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&descDepth, nullptr, &pDepthStencil));
+
+    D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
+    descDSV.Format = DXGI_FORMAT_D32_FLOAT;
+    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    descDSV.Texture2D.MipSlice = 0u;
+    GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &m_pDepthStencilView));
+
+    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
 }
 
 
@@ -229,8 +238,7 @@ void Renderer::Resize(const float& p_width, const float& p_height)
 
     SetBackBuffer();
 
-    SetDepthStencilBuffer();
-    SetRenderTarget();
+    SetDepthStencilBuffers();
 }
 
 void Renderer::GetResolution(int& p_width, int& p_height)
