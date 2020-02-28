@@ -17,6 +17,9 @@ namespace Engine::Scene
         ~SceneNode();
 
         void AddChild(std::shared_ptr<SceneNode> p_child);
+        void RemoveChild(int32_t p_id);
+        void RemoveChild(std::shared_ptr<SceneNode> p_child);
+
         void Update(float p_deltaTime);
         bool IsRoot();
 

@@ -11,9 +11,12 @@ namespace Engine::Scene
         ~SceneGraph() = default;
 
         void AddRootSceneNode(std::shared_ptr<SceneNode> p_sceneNode);
+        void RemoveRootSceneNode(int32_t p_id);
+
+
         void UpdateScene(float p_deltaTime);
 
-        const std::vector<std::shared_ptr<SceneNode>>& GetRootSceneNodes() const { return m_rootSceneNodes; }
+        const std::map<int32_t, std::shared_ptr<SceneNode>>& GetRootSceneNodes() const { return m_rootSceneNodes; }
 
         static SceneGraph* GetInstance()
         {
@@ -25,7 +28,7 @@ namespace Engine::Scene
             return m_instance;
         }
     private:
-        std::vector<std::shared_ptr<SceneNode>> m_rootSceneNodes;
+        std::map<int32_t, std::shared_ptr<SceneNode>> m_rootSceneNodes;
         inline static SceneGraph* m_instance;
     };
 }

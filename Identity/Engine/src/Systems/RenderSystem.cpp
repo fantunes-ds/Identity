@@ -20,17 +20,11 @@
 //Example of how to use events
 Engine::Systems::RenderSystem::RenderSystem()
 {
-    /*Containers::EventContainer::AddEvent("NoActiveCamera");
-    Event& event = Containers::EventContainer::GetEvent("NoActiveCamera");
-    event.AddListener(this, &RenderSystem::ResetActiveCamera);*/
 }
 
 void Engine::Systems::RenderSystem::DrawScene()
 {
     HRESULT hr;
-
-    if (Containers::LightContainer::GetLights().begin()->second)
-        std::cout << "be";
 
     std::shared_ptr<Rendering::Lights::ILight> ILight = Containers::LightContainer::GetLights().begin()->second;
     std::shared_ptr<Rendering::Lights::Light> light1 = std::dynamic_pointer_cast<Rendering::Lights::Light>(Containers::LightContainer::GetLights().begin()->second);
@@ -54,7 +48,7 @@ void Engine::Systems::RenderSystem::DrawScene()
 
     for (auto& sceneNode: Scene::SceneGraph::GetInstance()->GetRootSceneNodes())
     {
-        DrawSceneNode(sceneNode);
+        DrawSceneNode(sceneNode.second);
     }
 }
 

@@ -16,6 +16,7 @@ bool Engine::Components::CameraComponent::DeleteFromMemory()
     return Containers::CameraContainer::RemoveCamera(m_camera);
 }
 
+
 Engine::Components::CameraComponent::CameraComponent(Objects::GameObject* p_gameObject, const int p_width, const int p_height): IComponent{ p_gameObject }
 {
     auto camera = std::make_shared<Rendering::Camera>(p_width, p_height);

@@ -244,6 +244,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Rendering\Material.h" />
     <ClInclude Include="include\Rendering\Materials\Shader.h" />
     <ClInclude Include="include\Rendering\Materials\Texture.h" />
+    <ClInclude Include="include\Scene\Scene.h" />
     <ClInclude Include="include\Scene\SceneGraph\SceneGraph.h" />
     <ClInclude Include="include\Scene\SceneGraph\SceneNode.h" />
     <ClInclude Include="include\Systems\IECSSystem.h" />

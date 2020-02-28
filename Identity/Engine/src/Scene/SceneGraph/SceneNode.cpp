@@ -16,6 +16,26 @@ void Engine::Scene::SceneNode::AddChild(std::shared_ptr<SceneNode> p_child)
     p_child->m_parent = this;
 }
 
+void Engine::Scene::SceneNode::RemoveChild(int32_t p_id)
+{
+    for (auto& it = m_children.begin(); it != m_children.end(); ++it)
+    {
+        if (it->get()->GetID() == p_id)
+            m_children.erase(it);
+    }
+}
+
+void Engine::Scene::SceneNode::RemoveChild(std::shared_ptr<SceneNode> p_child)
+{
+    for (auto& it = m_children.begin(); it != m_children.end(); ++it)
+    {
+        if (it->get()->GetID() == p_child->GetID())
+        {
+            m_children.erase(it);
+        }
+    }
+}
+
 void Engine::Scene::SceneNode::Update(float p_deltaTime)
 {
     auto transform = Containers::TransformContainer::FindTransform(m_transform);
