@@ -28,21 +28,18 @@ void Engine::Systems::RenderSystem::DrawScene()
 {
     HRESULT hr;
 
-    if (Containers::LightContainer::GetLights().begin()->second)
-        std::cout << "be";
-
     std::shared_ptr<Rendering::Lights::ILight> ILight = Containers::LightContainer::GetLights().begin()->second;
     std::shared_ptr<Rendering::Lights::Light> light1 = std::dynamic_pointer_cast<Rendering::Lights::Light>(Containers::LightContainer::GetLights().begin()->second);
     Rendering::Lights::Light::LightData& light = light1->GetLightData();
 
     std::shared_ptr<Rendering::Camera> camera = Containers::CameraContainer::GetCamera(m_activeCamera);
 
+    float* pos[3] = { &light.position.x, &light.position.y, &light.position.z };
+
     //TODO: Light will be moved soon
     if (ImGui::Begin("Lighting Tool"))
     {
-        ImGui::SliderFloat("LightPosX", &light.position.x, -40.0f, 40.0f, "%.1f");
-        ImGui::SliderFloat("LightPosY", &light.position.y, -40.0f, 40.0f, "%.1f");
-        ImGui::SliderFloat("LightPosZ", &light.position.z, -40.0f, 40.0f, "%.1f");
+        ImGui::DragFloat3("LightPos", *pos,0.1f , -40.0f, 40.0f, "%.1f");
         ImGui::SliderFloat("LightColR", &light.color.x, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("LightColG", &light.color.y, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("LightColB", &light.color.z, 0.0f, 1.0f, "%.1f");
@@ -72,9 +69,6 @@ void Engine::Systems::RenderSystem::DrawScene()
                     Matrix4F view = camera->GetViewMatrix();
                     Matrix4F perspective = camera->GetPerspectiveMatrix();
 
-                    /*model.Transpose();
-                    view.Transpose();*/
-                    normalModel.Transpose();
                     perspective.Transpose();
 
                     Rendering::Buffers::VCB vcb { model, view, normalModel,perspective };
@@ -82,18 +76,12 @@ void Engine::Systems::RenderSystem::DrawScene()
 
                     const Vector3F cameraPos = camera->GetPosition();
 
-                    const Vector4F reversedXLightPos = Vector4F(light.position.x * -1, light.position.y, light.position.z, 1.0f);
+                    const Vector4F reversedXLightPos = Vector4F(light.position.x, -light.position.y, -light.position.z, 1.0f);
                     const Rendering::Buffers::PCB pcb { reversedXLightPos, light.ambient, light.diffuse,
                                                         light.specular , light.color,
                                                                         light.shininess,Vector3F{},cameraPos, 0.0f };
                     mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
                     Rendering::Renderer::GetInstance()->SetRenderTarget();
-
-                    //WIP
-                    // Rendering::Renderer::GetInstance()->GetContext()->PSSetShaderResources(0, 1, myText.GetTexture().GetAddressOf());
-                    // Rendering::Renderer::GetInstance()->GetContext()->PSSetSamplers(0, 1, myText.GetSampleState().GetAddressOf());
-                    
-                    //
 
                     GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
                 }
