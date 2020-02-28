@@ -1,5 +1,7 @@
 #include <stdafx.h>
 #include <3DLoader/ObjectLoader.h>
+#include <3DLoader/ObjectElements/Transform.h>
+#include "Containers/TransformContainer.h"
 
 std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(const std::string& p_file)
 {
@@ -53,7 +55,7 @@ std::shared_ptr<Engine::ObjectElements::Mesh> Engine::ObjectLoader::LoadMesh(aiM
             vertex.m_textCoords = GPM::Vector2D(UV.x, UV.y);
         }
 
-        vertex.m_position = GPM::Vector3D(vert.x, vert.y, -vert.z);
+        vertex.m_position = GPM::Vector3D(vert.x, -vert.y, vert.z);
         vertex.m_normal = GPM::Vector3D(norm.x, norm.y, norm.z);
 
         vertices.emplace_back(vertex);

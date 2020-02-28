@@ -3,6 +3,7 @@
 #include <map>
 #include <memory>
 #include <Components/IComponent.h>
+#include <Containers/IContainer.h>
 
 namespace Engine::Containers
 {
@@ -15,12 +16,12 @@ namespace Engine::Containers
         ComponentContainer(const ComponentContainer&&) = delete;
 
         template <class T, typename ...Args>
-        static int32_t AddComponent(Args& ... p_args)
+        static int32_t AddComponent(Objects::GameObject* p_gameObject, Args& ... p_args)
         {
             int32_t id = -1;
 
             //TODO: Possible memory leak here
-            T* newComp = new T(p_args...);
+            T* newComp = new T(p_gameObject, p_args...);
 
             if (dynamic_cast<Components::IComponent*>(newComp)->GetID() >= 0)
                 id = ComponentContainer::AddComponent(newComp);

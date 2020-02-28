@@ -10,8 +10,8 @@ namespace Engine::Components
     class API_ENGINE LightComponent: public IComponent
     {
     public:
-        LightComponent();
-        LightComponent(Rendering::Lights::Light::LightData p_lightData);
+        LightComponent(Objects::GameObject* p_gameObject);
+        LightComponent(Objects::GameObject* p_gameObject, Rendering::Lights::Light::LightData& p_lightData);
         bool operator==(IComponent* p_other) override;
         bool DeleteFromMemory() override;
 

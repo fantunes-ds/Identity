@@ -27,16 +27,16 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContaine
 
     if (model == nullptr)
     {
-		const std::string error("ModelManager::AddModel(const std::string& p_path, const std::string& p_name): Could not load model at " + p_path + " because there was no object to be found at that path");
-		MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);       
-		return nullptr;
+        const std::string error("ModelManager::AddModel(const std::string& p_path, const std::string& p_name): Could not load model at " + p_path + " because there was no object to be found at that path");
+        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+        return nullptr;
     }
     model->SetName(p_name);
 
     for (auto& mesh : model->GetMeshes())
         mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
 
-    for (auto& existingModel: ModelContainer->m_models)
+    for (auto& existingModel : ModelContainer->m_models)
     {
         if (*existingModel.second == *model)
         {
@@ -64,7 +64,7 @@ bool Engine::Containers::ModelContainer::RemoveModel(int32_t p_id)
 
 int32_t Engine::Containers::ModelContainer::FindModel(const std::string& p_name)
 {
-    for (const auto& model: GetInstance()->GetAllModels())
+    for (const auto& model : GetInstance()->GetAllModels())
     {
         if (model.second->GetName() == p_name)
             return model.first;
