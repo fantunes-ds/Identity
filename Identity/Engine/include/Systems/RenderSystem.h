@@ -32,5 +32,9 @@ namespace Engine::Systems
         std::map<int, std::shared_ptr<Rendering::Lights::Light>> m_lights;
 
         int32_t m_activeCamera = -1;
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D>          m_renderTargetTextureMap;
+        Microsoft::WRL::ComPtr<ID3D11RenderTargetView>   m_renderTargetViewMap;
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_shaderResourceViewMap;
     };
 }

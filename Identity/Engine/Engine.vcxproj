@@ -278,6 +278,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Tools\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="include\Tools\ImGUI\imstb_textedit.h" />
     <ClInclude Include="include\Tools\ImGUI\imstb_truetype.h" />
+    <ClInclude Include="include\UI\UIManager.h" />
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
@@ -299,6 +300,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\3DLoader\ObjectElements\Mesh.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Transform.cpp" />
     <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
+    <ClCompile Include="src\UI\UIManager.cpp" />
     <ClInclude Include="src\Core\App.h" />
     <ClCompile Include="src\Rendering\Buffers\InputLayout.cpp" />
     <ClCompile Include="src\Containers\TransformContainer.cpp" />

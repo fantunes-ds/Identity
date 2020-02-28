@@ -195,6 +195,9 @@
     <ClInclude Include="include\Rendering\Lights\ILight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\UI\UIManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\TestDependencies.cpp">
@@ -338,7 +341,13 @@
     <ClCompile Include="src\Containers\MaterialContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Components\IComponent.cpp">
+    <ClCompile Include="src\Rendering\Lights\Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\LightComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI\UIManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

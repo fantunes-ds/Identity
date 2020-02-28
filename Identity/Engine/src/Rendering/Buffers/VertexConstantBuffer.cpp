@@ -17,8 +17,7 @@ void VertexConstantBuffer::GenBuffers()
     vertexBufferDesc.StructureByteStride            = 0u;
     D3D11_SUBRESOURCE_DATA VertexConstantShaderData = {};
     VertexConstantShaderData.pSysMem                = &m_vcb;
-    GFX_THROW_INFO(Renderer::GetInstance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &VertexConstantShaderData, &m_buffer
-                   ));
+    GFX_THROW_INFO(Renderer::GetInstance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &VertexConstantShaderData, &m_buffer));
 
     Renderer::GetInstance()->GetContext()->VSSetConstantBuffers(0u, 1u, m_buffer.GetAddressOf());
 }

@@ -49,11 +49,7 @@ int App::Run() const
     Containers::MaterialContainer::GetMaterial("LamboTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
     Containers::MaterialContainer::GetMaterial("LamboTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
 
-    // Containers::ModelContainer::AddModel("../Engine/Resources/YoungLink.obj", "statue");
-    // Containers::ModelContainer::AddModel("../Engine/Resources/Lambo.obj", "lambo");
-
     camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-
 
     Containers::LightContainer* test = Containers::LightContainer::GetInstance();
 
@@ -98,8 +94,6 @@ int App::Run() const
 
     renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::CameraComponent>()->GetCamera()->GetID());
 
-
-
     while (true)
     {
         if (const auto eCode = Rendering::Window::ProcessMessage())
@@ -114,14 +108,6 @@ int App::Run() const
 void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
 {
     Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
-    if (_INPUT->keyboard.IsKeyHeld('R'))
-        Rendering::Renderer::GetInstance()->ClearBuffers(1.0f, 0.0f, 0.0f);
-
-    if (_INPUT->keyboard.IsKeyHeld('G'))
-        Rendering::Renderer::GetInstance()->ClearBuffers(0.0f, 1.0f, 0.0f);
-
-    if (_INPUT->keyboard.IsKeyHeld('B'))
-        Rendering::Renderer::GetInstance()->ClearBuffers(0.0f, 0.0f, 1.0f);
 
     if (_INPUT->keyboard.IsKeyDown('F'))
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());
@@ -131,11 +117,6 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
     ImGui::NewFrame();
 
     p_renderSystem.Update();
-
-    static bool show_demo_window = true;
-    ImGui::Begin("Identity UI Tools");
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    ImGui::End();
 
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

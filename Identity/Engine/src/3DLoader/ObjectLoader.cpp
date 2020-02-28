@@ -56,7 +56,7 @@ std::shared_ptr<Engine::ObjectElements::Mesh> Engine::ObjectLoader::LoadMesh(aiM
         }
 
         vertex.m_position = GPM::Vector3D(vert.x, -vert.y, vert.z);
-        vertex.m_normal = GPM::Vector3D(norm.x, norm.y, norm.z);
+        vertex.m_normal = GPM::Vector3D(norm.x, -norm.y, norm.z);
 
         vertices.emplace_back(vertex);
     }

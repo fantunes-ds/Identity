@@ -75,6 +75,17 @@ void Renderer::ResetContext()
     m_pContext->Flush();
 }
 
+void Renderer::SetRenderTarget()
+{
+    m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
+}
+
+void Renderer::SetRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target)
+{
+    m_pContext->OMSetRenderTargets(1, &p_target, m_pDepthStencilView.Get());
+}
+
+
 void Renderer::CreateSwapChain(const HWND& p_hwnd)
 {
     HRESULT hr;
@@ -198,9 +209,53 @@ void Renderer::SetBackBuffer()
 {
     HRESULT hr;
 
+    //D3D11_TEXTURE2D_DESC            textureDesc;
+    //D3D11_RENDER_TARGET_VIEW_DESC   renderTargetViewDesc;
+    //D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+
+    /////////////////////////// Map's Texture
+    //// Initialize the  texture description.
+    //ZeroMemory(&textureDesc, sizeof(textureDesc));
+
+    //// Setup the texture description.
+    //// We will have our map be a square
+    //// We will need to have this texture bound as a render target AND a shader resource
+    //textureDesc.Width = m_width / 2;
+    //textureDesc.Height = m_height / 2;
+    //textureDesc.MipLevels = 1;
+    //textureDesc.ArraySize = 1;
+    //textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    //textureDesc.SampleDesc.Count = 1;
+    //textureDesc.Usage = D3D11_USAGE_DEFAULT;
+    //textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    //textureDesc.CPUAccessFlags = 0;
+    //textureDesc.MiscFlags = 0;
+
+    ///////////////////////// Map's Render Target
+    //// Setup the description of the render target view.
+    //renderTargetViewDesc.Format = textureDesc.Format;
+    //renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+    //renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+    //GetDevice()->CreateTexture2D(&textureDesc, NULL, &m_renderTargetTextureMap);
+
     Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
     GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
-    GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
+    GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(*backBuffer.GetAddressOf(), nullptr, &m_pTarget));
+
+    //GetDevice()->CreateRenderTargetView(*m_renderTargetTextureMap.GetAddressOf(), &renderTargetViewDesc, &m_renderTargetViewMap);
+
+    ///////////////////////// Map's Shader Resource View
+    //// Setup the description of the shader resource view.
+    //shaderResourceViewDesc.Format = textureDesc.Format;
+    //shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    //shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+    //shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+    //// Create the shader resource view.
+    //GetDevice()->CreateShaderResourceView(*m_renderTargetTextureMap.GetAddressOf(), &shaderResourceViewDesc, &m_shaderResourceViewMap);
+    ////const float colour[] = { 0.5f, 0.3f, 0.3f, 1.0f };
+    ////GetContext()->ClearRenderTargetView(m_renderTargetViewMap.Get(), colour);
 }
 
 void Renderer::Resize(const float& p_width, const float& p_height)
@@ -268,24 +323,6 @@ void Renderer::ChangeResolution()
 {
     const char* res[] = { "1920x1080", "1280x720", "800x600" };
     static const char* currentItem = "1920x1080";
-
-    if (ImGui::Begin("Render Tool"))
-    {
-        // ImGui::SliderFloat("Camera FOV", &angle, 10.f, 180.f, "%1.f");
-        if (ImGui::BeginCombo("Fullscreen Resolution", currentItem, ImGuiComboFlags_NoArrowButton))
-        {
-            for (auto& re : res)
-            {
-                const bool isSelected = (currentItem == re); // You can store your selection however you want, outside or inside your objects
-                if (ImGui::Selectable(re, isSelected))
-                    currentItem = re;
-                if (isSelected)
-                    ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
-            }
-
-            ImGui::EndCombo();
-        }
-    }ImGui::End();
 
     std::string selected = currentItem;
     std::replace(selected.begin(), selected.end(), 'x', ' ');

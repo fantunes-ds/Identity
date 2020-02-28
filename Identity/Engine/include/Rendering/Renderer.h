@@ -81,6 +81,11 @@ namespace Engine::Rendering
          @brief Reset the base colour of the back buffer
          */
         void ClearBuffers(const float& p_red, const float& p_green, const float& p_blue) const;
+        /*
+         @brief Set the Render Target to the window. Need to be done before every draw
+        */
+        void SetRenderTarget();
+        void SetRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target);
 
         /*
         @brief Set the renderer to fullscreen and call the Resize method
@@ -94,12 +99,16 @@ namespace Engine::Rendering
         void GetResolution(int& p_width, int& p_height);
 
         [[nodiscard]] const bool& GetFullscreenState() const { return isFullscreen; }
-        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() const { return m_pDevice; };
-        [[nodiscard]] const Microsoft::WRL::ComPtr<IDXGISwapChain>& GetSwapChain() const { return m_pSwapChain; };
-        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() const { return m_pContext; };
-        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& GetTarget() const { return m_pTarget; };
-        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& GetDepthStencil() const { return m_pDepthStencilView; };
-        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3DBlob>& GetBlob() const { return m_blob; };
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() const { return m_pDevice; }
+        [[nodiscard]] const Microsoft::WRL::ComPtr<IDXGISwapChain>& GetSwapChain() const { return m_pSwapChain; }
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() const { return m_pContext; }
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& GetTarget() const { return m_pTarget; }
+        //[[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& GetRenderTextureTarget() const { return m_renderTargetViewMap; }
+        //[[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& GetShaderResourceView() const { return m_shaderResourceViewMap; }
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& GetDepthStencilView() const { return m_pDepthStencilView; }
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3DBlob>& GetBlob() const { return m_blob; }
+        [[nodiscard]] const float& GetWidth() const { return m_width; }
+        [[nodiscard]] const float& GetHeight() const { return m_height; }
 
     private:
         /*
@@ -134,6 +143,10 @@ namespace Engine::Rendering
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pTarget;
         Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
         Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
+
+        //Microsoft::WRL::ComPtr<ID3D11Texture2D>          m_renderTargetTextureMap;
+        //Microsoft::WRL::ComPtr<ID3D11RenderTargetView>   m_renderTargetViewMap;
+        //Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_shaderResourceViewMap;
 
         bool isFullscreen = false;
         bool m_enable4xMSAA = false;

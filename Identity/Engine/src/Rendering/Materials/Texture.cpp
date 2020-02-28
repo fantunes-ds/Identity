@@ -17,7 +17,7 @@ void Texture::LoadTexture(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, 
 {
     HRESULT hr;
 
-    GFX_THROW_INFO(DirectX::CreateWICTextureFromFile(p_device.Get(), p_path.c_str(), m_text.GetAddressOf(), m_texture.GetAddressOf()));
+    GFX_THROW_INFO(DirectX::CreateWICTextureFromFile(p_device.Get(), p_path.c_str(), m_text.GetAddressOf(), m_texSRV.GetAddressOf()));
 
     D3D11_SAMPLER_DESC samplerDesc = {};
     samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -30,6 +30,6 @@ void Texture::LoadTexture(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, 
 
 void Texture::BindTexture(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
 {
-    p_context->PSSetShaderResources(0, 1, m_texture.GetAddressOf());
+    p_context->PSSetShaderResources(0, 1, m_texSRV.GetAddressOf());
     p_context->PSSetSamplers(0, 1, m_samplerState.GetAddressOf());
 }
