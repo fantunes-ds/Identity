@@ -24,7 +24,7 @@ void Engine::Rendering::Camera::UpdateVectors()
 {
      //Supposedly ok.
      const Quaternion pitch = Quaternion(Vector3F(1.0f, 0.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_pitch));
-     const Quaternion yaw   = Quaternion(Vector3F(0.0f, 1.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_yaw));
+     const Quaternion yaw   = Quaternion(Vector3F(0.0f, 1.0f, 0.0f), GPM::Tools::Utils::ToRadians(-m_yaw));
      const Quaternion roll  = Quaternion(Vector3F(0.0f, 0.0f, 1.0f), GPM::Tools::Utils::ToRadians(0.0f));
     
      auto transform = Containers::TransformContainer::GetTransform(m_transformId);
@@ -38,11 +38,10 @@ void Engine::Rendering::Camera::UpdateCameraPosition()
 {
     auto transform = Containers::TransformContainer::GetTransform(m_transformId);
 
+    float *pos [3] = { &transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z };
     if (ImGui::Begin("Camera Tool"))
     {
-        ImGui::SliderFloat("CameraX", &transform->GetPosition().x, -10.0f, 10.0f, "%.1f");
-        ImGui::SliderFloat("CameraY", &transform->GetPosition().y, -10.0f, 10.0f, "%.1f");
-        ImGui::SliderFloat("CameraZ", &transform->GetPosition().z, -10.0f, 10.0f, "%.1f");
+        ImGui::DragFloat3("CameraPosition", *pos, 0.1f, -10.0f, 10.0f, "%0.1f");
         ImGui::SliderFloat("Camera FOV", &m_fovAngle, 10.f, 180.f, "%1.f");
     }ImGui::End();
 
@@ -88,7 +87,7 @@ void Engine::Rendering::Camera::UpdateCameraPosition()
 
 void Engine::Rendering::Camera::UpdateCameraRotation()
 {
-    const float sensitivity{ 0.1f };
+    const float sensitivity{ 0.3f };
     float xPos{ static_cast<float>(_INPUT->mouse.GetRawPosition()->x) };
     float yPos{ static_cast<float>(_INPUT->mouse.GetRawPosition()->y) };
 
@@ -110,8 +109,8 @@ void Engine::Rendering::Camera::UpdateCameraRotation()
 
      if (ImGui::Begin("Camera Tool"))
      {
-         ImGui::SliderFloat("CameraYaw", &m_yaw, -180.0f, 180.0f, "%.1f");
-         ImGui::SliderFloat("CameraPitch", &m_pitch, -180.0f, 180.0f, "%.1f");
+         ImGui::DragFloat("CameraYaw", &m_yaw, 1.f ,-180.0f, 180.0f, "%.1f");
+         ImGui::DragFloat("CameraPitch", &m_pitch, 1.f,-180.0f, 180.0f, "%.1f");
      }ImGui::End();
 }
 
@@ -119,7 +118,7 @@ void Engine::Rendering::Camera::UpdateViewMatrix()
 {
     auto transform = Containers::TransformContainer::GetTransform(m_transformId);
     const Matrix4F rotation = transform->GetRotation().Conjugate().ToMatrix4().Transpose();
-    const Matrix4F translation = Matrix4F::CreateTranslation(transform->GetPosition());
+    const Matrix4F translation = Matrix4F::CreateTranslation(Vector3F{ -transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z });
 
     m_viewMatrix = rotation * translation;
 }

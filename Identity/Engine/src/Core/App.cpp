@@ -62,8 +62,8 @@ int App::Run() const
     gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
 
     gameObject2.GetTransform()->Translate(Vector3F{6.0f, 5.0f, -4.0f});
-    gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    gameObject2.GetTransform()->RotateWithEulerAngles(Vector3F{ 45.f, 45.f, 0.f });
+    gameObject2.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
+    gameObject2.GetTransform()->RotateWithEulerAngles(Vector3F{ 45.f, 45.f, 90.f });
     gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
 
     camera.GetTransform()->Translate(Vector3F{ 0.0f, 0.0f, -10.0f });

@@ -99,6 +99,13 @@ void Engine::Systems::RenderSystem::DrawScene()
                 }
             }
         }
+        if (ImGui::Begin("DirectionInfo"))
+        {
+            ImGui::Text("Forward: %f | %f | %f", &gameObject.second->GetTransform()->GetForward().x, &gameObject.second->GetTransform()->GetForward().y, &gameObject.second->GetTransform()->GetForward().z);
+            ImGui::Text("Up: %f | %f | %f", gameObject.second->GetTransform()->GetUp().x, gameObject.second->GetTransform()->GetUp().y, gameObject.second->GetTransform()->GetUp().z);
+            ImGui::Text("Right: %f | %f | %f", gameObject.second->GetTransform()->GetRight().x, gameObject.second->GetTransform()->GetRight().y, gameObject.second->GetTransform()->GetRight().z);
+            ImGui::Text("--------------", gameObject.second->GetTransform()->GetRight().x, gameObject.second->GetTransform()->GetRight().y, gameObject.second->GetTransform()->GetRight().z);
+        }ImGui::End();
     }
 
 }

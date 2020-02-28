@@ -65,7 +65,7 @@ namespace Engine::Rendering
 
         float m_zoom{ 45.0f };
         float m_yaw{ 0.0f };
-        float m_pitch{ 0.0f };
+        float m_pitch{ 180.0f };
         float m_lastX{ m_width * 0.5f };
         float m_lastY{ m_height * 0.5f };
 
