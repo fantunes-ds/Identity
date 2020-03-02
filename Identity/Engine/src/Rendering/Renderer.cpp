@@ -80,9 +80,9 @@ void Renderer::SetRenderTarget()
     m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
 }
 
-void Renderer::SetRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target)
+void Renderer::SetRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target) 
 {
-    m_pContext->OMSetRenderTargets(1, &p_target, m_pDepthStencilView.Get());
+    m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), nullptr);
 }
 
 
@@ -153,7 +153,7 @@ void Renderer::SetDepthStencilBuffers()
     descDepth.Height = m_height;
     descDepth.MipLevels = 1;
     descDepth.ArraySize = 1;
-    descDepth.Format = DXGI_FORMAT_D32_FLOAT;
+    descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
     //with 4x msaa
     if (m_enable4xMSAA)
@@ -173,10 +173,10 @@ void Renderer::SetDepthStencilBuffers()
     descDepth.CPUAccessFlags = 0;
     descDepth.MiscFlags = 0;
 
-    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&descDepth, nullptr, &pDepthStencil));
+    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&descDepth, NULL, &pDepthStencil));
 
     D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
-    descDSV.Format = DXGI_FORMAT_D32_FLOAT;
+    descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
     descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     descDSV.Texture2D.MipSlice = 0u;
     GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &m_pDepthStencilView));
@@ -209,53 +209,9 @@ void Renderer::SetBackBuffer()
 {
     HRESULT hr;
 
-    //D3D11_TEXTURE2D_DESC            textureDesc;
-    //D3D11_RENDER_TARGET_VIEW_DESC   renderTargetViewDesc;
-    //D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
-
-    /////////////////////////// Map's Texture
-    //// Initialize the  texture description.
-    //ZeroMemory(&textureDesc, sizeof(textureDesc));
-
-    //// Setup the texture description.
-    //// We will have our map be a square
-    //// We will need to have this texture bound as a render target AND a shader resource
-    //textureDesc.Width = m_width / 2;
-    //textureDesc.Height = m_height / 2;
-    //textureDesc.MipLevels = 1;
-    //textureDesc.ArraySize = 1;
-    //textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-    //textureDesc.SampleDesc.Count = 1;
-    //textureDesc.Usage = D3D11_USAGE_DEFAULT;
-    //textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-    //textureDesc.CPUAccessFlags = 0;
-    //textureDesc.MiscFlags = 0;
-
-    ///////////////////////// Map's Render Target
-    //// Setup the description of the render target view.
-    //renderTargetViewDesc.Format = textureDesc.Format;
-    //renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-    //renderTargetViewDesc.Texture2D.MipSlice = 0;
-
-    //GetDevice()->CreateTexture2D(&textureDesc, NULL, &m_renderTargetTextureMap);
-
     Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
     GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
     GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(*backBuffer.GetAddressOf(), nullptr, &m_pTarget));
-
-    //GetDevice()->CreateRenderTargetView(*m_renderTargetTextureMap.GetAddressOf(), &renderTargetViewDesc, &m_renderTargetViewMap);
-
-    ///////////////////////// Map's Shader Resource View
-    //// Setup the description of the shader resource view.
-    //shaderResourceViewDesc.Format = textureDesc.Format;
-    //shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    //shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-    //shaderResourceViewDesc.Texture2D.MipLevels = 1;
-
-    //// Create the shader resource view.
-    //GetDevice()->CreateShaderResourceView(*m_renderTargetTextureMap.GetAddressOf(), &shaderResourceViewDesc, &m_shaderResourceViewMap);
-    ////const float colour[] = { 0.5f, 0.3f, 0.3f, 1.0f };
-    ////GetContext()->ClearRenderTargetView(m_renderTargetViewMap.Get(), colour);
 }
 
 void Renderer::Resize(const float& p_width, const float& p_height)

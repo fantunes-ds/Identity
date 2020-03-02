@@ -44,8 +44,8 @@ void Engine::Systems::RenderSystem::DrawScene()
     // Setup the texture description.
     // We will have our map be a square
     // We will need to have this texture bound as a render target AND a shader resource
-    textureDesc.Width            = Rendering::Renderer::GetInstance()->GetWidth()/2;
-    textureDesc.Height           = Rendering::Renderer::GetInstance()->GetHeight()/2;
+    textureDesc.Width            = Rendering::Renderer::GetInstance()->GetWidth();
+    textureDesc.Height           = Rendering::Renderer::GetInstance()->GetHeight();
     textureDesc.MipLevels        = 1;
     textureDesc.ArraySize        = 1;
     textureDesc.Format           = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -112,14 +112,13 @@ void Engine::Systems::RenderSystem::DrawScene()
                     Matrix4F view        = camera->GetViewMatrix();
                     Matrix4F perspective = camera->GetPerspectiveMatrix();
 
-                    //normalModel.Transpose();
+                    normalModel.Transpose();
                     perspective.Transpose();
 
                     Rendering::Buffers::VCB vcb{model, view, normalModel, perspective};
                     mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
 
-                    const Vector4F reversedXLightPos = Vector4F(light.position.x * -1, light.position.y, light.position.z,
-                                                                1.0f);
+                    const Vector4F reversedXLightPos = Vector4F(light.position.x * -1, light.position.y, light.position.z, 1.0f);
                     const Rendering::Buffers::PCB pcb{
                         reversedXLightPos, light.ambient, light.diffuse,
                         light.specular, light.color,
@@ -127,13 +126,13 @@ void Engine::Systems::RenderSystem::DrawScene()
                     };
                     mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
 
+                    Rendering::Renderer::GetInstance()->SetRenderTarget();
                     GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
+
 
                     // Set our maps Render Target
-                    Rendering::Renderer::GetInstance()->SetRenderTarget(*m_renderTargetViewMap.GetAddressOf());
-
+                    Rendering::Renderer::GetInstance()->SetRenderTarget(m_renderTargetViewMap);
                     GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
-                    Rendering::Renderer::GetInstance()->SetRenderTarget();
                 }
             }
         }
