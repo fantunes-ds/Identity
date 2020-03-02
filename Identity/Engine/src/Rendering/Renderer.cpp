@@ -48,7 +48,7 @@ void Renderer::EndFrame() const
 {
     HRESULT hr;
 
-    if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
+    if (FAILED(hr = m_pSwapChain->Present(0u, 0u)))
     {
         if (hr == DXGI_ERROR_DEVICE_REMOVED)
         {
@@ -84,7 +84,7 @@ void Renderer::CreateSwapChain(const HWND& p_hwnd)
     swapChainDesc.BufferDesc.Width = 0;
     swapChainDesc.BufferDesc.Height = 0;
     swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-    swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
+    swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
     swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
     swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;

@@ -5,6 +5,7 @@
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
+#include <Tools/FPSCounter.h>
 
 #include <Systems/RenderSystem.h>
 #include <Input/Input.h>
@@ -29,6 +30,8 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 int App::Run() const
 {
     Systems::RenderSystem renderSystem;
+    Tools::FPSCounter fpsCounter(20);
+
     Objects::GameObject gameObject;
     Objects::GameObject gameObject2;
     Objects::GameObject camera;
@@ -83,7 +86,7 @@ int App::Run() const
     camera.AddComponent<Components::CameraComponent>(m_width, m_height);
     // gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
     // gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
-    light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
+    //light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
     light.AddComponent<Components::LightComponent>(dirLight);
 
     for (auto& mesh : gameObject.GetModel()->GetMeshes())
@@ -102,12 +105,17 @@ int App::Run() const
 
     while (true)
     {
+        fpsCounter.Start();
+
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;
         }
 
         DoFrame(renderSystem);
+
+        fpsCounter.Stop();
+        m_window.SetTitle(std::to_string(fpsCounter.GetFPS()));
     }
 }
 

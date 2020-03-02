@@ -195,6 +195,9 @@
     <ClInclude Include="include\Rendering\Lights\ILight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Tools\FPSCounter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\TestDependencies.cpp">
@@ -339,6 +342,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Components\IComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\FPSCounter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
