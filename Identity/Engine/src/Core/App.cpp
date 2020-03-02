@@ -29,8 +29,8 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 int App::Run() const
 {
     Systems::RenderSystem renderSystem;
-    Objects::GameObject gameObject;
-    Objects::GameObject gameObject2("car");
+    Objects::GameObject statue;
+    Objects::GameObject lambo("car");
     Objects::GameObject camera("Camera");
     Objects::GameObject light("Light");
 
@@ -54,39 +54,39 @@ int App::Run() const
 
     Containers::LightContainer* test = Containers::LightContainer::GetInstance();
 
-    gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
-    gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    statue.GetTransform()->Translate(Vector3F{ 3.0f, 0.0f, 4.0f });
+    statue.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
 
-    gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
-    gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    lambo.GetTransform()->Translate(Vector3F{ 6.0f, 0.0f, -4.0f });
+    lambo.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
 
 
-    light.GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
-    light.GetTransform()->Scale(Vector3F{0.01f, 0.01f, 0.01f});
+    light.GetTransform()->Translate(Vector3F{ 10.0f, 4.0f, -10.0f });
+    light.GetTransform()->Scale(Vector3F{ 0.01f, 0.01f, 0.01f });
 
     Rendering::Lights::Light::LightData dirLight;
 
-    dirLight.position  = Vector4F(light.GetTransform()->GetPosition().x * -1, light.GetTransform()->GetPosition().y, light.GetTransform()->GetPosition().z * -1, 1.0f);
-    dirLight.ambient   = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
-    dirLight.diffuse   = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
-    dirLight.specular  = Vector4F(0.5f, 0.5f ,0.5f, 1.0f);
-    dirLight.color     = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
+    dirLight.position = Vector4F(light.GetTransform()->GetPosition().x * -1, light.GetTransform()->GetPosition().y, light.GetTransform()->GetPosition().z * -1, 1.0f);
+    dirLight.ambient = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
+    dirLight.diffuse = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
+    dirLight.specular = Vector4F(0.5f, 0.5f, 0.5f, 1.0f);
+    dirLight.color = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
     dirLight.shininess = 32.0f;
 
     int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    // gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
-     gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+    statue.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
+    lambo.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
     //light.AddComponent<Components::ModelComponent>("../Engine/Resources/Wood_Box.fbx", "cube");
     light.AddComponent<Components::LightComponent>(dirLight);
 
+    lambo.SetParentObject(statue);
 
-    
     /*for (auto& mesh : gameObject.GetModel()->GetMeshes())
     {
         mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LinkTexture"));
     }*/
 
-    for (auto& mesh : gameObject2.GetModel()->GetMeshes())
+    for (auto& mesh : lambo.GetModel()->GetMeshes())
     {
         mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LamboTexture"));
     }
@@ -97,7 +97,7 @@ int App::Run() const
 
     while (true)
     {
-        gameObject2.GetTransform()->RotateWithEulerAngles(GPM::Vector3F(0.0f, 0.5f, 0.0f));
+        lambo.GetTransform()->RotateWithEulerAngles(GPM::Vector3F(0.0f, 0.5f, 0.0f));
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;

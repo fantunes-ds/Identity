@@ -18,14 +18,9 @@ namespace Engine::Objects
         GameObject(const std::string& p_name);
         ~GameObject() = default;
 
-        [[nodiscard]] std::shared_ptr<ObjectElements::Transform> GetTransform() const;
-        [[nodiscard]] inline uint32_t GetTransformID() const { return m_transform; }
-        [[nodiscard]] std::shared_ptr<ObjectElements::Model> GetModel() const;
+        //TODO: works when modifying parent's transform, but doesn't work when modifying child's transform
+        void SetParentObject(GameObject& p_parent);
 
-        inline std::vector<int32_t>& GetAllComponents() { return m_components; }
-        inline void SetTransform(int32_t p_transform) { m_transform = p_transform; }
-
-        bool operator==(GameObject& p_other) const;
         bool RemoveComponent(int32_t p_id);
 
         template <class T, typename ...Args>
@@ -88,6 +83,15 @@ namespace Engine::Objects
 
             return foundComps;
         }
+
+        [[nodiscard]] std::shared_ptr<ObjectElements::Transform> GetTransform() const;
+        [[nodiscard]] inline uint32_t GetTransformID() const { return m_transform; }
+        [[nodiscard]] std::shared_ptr<ObjectElements::Model> GetModel() const;
+
+        inline std::vector<int32_t>& GetAllComponents() { return m_components; }
+        inline void SetTransform(int32_t p_transform) { m_transform = p_transform; }
+
+        bool operator==(GameObject& p_other) const;
 
     private:
         int32_t m_transform = -1;

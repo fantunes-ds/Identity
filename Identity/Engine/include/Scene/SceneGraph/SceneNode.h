@@ -29,6 +29,7 @@ namespace Engine::Scene
 
         void SetTransform(int32_t p_trans) { m_transform = p_trans; }
         void SetMesh(std::shared_ptr<ObjectElements::Mesh> p_mesh) { m_mesh = p_mesh; }
+        void SetParent(SceneNode* p_parent) { m_parent = p_parent; }
 
     protected:
         SceneNode* m_parent = nullptr;
