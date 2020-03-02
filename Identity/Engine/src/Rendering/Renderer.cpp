@@ -173,6 +173,10 @@ void Renderer::SetDepthStencilBuffers()
     m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
 }
 
+void Renderer::SetRenderTarget()
+{
+    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
+}
 
 void Renderer::SetViewPort(const float& p_width, const float& p_height) const
 {
