@@ -82,7 +82,7 @@ void Renderer::SetRenderTarget()
 
 void Renderer::SetRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target) 
 {
-    m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), nullptr);
+    m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), m_pDepthStencilView.Get());
 }
 
 
@@ -181,7 +181,7 @@ void Renderer::SetDepthStencilBuffers()
     descDSV.Texture2D.MipSlice = 0u;
     GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &m_pDepthStencilView));
 
-    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
+    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), nullptr);
 }
 
 

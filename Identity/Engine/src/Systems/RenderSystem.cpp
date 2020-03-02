@@ -48,7 +48,7 @@ void Engine::Systems::RenderSystem::DrawScene()
     textureDesc.Height           = Rendering::Renderer::GetInstance()->GetHeight();
     textureDesc.MipLevels        = 1;
     textureDesc.ArraySize        = 1;
-    textureDesc.Format           = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    textureDesc.Format           = DXGI_FORMAT_B8G8R8A8_UNORM;
     textureDesc.SampleDesc.Count = 1;
     textureDesc.Usage            = D3D11_USAGE_DEFAULT;
     textureDesc.BindFlags        = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
@@ -126,10 +126,6 @@ void Engine::Systems::RenderSystem::DrawScene()
                     };
                     mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
 
-                    Rendering::Renderer::GetInstance()->SetRenderTarget();
-                    GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
-
-
                     // Set our maps Render Target
                     Rendering::Renderer::GetInstance()->SetRenderTarget(m_renderTargetViewMap);
                     GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
@@ -144,10 +140,14 @@ void Engine::Systems::RenderSystem::DrawScene()
             ImGui::Text("--------------", gameObject.second->GetTransform()->GetRight().x, gameObject.second->GetTransform()->GetRight().y, gameObject.second->GetTransform()->GetRight().z);
         }ImGui::End();
     }
-                    ImGui::Begin("Scene");
-                    //ImGui::Image(Rendering::Renderer::GetInstance()->GetShaderResourceView().Get(), ImVec2(Rendering::Renderer::GetInstance()->GetWidth() / 2, Rendering::Renderer::GetInstance()->GetHeight() / 2));
-                    ImGui::Image(m_shaderResourceViewMap.Get(), ImVec2(textureDesc.Width, textureDesc.Height));
-                    ImGui::End();
+    static bool open = true;
+    ImGuiWindowFlags window_flags = !ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoScrollbar;
+    ImGui::Begin("Scene", &open, window_flags);
+    ImGui::SetScrollX(ImGui::GetScrollMaxX() * 0.5f);
+    ImGui::SetScrollY(ImGui::GetScrollMaxY() * 0.5f);
+    ImGui::Image(m_shaderResourceViewMap.Get(), ImVec2(textureDesc.Width,
+                                                                       textureDesc.Height));
+    ImGui::End();
 }
 
 void Engine::Systems::RenderSystem::Update()
