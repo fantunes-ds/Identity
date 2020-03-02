@@ -39,10 +39,13 @@ void Engine::Systems::RenderSystem::DrawScene()
     //TODO: Light will be moved soon
     if (ImGui::Begin("Lighting Tool"))
     {
-        ImGui::DragFloat3("LightPos", *pos,0.1f , -40.0f, 40.0f, "%.1f");
+        ImGui::DragFloat3("LightPos", *pos,0.1f , -90.0f, 90.0f, "%.1f");
         ImGui::SliderFloat("LightColR", &light.color.x, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("LightColG", &light.color.y, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("LightColB", &light.color.z, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("SpecColR", &light.specular.x, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("SpecColG", &light.specular.y, 0.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("SpecColB", &light.specular.z, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("Ambient LightX", &light.ambient.x, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("Ambient LightY", &light.ambient.y, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("Ambient LightZ", &light.ambient.z, 0.0f, 1.0f, "%.1f");
@@ -65,21 +68,23 @@ void Engine::Systems::RenderSystem::DrawScene()
                     Matrix4F model = Containers::TransformContainer::FindTransform(gameObject.second->GetTransformID())->GetTransformMatrix();
 
                     Matrix4F normalModel = Matrix4F::Inverse(model);
+                    OutputDebugString(normalModel.ToString().c_str());
 
                     Matrix4F view = camera->GetViewMatrix();
                     Matrix4F perspective = camera->GetPerspectiveMatrix();
 
                     perspective.Transpose();
+                    //normalModel.Transpose();
 
                     Rendering::Buffers::VCB vcb { model, view, normalModel,perspective };
                     mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
 
                     const Vector3F cameraPos = camera->GetPosition();
 
-                    const Vector4F reversedXLightPos = Vector4F(light.position.x, -light.position.y, -light.position.z, 1.0f);
+                    const Vector4F reversedXLightPos = Vector4F(light.position.x, light.position.y, -light.position.z, 1.0f);
                     const Rendering::Buffers::PCB pcb { reversedXLightPos, light.ambient, light.diffuse,
                                                         light.specular , light.color,
-                                                                        light.shininess,Vector3F{},cameraPos, 0.0f };
+                                                                        light.shininess,Vector3F{},Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, 0.0f };
                     mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
                     Rendering::Renderer::GetInstance()->SetRenderTarget();
 
@@ -89,7 +94,7 @@ void Engine::Systems::RenderSystem::DrawScene()
         }
         if (ImGui::Begin("DirectionInfo"))
         {
-            ImGui::Text("Forward: %f | %f | %f", &gameObject.second->GetTransform()->GetForward().x, &gameObject.second->GetTransform()->GetForward().y, &gameObject.second->GetTransform()->GetForward().z);
+            ImGui::Text("Forward: %f | %f | %f", gameObject.second->GetTransform()->GetForward().x, gameObject.second->GetTransform()->GetForward().y, gameObject.second->GetTransform()->GetForward().z);
             ImGui::Text("Up: %f | %f | %f", gameObject.second->GetTransform()->GetUp().x, gameObject.second->GetTransform()->GetUp().y, gameObject.second->GetTransform()->GetUp().z);
             ImGui::Text("Right: %f | %f | %f", gameObject.second->GetTransform()->GetRight().x, gameObject.second->GetTransform()->GetRight().y, gameObject.second->GetTransform()->GetRight().z);
             ImGui::Text("--------------", gameObject.second->GetTransform()->GetRight().x, gameObject.second->GetTransform()->GetRight().y, gameObject.second->GetTransform()->GetRight().z);

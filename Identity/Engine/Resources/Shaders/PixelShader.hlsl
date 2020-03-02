@@ -33,14 +33,16 @@ static bool blinn = true;
 
 float4 main(VS_OUT f_in) : SV_TARGET
 {
-    f_in.norm = normalize(f_in.norm);
-    
+    // ambient calculations
     float3 ambient = light.ambient * light.color;
-    float3 lightDir = normalize(light.position.rgb - f_in.worldPos);
     
+    //diffuse
+    f_in.norm = normalize(f_in.norm);
+    float3 lightDir = normalize(light.position.rgb - f_in.worldPos);
     float diff = max(dot(f_in.norm, lightDir), 0.0);
     float3 diffuse = diff * light.color;
     
+    //specular
     float3 viewDir = normalize(cameraPos - f_in.worldPos);
     float spec = 0.0f;
     if (blinn)
@@ -57,4 +59,5 @@ float4 main(VS_OUT f_in) : SV_TARGET
     f_in.vertexColor = shaderTexture.Sample(SampleType, f_in.tex);
     f_in.vertexColor = float4(ambient + diffuse + specular, 1) * f_in.vertexColor;
     return f_in.vertexColor;
+
 }

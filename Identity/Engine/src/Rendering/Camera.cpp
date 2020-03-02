@@ -23,7 +23,7 @@ m_transformId(p_transformId), m_width(static_cast<float>(p_width)), m_height(sta
 void Engine::Rendering::Camera::UpdateVectors()
 {
      //Supposedly ok.
-     const Quaternion pitch = Quaternion(Vector3F(1.0f, 0.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_pitch));
+     const Quaternion pitch = Quaternion(Vector3F(-1.0f, 0.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_pitch));
      const Quaternion yaw   = Quaternion(Vector3F(0.0f, 1.0f, 0.0f), GPM::Tools::Utils::ToRadians(-m_yaw));
      const Quaternion roll  = Quaternion(Vector3F(0.0f, 0.0f, 1.0f), GPM::Tools::Utils::ToRadians(0.0f));
     
@@ -45,7 +45,7 @@ void Engine::Rendering::Camera::UpdateCameraPosition()
         ImGui::SliderFloat("Camera FOV", &m_fovAngle, 10.f, 180.f, "%1.f");
     }ImGui::End();
 
-    if (ImGui::Begin("DirectionInfo"))
+    if (ImGui::Begin("Camera DirectionInfo"))
     {
         ImGui::Text("Forward: %f | %f | %f", transform->GetForward().x, transform->GetForward().y, transform->GetForward().z);
         ImGui::Text("Up: %f | %f | %f", transform->GetUp().x, transform->GetUp().y, transform->GetUp().z);
@@ -65,24 +65,22 @@ void Engine::Rendering::Camera::UpdateCameraPosition()
     {
         transform->Translate(transform->GetForward() * m_speed * -1);
     }
+    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
+    {
+        transform->Translate(transform->GetRight() * m_speed );
+    }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
     {
         transform->Translate(transform->GetRight() * m_speed * -1);
     }
-    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
-    {
-        transform->Translate(transform->GetRight() * m_speed);
-    }
-
-    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::Q))
+    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::E))
     {
         transform->Translate(transform->GetUp() * m_speed);
     }
-    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::E))
+    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::Q))
     {
         transform->Translate(transform->GetUp() * m_speed * -1);
     }
-
 }
 
 void Engine::Rendering::Camera::UpdateCameraRotation()
@@ -116,9 +114,12 @@ void Engine::Rendering::Camera::UpdateCameraRotation()
 
 void Engine::Rendering::Camera::UpdateViewMatrix()
 {
+
     auto transform = Containers::TransformContainer::GetTransform(m_transformId);
+    std::string gopos = "go x : " + std::to_string(transform->GetPosition().x) + "y : " + std::to_string(transform->GetPosition().y) + "z : " + std::to_string(transform->GetPosition().z + '\n');
+    OutputDebugString(gopos.c_str());
     const Matrix4F rotation = transform->GetRotation().Conjugate().ToMatrix4().Transpose();
-    const Matrix4F translation = Matrix4F::CreateTranslation(Vector3F{ -transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z });
+    const Matrix4F translation = Matrix4F::CreateTranslation(Vector3F{ -transform->GetPosition().x, -transform->GetPosition().y, transform->GetPosition().z});
 
     m_viewMatrix = rotation * translation;
 }
@@ -133,7 +134,7 @@ void Engine::Rendering::Camera::UpdateResolution(const float p_width, const floa
 void Engine::Rendering::Camera::UpdatePerspectiveMatrix() noexcept
 {
     const float twoNearZ = m_nearZ + m_nearZ;
-    const float fRange = m_farZ / (m_farZ - m_nearZ);
+    const float fRange = m_farZ / (m_nearZ - m_farZ);
 
     const float radAngle = GPM::Tools::Utils::ToRadians(m_fovAngle);
 
@@ -147,6 +148,6 @@ void Engine::Rendering::Camera::UpdatePerspectiveMatrix() noexcept
 
     m_perspectiveMatrix = Matrix4F{xScale, 0.0f, 0.0f, 0.0f,
                                         0.0f, yScale, 0.0f, 0.0f,
-                                        0.0f, 0.0f, fRange, 1.0f,
-                                        0.0f, 0.0f, -m_nearZ * fRange, 0.0f};
+                                        0.0f, 0.0f, fRange, -1.0f,
+                                        0.0f, 0.0f, m_nearZ * fRange, 0.0f};
 }

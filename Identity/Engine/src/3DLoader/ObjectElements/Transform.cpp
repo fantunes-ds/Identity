@@ -32,7 +32,7 @@ Engine::ObjectElements::Transform::Transform(const Transform& p_other) :
 
 void Engine::ObjectElements::Transform::Translate(const Vector3F& p_vector)
 {
-    m_position += Vector3F{ p_vector.x, -p_vector.y, p_vector.z};
+    m_position += Vector3F{ p_vector.x, p_vector.y, p_vector.z};
     UpdateTransformMatrix();
 }
 
@@ -41,7 +41,7 @@ void Engine::ObjectElements::Transform::RotateWithEulerAngles(const Vector3F& p_
 {
     //TODO: check if it properly accepts angles > 360
     Quaternion quat;
-    quat.MakeFromEuler(Vector3F{-p_euler.x, p_euler.y, p_euler.z});
+    quat.MakeFromEuler(Vector3F{p_euler.x, p_euler.y, p_euler.z});
     m_rotation *= quat;
     CalculateAxes();
     UpdateTransformMatrix();
@@ -72,16 +72,15 @@ std::shared_ptr<Engine::ObjectElements::Transform> Engine::ObjectElements::Trans
 
 void Engine::ObjectElements::Transform::CalculateAxes()
 {
-    Quaternion quatfwd = (m_rotation * Vector3F::forward * m_rotation.Conjugate());
-    Vector3F vec3fwd = quatfwd.GetRotationAxis();
-    m_forward = Vector3F{ vec3fwd.x,vec3fwd.y, -vec3fwd.z };
-    m_right = Vector3F::Cross(Vector3F::up, m_forward);
-    m_up = Vector3F::Cross(m_forward, m_right);
-    
-    // m_forward = Vector3F(-m_transform[2], -m_transform[6], -m_transform[10]);
-    // m_up = Vector3F(-m_transform[1], -m_transform[5], -m_transform[9]);
-    // m_right = Vector3F(m_transform[0], m_transform[4], m_transform[8]);
-
+    Quaternion quatf = (m_rotation * Vector3F::forward * m_rotation.Conjugate());
+    Quaternion quatr = (m_rotation * Vector3F::right * m_rotation.Conjugate());
+    Quaternion quatu = (m_rotation * Vector3F::up * m_rotation.Conjugate());
+    Vector3F vec3f = quatf.GetRotationAxis();
+    Vector3F vec3r = quatr.GetRotationAxis();
+    Vector3F vec3u = quatu.GetRotationAxis();
+    m_forward = Vector3F{ -vec3f.x,-vec3f.y, vec3f.z };
+    m_right = Vector3F{ vec3r.x,vec3r.y, vec3r.z };
+    m_up = Vector3F{ vec3u.x,vec3u.y, -vec3u.z };
     
     UpdateTransformMatrix();
 }
