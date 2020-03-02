@@ -13,7 +13,7 @@ namespace Engine::Containers
         CameraContainer(const CameraContainer&) = delete;
         CameraContainer(const CameraContainer&&) = delete;
 
-        static int32_t AddCamera(Rendering::Camera* p_camera);
+        static int32_t AddCamera(std::shared_ptr<Rendering::Camera> p_camera);
         static bool RemoveCamera(int32_t p_id);
 
         static CameraContainer* GetInstance();

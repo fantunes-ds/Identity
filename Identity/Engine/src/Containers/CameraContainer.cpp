@@ -19,11 +19,11 @@ Engine::Containers::CameraContainer* Engine::Containers::CameraContainer::GetIns
     return m_instance;
 }
 
-int32_t Engine::Containers::CameraContainer::AddCamera(Rendering::Camera* p_camera)
+int32_t Engine::Containers::CameraContainer::AddCamera(std::shared_ptr<Rendering::Camera> p_camera)
 {
     int32_t id = p_camera->GetID();
 
-    GetInstance()->m_cameras.insert_or_assign(id, std::make_shared<Rendering::Camera>(*p_camera));
+    GetInstance()->m_cameras.insert_or_assign(id, std::shared_ptr<Rendering::Camera>(p_camera));
 
     return id;
 }

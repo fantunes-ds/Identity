@@ -1,12 +1,12 @@
 #include <stdafx.h>
 #include <Components/ModelComponent.h>
 
-Engine::Components::ModelComponent::ModelComponent(const std::string& p_name)
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name): IComponent{ p_gameObject }
 {
     m_model = Containers::ModelContainer::FindModel(p_name);
 }
 
-Engine::Components::ModelComponent::ModelComponent(const std::string& p_file, const std::string& p_name)
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file, const std::string& p_name): IComponent{ p_gameObject }
 {
     Containers::ModelContainer::AddModel(p_file, p_name);
     m_model = Containers::ModelContainer::FindModel(p_name);

@@ -16,10 +16,11 @@ namespace Engine
     public:
         EventCallback(T* p_instance, void(T::* p_function)()) :
             m_function{ p_function }, m_instance{ p_instance }, m_id{ ++m_staticId } {}
+        ~EventCallback() = default;
 
         //@warning DO NOT USE, not functional yet
         template<typename ...Args, typename ...funcArgs>
-        EventCallback(T* p_instance, void(T::* p_function)(funcArgs...), Args&&... p_args) :
+        EventCallback(T* p_instance, void(T::* p_function)(funcArgs...), Args&& ... p_args) :
             m_function{ p_function(&p_args...) }, m_instance{ p_instance }, m_id{ ++m_staticId } {}
 
         void operator () () override { (m_instance->*m_function)(); }
@@ -32,11 +33,12 @@ namespace Engine
 
             if (p_other == nullptr || callback == nullptr)
                 return false;
-           
+
 
             return (callback->m_function == m_function &&
                 callback->m_instance == m_instance);
         }
+
         bool operator == (EventCallback<T>& p_other)
         {
             if (p_other == nullptr)

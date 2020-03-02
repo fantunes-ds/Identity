@@ -32,8 +32,7 @@ Engine::ObjectElements::Transform::Transform(const Transform& p_other) :
 
 void Engine::ObjectElements::Transform::Translate(const Vector3F& p_vector)
 {
-
-    m_position += Vector3F{ p_vector.x * - 1.0f, p_vector.y, p_vector.z * - 1.0f };
+    m_position += Vector3F{ p_vector.x, -p_vector.y, p_vector.z};
     UpdateTransformMatrix();
 }
 
@@ -42,7 +41,7 @@ void Engine::ObjectElements::Transform::RotateWithEulerAngles(const Vector3F& p_
 {
     //TODO: check if it properly accepts angles > 360
     Quaternion quat;
-    quat.MakeFromEuler(p_euler);
+    quat.MakeFromEuler(Vector3F{-p_euler.x, p_euler.y, p_euler.z});
     m_rotation *= quat;
     CalculateAxes();
     UpdateTransformMatrix();
@@ -57,8 +56,8 @@ void Engine::ObjectElements::Transform::Scale(const Vector3F& p_scale)
 void Engine::ObjectElements::Transform::UpdateTransformMatrix()
 {
     m_transform = Matrix4F::CreateTransformation(m_position,
-                                                          m_rotation,
-                                                          m_scale);
+                                                 m_rotation,
+                                                 m_scale);
 }
 
 Vector3F Engine::ObjectElements::Transform::GetEuler() const
@@ -73,7 +72,16 @@ std::shared_ptr<Engine::ObjectElements::Transform> Engine::ObjectElements::Trans
 
 void Engine::ObjectElements::Transform::CalculateAxes()
 {
-    m_forward = m_rotation.ToEuler().Normalized();
+    Quaternion quatfwd = (m_rotation * Vector3F::forward * m_rotation.Conjugate());
+    Vector3F vec3fwd = quatfwd.GetRotationAxis();
+    m_forward = Vector3F{ vec3fwd.x,vec3fwd.y, -vec3fwd.z };
     m_right = Vector3F::Cross(Vector3F::up, m_forward);
-    m_up = Vector3F::Cross(m_forward, Vector3F::right);
+    m_up = Vector3F::Cross(m_forward, m_right);
+    
+    // m_forward = Vector3F(-m_transform[2], -m_transform[6], -m_transform[10]);
+    // m_up = Vector3F(-m_transform[1], -m_transform[5], -m_transform[9]);
+    // m_right = Vector3F(m_transform[0], m_transform[4], m_transform[8]);
+
+    
+    UpdateTransformMatrix();
 }
