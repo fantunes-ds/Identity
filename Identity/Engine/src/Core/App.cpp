@@ -5,6 +5,7 @@
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
+#include <Tools/FPSCounter.h>
 
 #include <Systems/RenderSystem.h>
 #include <Input/Input.h>
@@ -29,8 +30,10 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 int App::Run() const
 {
     Systems::RenderSystem renderSystem;
-    Objects::GameObject gameObject;
-    Objects::GameObject gameObject2;
+    Tools::FPSCounter fpsCounter(20);
+
+    Objects::GameObject link;
+    Objects::GameObject lambo;
     Objects::GameObject camera;
     Objects::GameObject light;
 
@@ -49,47 +52,46 @@ int App::Run() const
     Containers::MaterialContainer::GetMaterial("LamboTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
     Containers::MaterialContainer::GetMaterial("LamboTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
 
-    // Containers::ModelContainer::AddModel("../Engine/Resources/YoungLink.obj", "statue");
-    // Containers::ModelContainer::AddModel("../Engine/Resources/Lambo.obj", "lambo");
-
     camera.AddComponent<Components::CameraComponent>(m_width, m_height);
 
 
     Containers::LightContainer* test = Containers::LightContainer::GetInstance();
 
-    gameObject.GetTransform()->Translate(Vector3F{3.0f, 0.0f, 4.0f});
-    gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
+    link.GetTransform()->Translate(Vector3F{3.0f, -5.0f, 4.0f});
+    link.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    link.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
 
-    gameObject2.GetTransform()->Translate(Vector3F{6.0f, 0.0f, -4.0f});
-    gameObject2.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+    lambo.GetTransform()->Translate(Vector3F{6.0f, 5.0f, -4.0f});
+    lambo.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
+    lambo.GetTransform()->RotateWithEulerAngles(Vector3F{ 45.f, 45.f, 90.f });
+    lambo.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
 
+    camera.GetTransform()->Translate(Vector3F{ 0.0f, 0.0f, -10.0f });
 
-    light.GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
-    light.GetTransform()->Scale(Vector3F{0.1f, 0.1f, 0.1f});
+    light.GetTransform()->Translate(Vector3F{ 10.0f, 4.0f, -10.0f });
+    light.GetTransform()->Scale(Vector3F{ 0.01f, 0.01f, 0.01f });
 
     Rendering::Lights::Light::LightData dirLight;
 
-    dirLight.position  = Vector4F(light.GetTransform()->GetPosition().x * -1, light.GetTransform()->GetPosition().y, light.GetTransform()->GetPosition().z * -1, 1.0f);
-    dirLight.ambient   = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
-    dirLight.diffuse   = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
-    dirLight.specular  = Vector4F(0.5f, 0.5f ,0.5f, 1.0f);
-    dirLight.color     = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
+    dirLight.position = Vector4F(light.GetTransform()->GetPosition().x * -1, light.GetTransform()->GetPosition().y, light.GetTransform()->GetPosition().z * -1, 1.0f);
+    dirLight.ambient = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
+    dirLight.diffuse = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
+    dirLight.specular = Vector4F(0.5f, 0.5f, 0.5f, 1.0f);
+    dirLight.color = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
     dirLight.shininess = 32.0f;
 
-    int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    // gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
-    // gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
-    light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
+    camera.AddComponent<Components::CameraComponent>(m_width, m_height);
+    //light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
     light.AddComponent<Components::LightComponent>(dirLight);
 
-    for (auto& mesh : gameObject.GetModel()->GetMeshes())
+    //.SetParentObject(statue);
+
+    for (auto& mesh : link.GetModel()->GetMeshes())
     {
         mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LinkTexture"));
     }
 
-    for (auto& mesh : gameObject2.GetModel()->GetMeshes())
+    for (auto& mesh : lambo.GetModel()->GetMeshes())
     {
         mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LamboTexture"));
     }
@@ -100,26 +102,31 @@ int App::Run() const
 
     while (true)
     {
+        fpsCounter.Start();
+
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;
         }
 
-        DoFrame(renderSystem);
+        DoFrame(renderSystem, fpsCounter.GetDeltaTime());
+
+        m_window.SetTitle(std::to_string(fpsCounter.GetFPS()));
+        fpsCounter.Stop();
     }
 }
 
-void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
+void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTime) const
 {
-    Rendering::Renderer::GetInstance()->ClearBuffer(0.3f, 0.3f, 0.3f);
+    Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
     if (_INPUT->keyboard.IsKeyHeld('R'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(1.0f, 0.0f, 0.0f);
+        Rendering::Renderer::GetInstance()->ClearBuffers(1.0f, 0.0f, 0.0f);
 
     if (_INPUT->keyboard.IsKeyHeld('G'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(0.0f, 1.0f, 0.0f);
+        Rendering::Renderer::GetInstance()->ClearBuffers(0.0f, 1.0f, 0.0f);
 
     if (_INPUT->keyboard.IsKeyHeld('B'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(0.0f, 0.0f, 1.0f);
+        Rendering::Renderer::GetInstance()->ClearBuffers(0.0f, 0.0f, 1.0f);
 
     if (_INPUT->keyboard.IsKeyDown('F'))
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());
@@ -128,7 +135,7 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    p_renderSystem.Update();
+    p_renderSystem.Update(p_deltaTime);
 
     static bool show_demo_window = true;
     ImGui::Begin("Identity UI Tools");

@@ -19,6 +19,6 @@ namespace Engine::Components
         [[nodiscard]] inline std::shared_ptr<Rendering::Camera> GetCamera() const { return Containers::CameraContainer::GetCamera(m_camera); }
 
     private:
-        int32_t m_camera = -1;
+        int32_t m_camera{ -1 };
     };
 }

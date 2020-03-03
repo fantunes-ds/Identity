@@ -244,6 +244,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Rendering\Material.h" />
     <ClInclude Include="include\Rendering\Materials\Shader.h" />
     <ClInclude Include="include\Rendering\Materials\Texture.h" />
+    <ClInclude Include="include\Scene\Scene.h" />
     <ClInclude Include="include\Scene\SceneGraph\SceneGraph.h" />
     <ClInclude Include="include\Scene\SceneGraph\SceneNode.h" />
     <ClInclude Include="include\Systems\IECSSystem.h" />
@@ -265,8 +266,10 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Rendering\Window.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\TestDependencies.h" />
+    <ClInclude Include="include\Tools\ASSIMP\ASSIMPConversion.h" />
     <ClInclude Include="include\Tools\DirectX\dxerr.h" />
     <ClInclude Include="include\Tools\DirectX\GraphicsMacros.h" />
+    <ClInclude Include="include\Tools\FPSCounter.h" />
     <ClInclude Include="include\Tools\IDCounter.h" />
     <ClInclude Include="include\Tools\IdentityException.h" />
     <ClInclude Include="include\Tools\ImGUI\imconfig.h" />
@@ -281,6 +284,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\IComponent.cpp" />
     <ClCompile Include="src\Rendering\Lights\Light.cpp" />
     <ClCompile Include="src\Components\LightComponent.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
@@ -320,7 +324,9 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Rendering\Renderer.cpp" />
     <ClCompile Include="src\Rendering\Window.cpp" />
     <ClCompile Include="src\TestDependencies.cpp" />
+    <ClCompile Include="src\Tools\ASSIMP\AssimpConversion.cpp" />
     <ClCompile Include="src\Tools\DirectX\dxerr.cpp" />
+    <ClCompile Include="src\Tools\FPSCounter.cpp" />
     <ClCompile Include="src\Tools\IdentityException.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui.cpp" />
     <ClCompile Include="src\Tools\ImGUI\ImGUIManager.cpp" />

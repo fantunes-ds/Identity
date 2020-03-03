@@ -29,7 +29,7 @@ namespace Engine::Core
         int Run() const;
 
     private:
-        void DoFrame(Systems::RenderSystem& p_renderSystem) const;
+        void DoFrame(Systems::RenderSystem& p_renderSystem, float p_deltaTime) const;
 
     private:
         Tools::UI::ImGUIManager m_imguiManager;

@@ -29,9 +29,9 @@ int32_t Engine::Containers::TransformContainer::AddTransform()
 int32_t Engine::Containers::TransformContainer::AddTransform(std::shared_ptr<ObjectElements::Transform> p_transform)
 {
     //TODO: Fix this stupidity
-    Matrix4F& matrix = p_transform->GetTransformMatrix();
+    Matrix4F& matrix = p_transform->GetWorldTransformMatrix();
     GetInstance()->m_transforms.insert_or_assign(p_transform->GetID(), p_transform);
-    FindTransform(p_transform->GetID())->SetTransformMatrix(matrix);
+    FindTransform(p_transform->GetID())->SetWorldTransformMatrix(matrix);
 
     return p_transform->GetID();
 }
