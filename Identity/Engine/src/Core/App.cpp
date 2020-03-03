@@ -89,7 +89,7 @@ int App::Run() const
     for (auto& mesh : link.GetModel()->GetMeshes())
     {
         mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LinkTexture"));
-    }*/
+    }
 
     for (auto& mesh : lambo.GetModel()->GetMeshes())
     {
