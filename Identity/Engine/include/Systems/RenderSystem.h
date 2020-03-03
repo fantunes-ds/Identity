@@ -6,6 +6,7 @@
 #include <Rendering/Lights/Light.h>
 #include "Events/Event.h"
 #include "Rendering/Materials/Texture.h"
+#include "Scene/SceneGraph/SceneGraph.h"
 
 namespace Engine::Systems
 {
@@ -16,6 +17,7 @@ namespace Engine::Systems
         virtual ~RenderSystem() = default;
 
         void DrawScene(float p_deltaTime);
+        void DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode);
         void Update(float p_deltaTime) override;
 
         void ResetActiveCamera();
@@ -23,8 +25,7 @@ namespace Engine::Systems
         void SetActiveCamera(int32_t p_id);
 
     private:
-        std::map<int, std::shared_ptr<Rendering::Lights::Light>> m_lights;
-
+        std::map<int32_t, std::shared_ptr<Rendering::Lights::Light>> m_lights;
         int32_t m_activeCamera = -1;
     };
 }

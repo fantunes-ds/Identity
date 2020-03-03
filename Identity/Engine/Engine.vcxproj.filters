@@ -195,6 +195,12 @@
     <ClInclude Include="include\Rendering\Lights\ILight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Tools\ASSIMP\ASSIMPConversion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scene\Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\Tools\FPSCounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -341,10 +347,13 @@
     <ClCompile Include="src\Containers\MaterialContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tools\FPSCounter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\Components\IComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tools\FPSCounter.cpp">
+    <ClCompile Include="src\Tools\ASSIMP\AssimpConversion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -13,15 +13,13 @@
 #include <Containers/EventContainer.h>
 #include <Rendering/Buffers/VertexConstantBuffer.h>
 #include <Containers/LightContainer.h>
+#include <Scene/SceneGraph/SceneNode.h>
 
 //WIP
 
 //Example of how to use events
 Engine::Systems::RenderSystem::RenderSystem()
 {
-    /*Containers::EventContainer::AddEvent("NoActiveCamera");
-    Event& event = Containers::EventContainer::GetEvent("NoActiveCamera");
-    event.AddListener(this, &RenderSystem::ResetActiveCamera);*/
 }
 
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
@@ -39,7 +37,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
     //TODO: Light will be moved soon
     if (ImGui::Begin("Lighting Tool"))
     {
-        ImGui::DragFloat3("LightPos", *pos,0.1f , -90.0f, 90.0f, "%.1f");
+        ImGui::DragFloat3("LightPos", *pos, 0.1f, -90.0f, 90.0f, "%.1f");
         ImGui::SliderFloat("LightColR", &light.color.x, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("LightColG", &light.color.y, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("LightColB", &light.color.z, 0.0f, 1.0f, "%.1f");
@@ -51,61 +49,58 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
         ImGui::SliderFloat("Ambient LightZ", &light.ambient.z, 0.0f, 1.0f, "%.1f");
     }ImGui::End();
 
-    for (auto& gameObject : Containers::GameObjectContainer::GetAllGameObjects())
+    for (auto& sceneNode : Scene::SceneGraph::GetInstance()->GetRootSceneNodes())
     {
-        for (auto& component : gameObject.second->GetAllComponents())
-        {
-            if (std::shared_ptr<Components::ModelComponent> modelComp = std::dynamic_pointer_cast<Components::ModelComponent>(Containers::ComponentContainer::FindComponent(component)))
-            {
-                auto& meshes = Containers::ModelContainer::FindModel(modelComp->GetModel())->GetMeshes();
+        DrawSceneNode(sceneNode.second);
+    }
+}
 
-                for (auto mesh : meshes)
-                {
-                    mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
+void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
+{
+    auto camera = Containers::CameraContainer::GetCamera(m_activeCamera);
+    auto mesh = p_sceneNode->GetMesh();
+    std::shared_ptr<Rendering::Lights::Light> light1 = std::dynamic_pointer_cast<Rendering::Lights::Light>(Containers::LightContainer::GetLights().begin()->second);
+    Rendering::Lights::Light::LightData& light = light1->GetLightData();
 
-                    mesh->GetMaterial().GetShader().GenConstantBuffers();
+    if (mesh != nullptr)
+    {
+        mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
 
-                    Matrix4F model = Containers::TransformContainer::FindTransform(gameObject.second->GetTransformID())->GetTransformMatrix();
+        mesh->GetMaterial().GetShader().GenConstantBuffers();
 
-                    Matrix4F normalModel = Matrix4F::Inverse(model);
-                 
+        Matrix4F model = Containers::TransformContainer::FindTransform(p_sceneNode->GetTransform())->GetWorldTransformMatrix();
 
-                    Matrix4F view = camera->GetViewMatrix();
-                    Matrix4F perspective = camera->GetPerspectiveMatrix();
+        Matrix4F normalModel = Matrix4F::Inverse(model);
 
-                    perspective.Transpose();
-                    //normalModel.Transpose();
+        Matrix4F view = camera->GetViewMatrix();
+        Matrix4F perspective = camera->GetPerspectiveMatrix();
+        perspective.Transpose();
 
-                    Rendering::Buffers::VCB vcb { model, view, normalModel,perspective };
-                    mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
 
-                    const Vector3F cameraPos = camera->GetPosition();
+        Rendering::Buffers::VCB vcb{ model, view, normalModel,perspective };
+        mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
+        const Vector3F cameraPos = camera->GetPosition();
 
-                    const Vector4F reversedXLightPos = Vector4F(light.position.x, light.position.y, -light.position.z, 1.0f);
-                    const Rendering::Buffers::PCB pcb { reversedXLightPos, light.ambient, light.diffuse,
-                                                        light.specular , light.color,
-                                                                        light.shininess,Vector3F{},Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, 0.0f };
-                    mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
-                    Rendering::Renderer::GetInstance()->SetRenderTarget();
+        const Vector4F reversedXLightPos = Vector4F(light.position.x, light.position.y, -light.position.z, 1.0f);
+        const Rendering::Buffers::PCB pcb{ reversedXLightPos, light.ambient, light.diffuse,
+                                            light.specular , light.color,
+                                                            light.shininess,Vector3F{},Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, 0.0f };
+        mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
+        Rendering::Renderer::GetInstance()->SetRenderTarget();
 
-                    GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
-                }
-            }
-        }
-        if (ImGui::Begin("DirectionInfo"))
-        {
-            ImGui::Text("Forward: %f | %f | %f", gameObject.second->GetTransform()->GetForward().x, gameObject.second->GetTransform()->GetForward().y, gameObject.second->GetTransform()->GetForward().z);
-            ImGui::Text("Up: %f | %f | %f", gameObject.second->GetTransform()->GetUp().x, gameObject.second->GetTransform()->GetUp().y, gameObject.second->GetTransform()->GetUp().z);
-            ImGui::Text("Right: %f | %f | %f", gameObject.second->GetTransform()->GetRight().x, gameObject.second->GetTransform()->GetRight().y, gameObject.second->GetTransform()->GetRight().z);
-            ImGui::Text("--------------", gameObject.second->GetTransform()->GetRight().x, gameObject.second->GetTransform()->GetRight().y, gameObject.second->GetTransform()->GetRight().z);
-        }ImGui::End();
+        GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
     }
 
+    for (auto child : p_sceneNode->GetChildren())
+    {
+        DrawSceneNode(child);
+    }
 }
 
 void Engine::Systems::RenderSystem::Update(float p_deltaTime)
 {
     DrawScene(p_deltaTime);
+    Scene::SceneGraph::GetInstance()->UpdateScene(0);
 
     if (Containers::CameraContainer::GetCamera(m_activeCamera))
     {

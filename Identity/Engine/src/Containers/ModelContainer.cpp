@@ -3,6 +3,7 @@
 #include <3DLoader/ObjectElements/Model.h>
 #include <3DLoader/ObjectLoader.h>
 #include <Rendering/Renderer.h>
+#include "Scene/SceneGraph/SceneGraph.h"
 
 Engine::Containers::ModelContainer::~ModelContainer()
 {
@@ -47,6 +48,8 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContaine
     }
 
     ModelContainer->m_models.insert_or_assign(model->GetID(), model);
+    Scene::SceneGraph::GetInstance()->AddRootSceneNode(model->GetRootNode());
+
     return model;
 }
 
@@ -75,6 +78,12 @@ int32_t Engine::Containers::ModelContainer::FindModel(const std::string& p_name)
 
 std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContainer::FindModel(uint32_t p_id)
 {
+    if (GetInstance()->GetAllModels().find(p_id) == GetInstance()->GetAllModels().end())
+    {
+        const std::string error("ModelContainer::FindModel(int32_t p_id): Could not find Model with ID" + p_id);
+        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+    }
+
     return GetInstance()->GetAllModels().at(p_id);
 }
 

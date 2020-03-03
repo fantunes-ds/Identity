@@ -8,7 +8,7 @@ Engine::ObjectElements::Transform::Transform() :
     m_forward = Vector3F::forward;
     m_right = Vector3F::right;
     m_up = Vector3F::up;
-    UpdateTransformMatrix();
+    UpdateWorldTransformMatrix();
 
 
 }
@@ -19,7 +19,7 @@ Engine::ObjectElements::Transform::Transform(Vector3F& p_position) :
     m_forward = Vector3F::forward;
     m_right = Vector3F::Cross(Vector3F::up, m_forward);
     m_up = Vector3F::Cross(m_forward, Vector3F::right);
-    UpdateTransformMatrix();
+    UpdateWorldTransformMatrix();
 }
 
 Engine::ObjectElements::Transform::Transform(const Transform& p_other) :
@@ -33,7 +33,7 @@ Engine::ObjectElements::Transform::Transform(const Transform& p_other) :
 void Engine::ObjectElements::Transform::Translate(const Vector3F& p_vector)
 {
     m_position += Vector3F{ p_vector.x, p_vector.y, p_vector.z};
-    UpdateTransformMatrix();
+    UpdateWorldTransformMatrix();
 }
 
 
@@ -44,20 +44,20 @@ void Engine::ObjectElements::Transform::RotateWithEulerAngles(const Vector3F& p_
     quat.MakeFromEuler(Vector3F{p_euler.x, p_euler.y, p_euler.z});
     m_rotation *= quat;
     CalculateAxes();
-    UpdateTransformMatrix();
+    UpdateWorldTransformMatrix();
 }
 
 void Engine::ObjectElements::Transform::Scale(const Vector3F& p_scale)
 {
     m_scale *= p_scale;
-    UpdateTransformMatrix();
+    UpdateWorldTransformMatrix();
 }
 
-void Engine::ObjectElements::Transform::UpdateTransformMatrix()
+void Engine::ObjectElements::Transform::UpdateWorldTransformMatrix()
 {
-    m_transform = Matrix4F::CreateTransformation(m_position,
-                                                 m_rotation,
-                                                 m_scale);
+    m_worldTransform = Matrix4F::CreateTransformation(m_position,
+                                                          m_rotation,
+                                                          m_scale);
 }
 
 Vector3F Engine::ObjectElements::Transform::GetEuler() const
@@ -82,5 +82,5 @@ void Engine::ObjectElements::Transform::CalculateAxes()
     m_right = Vector3F{ vec3r.x,vec3r.y, vec3r.z };
     m_up = Vector3F{ vec3u.x,vec3u.y, -vec3u.z };
     
-    UpdateTransformMatrix();
+    UpdateWorldTransformMatrix();
 }
