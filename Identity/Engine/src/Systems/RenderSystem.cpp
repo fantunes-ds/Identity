@@ -24,7 +24,7 @@ Engine::Systems::RenderSystem::RenderSystem()
     event.AddListener(this, &RenderSystem::ResetActiveCamera);*/
 }
 
-void Engine::Systems::RenderSystem::DrawScene()
+void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 {
     HRESULT hr;
 
@@ -68,7 +68,7 @@ void Engine::Systems::RenderSystem::DrawScene()
                     Matrix4F model = Containers::TransformContainer::FindTransform(gameObject.second->GetTransformID())->GetTransformMatrix();
 
                     Matrix4F normalModel = Matrix4F::Inverse(model);
-                    OutputDebugString(normalModel.ToString().c_str());
+                 
 
                     Matrix4F view = camera->GetViewMatrix();
                     Matrix4F perspective = camera->GetPerspectiveMatrix();
@@ -103,9 +103,9 @@ void Engine::Systems::RenderSystem::DrawScene()
 
 }
 
-void Engine::Systems::RenderSystem::Update()
+void Engine::Systems::RenderSystem::Update(float p_deltaTime)
 {
-    DrawScene();
+    DrawScene(p_deltaTime);
 
     if (Containers::CameraContainer::GetCamera(m_activeCamera))
     {
@@ -113,21 +113,6 @@ void Engine::Systems::RenderSystem::Update()
         Rendering::Renderer::GetInstance()->GetResolution(width, height);
         Containers::CameraContainer::GetCamera(m_activeCamera)->UpdateCamera(width, height);
     }
-}
-
-uint32_t Engine::Systems::RenderSystem::AddLight(Rendering::Lights::Light& p_light)
-{
-    //TODO: create lightManager and load light into it rather than into rendersystem
-    std::shared_ptr newLight = std::make_shared<Rendering::Lights::Light>(p_light);
-
-    if (newLight)
-    {
-        const uint32_t tmpId = Tools::IDCounter::GetNewID();
-        m_lights.insert_or_assign(tmpId, newLight);
-        return tmpId;
-    }
-    else
-        return -1;
 }
 
 void Engine::Systems::RenderSystem::ResetActiveCamera()

@@ -14,10 +14,12 @@ namespace Engine::Tools
         void Stop();
 
         int GetFPS() const;
+        float GetDeltaTime() const { return m_deltaTime; }
 
     private:
         int m_numberOfSamples;
-        float m_frameTime;
+        float m_deltaTime;
+        float m_FPS;
         std::chrono::time_point<std::chrono::system_clock> m_startTime;
         std::chrono::time_point<std::chrono::system_clock> m_endTime;
 

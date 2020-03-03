@@ -84,9 +84,7 @@ int App::Run() const
     dirLight.shininess = 32.0f;
 
     camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    // gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
-    // gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
-    //light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
+    light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
     light.AddComponent<Components::LightComponent>(dirLight);
 
     for (auto& mesh : gameObject.GetModel()->GetMeshes())
@@ -112,14 +110,14 @@ int App::Run() const
             return *eCode;
         }
 
-        DoFrame(renderSystem);
+        DoFrame(renderSystem, fpsCounter.GetDeltaTime());
 
-        fpsCounter.Stop();
         m_window.SetTitle(std::to_string(fpsCounter.GetFPS()));
+        fpsCounter.Stop();
     }
 }
 
-void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
+void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTime) const
 {
     Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
     if (_INPUT->keyboard.IsKeyHeld('R'))
@@ -138,7 +136,7 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    p_renderSystem.Update();
+    p_renderSystem.Update(p_deltaTime);
 
     static bool show_demo_window = true;
     ImGui::Begin("Identity UI Tools");

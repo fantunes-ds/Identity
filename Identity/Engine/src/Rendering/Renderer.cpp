@@ -48,7 +48,7 @@ void Renderer::EndFrame() const
 {
     HRESULT hr;
 
-    if (FAILED(hr = m_pSwapChain->Present(0u, 0u)))
+    if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
     {
         if (hr == DXGI_ERROR_DEVICE_REMOVED)
         {

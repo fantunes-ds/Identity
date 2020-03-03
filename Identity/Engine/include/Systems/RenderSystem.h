@@ -15,14 +15,8 @@ namespace Engine::Systems
         RenderSystem();
         virtual ~RenderSystem() = default;
 
-        void DrawScene();
-        void Update() override;
-
-        /**
-         * @brief As soon as we have a LightContainer, this method should be deleted.
-         * @return returns the new light's id if successful, -1 if unsuccessful.
-         */
-        uint32_t AddLight(Rendering::Lights::Light& p_light);
+        void DrawScene(float p_deltaTime);
+        void Update(float p_deltaTime) override;
 
         void ResetActiveCamera();
 
