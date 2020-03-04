@@ -9,8 +9,8 @@ namespace Engine::Components
     class API_ENGINE ModelComponent: public IComponent
     {
     public:
-        ModelComponent(const std::string& p_name);
-        ModelComponent(const std::string& p_file, const std::string& p_name);
+        ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name);
+        ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file, const std::string& p_name);
         virtual ~ModelComponent() = default;
 
         bool operator==(IComponent* p_other) override;

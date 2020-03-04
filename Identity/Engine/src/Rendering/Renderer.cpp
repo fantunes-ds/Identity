@@ -9,7 +9,9 @@
 
 using namespace Engine::Rendering;
 
-Renderer::Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight) : m_width(p_clientWidth), m_height(p_clientHeight)
+std::unique_ptr<Renderer> Renderer::instance;
+Renderer::Renderer(const HWND& p_hwnd, const int& p_clientWidth, const int& p_clientHeight) :
+    m_width(static_cast<float>(p_clientWidth)), m_height(static_cast<float>(p_clientHeight))
 {
     HRESULT hr;
 
@@ -31,12 +33,58 @@ Renderer::Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clien
     //check for msaa quality support
     GFX_THROW_INFO(m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m_4xMsaaQuality));
 
+    CreateSwapChain(p_hwnd);
+    SetBackBuffer();
+    SetDepthStencilBuffers();
+
+    m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    SetViewPort(m_width, m_height);
+
+    ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
+}
+
+void Renderer::EndFrame() const
+{
+    HRESULT hr;
+
+    if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
+    {
+        if (hr == DXGI_ERROR_DEVICE_REMOVED)
+        {
+            throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
+        }
+        throw GFX_EXCEPT(hr);
+    }
+}
+
+void Renderer::ClearBuffers(const float& p_red, const float& p_green, const float& p_blue) const
+{
+    const float colour[] = { p_red, p_green, p_blue, 1.0f };
+    m_pContext->ClearRenderTargetView(m_pTarget.Get(), colour);
+    m_pContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
+}
+
+void Renderer::ResetContext()
+{
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> nullView;
+    m_pContext->OMSetRenderTargets(0, nullView.GetAddressOf(), nullptr);
+
+    m_pTarget.Reset();
+    m_pDepthStencilView.Reset();
+    m_pContext->Flush();
+}
+
+void Renderer::CreateSwapChain(const HWND& p_hwnd)
+{
+    HRESULT hr;
+
     //describe the swap chain
     DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
     swapChainDesc.BufferDesc.Width = 0;
     swapChainDesc.BufferDesc.Height = 0;
     swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-    swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
+    swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
     swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
     swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
@@ -72,181 +120,193 @@ Renderer::Renderer(const HWND p_hwnd, const int p_clientWidth, const int p_clien
     GFX_THROW_INFO(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), &dxgiFactory));
 
     GFX_THROW_INFO(dxgiFactory->CreateSwapChain(m_pDevice.Get(), &swapChainDesc, &m_pSwapChain));
+}
 
-    dxgiDevice->Release();
-    dxgiAdapter->Release();
-    dxgiFactory->Release();
+void Renderer::SetDepthStencilBuffers()
+{
+    HRESULT hr;
 
+    D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+    dsDesc.DepthEnable = TRUE;
+    dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
-    //create render target view
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
-    GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
-    GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
-    
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDSState;
+    GFX_THROW_INFO(m_pDevice->CreateDepthStencilState(&dsDesc, &pDSState));
 
-    D3D11_TEXTURE2D_DESC depthStencilDesc;
-    depthStencilDesc.Width = m_width;
-    depthStencilDesc.Height = m_height;
-    depthStencilDesc.MipLevels = 1;
-    depthStencilDesc.ArraySize = 1;
-    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    m_pContext->OMSetDepthStencilState(pDSState.Get(), 1u);
+
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
+    D3D11_TEXTURE2D_DESC descDepth;
+    descDepth.Width = m_width;
+    descDepth.Height = m_height;
+    descDepth.MipLevels = 1;
+    descDepth.ArraySize = 1;
+    descDepth.Format = DXGI_FORMAT_D32_FLOAT;
 
     //with 4x msaa
     if (m_enable4xMSAA)
     {
-        depthStencilDesc.SampleDesc.Count = 4;
-        depthStencilDesc.SampleDesc.Quality = m_4xMsaaQuality - 1;
+        descDepth.SampleDesc.Count = 4;
+        descDepth.SampleDesc.Quality = m_4xMsaaQuality - 1;
     }
     //without
     else
     {
-        depthStencilDesc.SampleDesc.Count = 1;
-        depthStencilDesc.SampleDesc.Quality = 0;
+        descDepth.SampleDesc.Count = 1;
+        descDepth.SampleDesc.Quality = 0;
     }
 
-    depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthStencilDesc.CPUAccessFlags = 0;
-    depthStencilDesc.MiscFlags = 0;
+    descDepth.Usage = D3D11_USAGE_DEFAULT;
+    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    descDepth.CPUAccessFlags = 0;
+    descDepth.MiscFlags = 0;
 
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
-    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer));
-    GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(depthStencilBuffer.Get(), 0, &m_pDepthStencil));
+    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&descDepth, nullptr, &pDepthStencil));
 
-    m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
+    D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
+    descDSV.Format = DXGI_FORMAT_D32_FLOAT;
+    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    descDSV.Texture2D.MipSlice = 0u;
+    GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &m_pDepthStencilView));
 
+    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
+}
+
+void Renderer::SetRenderTarget()
+{
+    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
+}
+
+void Renderer::SetViewPort(const float& p_width, const float& p_height) const
+{
     D3D11_VIEWPORT viewPort;
     viewPort.TopLeftX = 0;
     viewPort.TopLeftY = 0;
-    viewPort.Width = static_cast<float>(m_width);
-    viewPort.Height = static_cast<float>(m_height);
+    viewPort.Width = p_width;
+    viewPort.Height = p_height;
     viewPort.MinDepth = 0;
     viewPort.MaxDepth = 1;
     m_pContext->RSSetViewports(1u, &viewPort);
-
-    ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
 }
 
-Renderer::~Renderer()
+void Renderer::InitRenderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight)
 {
-    ImGui_ImplDX11_Shutdown();
+    if (instance != nullptr)
+        MessageBox(p_hwnd, "ERROR : Singleton duplication !?", "An instance was already found for Renderer. It is forbidden to have two singletons.", MB_OK | MB_ICONERROR);
+    else
+        instance = std::make_unique<Renderer>(p_hwnd, p_clientWidth, p_clientHeight);
 }
 
-void Renderer::EndFrame() const
-{
-    HRESULT hr;
-
-    if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
-    {
-        if (hr == DXGI_ERROR_DEVICE_REMOVED)
-        {
-            throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
-        }
-        else
-        {
-            throw GFX_EXCEPT(hr);
-        }
-    }
-}
-
-void Renderer::ClearBuffer(float p_red, float p_green, float p_blue) const
-{
-    const float colour[] = { p_red, p_green, p_blue, 1.0f };
-    m_pContext->ClearRenderTargetView(m_pTarget.Get(), colour);
-    m_pContext->ClearDepthStencilView(m_pDepthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
-}
-
-void Renderer::LoadPixelShader(const std::wstring& p_path)
+void Renderer::SetBackBuffer()
 {
     HRESULT hr;
 
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
-    GFX_THROW_INFO(D3DReadFileToBlob(p_path.c_str(), &m_blob));
-    GFX_THROW_INFO(m_pDevice->CreatePixelShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), nullptr, &pixelShader));
-    m_pContext->PSSetShader(pixelShader.Get(), nullptr, 0u);
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
+    GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
+    GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
 }
 
-void Renderer::LoadVertexShader(const std::wstring& p_path)
+void Renderer::Resize(const float& p_width, const float& p_height)
 {
     HRESULT hr;
 
-    Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
-    GFX_THROW_INFO(D3DReadFileToBlob(p_path.c_str(), &m_blob));
-    GFX_THROW_INFO(m_pDevice->CreateVertexShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), nullptr, &vertexShader));
-    m_pContext->VSSetShader(vertexShader.Get(), nullptr, 0u);
-}
-
-void Renderer::Resize(const int p_width, const int p_height)
-{
     m_width = p_width;
     m_height = p_height;
 
-    HRESULT hr;
-    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> nullView;
-    m_pContext->OMSetRenderTargets(0, nullView.GetAddressOf(), nullptr);
+    ResetContext();
 
-    m_pTarget.Reset();
-    m_pDepthStencil.Reset();
-    m_pContext->Flush();
-
-    GFX_THROW_INFO(m_pSwapChain->ResizeBuffers(
-        0,
-        m_width,
-        m_height,
-        DXGI_FORMAT_UNKNOWN,
-        0
-    ));
-
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
-    GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
-    GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
-
-    D3D11_TEXTURE2D_DESC depthStencilDesc;
-    depthStencilDesc.Width = m_width;
-    depthStencilDesc.Height = m_height;
-    depthStencilDesc.MipLevels = 1;
-    depthStencilDesc.ArraySize = 1;
-    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-    //with 4x msaa
-    if (m_enable4xMSAA)
+    if (isFullscreen)
     {
-        depthStencilDesc.SampleDesc.Count = 4;
-        depthStencilDesc.SampleDesc.Quality = m_4xMsaaQuality - 1;
+        GFX_THROW_INFO(m_pSwapChain->ResizeBuffers(
+            0,
+            m_fullWidth,
+            m_fullHeight,
+            DXGI_FORMAT_UNKNOWN,
+            0
+        ));
+        SetViewPort(m_fullWidth, m_height);
     }
-    //without
     else
     {
-        depthStencilDesc.SampleDesc.Count = 1;
-        depthStencilDesc.SampleDesc.Quality = 0;
+        GFX_THROW_INFO(m_pSwapChain->ResizeBuffers(
+            0,
+            m_width,
+            m_height,
+            DXGI_FORMAT_UNKNOWN,
+            0
+        ));
+        SetViewPort(m_width, m_height);
     }
+    m_pSwapChain->SetFullscreenState(isFullscreen, nullptr);
 
-    depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthStencilDesc.CPUAccessFlags = 0;
-    depthStencilDesc.MiscFlags = 0;
+    SetBackBuffer();
 
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
-    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer));
-    GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(depthStencilBuffer.Get(), 0, &m_pDepthStencil));
-
-    m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
-
-    D3D11_VIEWPORT viewPort;
-    viewPort.TopLeftX = 0;
-    viewPort.TopLeftY = 0;
-    viewPort.Width = static_cast<float>(m_width);
-    viewPort.Height = static_cast<float>(m_height);
-    viewPort.MinDepth = 0;
-    viewPort.MaxDepth = 1;
-    m_pContext->RSSetViewports(1u, &viewPort);
+    SetDepthStencilBuffers();
 }
 
-void Renderer::GetResolution(int& p_width, int& p_height) const
+void Renderer::GetResolution(int& p_width, int& p_height)
 {
-    p_width = m_width;
-    p_height = m_height;
+    ChangeResolution();
+
+    if (isFullscreen)
+    {
+        p_width = static_cast<int>(m_fullWidth);
+        p_height = static_cast<int>(m_fullHeight);
+    }
+    else
+    {
+        p_width = static_cast<int>(m_width);
+        p_height = static_cast<int>(m_height);
+    }
 }
+
+void Renderer::SetFullscreen(const bool& p_state)
+{
+    isFullscreen = p_state;
+
+    Resize(m_fullWidth, m_fullHeight);
+}
+
+void Renderer::ChangeResolution()
+{
+    const char* res[] = { "1920x1080", "1280x720", "800x600" };
+    static const char* currentItem = "1920x1080";
+
+    if (ImGui::Begin("Render Tool"))
+    {
+        // ImGui::SliderFloat("Camera FOV", &angle, 10.f, 180.f, "%1.f");
+        if (ImGui::BeginCombo("Fullscreen Resolution", currentItem, ImGuiComboFlags_NoArrowButton))
+        {
+            for (auto& re : res)
+            {
+                const bool isSelected = (currentItem == re); // You can store your selection however you want, outside or inside your objects
+                if (ImGui::Selectable(re, isSelected))
+                    currentItem = re;
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
+            }
+
+            ImGui::EndCombo();
+        }
+    }ImGui::End();
+
+    std::string selected = currentItem;
+    std::replace(selected.begin(), selected.end(), 'x', ' ');
+
+    std::vector<float> array;
+    std::stringstream ss(selected);
+    int temp;
+    while(ss >> temp)
+        array.push_back(temp);
+
+    m_fullWidth = array[0];
+    m_fullHeight = array[1];
+
+    Resize(m_width, m_height);
+}
+
+
 
 #pragma region ExceptionsClass
 

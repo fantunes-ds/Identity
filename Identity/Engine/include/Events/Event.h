@@ -1,6 +1,7 @@
 #pragma once
 #include <Export.h>
 #include <Events/IEventCallback.h>
+#include <Tools/IDCounter.h>
 
 namespace Engine
 {
@@ -22,15 +23,20 @@ namespace Engine
             //check if delegate is already added to vector
             for (auto callback : m_actions)
             {
-                if (*dynamic_cast<EventCallback<T>*>(callback.second.get()) == &*newCallback)
-                    return -1;
+                EventCallback<T>* cast = dynamic_cast<EventCallback<T>*>(&*callback.second);
+
+                if (cast != nullptr)
+                {
+                    if (*cast == *newCallback)
+                        return -1;
+                }
             }
 
-            int32_t id = Engine::Tools::IDCounter::GetNewID();
+            int32_t id = Tools::IDCounter::GetNewID();
 
-            m_actions.insert_or_assign(id, newCallback);
+                m_actions.insert_or_assign(id, newCallback);
 
-            return id;
+                return id;
         }
 
         //@warning DO NOT USE, not functional yet

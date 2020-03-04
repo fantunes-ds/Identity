@@ -7,9 +7,15 @@
 
 Engine::Objects::GameObject::GameObject()
 {
-    ObjectElements::Transform transform{};
-    m_transform = Containers::TransformContainer::AddTransform(transform);
-    Containers::GameObjectContainer::AddGameObject(this);
+    m_transform = Containers::TransformContainer::AddTransform(std::make_shared<ObjectElements::Transform>());
+    Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
+}
+
+Engine::Objects::GameObject::GameObject(const std::string& p_name)
+{
+    m_transform = Containers::TransformContainer::AddTransform(std::make_shared<ObjectElements::Transform>());
+    Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
+    SetName(p_name);
 }
 
 std::shared_ptr<Engine::ObjectElements::Transform> Engine::Objects::GameObject::GetTransform() const
@@ -34,6 +40,13 @@ bool Engine::Objects::GameObject::operator==(GameObject& p_other) const
         return true;
 
     return false;
+}
+
+void Engine::Objects::GameObject::SetParentObject(GameObject& p_parent)
+{
+    auto rootNode = Containers::ModelContainer::FindModel(FindComponentOfType<Components::ModelComponent>()->GetModel())->GetRootNode();
+    auto parentNode = Containers::ModelContainer::FindModel(p_parent.FindComponentOfType<Components::ModelComponent>()->GetModel())->GetRootNode();
+    rootNode->SetParent(&*parentNode);
 }
 
 bool Engine::Objects::GameObject::RemoveComponent(int32_t p_id)

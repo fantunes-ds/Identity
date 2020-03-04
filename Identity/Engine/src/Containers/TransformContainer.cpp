@@ -1,5 +1,6 @@
 #include <stdafx.h>
 #include <Containers/TransformContainer.h>
+#include <3DLoader/ObjectElements/Transform.h>
 #include <Tools/IDCounter.h>
 
 Engine::Containers::TransformContainer::~TransformContainer()
@@ -17,14 +18,22 @@ Engine::Containers::TransformContainer* Engine::Containers::TransformContainer::
     return m_instance;
 }
 
-int32_t Engine::Containers::TransformContainer::AddTransform(ObjectElements::Transform& p_transform)
+int32_t Engine::Containers::TransformContainer::AddTransform()
+{
+    ObjectElements::Transform transform{};
+    GetInstance()->m_transforms.insert_or_assign(transform.GetID(), std::make_shared<ObjectElements::Transform>(transform));
+
+    return transform.GetID();
+}
+
+int32_t Engine::Containers::TransformContainer::AddTransform(std::shared_ptr<ObjectElements::Transform> p_transform)
 {
     //TODO: Fix this stupidity
-    Matrix4F& matrix = p_transform.GetTransformMatrix();
-    GetInstance()->m_transforms.insert_or_assign(p_transform.GetID(), std::make_shared<ObjectElements::Transform>(p_transform));
-    FindTransform(p_transform.GetID())->SetTransformMatrix(matrix);
+    Matrix4F& matrix = p_transform->GetWorldTransformMatrix();
+    GetInstance()->m_transforms.insert_or_assign(p_transform->GetID(), p_transform);
+    FindTransform(p_transform->GetID())->SetWorldTransformMatrix(matrix);
 
-    return p_transform.GetID();
+    return p_transform->GetID();
 }
 
 std::shared_ptr<Engine::ObjectElements::Transform> Engine::Containers::TransformContainer::FindTransform(uint32_t p_id)

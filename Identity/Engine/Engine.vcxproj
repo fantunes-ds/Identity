@@ -70,26 +70,26 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\STB;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
     <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\STB;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
     <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\STB;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
     <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Dependencies\GPM\include\;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\STB;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
     <LibraryPath>$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
@@ -221,6 +221,8 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Components\CameraComponent.h" />
+    <ClInclude Include="include\Components\IComponent.h" />
+    <ClInclude Include="include\Components\LightComponent.h" />
     <ClInclude Include="include\Components\ModelComponent.h" />
     <ClInclude Include="include\Containers\CameraContainer.h" />
     <ClInclude Include="include\Containers\ComponentContainer.h" />
@@ -228,12 +230,23 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Containers\GameObjectContainer.h" />
     <ClInclude Include="include\Containers\IContainer.h" />
     <ClInclude Include="include\Containers\LightContainer.h" />
+    <ClInclude Include="include\Containers\MaterialContainer.h" />
     <ClInclude Include="include\Containers\ModelContainer.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Transform.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />
+    <ClInclude Include="include\Rendering\Buffers\InputLayout.h" />
     <ClInclude Include="include\Containers\TransformContainer.h" />
     <ClInclude Include="include\Objects\IObject.h" />
+    <ClInclude Include="include\Rendering\Buffers\PixelConstantBuffer.h" />
+    <ClInclude Include="include\Rendering\Buffers\VertexConstantBuffer.h" />
+    <ClInclude Include="include\Rendering\Lights\ILight.h" />
+    <ClInclude Include="include\Rendering\Material.h" />
+    <ClInclude Include="include\Rendering\Materials\Shader.h" />
+    <ClInclude Include="include\Rendering\Materials\Texture.h" />
+    <ClInclude Include="include\Scene\Scene.h" />
+    <ClInclude Include="include\Scene\SceneGraph\SceneGraph.h" />
+    <ClInclude Include="include\Scene\SceneGraph\SceneNode.h" />
     <ClInclude Include="include\Systems\IECSSystem.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\3DLoader\ObjectLoader.h" />
@@ -250,12 +263,13 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Rendering\Buffers\VertexBuffer.h" />
     <ClInclude Include="include\Rendering\Camera.h" />
     <ClInclude Include="include\Rendering\Renderer.h" />
-    <ClInclude Include="include\Rendering\Light.h" />
     <ClInclude Include="include\Rendering\Window.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\TestDependencies.h" />
+    <ClInclude Include="include\Tools\ASSIMP\ASSIMPConversion.h" />
     <ClInclude Include="include\Tools\DirectX\dxerr.h" />
     <ClInclude Include="include\Tools\DirectX\GraphicsMacros.h" />
+    <ClInclude Include="include\Tools\FPSCounter.h" />
     <ClInclude Include="include\Tools\IDCounter.h" />
     <ClInclude Include="include\Tools\IdentityException.h" />
     <ClInclude Include="include\Tools\ImGUI\imconfig.h" />
@@ -270,8 +284,12 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\IComponent.cpp" />
+    <ClCompile Include="src\Rendering\Lights\Light.cpp" />
+    <ClCompile Include="src\Components\LightComponent.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
     <ClCompile Include="src\Containers\LightContainer.cpp" />
+    <ClCompile Include="src\Containers\MaterialContainer.cpp" />
     <ClCompile Include="src\Objects\IObject.cpp" />
     <ClCompile Include="src\Components\CameraComponent.cpp" />
     <ClCompile Include="src\Components\ModelComponent.cpp" />
@@ -285,8 +303,16 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\3DLoader\ObjectElements\Transform.cpp" />
     <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
     <ClInclude Include="src\Core\App.h" />
+    <ClCompile Include="src\Rendering\Buffers\InputLayout.cpp" />
     <ClCompile Include="src\Containers\TransformContainer.cpp" />
     <ClCompile Include="src\Objects\GameObject.cpp" />
+    <ClCompile Include="src\Rendering\Buffers\PixelConstantBuffer.cpp" />
+    <ClCompile Include="src\Rendering\Buffers\VertexConstantBuffer.cpp" />
+    <ClCompile Include="src\Rendering\Material.cpp" />
+    <ClCompile Include="src\Rendering\Materials\Shader.cpp" />
+    <ClCompile Include="src\Rendering\Materials\Texture.cpp" />
+    <ClCompile Include="src\Scene\SceneGraph\SceneGraph.cpp" />
+    <ClCompile Include="src\Scene\SceneGraph\SceneNode.cpp" />
     <ClCompile Include="src\Systems\RenderSystem.cpp" />
     <ClCompile Include="src\Events\Event.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
@@ -298,7 +324,9 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Rendering\Renderer.cpp" />
     <ClCompile Include="src\Rendering\Window.cpp" />
     <ClCompile Include="src\TestDependencies.cpp" />
+    <ClCompile Include="src\Tools\ASSIMP\AssimpConversion.cpp" />
     <ClCompile Include="src\Tools\DirectX\dxerr.cpp" />
+    <ClCompile Include="src\Tools\FPSCounter.cpp" />
     <ClCompile Include="src\Tools\IdentityException.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui.cpp" />
     <ClCompile Include="src\Tools\ImGUI\ImGUIManager.cpp" />
@@ -334,8 +362,16 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />
     <None Include="include\Tools\DirectX\DXGetErrorString.inl" />
     <None Include="include\Tools\DirectX\DXTrace.inl" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\directxtk_desktop_2015.2019.12.17.1\build\native\directxtk_desktop_2015.targets" Condition="Exists('..\packages\directxtk_desktop_2015.2019.12.17.1\build\native\directxtk_desktop_2015.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\directxtk_desktop_2015.2019.12.17.1\build\native\directxtk_desktop_2015.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtk_desktop_2015.2019.12.17.1\build\native\directxtk_desktop_2015.targets'))" />
+  </Target>
 </Project>
