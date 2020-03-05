@@ -1,28 +1,16 @@
 #include <stdafx.h>
 #include <Systems/RenderSystem.h>
 #include <Containers/ModelContainer.h>
-#include "Tools/DirectX/GraphicsMacros.h"
-#include "Rendering/Lights/Light.h"
-#include "Tools/ImGUI/imgui.h"
-#include "Tools/ImGUI/imgui_impl_dx11.h"
+#include <Tools/DirectX/GraphicsMacros.h>
+#include <Rendering/Lights/Light.h>
+#include <Tools/ImGUI/imgui.h>
 #include <Input/Input.h>
 #include <Containers/GameObjectContainer.h>
 #include <Containers/TransformContainer.h>
-#include "Components/ModelComponent.h"
-#include "Containers/CameraContainer.h"
-#include <Containers/EventContainer.h>
+#include <Components/ModelComponent.h>
+#include <Containers/CameraContainer.h>
 #include <Rendering/Buffers/VertexConstantBuffer.h>
 #include <Containers/LightContainer.h>
-
-//WIP
-
-//Example of how to use events
-Engine::Systems::RenderSystem::RenderSystem()
-{
-    /*Containers::EventContainer::AddEvent("NoActiveCamera");
-    Event& event = Containers::EventContainer::GetEvent("NoActiveCamera");
-    event.AddListener(this, &RenderSystem::ResetActiveCamera);*/
-}
 
 void Engine::Systems::RenderSystem::DrawScene()
 {
@@ -31,63 +19,7 @@ void Engine::Systems::RenderSystem::DrawScene()
     std::shared_ptr<Rendering::Lights::Light>  light1 = std::dynamic_pointer_cast<Rendering::Lights::Light>(Containers::LightContainer::GetLights().begin()->second);
     Rendering::Lights::Light::LightData& light = light1->GetLightData();
 
-    std::shared_ptr<Rendering::Camera> camera = Containers::CameraContainer::GetCamera(m_activeCamera);    
-
-    D3D11_TEXTURE2D_DESC            textureDesc;
-    D3D11_RENDER_TARGET_VIEW_DESC   renderTargetViewDesc;
-    D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
-
-    /////////////////////////// Map's Texture
-    //// Initialize the  texture description.
-    ZeroMemory(&textureDesc, sizeof(textureDesc));
-
-    // Setup the texture description.
-    // We will have our map be a square
-    // We will need to have this texture bound as a render target AND a shader resource
-    textureDesc.Width            = Rendering::Renderer::GetInstance()->GetWidth();
-    textureDesc.Height           = Rendering::Renderer::GetInstance()->GetHeight();
-    textureDesc.MipLevels        = 1;
-    textureDesc.ArraySize        = 1;
-    textureDesc.Format           = DXGI_FORMAT_B8G8R8A8_UNORM;
-    textureDesc.SampleDesc.Count = 1;
-    textureDesc.Usage            = D3D11_USAGE_DEFAULT;
-    textureDesc.BindFlags        = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-    textureDesc.CPUAccessFlags   = 0;
-    textureDesc.MiscFlags        = 0;
-
-    // Create the texture
-    Rendering::Renderer::GetInstance()->GetDevice()->CreateTexture2D(&textureDesc, NULL, &m_renderTargetTextureMap);
-
-    ///////////////////////// Map's Render Target
-    //// Setup the description of the render target view.
-    renderTargetViewDesc.Format             = textureDesc.Format;
-    renderTargetViewDesc.ViewDimension      = D3D11_RTV_DIMENSION_TEXTURE2D;
-    renderTargetViewDesc.Texture2D.MipSlice = 0;
-
-    // Create the render target view.
-    Rendering::Renderer::GetInstance()->GetDevice()->CreateRenderTargetView(*m_renderTargetTextureMap.GetAddressOf(), &renderTargetViewDesc, &m_renderTargetViewMap);
-    /////////////////////// Map's Shader Resource View
-    // Setup the description of the shader resource view.
-    shaderResourceViewDesc.Format                    = textureDesc.Format;
-    shaderResourceViewDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
-    shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-    shaderResourceViewDesc.Texture2D.MipLevels       = 1;
-
-    //// Create the shader resource view.
-    Rendering::Renderer::GetInstance()->GetDevice()->CreateShaderResourceView(*m_renderTargetTextureMap.GetAddressOf(),
-                                                                              &shaderResourceViewDesc,
-                                                                              &m_shaderResourceViewMap);
-
-    ////////////////////////// Draw Terrain Onto Map
-    // Here we will draw our map, which is just the terrain from the mapCam's view
-
-    
-
-
-    const float colour[] = { 0.5f, 0.3f, 0.3f, 1.0f };
-    Rendering::Renderer::GetInstance()->GetContext()->ClearRenderTargetView(*m_renderTargetViewMap.GetAddressOf(), colour);
-    Rendering::Renderer::GetInstance()->GetContext()->ClearDepthStencilView(*Rendering::Renderer::GetInstance()->GetDepthStencilView().GetAddressOf(), D3D11_CLEAR_STENCIL | D3D11_CLEAR_DEPTH, 1.0f, 0);
-
+    std::shared_ptr<Rendering::Camera> camera = Containers::CameraContainer::GetCamera(m_activeCamera);
 
     for (auto& gameObject : Containers::GameObjectContainer::GetAllGameObjects())
     {
@@ -102,7 +34,6 @@ void Engine::Systems::RenderSystem::DrawScene()
                 {
                     mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
                     mesh->GetMaterial().GetShader().GenConstantBuffers();
-
 
                     Matrix4F model = Containers::TransformContainer::FindTransform(gameObject.second->GetTransformID())->
                             GetTransformMatrix();
@@ -126,8 +57,8 @@ void Engine::Systems::RenderSystem::DrawScene()
                     };
                     mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
 
-                    // Set our maps Render Target
-                    Rendering::Renderer::GetInstance()->SetRenderTarget(m_renderTargetViewMap);
+                    for (auto& RT : Rendering::Renderer::GetInstance()->GetRenderTextures())
+                        RT.Bind();
                     GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
                 }
             }
@@ -141,12 +72,12 @@ void Engine::Systems::RenderSystem::DrawScene()
         }ImGui::End();
     }
     static bool open = true;
-    ImGuiWindowFlags window_flags = !ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoScrollbar;
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | !ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
     ImGui::Begin("Scene", &open, window_flags);
     ImGui::SetScrollX(ImGui::GetScrollMaxX() * 0.5f);
     ImGui::SetScrollY(ImGui::GetScrollMaxY() * 0.5f);
-    ImGui::Image(m_shaderResourceViewMap.Get(), ImVec2(textureDesc.Width,
-                                                                       textureDesc.Height));
+    ImGui::Image(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView().Get(), ImVec2(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetRect().x,
+                                                                                                                                  Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetRect().y));
     ImGui::End();
 }
 

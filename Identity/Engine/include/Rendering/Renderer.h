@@ -1,13 +1,12 @@
 #pragma once
 #include <Export.h>
 
-#include <WinSetup.h>
 #include <vector>
 #include <d3d11.h>
 #include <Tools/IdentityException.h>
 #include <wrl.h>
-#include "3DLoader/ObjectElements/Model.h"
-#include "Camera.h"
+#include <3DLoader/ObjectElements/Model.h>
+#include <Rendering/RenderTexture.h>
 
 namespace Engine::Rendering
 {
@@ -81,11 +80,6 @@ namespace Engine::Rendering
          @brief Reset the base colour of the back buffer
          */
         void ClearBuffers(const float& p_red, const float& p_green, const float& p_blue) const;
-        /*
-         @brief Set the Render Target to the window. Need to be done before every draw
-        */
-        void SetRenderTarget();
-        void SetRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target);
 
         /*
         @brief Set the renderer to fullscreen and call the Resize method
@@ -107,6 +101,7 @@ namespace Engine::Rendering
         [[nodiscard]] const Microsoft::WRL::ComPtr<ID3DBlob>& GetBlob() const { return m_blob; }
         [[nodiscard]] const float& GetWidth() const { return m_width; }
         [[nodiscard]] const float& GetHeight() const { return m_height; }
+        [[nodiscard]] const std::vector<RenderTexture>& GetRenderTextures() const { return m_renderTextures; }
 
     private:
         /*
@@ -135,12 +130,16 @@ namespace Engine::Rendering
          */
         void ChangeResolution();
 
-        Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
-        Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
-        Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pContext;
+        void CreateRenderTexture();
+
+        Microsoft::WRL::ComPtr<ID3D11Device>           m_pDevice;
+        Microsoft::WRL::ComPtr<IDXGISwapChain>         m_pSwapChain;
+        Microsoft::WRL::ComPtr<ID3D11DeviceContext>    m_pContext;
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pTarget;
         Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
-        Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
+        Microsoft::WRL::ComPtr<ID3DBlob>               m_blob;
+        std::vector<RenderTexture>                     m_renderTextures;
+
 
         bool isFullscreen = false;
         bool m_enable4xMSAA = false;

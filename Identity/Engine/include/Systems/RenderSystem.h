@@ -5,14 +5,13 @@
 #include <Rendering/Renderer.h>
 #include <Rendering/Lights/Light.h>
 #include "Events/Event.h"
-#include "Rendering/Materials/Texture.h"
 
 namespace Engine::Systems
 {
     class API_ENGINE RenderSystem: public IECSSystem
     {
     public:
-        RenderSystem();
+        RenderSystem() = default;
         virtual ~RenderSystem() = default;
 
         void DrawScene();
@@ -33,8 +32,10 @@ namespace Engine::Systems
 
         int32_t m_activeCamera = -1;
 
-        Microsoft::WRL::ComPtr<ID3D11Texture2D>          m_renderTargetTextureMap;
-        Microsoft::WRL::ComPtr<ID3D11RenderTargetView>   m_renderTargetViewMap;
-        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_shaderResourceViewMap;
+        Microsoft::WRL::ComPtr<ID3D11Texture2D>          m_renderTargetTexture;
+        Microsoft::WRL::ComPtr<ID3D11RenderTargetView>   m_renderTargetView;
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_renderShaderResourceView;
+
+        Microsoft::WRL::ComPtr<ID3D11DepthStencilView> newDepthStencil;
     };
 }

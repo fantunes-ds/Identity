@@ -56,13 +56,21 @@ void Renderer::EndFrame() const
         }
         throw GFX_EXCEPT(hr);
     }
-}
+}   
 
 void Renderer::ClearBuffers(const float& p_red, const float& p_green, const float& p_blue) const
 {
     const float colour[] = { p_red, p_green, p_blue, 1.0f };
-    m_pContext->ClearRenderTargetView(m_pTarget.Get(), colour);
-    m_pContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
+    
+    m_pContext->ClearRenderTargetView(GetTarget().Get(), colour);
+    m_pContext->ClearDepthStencilView(GetDepthStencilView().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
+
+    for (auto& RT : m_renderTextures)
+    {
+        m_pContext->ClearRenderTargetView(RT.GetTarget().Get(), colour);
+        if(*RT.GetDepthStencilView().GetAddressOf() != nullptr)
+            m_pContext->ClearDepthStencilView(RT.GetDepthStencilView().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
+    }
 }
 
 void Renderer::ResetContext()
@@ -74,17 +82,6 @@ void Renderer::ResetContext()
     m_pDepthStencilView.Reset();
     m_pContext->Flush();
 }
-
-void Renderer::SetRenderTarget()
-{
-    m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
-}
-
-void Renderer::SetRenderTarget(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target) 
-{
-    m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), m_pDepthStencilView.Get());
-}
-
 
 void Renderer::CreateSwapChain(const HWND& p_hwnd)
 {
@@ -202,7 +199,10 @@ void Renderer::InitRenderer(const HWND p_hwnd, const int p_clientWidth, const in
     if (instance != nullptr)
         MessageBox(p_hwnd, "ERROR : Singleton duplication !?", "An instance was already found for Renderer. It is forbidden to have two singletons.", MB_OK | MB_ICONERROR);
     else
+    {
         instance = std::make_unique<Renderer>(p_hwnd, p_clientWidth, p_clientHeight);
+        instance->CreateRenderTexture();
+    }
 }
 
 void Renderer::SetBackBuffer()
@@ -212,6 +212,12 @@ void Renderer::SetBackBuffer()
     Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
     GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
     GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(*backBuffer.GetAddressOf(), nullptr, &m_pTarget));
+}
+
+void Renderer::CreateRenderTexture()
+{
+    const RenderTexture sceneRenderTexture{ static_cast<UINT>(m_width), static_cast<UINT>(m_height), true };
+    m_renderTextures.push_back(sceneRenderTexture);
 }
 
 void Renderer::Resize(const float& p_width, const float& p_height)
@@ -248,7 +254,6 @@ void Renderer::Resize(const float& p_width, const float& p_height)
     m_pSwapChain->SetFullscreenState(isFullscreen, nullptr);
 
     SetBackBuffer();
-
     SetDepthStencilBuffers();
 }
 
@@ -294,7 +299,6 @@ void Renderer::ChangeResolution()
 
     Resize(m_width, m_height);
 }
-
 
 
 #pragma region ExceptionsClass
