@@ -240,6 +240,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\3DLoader\ObjectElements\Transform.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />
+    <ClInclude Include="include\Physics\BulletInclude.h" />
     <ClInclude Include="include\Rendering\Buffers\InputLayout.h" />
     <ClInclude Include="include\Containers\TransformContainer.h" />
     <ClInclude Include="include\Objects\IObject.h" />
@@ -252,6 +253,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Scene\Scene.h" />
     <ClInclude Include="include\Scene\SceneGraph\SceneGraph.h" />
     <ClInclude Include="include\Scene\SceneGraph\SceneNode.h" />
+    <ClInclude Include="include\Systems\CollisionSystem.h" />
     <ClInclude Include="include\Systems\IECSSystem.h" />
     <ClInclude Include="include\Systems\RenderSystem.h" />
     <ClInclude Include="include\3DLoader\ObjectLoader.h" />
@@ -318,6 +320,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Rendering\Materials\Texture.cpp" />
     <ClCompile Include="src\Scene\SceneGraph\SceneGraph.cpp" />
     <ClCompile Include="src\Scene\SceneGraph\SceneNode.cpp" />
+    <ClCompile Include="src\Systems\CollisionSystem.cpp" />
     <ClCompile Include="src\Systems\RenderSystem.cpp" />
     <ClCompile Include="src\Events\Event.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />

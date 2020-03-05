@@ -1,6 +1,6 @@
 #pragma once
 #include <Export.h>
-#include "btBulletDynamicsCommon.h"
+#include <Physics/BulletInclude.h>
 
 namespace Engine::Systems
 {
@@ -8,7 +8,7 @@ namespace Engine::Systems
     {
     public:
         CollisionSystem();
-        ~CollisionSystem() = default;
+        ~CollisionSystem();
 
     private:
         btDefaultCollisionConfiguration* m_collisionConfiguration;

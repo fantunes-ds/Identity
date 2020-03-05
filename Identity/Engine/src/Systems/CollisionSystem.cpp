@@ -20,3 +20,15 @@ Engine::Systems::CollisionSystem::CollisionSystem()
 
     ///-----initialization_end-----
 }
+
+Engine::Systems::CollisionSystem::~CollisionSystem()
+{
+    delete m_collisionConfiguration;
+    delete m_dispatcher;
+    delete m_dynamicsWorld;
+    delete m_overlappingPairCache;
+    delete m_solver;
+
+    for (int i = 0; i < m_collisionShapes.size(); ++i)
+        delete m_collisionShapes[i];
+}
