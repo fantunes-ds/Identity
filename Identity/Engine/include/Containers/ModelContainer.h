@@ -26,6 +26,7 @@ namespace Engine::Containers
 
         //TODO: determine if return pointer or id?
         static std::shared_ptr<Engine::ObjectElements::Model> AddModel(const std::string& p_path, const std::string& p_name);
+        static std::shared_ptr<Engine::ObjectElements::Model> AddModel(ObjectElements::Model& p_model);
         static bool RemoveModel(int32_t p_id);
         /**
          * @brief Finds an already loaded Model according to name.

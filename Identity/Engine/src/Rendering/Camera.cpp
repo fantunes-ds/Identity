@@ -30,8 +30,6 @@ void Engine::Rendering::Camera::UpdateVectors()
      auto transform = Containers::TransformContainer::GetTransform(m_transformId);
 
      transform->SetRotation((roll * yaw * pitch).Normalize());
-     //const Matrix4F coucou = Matrix4F::CreateRotation((pitch * yaw * roll).Normalize().Conjugate()).Transpose();
-     //transform->SetRotation(Quaternion(Matrix4F{ coucou }));
 }
 
 void Engine::Rendering::Camera::UpdateCameraPosition()
@@ -116,8 +114,6 @@ void Engine::Rendering::Camera::UpdateViewMatrix()
 {
 
     auto transform = Containers::TransformContainer::GetTransform(m_transformId);
-    std::string gopos = "go x : " + std::to_string(transform->GetPosition().x) + "y : " + std::to_string(transform->GetPosition().y) + "z : " + std::to_string(transform->GetPosition().z + '\n');
-    OutputDebugString(gopos.c_str());
     const Matrix4F rotation = transform->GetRotation().Conjugate().ToMatrix4().Transpose();
     const Matrix4F translation = Matrix4F::CreateTranslation(Vector3F{ -transform->GetPosition().x, -transform->GetPosition().y, transform->GetPosition().z});
 

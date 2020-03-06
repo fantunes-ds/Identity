@@ -210,6 +210,9 @@
     <ClInclude Include="include\Physics\BulletInclude.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Tools\Bullet\BulletDebugRender.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\TestDependencies.cpp">
@@ -365,10 +368,15 @@
     <ClCompile Include="src\Systems\CollisionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tools\Bullet\BulletDebugRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\PixelShader.hlsl" />
     <FxCompile Include="Resources\Shaders\VertexShader.hlsl" />
+    <FxCompile Include="Resources\Shaders\pDirect2D.hlsl" />
+    <FxCompile Include="Resources\Shaders\vDirect2D.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl">

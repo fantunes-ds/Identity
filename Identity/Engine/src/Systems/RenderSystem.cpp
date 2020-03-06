@@ -14,6 +14,7 @@
 #include <Rendering/Buffers/VertexConstantBuffer.h>
 #include <Containers/LightContainer.h>
 #include <Scene/SceneGraph/SceneNode.h>
+#include "Tools/Bullet/BulletDebugRender.h"
 
 //WIP
 
@@ -25,6 +26,7 @@ Engine::Systems::RenderSystem::RenderSystem()
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 {
     HRESULT hr;
+    Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     std::shared_ptr<Rendering::Lights::ILight> ILight = Containers::LightContainer::GetLights().begin()->second;
     std::shared_ptr<Rendering::Lights::Light> light1 = std::dynamic_pointer_cast<Rendering::Lights::Light>(Containers::LightContainer::GetLights().begin()->second);
@@ -53,6 +55,38 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
     {
         DrawSceneNode(sceneNode.second);
     }
+
+    //TEST
+    auto mesh = Containers::ModelContainer::FindModel(Containers::ModelContainer::FindModel("DebugBox"))->GetMeshes()[0];
+    mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LinkTexture"));
+    mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
+
+    mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
+
+    mesh->GetMaterial().GetShader().GenConstantBuffers();
+
+    Matrix4F model = Tools::Bullet::BulletDebugRenderer::GetInstance()->GetWorldMatrix();
+    //model.Transpose();
+    Matrix4F normalModel = Matrix4F::Inverse(model);
+
+    Matrix4F view = camera->GetViewMatrix();
+    Matrix4F perspective = camera->GetPerspectiveMatrix();
+    perspective.Transpose();
+
+
+    Rendering::Buffers::VCB vcb{ model, view, normalModel,perspective };
+    mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
+    const Vector3F cameraPos = camera->GetPosition();
+
+    const Vector4F reversedXLightPos = Vector4F(light.position.x, light.position.y, -light.position.z, 1.0f);
+    const Rendering::Buffers::PCB pcb{ reversedXLightPos, light.ambient, light.diffuse,
+                                        light.specular , light.color,
+                                                        light.shininess,Vector3F{},Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, 0.0f };
+    mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
+    Rendering::Renderer::GetInstance()->SetRenderTarget();
+    Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+
+    GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
 }
 
 void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)

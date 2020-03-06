@@ -8,18 +8,25 @@
 #include <Tools/FPSCounter.h>
 
 #include <Systems/RenderSystem.h>
+#include <Systems/CollisionSystem.h>
+
 #include <Input/Input.h>
 #include <Objects/GameObject.h>
 #include <Components/ModelComponent.h>
 #include <Components/CameraComponent.h>
 #include <Containers/MaterialContainer.h>
 #include <Components/LightComponent.h>
+#include <LinearMath/btVector3.h>
 
 using namespace Engine::Core;
 
 App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
+    btVector3 vec(0.0f, 0.0f, 0.0f);
+    //btDiscreteDynamicsWorld w;
+    //b3PhysicsClientHandle kPhysClient = 0;
     Input::Input::InitInput();
+    //btVector3 vec3;
 }
 
 App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name), m_width(p_width), m_height(p_height)
@@ -30,12 +37,15 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 int App::Run() const
 {
     Systems::RenderSystem renderSystem;
+    Systems::CollisionSystem collisionSystem;
     Tools::FPSCounter fpsCounter(20);
 
     Objects::GameObject link;
     Objects::GameObject lambo;
     Objects::GameObject camera;
     Objects::GameObject light;
+
+    collisionSystem.InitTestScene();
 
     Containers::MaterialContainer::AddMaterial("missing");
     Containers::MaterialContainer::GetMaterial("missing")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/missing.png");
@@ -103,6 +113,7 @@ int App::Run() const
     while (true)
     {
         fpsCounter.Start();
+        collisionSystem.Update(fpsCounter.GetDeltaTime());
 
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {

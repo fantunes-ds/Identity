@@ -53,6 +53,14 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContaine
     return model;
 }
 
+std::shared_ptr<Engine::ObjectElements::Model> Engine::Containers::ModelContainer::AddModel(
+    ObjectElements::Model& p_model)
+{
+    auto model = std::make_shared<ObjectElements::Model>(p_model);
+    GetInstance()->m_models.insert_or_assign(p_model.GetID(), model);
+    return model;
+}
+
 bool Engine::Containers::ModelContainer::RemoveModel(int32_t p_id)
 {
     const size_t sizeBefore = GetInstance()->m_models.size();

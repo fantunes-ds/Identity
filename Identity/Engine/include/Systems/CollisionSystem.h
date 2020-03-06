@@ -1,6 +1,7 @@
 #pragma once
 #include <Export.h>
 #include <Physics/BulletInclude.h>
+#include <Tools/Bullet/BulletDebugRender.h>
 
 namespace Engine::Systems
 {
@@ -10,7 +11,12 @@ namespace Engine::Systems
         CollisionSystem();
         ~CollisionSystem();
 
+        void Update(float p_deltaTime);
+        void InitTestScene();
     private:
+
+        btIDebugDraw* m_debugRenderer;
+
         btDefaultCollisionConfiguration* m_collisionConfiguration;
 
         ///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
@@ -23,8 +29,6 @@ namespace Engine::Systems
         btSequentialImpulseConstraintSolver* m_solver;
 
         btDiscreteDynamicsWorld* m_dynamicsWorld;
-
-        ///-----initialization_end-----
 
         //keep track of the shapes, we release memory at exit.
         //make sure to re-use collision shapes among rigid bodies whenever possible!
