@@ -32,8 +32,7 @@ bool Engine::Components::Camera::operator==(IComponent* p_other)
 
 bool Engine::Components::Camera::DeleteFromMemory()
 {
-    return false;
-    // return Containers::CameraSystem::RemoveCamera(GetID());
+    return Containers::CameraSystem::RemoveCamera(GetID());
 }
 
 void Engine::Components::Camera::UpdateVectors()
