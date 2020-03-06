@@ -225,7 +225,7 @@ void Renderer::Resize(const float& p_width, const float& p_height)
             DXGI_FORMAT_UNKNOWN,
             0
         ));
-        SetViewPort(m_fullWidth, m_height);
+        SetViewPort(m_fullWidth, m_fullHeight);
     }
     else
     {

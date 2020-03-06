@@ -9,7 +9,7 @@
 #include <Containers/GameObjectContainer.h>
 #include <Containers/TransformSystem.h>
 #include "Components/ModelComponent.h"
-#include "Containers/CameraContainer.h"
+#include "Containers/CameraSystem.h"
 #include <Containers/EventContainer.h>
 #include <Rendering/Buffers/VertexConstantBuffer.h>
 #include <Containers/LightContainer.h>
@@ -30,7 +30,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
     std::shared_ptr<Rendering::Lights::Light> light1 = std::dynamic_pointer_cast<Rendering::Lights::Light>(Containers::LightContainer::GetLights().begin()->second);
     Rendering::Lights::Light::LightData& light = light1->GetLightData();
 
-    std::shared_ptr<Rendering::Camera> camera = Containers::CameraContainer::GetCamera(m_activeCamera);
+    auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
 
     float* pos[3] = { &light.position.x, &light.position.y, &light.position.z };
 
@@ -57,7 +57,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 
 void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
 {
-    auto camera = Containers::CameraContainer::GetCamera(m_activeCamera);
+    auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
     auto mesh = p_sceneNode->GetMesh();
     std::shared_ptr<Rendering::Lights::Light> light1 = std::dynamic_pointer_cast<Rendering::Lights::Light>(Containers::LightContainer::GetLights().begin()->second);
     Rendering::Lights::Light::LightData& light = light1->GetLightData();
@@ -99,16 +99,16 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
     }
 }
 
-void Engine::Systems::RenderSystem::Update(float p_deltaTime)
+void Engine::Systems::RenderSystem::IUpdate(float p_deltaTime)
 {
-    Containers::TransformSystem::GetInstance()->Update(p_deltaTime);
+    Containers::TransformSystem::Update(p_deltaTime);
     Scene::SceneGraph::GetInstance()->UpdateScene(0);
     
-    if (Containers::CameraContainer::GetCamera(m_activeCamera))
+    if (Containers::CameraSystem::GetCamera(m_activeCamera))
     {
         int width, height;
         Rendering::Renderer::GetInstance()->GetResolution(width, height);
-        Containers::CameraContainer::GetCamera(m_activeCamera)->UpdateCamera(width, height);
+        Containers::CameraSystem::GetCamera(m_activeCamera)->UpdateCamera(width, height);
     }
     DrawScene(p_deltaTime);
 }

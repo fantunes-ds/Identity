@@ -19,6 +19,11 @@ Engine::Containers::TransformSystem* Engine::Containers::TransformSystem::GetIns
 
 void Engine::Containers::TransformSystem::Update(float p_deltaTime)
 {
+    GetInstance()->IUpdate(p_deltaTime);
+}
+
+void Engine::Containers::TransformSystem::IUpdate(float p_deltaTime)
+{
     for (std::shared_ptr<Engine::Components::Transform> transform : GetTransforms())
     {
         if (transform->needUpdate)

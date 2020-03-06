@@ -11,7 +11,7 @@
 #include <Input/Input.h>
 #include <Objects/GameObject.h>
 #include <Components/ModelComponent.h>
-#include <Components/CameraComponent.h>
+#include <Components/Camera.h>
 #include <Containers/MaterialContainer.h>
 #include <Components/LightComponent.h>
 
@@ -52,7 +52,7 @@ int App::Run() const
     Containers::MaterialContainer::GetMaterial("LamboTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
     Containers::MaterialContainer::GetMaterial("LamboTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
 
-    camera.AddComponent<Components::CameraComponent>(m_width, m_height);
+    camera.AddComponent<Components::Camera>(m_width, m_height);
 
 
     Containers::LightContainer* test = Containers::LightContainer::GetInstance();
@@ -80,7 +80,7 @@ int App::Run() const
     dirLight.color = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
     dirLight.shininess = 32.0f;
 
-    camera.AddComponent<Components::CameraComponent>(m_width, m_height);
+    // camera.AddComponent<Components::CameraComponent>(m_width, m_height);
     // light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
     light.AddComponent<Components::LightComponent>(dirLight);
 
@@ -99,7 +99,7 @@ int App::Run() const
     // Containers::TransformSystem::GetInstance()->Update(0.f);
 
 
-    renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::CameraComponent>()->GetCamera()->GetID());
+    renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
 
 
 
@@ -138,8 +138,7 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTi
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-
-    p_renderSystem.Update(p_deltaTime);
+    p_renderSystem.IUpdate(p_deltaTime);
 
     static bool show_demo_window = true;
     ImGui::Begin("Identity UI Tools");

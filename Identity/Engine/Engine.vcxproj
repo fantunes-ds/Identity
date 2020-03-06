@@ -220,11 +220,10 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\Components\CameraComponent.h" />
     <ClInclude Include="include\Components\IComponent.h" />
     <ClInclude Include="include\Components\LightComponent.h" />
     <ClInclude Include="include\Components\ModelComponent.h" />
-    <ClInclude Include="include\Containers\CameraContainer.h" />
+    <ClInclude Include="include\Containers\CameraSystem.h" />
     <ClInclude Include="include\Containers\ComponentContainer.h" />
     <ClInclude Include="include\Containers\EventContainer.h" />
     <ClInclude Include="include\Containers\GameObjectContainer.h" />
@@ -261,7 +260,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Objects\GameObject.h" />
     <ClInclude Include="include\Rendering\Buffers\IndexBuffer.h" />
     <ClInclude Include="include\Rendering\Buffers\VertexBuffer.h" />
-    <ClInclude Include="include\Rendering\Camera.h" />
+    <ClInclude Include="include\Components\Camera.h" />
     <ClInclude Include="include\Rendering\Renderer.h" />
     <ClInclude Include="include\Rendering\Window.h" />
     <ClInclude Include="include\stdafx.h" />
@@ -291,9 +290,8 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Containers\LightContainer.cpp" />
     <ClCompile Include="src\Containers\MaterialContainer.cpp" />
     <ClCompile Include="src\Objects\IObject.cpp" />
-    <ClCompile Include="src\Components\CameraComponent.cpp" />
     <ClCompile Include="src\Components\ModelComponent.cpp" />
-    <ClCompile Include="src\Containers\CameraContainer.cpp" />
+    <ClCompile Include="src\Containers\CameraSystem.cpp" />
     <ClCompile Include="src\Core\App.cpp" />
     <ClCompile Include="src\Containers\ComponentContainer.cpp" />
     <ClCompile Include="src\Containers\GameObjectContainer.cpp" />
@@ -320,7 +318,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Input\Keyboard.cpp" />
     <ClCompile Include="src\Rendering\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Rendering\Buffers\VertexBuffer.cpp" />
-    <ClCompile Include="src\Rendering\Camera.cpp" />
+    <ClCompile Include="src\Components\Camera.cpp" />
     <ClCompile Include="src\Rendering\Renderer.cpp" />
     <ClCompile Include="src\Rendering\Window.cpp" />
     <ClCompile Include="src\TestDependencies.cpp" />

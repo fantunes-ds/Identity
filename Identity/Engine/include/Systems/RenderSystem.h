@@ -18,7 +18,7 @@ namespace Engine::Systems
 
         void DrawScene(float p_deltaTime);
         void DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode);
-        void Update(float p_deltaTime) override;
+        void IUpdate(float p_deltaTime) override;
 
         void ResetActiveCamera();
 

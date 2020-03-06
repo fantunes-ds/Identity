@@ -15,7 +15,8 @@ namespace Engine::Containers
         static TransformSystem* GetInstance();
 
 
-        void Update(float p_deltaTime) override;
+        static void Update(float p_deltaTime);
+        void IUpdate(float p_deltaTime) override;
         // static void Update(float p_deltaTime);
 
         static int32_t AddTransform();
