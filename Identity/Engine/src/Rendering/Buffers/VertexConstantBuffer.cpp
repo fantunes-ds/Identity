@@ -19,8 +19,16 @@ void VertexConstantBuffer::GenBuffers()
     VertexConstantShaderData.pSysMem                = &m_vcb;
     GFX_THROW_INFO(Renderer::GetInstance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &VertexConstantShaderData, &m_buffer
                    ));
+}
 
+void VertexConstantBuffer::Bind() const
+{
     Renderer::GetInstance()->GetContext()->VSSetConstantBuffers(0u, 1u, m_buffer.GetAddressOf());
+}
+
+void VertexConstantBuffer::Unbind() const
+{
+    Renderer::GetInstance()->GetContext()->VSSetConstantBuffers(0u, 0u, nullptr);
 }
 
 void VertexConstantBuffer::Update(const VCB& p_filledBuffer) const

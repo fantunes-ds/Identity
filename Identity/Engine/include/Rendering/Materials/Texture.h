@@ -15,6 +15,7 @@ namespace Engine::Rendering::Materials
 
         void LoadTexture(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
         void BindTexture(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
+        void UnbindTexture(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
         [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTexture() const { return m_texture; }
         [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11SamplerState> GetSampleState() const { return m_samplerState; }
 

@@ -15,6 +15,9 @@ namespace Engine::Rendering::Materials
         void LoadPixelShader(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
         void LoadVertexShader(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
         void BindShader(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const;
+        void UnbindShader(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const;
+        void BindConstantBuffers(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const;
+        void UnbindConstantBuffers(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const;
 
         void GenConstantBuffers();
 

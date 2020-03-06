@@ -19,6 +19,8 @@ namespace Engine::Rendering::Buffers
         ~PixelConstantBuffer() = default;
 
         void GenBuffers();
+        void Bind() const;
+        void Unbind() const;
 
         const PCB& GetVCB() const { return m_pcb; }
 

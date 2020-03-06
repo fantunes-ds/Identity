@@ -33,3 +33,9 @@ void Texture::BindTexture(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_c
     p_context->PSSetShaderResources(0, 1, m_texture.GetAddressOf());
     p_context->PSSetSamplers(0, 1, m_samplerState.GetAddressOf());
 }
+
+void Texture::UnbindTexture(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
+{
+    p_context->PSSetShaderResources(0, 0, nullptr);
+    p_context->PSSetSamplers(0, 0, nullptr);
+}

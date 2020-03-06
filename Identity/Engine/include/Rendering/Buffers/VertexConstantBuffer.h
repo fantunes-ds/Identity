@@ -20,6 +20,8 @@ namespace Engine::Rendering::Buffers
         ~VertexConstantBuffer() = default;
 
         void GenBuffers();
+        void Bind() const;
+        void Unbind() const;
 
         [[nodiscard]] const VCB& GetVCB() const { return m_vcb; }
         [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11Buffer>& GetBuffer() const { return m_buffer; }

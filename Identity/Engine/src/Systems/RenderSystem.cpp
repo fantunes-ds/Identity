@@ -66,8 +66,6 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
     {
         mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
 
-        mesh->GetMaterial().GetShader().GenConstantBuffers();
-
         Matrix4F model = Containers::TransformContainer::FindTransform(p_sceneNode->GetTransform())->GetWorldTransformMatrix();
 
         Matrix4F normalModel = Matrix4F::Inverse(model);
@@ -75,7 +73,6 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         Matrix4F view = camera->GetViewMatrix();
         Matrix4F perspective = camera->GetPerspectiveMatrix();
         perspective.Transpose();
-
 
         Rendering::Buffers::VCB vcb{ model, view, normalModel,perspective };
         mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
@@ -89,6 +86,7 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         Rendering::Renderer::GetInstance()->SetRenderTarget();
 
         GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
+        mesh->Unbind(Rendering::Renderer::GetInstance()->GetContext());
     }
 
     for (auto child : p_sceneNode->GetChildren())

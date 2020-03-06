@@ -24,6 +24,7 @@ namespace Engine::ObjectElements
 
         void GenerateBuffers(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device);
         void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
+        void Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
         void SetMaterial(const int32_t p_material);
 
         bool operator==(const Mesh& p_other) const;

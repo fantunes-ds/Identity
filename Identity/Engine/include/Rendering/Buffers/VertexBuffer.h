@@ -12,6 +12,7 @@ namespace Engine::Rendering::Buffers
     {
         void Generate(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, std::vector<Geometry::Vertex>& p_vertices);
         void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
+        void Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
 
         bool operator==(const VertexBuffer& p_other) const;
 

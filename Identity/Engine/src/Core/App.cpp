@@ -81,10 +81,7 @@ int App::Run() const
     dirLight.shininess = 32.0f;
 
     camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    //light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
     light.AddComponent<Components::LightComponent>(dirLight);
-
-    //.SetParentObject(statue);
 
     for (auto& mesh : link.GetModel()->GetMeshes())
     {
