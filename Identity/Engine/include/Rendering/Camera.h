@@ -2,7 +2,7 @@
 #include <Export.h>
 #include <GPM/GPM.h>
 #include <Objects/IObject.h>
-#include "Containers/TransformContainer.h"
+#include "Containers/TransformSystem.h"
 
 namespace Engine::Systems
 {
@@ -25,8 +25,8 @@ namespace Engine::Rendering
         [[nodiscard]] const Matrix4F& GetPerspectiveMatrix() const noexcept { return m_perspectiveMatrix; }
         [[nodiscard]] const Matrix4F& GetViewMatrix() const { return m_viewMatrix; }
 
-        [[nodiscard]] const Vector3F& GetPosition() const noexcept { return Containers::TransformContainer::GetTransform(m_transformId)->GetPosition(); }
-        [[nodiscard]] const Quaternion& GetRotation() const noexcept { return Containers::TransformContainer::GetTransform(m_transformId)->GetRotation(); }
+        [[nodiscard]] const Vector3F& GetPosition() const noexcept { return Containers::TransformSystem::GetTransform(m_transformId)->GetPosition(); }
+        [[nodiscard]] const Quaternion& GetRotation() const noexcept { return Containers::TransformSystem::GetTransform(m_transformId)->GetRotation(); }
         // [[nodiscard]] const Quaternion& GetOrientation() const noexcept { return m_orientation; }
 
         // [[nodiscard]] const float& GetYaw() const noexcept { return m_yaw; }

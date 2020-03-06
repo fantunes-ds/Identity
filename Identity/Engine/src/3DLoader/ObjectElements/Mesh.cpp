@@ -2,12 +2,12 @@
 
 #include <3DLoader/ObjectElements/Mesh.h>
 #include <Tools/DirectX/GraphicsMacros.h>
-#include <Containers/TransformContainer.h>
+#include <Containers/TransformSystem.h>
 
 Engine::ObjectElements::Mesh::Mesh(std::vector<Engine::Geometry::Vertex>& p_vertices, std::vector<unsigned short>& p_indices) :
     m_vertices { p_vertices }, m_indices { p_indices }
 {
-    m_transform = Containers::TransformContainer::AddTransform();
+    m_transform = Containers::TransformSystem::AddTransform();
 }
 
 Engine::ObjectElements::Mesh::Mesh(const Mesh& p_other):

@@ -1,6 +1,6 @@
 #include <stdafx.h>
 #include <Scene/SceneGraph/SceneNode.h>
-#include "Containers/TransformContainer.h"
+#include "Containers/TransformSystem.h"
 
 Engine::Scene::SceneNode::SceneNode(std::shared_ptr<ObjectElements::Mesh> p_mesh) : m_mesh{ p_mesh } {}
 
@@ -10,7 +10,7 @@ Engine::Scene::SceneNode::~SceneNode()
 
 void Engine::Scene::SceneNode::AddChild(std::shared_ptr<SceneNode> p_child)
 {
-    p_child->SetTransform(Containers::TransformContainer::AddTransform());
+    p_child->SetTransform(Containers::TransformSystem::AddTransform());
 
     m_children.push_back(p_child);
     p_child->m_parent = this;
@@ -38,11 +38,11 @@ void Engine::Scene::SceneNode::RemoveChild(std::shared_ptr<SceneNode> p_child)
 
 void Engine::Scene::SceneNode::Update(float p_deltaTime)
 {
-    auto transform = Containers::TransformContainer::FindTransform(m_transform);
+    auto transform = Containers::TransformSystem::FindTransform(m_transform);
 
     if (m_parent)
     {
-        auto parentTransform = Containers::TransformContainer::FindTransform(m_parent->GetTransform());
+        auto parentTransform = Containers::TransformSystem::FindTransform(m_parent->GetTransform());
         transform->SetWorldTransformMatrix(parentTransform->GetWorldTransformMatrix() * transform->GetLocalTransformMatrix());
     }
     else

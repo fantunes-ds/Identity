@@ -7,7 +7,7 @@
 #include "Tools/ImGUI/imgui_impl_dx11.h"
 #include <Input/Input.h>
 #include <Containers/GameObjectContainer.h>
-#include <Containers/TransformContainer.h>
+#include <Containers/TransformSystem.h>
 #include "Components/ModelComponent.h"
 #include "Containers/CameraContainer.h"
 #include <Containers/EventContainer.h>
@@ -68,7 +68,9 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
 
         mesh->GetMaterial().GetShader().GenConstantBuffers();
 
-        Matrix4F model = Containers::TransformContainer::FindTransform(p_sceneNode->GetTransform())->GetWorldTransformMatrix();
+        auto testing = Containers::TransformSystem::FindTransform(p_sceneNode->GetTransform());
+
+        Matrix4F model = Containers::TransformSystem::FindTransform(p_sceneNode->GetTransform())->GetWorldTransformMatrix();
 
         Matrix4F normalModel = Matrix4F::Inverse(model);
 
@@ -99,15 +101,16 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
 
 void Engine::Systems::RenderSystem::Update(float p_deltaTime)
 {
-    DrawScene(p_deltaTime);
+    Containers::TransformSystem::GetInstance()->Update(p_deltaTime);
     Scene::SceneGraph::GetInstance()->UpdateScene(0);
-
+    
     if (Containers::CameraContainer::GetCamera(m_activeCamera))
     {
         int width, height;
         Rendering::Renderer::GetInstance()->GetResolution(width, height);
         Containers::CameraContainer::GetCamera(m_activeCamera)->UpdateCamera(width, height);
     }
+    DrawScene(p_deltaTime);
 }
 
 void Engine::Systems::RenderSystem::ResetActiveCamera()

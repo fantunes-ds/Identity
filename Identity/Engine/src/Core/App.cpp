@@ -81,7 +81,7 @@ int App::Run() const
     dirLight.shininess = 32.0f;
 
     camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    //light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
+    // light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
     light.AddComponent<Components::LightComponent>(dirLight);
 
     //.SetParentObject(statue);
@@ -95,6 +95,9 @@ int App::Run() const
     {
         mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LamboTexture"));
     }
+
+    // Containers::TransformSystem::GetInstance()->Update(0.f);
+
 
     renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::CameraComponent>()->GetCamera()->GetID());
 
@@ -134,6 +137,7 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTi
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
+
 
     p_renderSystem.Update(p_deltaTime);
 

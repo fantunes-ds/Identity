@@ -23,20 +23,18 @@ m_transformId(p_transformId), m_width(static_cast<float>(p_width)), m_height(sta
 void Engine::Rendering::Camera::UpdateVectors()
 {
      //Supposedly ok.
-     const Quaternion pitch = Quaternion(Vector3F(-1.0f, 0.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_pitch));
-     const Quaternion yaw   = Quaternion(Vector3F(0.0f, 1.0f, 0.0f), GPM::Tools::Utils::ToRadians(-m_yaw));
+     const Quaternion pitch = Quaternion(Vector3F(1.0f, 0.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_pitch));
+     const Quaternion yaw   = Quaternion(Vector3F(0.0f, 1.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_yaw));
      const Quaternion roll  = Quaternion(Vector3F(0.0f, 0.0f, 1.0f), GPM::Tools::Utils::ToRadians(0.0f));
     
-     auto transform = Containers::TransformContainer::GetTransform(m_transformId);
+     auto transform = Containers::TransformSystem::GetTransform(m_transformId);
 
-     transform->SetRotation((roll * yaw * pitch).Normalize());
-     //const Matrix4F coucou = Matrix4F::CreateRotation((pitch * yaw * roll).Normalize().Conjugate()).Transpose();
-     //transform->SetRotation(Quaternion(Matrix4F{ coucou }));
+     transform->SetRotation((pitch * yaw * roll).Normalize());
 }
 
 void Engine::Rendering::Camera::UpdateCameraPosition()
 {
-    auto transform = Containers::TransformContainer::GetTransform(m_transformId);
+    auto transform = Containers::TransformSystem::GetTransform(m_transformId);
 
     float *pos [3] = { &transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z };
     if (ImGui::Begin("Camera Tool"))
@@ -114,8 +112,7 @@ void Engine::Rendering::Camera::UpdateCameraRotation()
 
 void Engine::Rendering::Camera::UpdateViewMatrix()
 {
-
-    auto transform = Containers::TransformContainer::GetTransform(m_transformId);
+    auto transform = Containers::TransformSystem::GetTransform(m_transformId);
     std::string gopos = "go x : " + std::to_string(transform->GetPosition().x) + "y : " + std::to_string(transform->GetPosition().y) + "z : " + std::to_string(transform->GetPosition().z + '\n');
     OutputDebugString(gopos.c_str());
     const Matrix4F rotation = transform->GetRotation().Conjugate().ToMatrix4().Transpose();

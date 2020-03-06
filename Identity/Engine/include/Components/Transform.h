@@ -1,20 +1,27 @@
 #pragma once
 #include <Export.h>
 #include <GPM/GPM.h>
-#include <Objects/IObject.h>
+#include <Components/IComponent.h>
 
-namespace Engine::ObjectElements
+namespace Engine::Components
 {
-    class API_ENGINE Transform : public Objects::IObject
+    class API_ENGINE Transform : public IComponent
     {
     public:
         Transform();
 
-        Transform(Vector3F& p_position);
+        // Transform(Vector3F& p_position);
         ~Transform() = default;
-
-        Transform(const Transform& p_other);
+        Transform(Objects::GameObject* p_gameObject);
+        Transform(Objects::GameObject* p_gameObject, const Transform& p_other);
         //Transform(const Transform&& p_other) noexcept;
+
+
+        //---WIP---
+        bool operator==(IComponent* p_other) override;
+        bool DeleteFromMemory() override;
+        //---------
+
 
         /** 
          * @brief Adds the given vector to the current position.
@@ -34,12 +41,21 @@ namespace Engine::ObjectElements
         void Scale(const Vector3F& p_scale);
 
 
-        inline void SetPosition(const Vector3F& p_position) { m_position = p_position; }
-        inline void SetScale(const Vector3F& p_scale) { m_scale = p_scale; }
+        inline void SetPosition(const Vector3F& p_position)
+        {
+            m_position = p_position;
+            needUpdate = true;
+        }
+        inline void SetScale(const Vector3F& p_scale)
+        {
+            m_scale = p_scale;
+            needUpdate = true;
+        }
         inline void SetRotation(const Quaternion& p_rotation)
         {
             m_rotation = p_rotation;
-            CalculateAxes();
+            needAxesUpdate = true;
+            needUpdate = true;
         }
 
         inline void SetWorldTransformMatrix(const Matrix4F& p_transform) { m_worldTransform = p_transform; }
@@ -59,8 +75,11 @@ namespace Engine::ObjectElements
         inline Matrix4F& GetWorldTransformMatrix() { return m_worldTransform; }
         inline Matrix4F& GetLocalTransformMatrix() { return m_localTransform; }
 
-    private:
         void CalculateAxes();
+
+        bool needUpdate{ false };
+        bool needAxesUpdate{ false };
+    private:
 
         int32_t m_parent = -1;
         Vector3F m_position;

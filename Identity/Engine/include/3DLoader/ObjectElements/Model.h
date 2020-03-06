@@ -19,7 +19,7 @@ namespace Engine::ObjectElements
 
         inline std::vector<std::shared_ptr<Mesh>>& GetMeshes() { return m_meshes; }
         inline std::string& GetName() { return m_name; }
-        inline const std::shared_ptr<Scene::SceneNode> GetRootNode() const { return m_rootNode; }
+        inline std::shared_ptr<Scene::SceneNode> GetRootNode() { return m_rootNode; }
 
         inline void SetRootNode(std::shared_ptr<Scene::SceneNode> p_rootNode) { m_rootNode = p_rootNode; }
 
