@@ -34,14 +34,17 @@ Renderer::Renderer(const HWND& p_hwnd, const int& p_clientWidth, const int& p_cl
     GFX_THROW_INFO(m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m_4xMsaaQuality));
 
     CreateSwapChain(p_hwnd);
-    SetBackBuffer();
-    SetDepthStencilBuffers();
-
-    m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    //m_pSwapChain->SetFullscreenState(isFullscreen, nullptr);
 
     SetViewPort(m_width, m_height);
+    SetBackBuffer();
+    //ResetContext();
+    //SetDepthStencilBuffers();
+    m_pContext->OMSetRenderTargets(0, m_pTarget.GetAddressOf(), nullptr);
 
+    //m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
+
 }
 
 void Renderer::EndFrame() const
@@ -71,6 +74,29 @@ void Renderer::ClearBuffers(const float& p_red, const float& p_green, const floa
         if(*RT.GetDepthStencilView().GetAddressOf() != nullptr)
             m_pContext->ClearDepthStencilView(RT.GetDepthStencilView().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
     }
+}
+
+
+void Renderer::Bind(const bool p_bindDefaultDepthStencil)
+{
+    if (p_bindDefaultDepthStencil)
+        m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
+    else
+        m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), nullptr);
+}
+
+void Renderer::Bind(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target, const bool p_bindDefaultDepthStencil) const
+{
+    if (p_bindDefaultDepthStencil)
+        m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), m_pDepthStencilView.Get());
+    else
+        m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), nullptr);
+
+}
+
+void Renderer::Bind(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target, const Microsoft::WRL::ComPtr<ID3D11DepthStencilView> p_ds) const
+{
+    m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), p_ds.Get());
 }
 
 void Renderer::ResetContext()
@@ -178,7 +204,7 @@ void Renderer::SetDepthStencilBuffers()
     descDSV.Texture2D.MipSlice = 0u;
     GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &m_pDepthStencilView));
 
-    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), nullptr);
+    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
 }
 
 
@@ -211,7 +237,7 @@ void Renderer::SetBackBuffer()
 
     Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
     GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
-    GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(*backBuffer.GetAddressOf(), nullptr, &m_pTarget));
+    GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
 }
 
 void Renderer::CreateRenderTexture()
@@ -229,7 +255,7 @@ void Renderer::Resize(const float& p_width, const float& p_height)
 
     ResetContext();
 
-    if (isFullscreen)
+    if (m_isFullscreen)
     {
         GFX_THROW_INFO(m_pSwapChain->ResizeBuffers(
             0,
@@ -251,17 +277,15 @@ void Renderer::Resize(const float& p_width, const float& p_height)
         ));
         SetViewPort(m_width, m_height);
     }
-    m_pSwapChain->SetFullscreenState(isFullscreen, nullptr);
+    m_pSwapChain->SetFullscreenState(m_isFullscreen, nullptr);
 
     SetBackBuffer();
     SetDepthStencilBuffers();
 }
 
-void Renderer::GetResolution(int& p_width, int& p_height)
+void Renderer::GetResolution(int& p_width, int& p_height) const
 {
-    ChangeResolution();
-
-    if (isFullscreen)
+    if (m_isFullscreen)
     {
         p_width = static_cast<int>(m_fullWidth);
         p_height = static_cast<int>(m_fullHeight);
@@ -275,7 +299,7 @@ void Renderer::GetResolution(int& p_width, int& p_height)
 
 void Renderer::SetFullscreen(const bool& p_state)
 {
-    isFullscreen = p_state;
+    m_isFullscreen = p_state;
 
     Resize(m_fullWidth, m_fullHeight);
 }
@@ -304,8 +328,8 @@ void Renderer::ChangeResolution()
 #pragma region ExceptionsClass
 
 #pragma region HrExceptionClass
-Renderer::HrException::HrException(int p_line, const char* p_file, HRESULT p_hr,
-    std::vector<std::string> p_infoMsg) noexcept
+Renderer::HrException::HrException(int p_line, const char* p_file, const HRESULT p_hr,
+                                   const std::vector<std::string>& p_infoMsg) noexcept
     : Exception(p_line, p_file),
     m_hr(p_hr)
 {
@@ -368,7 +392,7 @@ std::string Renderer::HrException::GetErrorInfo() const noexcept
 #pragma endregion
 
 #pragma region InfoExceptionClass
-Renderer::InfoException::InfoException(int p_line, const char* p_file, std::vector<std::string> p_infoMsg) noexcept
+Renderer::InfoException::InfoException(const int p_line, const char* p_file, const std::vector<std::string>& p_infoMsg) noexcept
     : Exception(p_line, p_file)
 {
     for (const auto& msg : p_infoMsg)

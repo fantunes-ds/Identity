@@ -60,6 +60,8 @@ void Engine::Systems::RenderSystem::DrawScene()
                     for (auto& RT : Rendering::Renderer::GetInstance()->GetRenderTextures())
                         RT.Bind();
                     GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
+
+                    Rendering::Renderer::GetInstance()->Bind(false);
                 }
             }
         }

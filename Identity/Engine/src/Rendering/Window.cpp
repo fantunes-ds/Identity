@@ -46,7 +46,7 @@ Window::WindowClass::~WindowClass()
 
 Window::Window(int p_width, int p_height, const char* p_name) : m_width(p_width), m_height(p_height)
 {
-    //adjust the size ot he window so the coosen resolution is for the user view and not for the entire window
+    //adjust the size ot he window so the chosen resolution is for the user view and not for the entire window
     RECT wr;
     wr.left   = 100;
     wr.right  = p_width + wr.left;

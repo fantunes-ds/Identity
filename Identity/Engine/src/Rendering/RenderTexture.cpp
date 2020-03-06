@@ -5,14 +5,14 @@
 
 #include <utility>
 
-Engine::Rendering::RenderTexture::RenderTexture(UINT p_width, UINT p_height, bool p_createDepthBuffer) : m_width(p_width), m_height(p_height)
+Engine::Rendering::RenderTexture::RenderTexture(const UINT p_width, const UINT p_height, const bool p_createDepthBuffer) : m_width(p_width), m_height(p_height)
 {
     CreateTexture(p_width, p_height);
     if (p_createDepthBuffer)
         CreateDepthStencilBuffer(p_width, p_height);
 }
 
-Engine::Rendering::RenderTexture::RenderTexture(UINT p_width, UINT p_height, Microsoft::WRL::ComPtr<ID3D11DepthStencilView> p_stencil)
+Engine::Rendering::RenderTexture::RenderTexture(const UINT p_width, const UINT p_height, Microsoft::WRL::ComPtr<ID3D11DepthStencilView> p_stencil) : m_width(p_width), m_height(p_height)
 {
     CreateTexture(p_width, p_height);
     m_stencilView = std::move(p_stencil);
@@ -63,7 +63,7 @@ void Engine::Rendering::RenderTexture::CreateTexture(UINT p_width, UINT p_height
     GFX_THROW_INFO(Rendering::Renderer::GetInstance()->GetDevice()->CreateShaderResourceView(*m_renderTargetTexture.GetAddressOf(), &shaderResourceViewDesc, &m_renderShaderResourceView));
 }
 
-void Engine::Rendering::RenderTexture::CreateDepthStencilBuffer(UINT p_width, UINT p_height)
+void Engine::Rendering::RenderTexture::CreateDepthStencilBuffer(const UINT p_width, const UINT p_height)
 {
     HRESULT hr;
 
@@ -104,10 +104,10 @@ void Engine::Rendering::RenderTexture::CreateDepthStencilBuffer(UINT p_width, UI
     Renderer::GetInstance()->GetContext()->OMSetRenderTargets(1u, m_renderTargetView.GetAddressOf(), *m_stencilView.GetAddressOf());
 }
 
-const void Engine::Rendering::RenderTexture::Bind() const
+void Engine::Rendering::RenderTexture::Bind() const
 {
     if (*m_stencilView.GetAddressOf() != nullptr)
-        Renderer::GetInstance()->GetContext()->OMSetRenderTargets(1u, m_renderTargetView.GetAddressOf(), *m_stencilView.GetAddressOf());
+        Renderer::GetInstance()->Bind(m_renderTargetView, m_stencilView);
     else
-        Renderer::GetInstance()->GetContext()->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), nullptr);
+        Renderer::GetInstance()->Bind(m_renderTargetView, false);
 }

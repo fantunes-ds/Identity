@@ -281,9 +281,6 @@
     <ClCompile Include="src\Rendering\Buffers\InputLayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Objects\GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Components\ModelComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -303,9 +300,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Components\CameraComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Objects\IObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Containers\EventContainer.cpp">
@@ -357,6 +351,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Rendering\RenderTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Objects\GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Objects\IObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
