@@ -64,7 +64,6 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
 
         Matrix4F view = camera->GetViewMatrix();
         Matrix4F perspective = camera->GetPerspectiveMatrix();
-        perspective.Transpose();
 
         Rendering::Buffers::VCB vcb{ model, view, normalModel,perspective };
         mesh->GetMaterial().GetShader().GetVCB().Update(vcb);

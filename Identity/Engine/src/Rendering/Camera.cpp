@@ -148,6 +148,6 @@ void Engine::Rendering::Camera::UpdatePerspectiveMatrix() noexcept
 
     m_perspectiveMatrix = Matrix4F{xScale, 0.0f, 0.0f, 0.0f,
                                         0.0f, yScale, 0.0f, 0.0f,
-                                        0.0f, 0.0f, fRange, -1.0f,
-                                        0.0f, 0.0f, m_nearZ * fRange, 0.0f};
+                                        0.0f, 0.0f, fRange, m_nearZ* fRange,
+                                        0.0f, 0.0f, -1.0f , 0.0f};
 }
