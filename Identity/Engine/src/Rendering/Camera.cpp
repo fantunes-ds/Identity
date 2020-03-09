@@ -52,34 +52,34 @@ void Engine::Rendering::Camera::UpdateCameraPosition()
         ImGui::Text("Right: %f | %f | %f", transform->GetRight().x, transform->GetRight().y, transform->GetRight().z);
     }ImGui::End();
 
+    float speed = m_speed;
+
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::Space))
-        m_speed = 0.2f;
-    else
-        m_speed = 0.05f;
+        speed *= 4.0f;
 
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
     {
-        transform->Translate(transform->GetForward() * m_speed);
+        transform->Translate(transform->GetForward() * speed);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
     {
-        transform->Translate(transform->GetForward() * m_speed * -1);
+        transform->Translate(transform->GetForward() * speed * -1);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
     {
-        transform->Translate(transform->GetRight() * m_speed );
+        transform->Translate(transform->GetRight() * speed );
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
     {
-        transform->Translate(transform->GetRight() * m_speed * -1);
+        transform->Translate(transform->GetRight() * speed * -1);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::E))
     {
-        transform->Translate(transform->GetUp() * m_speed);
+        transform->Translate(transform->GetUp() * speed);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::Q))
     {
-        transform->Translate(transform->GetUp() * m_speed * -1);
+        transform->Translate(transform->GetUp() * speed * -1);
     }
 }
 
