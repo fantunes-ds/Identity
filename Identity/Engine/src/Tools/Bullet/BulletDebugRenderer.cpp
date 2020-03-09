@@ -36,11 +36,6 @@ Engine::Tools::Bullet::BulletDebugRenderer::BulletDebugRenderer()
     vertices.emplace_back(Geometry::Vertex{GPM::Vector3F{b.getX(), b.getY(), b.getZ()}, GPM::Vector2F{}, GPM::Vector3F{}});
     vertices.emplace_back(Geometry::Vertex{GPM::Vector3F{a.getX(), b.getY(), b.getZ()}, GPM::Vector2F{}, GPM::Vector3F{}});
 
-   /* for(unsigned int i = 0; i < 35; i++)
-    {
-        indices.emplace_back(i);
-    }*/
-
     //Back
     indices.emplace_back(0);
     indices.emplace_back(1);
@@ -121,10 +116,10 @@ GPM::Matrix4F Engine::Tools::Bullet::BulletDebugRenderer::GetWorldMatrix()
     return mat.Transpose();
 }
 
-Engine::Tools::Bullet::BulletDebugRenderer* Engine::Tools::Bullet::BulletDebugRenderer::GetInstance()
+/*Engine::Tools::Bullet::BulletDebugRenderer* Engine::Tools::Bullet::BulletDebugRenderer::GetInstance()
 {
     if (!m_instance)
         m_instance = new BulletDebugRenderer();
 
     return m_instance;
-}
+}*/

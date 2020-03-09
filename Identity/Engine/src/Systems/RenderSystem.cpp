@@ -15,10 +15,12 @@
 #include <Containers/LightContainer.h>
 #include <Scene/SceneGraph/SceneNode.h>
 #include "Tools/Bullet/BulletDebugRender.h"
+#include "Containers/ColliderContainer.h"
+#include <Components/BoxCollider.h>
 
-//WIP
+#define DEBUG_MODE true
 
-//Example of how to use events
+
 Engine::Systems::RenderSystem::RenderSystem()
 {
 }
@@ -57,36 +59,41 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
     }
 
     //TEST
-    auto mesh = Containers::ModelContainer::FindModel(Containers::ModelContainer::FindModel("DebugBox"))->GetMeshes()[0];
-    mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LinkTexture"));
-    mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
+    if (DEBUG_MODE)
+    {
+        for (auto collider: Containers::ColliderContainer::GetColliders())
+        {
+            auto model = collider.second->GetModel();
+            auto mesh = model->GetMeshes()[0];
+            mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
 
-    mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
+            mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
 
-    mesh->GetMaterial().GetShader().GenConstantBuffers();
+            mesh->GetMaterial().GetShader().GenConstantBuffers();
 
-    Matrix4F model = Tools::Bullet::BulletDebugRenderer::GetInstance()->GetWorldMatrix();
-    //model.Transpose();
-    Matrix4F normalModel = Matrix4F::Inverse(model);
+            Matrix4F modelMatrix = collider.second->GetWorldMatrix();
+            Matrix4F normalModel = Matrix4F::Inverse(modelMatrix);
 
-    Matrix4F view = camera->GetViewMatrix();
-    Matrix4F perspective = camera->GetPerspectiveMatrix();
-    perspective.Transpose();
+            Matrix4F view = camera->GetViewMatrix();
+            Matrix4F perspective = camera->GetPerspectiveMatrix();
+            perspective.Transpose();
 
 
-    Rendering::Buffers::VCB vcb{ model, view, normalModel,perspective };
-    mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
-    const Vector3F cameraPos = camera->GetPosition();
+            Rendering::Buffers::VCB vcb{ modelMatrix, view, normalModel,perspective };
+            mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
+            const Vector3F cameraPos = camera->GetPosition();
 
-    const Vector4F reversedXLightPos = Vector4F(light.position.x, light.position.y, -light.position.z, 1.0f);
-    const Rendering::Buffers::PCB pcb{ reversedXLightPos, light.ambient, light.diffuse,
-                                        light.specular , light.color,
-                                                        light.shininess,Vector3F{},Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, 0.0f };
-    mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
-    Rendering::Renderer::GetInstance()->SetRenderTarget();
-    Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+            const Vector4F reversedXLightPos = Vector4F(light.position.x, light.position.y, -light.position.z, 1.0f);
+            const Rendering::Buffers::PCB pcb{ reversedXLightPos, light.ambient, light.diffuse,
+                                                light.specular , light.color,
+                                                                light.shininess,Vector3F{},Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, 0.0f };
+            mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
+            Rendering::Renderer::GetInstance()->SetRenderTarget();
+            Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
-    GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
+            GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
+        }
+    }
 }
 
 void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)

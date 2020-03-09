@@ -13,9 +13,10 @@ namespace Engine::Systems
 
         void Update(float p_deltaTime);
         void InitTestScene();
+
     private:
 
-        btIDebugDraw* m_debugRenderer;
+        Tools::Bullet::BulletDebugRenderer* m_debugRenderer;
 
         btDefaultCollisionConfiguration* m_collisionConfiguration;
 

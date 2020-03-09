@@ -1,3 +1,5 @@
+#define DEBUG_MODE true;
+
 #include <stdafx.h>
 
 #include <Core/App.h>
@@ -17,6 +19,8 @@
 #include <Containers/MaterialContainer.h>
 #include <Components/LightComponent.h>
 #include <LinearMath/btVector3.h>
+#include "Components/BoxCollider.h"
+#include "Containers/ColliderContainer.h"
 
 using namespace Engine::Core;
 
@@ -40,8 +44,8 @@ int App::Run() const
     Systems::CollisionSystem collisionSystem;
     Tools::FPSCounter fpsCounter(20);
 
-    Objects::GameObject link;
-    Objects::GameObject lambo;
+    Objects::GameObject link("link");
+    Objects::GameObject lambo("lambo");
     Objects::GameObject camera;
     Objects::GameObject light;
 
@@ -70,11 +74,15 @@ int App::Run() const
     link.GetTransform()->Translate(Vector3F{3.0f, -5.0f, 4.0f});
     link.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
     link.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
+    link.AddComponent<Components::BoxCollider>();
+    link.FindComponentOfType<Components::BoxCollider>()->GetBtRigidbody()->setMassProps(0, btVector3(0.0f, 0.0f, 0.0f));
 
-    lambo.GetTransform()->Translate(Vector3F{6.0f, 5.0f, -4.0f});
+
+    lambo.GetTransform()->Translate(Vector3F{6.0f, 500.0f, -4.0f});
     lambo.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
-    lambo.GetTransform()->RotateWithEulerAngles(Vector3F{ 45.f, 45.f, 90.f });
+    //lambo.GetTransform()->RotateWithEulerAngles(Vector3F{ 45.f, 45.f, 90.f });
     lambo.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+    lambo.AddComponent<Components::BoxCollider>();
 
     camera.GetTransform()->Translate(Vector3F{ 0.0f, 0.0f, -10.0f });
 
@@ -112,8 +120,10 @@ int App::Run() const
 
     while (true)
     {
+        link.GetTransform()->Translate(Vector3F{ 0.02f, -0.0f, 0.0f });
         fpsCounter.Start();
         collisionSystem.Update(fpsCounter.GetDeltaTime());
+        Containers::ColliderContainer::Update(fpsCounter.GetDeltaTime());
 
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {

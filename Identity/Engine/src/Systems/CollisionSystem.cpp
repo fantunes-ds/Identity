@@ -17,10 +17,6 @@ Engine::Systems::CollisionSystem::CollisionSystem()
 
     m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher, m_overlappingPairCache, m_solver, m_collisionConfiguration);
 
-    m_debugRenderer = Tools::Bullet::BulletDebugRenderer::GetInstance();
-
-    m_dynamicsWorld->setDebugDrawer(m_debugRenderer);
-
     ///-----initialization_end-----
 }
 
@@ -57,18 +53,7 @@ void Engine::Systems::CollisionSystem::Update(float p_deltaTime)
         {
             trans = obj->getWorldTransform();
         }
-
-        std::string str;
-
-        if (j == 0)
-            str = ("world pos floor " + std::to_string(j) + " = " + std::to_string(trans.getOrigin().getX()) + ", " + std::to_string(trans.getOrigin().getY()) + ", " + std::to_string(trans.getOrigin().getZ()) + "\n");
-        else
-            str = ("world pos sphere " + std::to_string(j) + " = " + std::to_string(trans.getOrigin().getX()) + ", " + std::to_string(trans.getOrigin().getY()) + ", " + std::to_string(trans.getOrigin().getZ()) + "\n");
-
-        OutputDebugString(str.c_str());
     }
-
-    m_dynamicsWorld->debugDrawWorld();
 }
 
 void Engine::Systems::CollisionSystem::InitTestScene()

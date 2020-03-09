@@ -230,6 +230,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Components\LightComponent.h" />
     <ClInclude Include="include\Components\ModelComponent.h" />
     <ClInclude Include="include\Containers\CameraContainer.h" />
+    <ClInclude Include="include\Containers\ColliderContainer.h" />
     <ClInclude Include="include\Containers\ComponentContainer.h" />
     <ClInclude Include="include\Containers\EventContainer.h" />
     <ClInclude Include="include\Containers\GameObjectContainer.h" />
@@ -240,7 +241,9 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\3DLoader\ObjectElements\Transform.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />
+    <ClInclude Include="include\Components\BoxCollider.h" />
     <ClInclude Include="include\Physics\BulletInclude.h" />
+    <ClInclude Include="include\Physics\Rigidbody.h" />
     <ClInclude Include="include\Rendering\Buffers\InputLayout.h" />
     <ClInclude Include="include\Containers\TransformContainer.h" />
     <ClInclude Include="include\Objects\IObject.h" />
@@ -292,7 +295,9 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\BoxCollider.cpp" />
     <ClCompile Include="src\Components\IComponent.cpp" />
+    <ClCompile Include="src\Containers\ColliderContainer.cpp" />
     <ClCompile Include="src\Rendering\Lights\Light.cpp" />
     <ClCompile Include="src\Components\LightComponent.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
