@@ -223,6 +223,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Components\IComponent.h" />
     <ClInclude Include="include\Components\LightComponent.h" />
     <ClInclude Include="include\Components\ModelComponent.h" />
+    <ClInclude Include="include\Managers\ResourceManager.h" />
     <ClInclude Include="include\Systems\CameraSystem.h" />
     <ClInclude Include="include\Containers\ComponentContainer.h" />
     <ClInclude Include="include\Containers\EventContainer.h" />
@@ -284,6 +285,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Components\IComponent.cpp" />
+    <ClCompile Include="src\Managers\ResourceManager.cpp" />
     <ClCompile Include="src\Rendering\Lights\Light.cpp" />
     <ClCompile Include="src\Components\LightComponent.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
