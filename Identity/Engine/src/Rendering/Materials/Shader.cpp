@@ -6,7 +6,7 @@
 
 Engine::Rendering::Materials::Shader::Shader()
 {
-    //GenConstantBuffers();
+    GenConstantBuffers();
 }
 
 void Engine::Rendering::Materials::Shader::LoadPixelShader(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device,
@@ -29,8 +29,25 @@ void Engine::Rendering::Materials::Shader::LoadVertexShader(const Microsoft::WRL
 
 void Engine::Rendering::Materials::Shader::BindShader(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const
 {
-    p_context->PSSetShader(pixelShader.Get(), nullptr, 0u);
     p_context->VSSetShader(vertexShader.Get(), nullptr, 0u);
+    p_context->PSSetShader(pixelShader.Get(), nullptr, 0u);
+}
+void Engine::Rendering::Materials::Shader::UnbindShader(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const
+{
+    p_context->VSSetShader(nullptr, nullptr, 0u);
+    p_context->PSSetShader(nullptr, nullptr, 0u);
+}
+
+void Engine::Rendering::Materials::Shader::BindConstantBuffers(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const
+{
+    m_vcb.Bind();
+    m_pcb.Bind();
+}
+
+void Engine::Rendering::Materials::Shader::UnbindConstantBuffers(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const
+{
+    m_vcb.Unbind();
+    m_pcb.Unbind();
 }
 
 void Engine::Rendering::Materials::Shader::GenConstantBuffers()

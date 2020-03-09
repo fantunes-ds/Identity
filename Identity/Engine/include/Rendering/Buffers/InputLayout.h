@@ -11,6 +11,7 @@ namespace Engine::Rendering::Buffers
     {
         void Generate(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const Microsoft::WRL::ComPtr<ID3DBlob>& p_blob);
         void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const;
+        void Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const;
 
     private:
         Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;

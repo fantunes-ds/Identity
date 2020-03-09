@@ -23,5 +23,13 @@ void Engine::Rendering::Material::AddTexture(const Microsoft::WRL::ComPtr<ID3D11
 void Engine::Rendering::Material::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
 {
     m_shader.BindShader(p_context);
+    m_shader.BindConstantBuffers(p_context);
     m_texture.BindTexture(p_context);
+}
+
+void Engine::Rendering::Material::Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
+{
+    m_shader.UnbindShader(p_context);
+    m_shader.UnbindConstantBuffers(p_context);
+    m_texture.UnbindTexture(p_context);
 }

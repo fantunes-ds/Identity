@@ -15,8 +15,10 @@ namespace Engine::Rendering
         void AddVertexShader(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
         void AddTexture(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
         void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
+        void Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
 
         [[nodiscard]] Materials::Shader& GetShader() { return m_shader; }
+        [[nodiscard]] Materials::Texture& GetTexture() { return m_texture; }
 
         void SetName(const std::string& p_name) { m_name = p_name; }
         [[nodiscard]] const std::string& GetName() const { return m_name; }

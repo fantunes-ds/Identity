@@ -24,3 +24,8 @@ void Engine::Rendering::Buffers::InputLayout::Bind(const Microsoft::WRL::ComPtr<
 {
    p_context->IASetInputLayout(m_inputLayout.Get());
 }
+
+void Engine::Rendering::Buffers::InputLayout::Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const
+{
+   p_context->IASetInputLayout(nullptr);
+}

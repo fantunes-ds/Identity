@@ -54,7 +54,6 @@ int App::Run() const
 
     camera.AddComponent<Components::CameraComponent>(m_width, m_height);
 
-
     Containers::LightContainer* test = Containers::LightContainer::GetInstance();
 
     link.GetTransform()->Translate(Vector3F{3.0f, -5.0f, 4.0f});
@@ -81,10 +80,7 @@ int App::Run() const
     dirLight.shininess = 32.0f;
 
     camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    //light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
     light.AddComponent<Components::LightComponent>(dirLight);
-
-    //.SetParentObject(statue);
 
     for (auto& mesh : link.GetModel()->GetMeshes())
     {
@@ -97,8 +93,6 @@ int App::Run() const
     }
 
     renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::CameraComponent>()->GetCamera()->GetID());
-
-
 
     while (true)
     {
@@ -119,14 +113,6 @@ int App::Run() const
 void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTime) const
 {
     Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
-    if (_INPUT->keyboard.IsKeyHeld('R'))
-        Rendering::Renderer::GetInstance()->ClearBuffers(1.0f, 0.0f, 0.0f);
-
-    if (_INPUT->keyboard.IsKeyHeld('G'))
-        Rendering::Renderer::GetInstance()->ClearBuffers(0.0f, 1.0f, 0.0f);
-
-    if (_INPUT->keyboard.IsKeyHeld('B'))
-        Rendering::Renderer::GetInstance()->ClearBuffers(0.0f, 0.0f, 1.0f);
 
     if (_INPUT->keyboard.IsKeyDown('F'))
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());

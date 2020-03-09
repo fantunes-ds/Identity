@@ -12,6 +12,7 @@ namespace Engine::Rendering::Buffers
     {
         void Generate(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, std::vector<unsigned short> p_indices);
         void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const;
+        void Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const;
 
         [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11Buffer>& GetBuffer() { return m_buffer; }
         [[nodiscard]] D3D11_SUBRESOURCE_DATA& GetSubData() { return m_subData; }

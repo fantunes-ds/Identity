@@ -13,7 +13,7 @@ namespace Engine::Systems
     class API_ENGINE RenderSystem: public IECSSystem
     {
     public:
-        RenderSystem();
+        RenderSystem() = default;
         virtual ~RenderSystem() = default;
 
         void DrawScene(float p_deltaTime);
