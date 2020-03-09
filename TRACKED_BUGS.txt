@@ -4,3 +4,10 @@ Shader buffers, how can we fix them.
 
 When minimizing the rended window, the app crashes
 Changing camera's m_speed does not change its movement speed.
+
+When change the parameters in "Present" method from 1 to 0:
+m_pSwapChain->Present(1u, 0u) --> m_pSwapChain->Present(0u, 0u)
+vertical input from the mouse does not work anymore.
+
+If we use the same model for 2 different gameobjects (using the scene graph),
+all gameObject will take the transform and material of last updated object.
