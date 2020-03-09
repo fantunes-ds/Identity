@@ -391,3 +391,4 @@ MigrationBackup/
 
 # End of https://www.gitignore.io/api/c++,visualstudio
 Identity/Test_Identity/imgui.ini
+Identity/Editor/imgui.ini

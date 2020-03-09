@@ -1,26 +1,17 @@
 #include <stdafx.h>
 #include <Systems/RenderSystem.h>
 #include <Containers/ModelContainer.h>
-#include "Tools/DirectX/GraphicsMacros.h"
-#include "Rendering/Lights/Light.h"
-#include "Tools/ImGUI/imgui.h"
-#include "Tools/ImGUI/imgui_impl_dx11.h"
+#include <Tools/DirectX/GraphicsMacros.h>
+#include <Rendering/Lights/Light.h>
+#include <Tools/ImGUI/imgui.h>
 #include <Input/Input.h>
 #include <Containers/GameObjectContainer.h>
 #include <Containers/TransformContainer.h>
-#include "Components/ModelComponent.h"
-#include "Containers/CameraContainer.h"
-#include <Containers/EventContainer.h>
+#include <Components/ModelComponent.h>
+#include <Containers/CameraContainer.h>
 #include <Rendering/Buffers/VertexConstantBuffer.h>
 #include <Containers/LightContainer.h>
 #include <Scene/SceneGraph/SceneNode.h>
-
-//WIP
-
-//Example of how to use events
-Engine::Systems::RenderSystem::RenderSystem()
-{
-}
 
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 {
@@ -28,6 +19,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 
     std::shared_ptr<Rendering::Lights::ILight> ILight = Containers::LightContainer::GetLights().begin()->second;
     std::shared_ptr<Rendering::Lights::Light> light1 = std::dynamic_pointer_cast<Rendering::Lights::Light>(Containers::LightContainer::GetLights().begin()->second);
+
     Rendering::Lights::Light::LightData& light = light1->GetLightData();
 
     std::shared_ptr<Rendering::Camera> camera = Containers::CameraContainer::GetCamera(m_activeCamera);

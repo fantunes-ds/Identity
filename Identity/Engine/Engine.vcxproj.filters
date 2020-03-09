@@ -202,6 +202,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Tools\FPSCounter.h">
+    <ClInclude Include="include\UI\UIManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Rendering\RenderTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -284,9 +288,6 @@
     <ClCompile Include="src\Rendering\Buffers\InputLayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Objects\GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Components\ModelComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -306,9 +307,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Components\CameraComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Objects\IObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Containers\EventContainer.cpp">
@@ -353,7 +351,10 @@
     <ClCompile Include="src\Components\IComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    </ClCompile>
     <ClCompile Include="src\Tools\ASSIMP\AssimpConversion.cpp">
+      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Rendering\RenderTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

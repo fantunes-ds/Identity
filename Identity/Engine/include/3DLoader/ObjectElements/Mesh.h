@@ -46,7 +46,7 @@ namespace Engine::ObjectElements
 
         //--WIP--
         // Rendering::Material m_material;
-        int32_t m_material;
+        int32_t m_material{-1};
         //-------
 
         //data

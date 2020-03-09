@@ -71,27 +71,27 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Engine/include;$(SolutionDir)Dependencies/GPM/include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
-    <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Engine/include;$(SolutionDir)Dependencies/GPM/include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath);</IncludePath>
+    <SourcePath>$(ProjectDir)src;$(SourcePath);</SourcePath>
     <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
     <LibraryPath>$(SolutionDir)Dependencies/GPM/lib/$(Platform)/$(Configuration);$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Engine/include;$(SolutionDir)Dependencies/GPM/include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
-    <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Engine/include;$(SolutionDir)Dependencies/GPM/include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath);</IncludePath>
+    <SourcePath>$(ProjectDir)src;$(SourcePath);</SourcePath>
     <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
     <LibraryPath>$(SolutionDir)Dependencies/GPM/lib/$(Platform)/$(Configuration);$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Engine/include;$(SolutionDir)Dependencies/GPM/include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
-    <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Engine/include;$(SolutionDir)Dependencies/GPM/include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath);</IncludePath>
+    <SourcePath>$(ProjectDir)src;$(SourcePath);</SourcePath>
     <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)Dependencies/GPM/lib/$(Platform)/$(Configuration);$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)Engine/include;$(SolutionDir)Dependencies/GPM/include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath)</IncludePath>
-    <SourcePath>$(ProjectDir)src;$(SourcePath)</SourcePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)Engine/include;$(SolutionDir)Dependencies/GPM/include;$(SolutionDir)Dependencies\irrKlang\$(Platform)\include;$(SolutionDir)Dependencies\Assimp\include;$(IncludePath);</IncludePath>
+    <SourcePath>$(ProjectDir)src;$(SourcePath);</SourcePath>
     <OutDir>$(SolutionDir)Bin\$(Configuration)\$(Platform)\Exe\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)Dependencies/GPM/lib/$(Platform)/$(Configuration);$(SolutionDir)Dependencies\irrKlang\$(Platform)\lib;$(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>

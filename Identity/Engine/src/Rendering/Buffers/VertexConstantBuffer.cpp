@@ -8,17 +8,16 @@ void VertexConstantBuffer::GenBuffers()
 {
     HRESULT hr;
 
-    D3D11_BUFFER_DESC vertexBufferDesc              = {};
-    vertexBufferDesc.BindFlags                      = D3D11_BIND_CONSTANT_BUFFER;
-    vertexBufferDesc.Usage                          = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
-    vertexBufferDesc.CPUAccessFlags                 = D3D11_CPU_ACCESS_WRITE;
-    vertexBufferDesc.MiscFlags                      = 0u;
-    vertexBufferDesc.ByteWidth                      = sizeof(m_vcb);
-    vertexBufferDesc.StructureByteStride            = 0u;
+    D3D11_BUFFER_DESC vertexBufferDesc = {};
+    vertexBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;        //Dynamic - values can change
+    vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    vertexBufferDesc.MiscFlags = 0u;
+    vertexBufferDesc.ByteWidth = sizeof(m_vcb);
+    vertexBufferDesc.StructureByteStride = 0u;
     D3D11_SUBRESOURCE_DATA VertexConstantShaderData = {};
-    VertexConstantShaderData.pSysMem                = &m_vcb;
-    GFX_THROW_INFO(Renderer::GetInstance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &VertexConstantShaderData, &m_buffer
-                   ));
+    VertexConstantShaderData.pSysMem = &m_vcb;
+    GFX_THROW_INFO(Renderer::GetInstance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &VertexConstantShaderData, &m_buffer));
 }
 
 void VertexConstantBuffer::Bind() const
