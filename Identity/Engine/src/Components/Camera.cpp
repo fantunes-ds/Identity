@@ -5,9 +5,9 @@
 #include "Containers/CameraSystem.h"
 
 
-void Engine::Components::Camera::UpdateCamera(const float& p_width, const float& p_height)
+void Engine::Components::Camera::UpdateCamera(const float p_deltaTime, const float& p_width, const float& p_height)
 {
-    UpdateCameraPosition();
+    UpdateCameraPosition(p_deltaTime);
     UpdateCameraRotation();
     UpdateVectors();
     UpdateViewMatrix();
@@ -49,7 +49,7 @@ void Engine::Components::Camera::UpdateVectors()
 
 }
 
-void Engine::Components::Camera::UpdateCameraPosition()
+void Engine::Components::Camera::UpdateCameraPosition(const float p_deltaTime)
 {
     auto transform = m_gameObject->GetTransform();
 
@@ -74,27 +74,27 @@ void Engine::Components::Camera::UpdateCameraPosition()
 
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
     {
-        transform->Translate(transform->GetForward() * m_speed);
+        transform->Translate(transform->GetForward() * m_speed * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
     {
-        transform->Translate(transform->GetForward() * m_speed * -1);
+        transform->Translate(transform->GetForward() * m_speed * -1 * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
     {
-        transform->Translate(transform->GetRight() * m_speed );
+        transform->Translate(transform->GetRight() * m_speed * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
     {
-        transform->Translate(transform->GetRight() * m_speed * -1);
+        transform->Translate(transform->GetRight() * m_speed * -1 * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::E))
     {
-        transform->Translate(transform->GetUp() * m_speed);
+        transform->Translate(transform->GetUp() * m_speed * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::Q))
     {
-        transform->Translate(transform->GetUp() * m_speed * -1);
+        transform->Translate(transform->GetUp() * m_speed * -1 * p_deltaTime);
     }
 }
 
@@ -131,7 +131,6 @@ void Engine::Components::Camera::UpdateViewMatrix()
 {
     auto transform = m_gameObject->GetTransform();
     std::string gopos = "go x : " + std::to_string(transform->GetPosition().x) + "y : " + std::to_string(transform->GetPosition().y) + "z : " + std::to_string(transform->GetPosition().z + '\n');
-    OutputDebugString(gopos.c_str());
     const Matrix4F rotation = transform->GetRotation().Conjugate().ToMatrix4().Transpose();
     const Matrix4F translation = Matrix4F::CreateTranslation(Vector3F{ -transform->GetPosition().x, -transform->GetPosition().y, transform->GetPosition().z});
 

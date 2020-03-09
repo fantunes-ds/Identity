@@ -3,6 +3,7 @@
 #include <Containers/EventContainer.h>
 #include <Tools/IDCounter.h>
 #include <windows.h>
+#include "Rendering/Renderer.h"
 
 Engine::Containers::CameraSystem::~CameraSystem()
 {
@@ -49,7 +50,12 @@ void Engine::Containers::CameraSystem::IUpdate(float p_deltaTime)
 {
     for (std::shared_ptr<Engine::Components::Camera> camera : GetCameras())
     {
-        //TODO need to move camera udpates here
+        int width, height;
+        Rendering::Renderer::GetInstance()->GetResolution(width, height);
+        for (auto camera : GetCameras())
+        {
+            camera->UpdateCamera(p_deltaTime, width, height);
+        }
     }
 }
 

@@ -102,14 +102,16 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
 void Engine::Systems::RenderSystem::IUpdate(float p_deltaTime)
 {
     Containers::TransformSystem::Update(p_deltaTime);
-    Scene::SceneGraph::GetInstance()->UpdateScene(0);
-    
-    if (Containers::CameraSystem::GetCamera(m_activeCamera))
-    {
-        int width, height;
-        Rendering::Renderer::GetInstance()->GetResolution(width, height);
-        Containers::CameraSystem::GetCamera(m_activeCamera)->UpdateCamera(width, height);
-    }
+    Scene::SceneGraph::GetInstance()->UpdateScene(p_deltaTime);
+    Containers::CameraSystem::Update(p_deltaTime);
+
+
+    // if (Containers::CameraSystem::GetCamera(m_activeCamera))
+    // {
+    //     int width, height;
+    //     Rendering::Renderer::GetInstance()->GetResolution(width, height);
+    //     Containers::CameraSystem::GetCamera(m_activeCamera)->UpdateCamera(width, height);
+    // }
     DrawScene(p_deltaTime);
 }
 

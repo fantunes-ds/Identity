@@ -19,7 +19,7 @@ namespace Engine::Components
         bool DeleteFromMemory() override;
 
         //Will be called by system if needed
-        void UpdateCamera(const float& p_width, const float& p_height);
+        void UpdateCamera(const float p_deltaTime, const float& p_width, const float& p_height);
         //------
 
         [[nodiscard]] const Matrix4F& GetPerspectiveMatrix() const noexcept { return m_perspectiveMatrix; }
@@ -37,7 +37,7 @@ namespace Engine::Components
         void UpdateResolution(const float p_width, const float p_height);
         void UpdatePerspectiveMatrix() noexcept;
         void UpdateVectors();
-        void UpdateCameraPosition();
+        void UpdateCameraPosition(const float p_deltaTime);
         void UpdateCameraRotation();
 
         bool needUpdate{ false };
