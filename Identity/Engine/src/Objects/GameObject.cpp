@@ -1,9 +1,9 @@
 #include <stdafx.h>
 #include <Objects/GameObject.h>
 #include <Containers/ModelContainer.h>
-#include <Containers/TransformSystem.h>
-#include "Components/ModelComponent.h"
-#include "Containers/GameObjectContainer.h"
+#include <Systems/TransformSystem.h>
+#include <Components/ModelComponent.h>
+#include <Containers/GameObjectContainer.h>
 
 Engine::Objects::GameObject::GameObject()
 {

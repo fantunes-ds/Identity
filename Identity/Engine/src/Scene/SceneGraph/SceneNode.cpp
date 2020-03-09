@@ -1,6 +1,6 @@
 #include <stdafx.h>
 #include <Scene/SceneGraph/SceneNode.h>
-#include "Containers/TransformSystem.h"
+#include <Systems/TransformSystem.h>
 
 Engine::Scene::SceneNode::SceneNode(std::shared_ptr<ObjectElements::Mesh> p_mesh) : m_mesh{ p_mesh } {}
 

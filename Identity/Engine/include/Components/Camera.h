@@ -42,7 +42,7 @@ namespace Engine::Components
 
         bool needUpdate{ false };
 
-        float m_speed{ 0.05f };
+        float m_speed{ 5.f };
         float m_sensitivity{ 0.05f };
 
         // Perpsective variables

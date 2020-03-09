@@ -1,9 +1,7 @@
 #include <stdafx.h>
-#include <Containers/CameraSystem.h>
-#include <Containers/EventContainer.h>
-#include <Tools/IDCounter.h>
+#include <Systems/CameraSystem.h>
 #include <windows.h>
-#include "Rendering/Renderer.h"
+#include <Rendering/Renderer.h>
 
 Engine::Containers::CameraSystem::~CameraSystem()
 {

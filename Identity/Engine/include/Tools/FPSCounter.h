@@ -14,7 +14,7 @@ namespace Engine::Tools
         void Stop();
 
         int GetFPS() const;
-        float GetDeltaTime() const { return m_deltaTime; }
+        float GetDeltaTime() const { return m_deltaTime / 1000.f; }
 
     private:
         int m_numberOfSamples;

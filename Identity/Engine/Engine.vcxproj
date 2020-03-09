@@ -223,7 +223,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\Components\IComponent.h" />
     <ClInclude Include="include\Components\LightComponent.h" />
     <ClInclude Include="include\Components\ModelComponent.h" />
-    <ClInclude Include="include\Containers\CameraSystem.h" />
+    <ClInclude Include="include\Systems\CameraSystem.h" />
     <ClInclude Include="include\Containers\ComponentContainer.h" />
     <ClInclude Include="include\Containers\EventContainer.h" />
     <ClInclude Include="include\Containers\GameObjectContainer.h" />
@@ -235,7 +235,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />
     <ClInclude Include="include\Rendering\Buffers\InputLayout.h" />
-    <ClInclude Include="include\Containers\TransformSystem.h" />
+    <ClInclude Include="include\Systems\TransformSystem.h" />
     <ClInclude Include="include\Objects\IObject.h" />
     <ClInclude Include="include\Rendering\Buffers\PixelConstantBuffer.h" />
     <ClInclude Include="include\Rendering\Buffers\VertexConstantBuffer.h" />
@@ -291,7 +291,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\Containers\MaterialContainer.cpp" />
     <ClCompile Include="src\Objects\IObject.cpp" />
     <ClCompile Include="src\Components\ModelComponent.cpp" />
-    <ClCompile Include="src\Containers\CameraSystem.cpp" />
+    <ClCompile Include="src\Systems\CameraSystem.cpp" />
     <ClCompile Include="src\Core\App.cpp" />
     <ClCompile Include="src\Containers\ComponentContainer.cpp" />
     <ClCompile Include="src\Containers\GameObjectContainer.cpp" />
@@ -302,7 +302,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
     <ClInclude Include="src\Core\App.h" />
     <ClCompile Include="src\Rendering\Buffers\InputLayout.cpp" />
-    <ClCompile Include="src\Containers\TransformSystem.cpp" />
+    <ClCompile Include="src\Systems\TransformSystem.cpp" />
     <ClCompile Include="src\Objects\GameObject.cpp" />
     <ClCompile Include="src\Rendering\Buffers\PixelConstantBuffer.cpp" />
     <ClCompile Include="src\Rendering\Buffers\VertexConstantBuffer.cpp" />

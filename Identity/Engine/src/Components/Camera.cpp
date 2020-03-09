@@ -2,7 +2,7 @@
 #include <Components/Camera.h>
 #include <Tools/ImGUI/imgui.h>
 #include <Input/Input.h>
-#include "Containers/CameraSystem.h"
+#include <Systems/CameraSystem.h>
 
 
 void Engine::Components::Camera::UpdateCamera(const float p_deltaTime, const float& p_width, const float& p_height)
@@ -68,9 +68,9 @@ void Engine::Components::Camera::UpdateCameraPosition(const float p_deltaTime)
     }ImGui::End();
 
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::Space))
-        m_speed = 0.2f;
+        m_speed = 10.f;
     else
-        m_speed = 0.05f;
+        m_speed = 5.f;
 
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
     {
