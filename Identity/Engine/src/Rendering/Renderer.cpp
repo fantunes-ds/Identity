@@ -49,7 +49,7 @@ void Renderer::EndFrame() const
 {
     HRESULT hr;
 
-    if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
+    if (FAILED(hr = m_pSwapChain->Present(0u, 0u)))
     {
         if (hr == DXGI_ERROR_DEVICE_REMOVED)
         {
@@ -248,9 +248,12 @@ void Renderer::CreateRenderTexture()
     m_renderTextures.push_back(sceneRenderTexture);
 }
 
-void Renderer::Resize(const float& p_width, const float& p_height)
+void Renderer::Resize(const float p_width, const float p_height)
 {
     HRESULT hr;
+
+    if (p_width == 0.0f || p_height == 0.0f)
+        return;
 
     m_width = p_width;
     m_height = p_height;

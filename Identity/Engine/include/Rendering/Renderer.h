@@ -102,7 +102,7 @@ namespace Engine::Rendering
         /**
          @brief Resize the renderer using new resolution.
         */
-        void Resize(const float& p_width, const float& p_height);
+        void Resize(const float p_width, const float p_height);
 
         void GetResolution(int& p_width, int& p_height) const;
         void SetRenderTarget();
