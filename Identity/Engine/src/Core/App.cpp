@@ -74,6 +74,7 @@ int App::Run() const
     link.GetTransform()->Translate(Vector3F{3.0f, -5.0f, 4.0f});
     link.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
     link.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
+    GPM::Vector3F linkOffset{ 0.0f, 10.0f, 0.0f };
     link.AddComponent<Components::BoxCollider>();
     link.FindComponentOfType<Components::BoxCollider>()->GetBtRigidbody()->setMassProps(0, btVector3(0.0f, 0.0f, 0.0f));
 
@@ -101,8 +102,6 @@ int App::Run() const
     camera.AddComponent<Components::CameraComponent>(m_width, m_height);
     //light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
     light.AddComponent<Components::LightComponent>(dirLight);
-
-    //.SetParentObject(statue);
 
     for (auto& mesh : link.GetModel()->GetMeshes())
     {

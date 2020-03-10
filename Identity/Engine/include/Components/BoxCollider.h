@@ -15,6 +15,7 @@ namespace Engine::Components
     {
     public:
         BoxCollider(Objects::GameObject* p_gameObject);
+        BoxCollider(const BoxCollider&) = default;
         ~BoxCollider();
 
         [[nodiscard]] GPM::Matrix4F GetWorldMatrix() const;

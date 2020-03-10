@@ -7,16 +7,19 @@
 
 Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject): IComponent{ p_gameObject }
 {
+    btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
     btTransform trans;
-    trans.setIdentity();
     auto& position = m_gameObject->GetTransform()->GetPosition();
+    auto positionWithOffset = position;
     auto& scale = m_gameObject->GetTransform()->GetScale();
-    trans.setOrigin(btVector3(position.x * scale.x, position.y * scale.y, position.z * scale.z));
+    float mass = 1.0f;
 
-    btVector3 localInertia(0.0f, 0.0f, 0.0f);
+    trans.setIdentity();
+    trans.setOrigin(btVector3(positionWithOffset.x * scale.x, positionWithOffset.y * scale.y, positionWithOffset.z * scale.z));
+    m_box->calculateLocalInertia(mass, localInertia);
     m_motionState = new btDefaultMotionState(trans);
-    btRigidBody::btRigidBodyConstructionInfo rbInfo(1, m_motionState, m_box, localInertia);
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, m_motionState, m_box, localInertia);
     m_rigidbody = new btRigidBody(rbInfo);
 
     ObjectElements::Model model = ConstructBox();

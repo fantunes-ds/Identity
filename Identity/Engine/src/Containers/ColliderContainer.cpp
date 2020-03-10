@@ -38,17 +38,14 @@ void Engine::Containers::ColliderContainer::Update(float p_deltaTime)
     for (auto& collider : GetInstance()->m_colliders)
     {
         collider.second->GetMotionState()->getWorldTransform(trans);
+        
         btVector3& collPos = trans.getOrigin();
+        btQuaternion collRot = trans.getRotation();
+
         collider.second->GetGameObject()->GetTransform()->SetPosition(GPM::Vector3F(collPos.getX(), collPos.getY(), collPos.getZ()));
+        collider.second->GetGameObject()->GetTransform()->SetRotation(GPM::Quaternion(collRot.getX(), collRot.getY(), collRot.getZ(), -collRot.getW()));
+
         collider.second->GetGameObject()->GetTransform()->UpdateWorldTransformMatrix();
-        auto& pos = collider.second->GetTransform()->GetPosition();
-
-        std::string str;
-        str = ("world pos " + collider.second->GetGameObject()->GetName() + " collider = " + std::to_string(trans.getOrigin().getX()) + ", " + std::to_string(trans.getOrigin().getY()) + ", " + std::to_string(trans.getOrigin().getZ()) + "\n");
-        OutputDebugString(str.c_str());
-
-        str = ("world pos " + collider.second->GetGameObject()->GetName() + " Transform = " + std::to_string(pos.x) + ", " + std::to_string(pos.y) + ", " + std::to_string(pos.z) + "\n");
-        OutputDebugString(str.c_str());
     }
 }
 
