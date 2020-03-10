@@ -4,10 +4,12 @@
 #include <wrl/client.h>
 #include <d3d11.h>
 #include <string>
+#include <Objects/IObject.h>
+
 
 namespace Engine::Rendering::Materials
 {
-    class Texture
+    class Texture : public Objects::IObject
     {
     public:
         Texture();
