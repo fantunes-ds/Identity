@@ -7,15 +7,12 @@
 
 Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject): IComponent{ p_gameObject }
 {
-    m_box = new btBoxShape(btVector3(10.0f, 1.0f, 10.0f));
-
+    m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
     btTransform trans;
     trans.setIdentity();
     auto& position = m_gameObject->GetTransform()->GetPosition();
     auto& scale = m_gameObject->GetTransform()->GetScale();
-
     trans.setOrigin(btVector3(position.x * scale.x, position.y * scale.y, position.z * scale.z));
-    //trans.setOrigin(btVector3(position.x, position.y, position.z));
 
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_motionState = new btDefaultMotionState(trans);
@@ -69,44 +66,32 @@ Engine::ObjectElements::Model Engine::Components::BoxCollider::ConstructBox()
     std::vector<Geometry::Vertex> vertices;
     std::vector<unsigned short> indices;
 
-    /*vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{a.getX(), a.getY(), a.getZ()}, GPM::Vector2F{}, GPM::Vector3F{} });
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{b.getX(), a.getY(), a.getZ()}, GPM::Vector2F{}, GPM::Vector3F{} });
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{b.getX(), b.getY(), a.getZ()}, GPM::Vector2F{}, GPM::Vector3F{} });
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{a.getX(), b.getY(), a.getZ()}, GPM::Vector2F{}, GPM::Vector3F{} });
-
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{a.getX(), a.getY(), b.getZ()}, GPM::Vector2F{}, GPM::Vector3F{} });
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{b.getX(), a.getY(), b.getZ()}, GPM::Vector2F{}, GPM::Vector3F{} });
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{b.getX(), b.getY(), b.getZ()}, GPM::Vector2F{}, GPM::Vector3F{} });
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{a.getX(), b.getY(), b.getZ()}, GPM::Vector2F{}, GPM::Vector3F{} });*/
-
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{a.getX() * scale.x, a.getY() * scale.y, a.getZ() * scale.z}, GPM::Vector2F{}, GPM::Vector3F{} });
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{b.getX() * scale.x, a.getY() * scale.y, a.getZ() * scale.z}, GPM::Vector2F{}, GPM::Vector3F{} });
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{b.getX() * scale.x, b.getY() * scale.y, a.getZ() * scale.z}, GPM::Vector2F{}, GPM::Vector3F{} });
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{a.getX() * scale.x, b.getY() * scale.y, a.getZ() * scale.z}, GPM::Vector2F{}, GPM::Vector3F{} });
-
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{a.getX() * scale.x, a.getY() * scale.y, b.getZ() * scale.z}, GPM::Vector2F{}, GPM::Vector3F{} });
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{b.getX() * scale.x, a.getY() * scale.y, b.getZ() * scale.z}, GPM::Vector2F{}, GPM::Vector3F{} });
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{b.getX() * scale.x, b.getY() * scale.y, b.getZ() * scale.z}, GPM::Vector2F{}, GPM::Vector3F{} });
-    vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{a.getX() * scale.x, b.getY() * scale.y, b.getZ() * scale.z}, GPM::Vector2F{}, GPM::Vector3F{} });
+    for (int i = 0; i < m_box->getNumVertices(); ++i)
+    {
+        btVector3 vertex;
+        m_box->getVertex(i, vertex);
+        vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{vertex.getX(), vertex.getY(), vertex.getZ()}, GPM::Vector2F{}, GPM::Vector3F{} });
+    }
 
     //Back
+
     indices.emplace_back(0);
     indices.emplace_back(1);
     indices.emplace_back(2);
 
-
     indices.emplace_back(2);
     indices.emplace_back(3);
     indices.emplace_back(0);
 
-    //Left
-    indices.emplace_back(0);
-    indices.emplace_back(3);
-    indices.emplace_back(7);
 
-    indices.emplace_back(7);
+    //Left
     indices.emplace_back(4);
     indices.emplace_back(0);
+    indices.emplace_back(2);
+
+    indices.emplace_back(2);
+    indices.emplace_back(6);
+    indices.emplace_back(4);
 
     //bottom
     indices.emplace_back(0);
@@ -118,13 +103,13 @@ Engine::ObjectElements::Model Engine::Components::BoxCollider::ConstructBox()
     indices.emplace_back(0);
 
     //right
-    indices.emplace_back(2);
+    indices.emplace_back(5);
     indices.emplace_back(1);
-    indices.emplace_back(5);
+    indices.emplace_back(3);
 
+    indices.emplace_back(3);
+    indices.emplace_back(7);
     indices.emplace_back(5);
-    indices.emplace_back(6);
-    indices.emplace_back(2);
 
     //top
     indices.emplace_back(7);

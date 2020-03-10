@@ -78,7 +78,7 @@ int App::Run() const
     link.FindComponentOfType<Components::BoxCollider>()->GetBtRigidbody()->setMassProps(0, btVector3(0.0f, 0.0f, 0.0f));
 
 
-    lambo.GetTransform()->Translate(Vector3F{6.0f, 500.0f, -4.0f});
+    lambo.GetTransform()->Translate(Vector3F{100.0f, 500.0f, -4.0f});
     lambo.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
     //lambo.GetTransform()->RotateWithEulerAngles(Vector3F{ 45.f, 45.f, 90.f });
     lambo.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");

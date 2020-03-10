@@ -9,6 +9,8 @@
 Engine::Tools::Bullet::BulletDebugRenderer::BulletDebugRenderer()
 {
     m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
+    m_box->setLocalScaling(btVector3());
+
     m_transform.setIdentity();
     m_transform.setOrigin(btVector3(0, 0, 0));
 
@@ -22,7 +24,6 @@ Engine::Tools::Bullet::BulletDebugRenderer::BulletDebugRenderer()
     btVector3 b;
 
     m_box->getAabb(m_transform, a, b);
-
     std::vector<Geometry::Vertex> vertices;
     std::vector<unsigned short> indices;
 
