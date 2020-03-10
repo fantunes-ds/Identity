@@ -36,7 +36,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager
 
     if (model == nullptr)
     {
-        const std::string error("ModelManager::AddModel(const std::string& p_path, const std::string& p_name): Could not load model at " + p_path + " because there was no object to be found at that path");
+        const std::string error("ResourceManager::AddModel(const std::string& p_path, const std::string& p_name): Could not load model at " + p_path + " because there was no object to be found at that path");
         MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
         return nullptr;
     }
@@ -72,12 +72,50 @@ std::vector<std::shared_ptr<Engine::ObjectElements::Model>> Engine::Managers::Re
 std::shared_ptr<Engine::Rendering::Materials::Texture> Engine::Managers::ResourceManager::AddTexture(
     const std::string& p_path, const std::string& p_name)
 {
-    return nullptr;
+
+    for (auto texture : GetInstance()->m_textures)
+    {
+        if (texture->GetPath() == p_path)
+        {
+            const std::string info("The texture located at " + p_path + " is already loaded and will be returned");
+            MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
+            return texture;
+        }
+
+        if (texture->GetName() == p_name)
+        {
+            const std::string info("The name '" + p_name + "' is already in use, please change the name");
+            MessageBox(nullptr, info.c_str(), "Error", MB_ICONERROR | MB_OK);
+            return nullptr;
+        }
+    }
+
+    std::shared_ptr<Rendering::Materials::Texture> texture = Rendering::Materials::Texture::LoadTexture(p_path, p_name);
+
+    if (texture == nullptr)
+    {
+        const std::string error("ResourceManager::AddTexture(const std::string& p_path, const std::string& p_name): Could not load texture at " + p_path + " because there was no object to be found at that path");
+        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+        return nullptr;
+    }
+
+    texture->SetName(p_name);
+    texture->SetPath(p_path);
+
+    GetInstance()->m_textures.push_back(texture);
+
+    return texture;
 }
 
 std::shared_ptr<Engine::Rendering::Materials::Texture> Engine::Managers::ResourceManager::GetTexture(
     const std::string& p_name)
 {
+    for (auto texture : GetInstance()->m_textures)
+    {
+        if (texture->GetName() == p_name)
+            return texture;
+    }
+
     return nullptr;
 }
 
