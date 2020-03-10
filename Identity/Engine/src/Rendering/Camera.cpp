@@ -22,7 +22,6 @@ m_transformId(p_transformId), m_width(static_cast<float>(p_width)), m_height(sta
 
 void Engine::Rendering::Camera::UpdateVectors()
 {
-     //Supposedly ok.
      const Quaternion pitch = Quaternion(Vector3F(-1.0f, 0.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_pitch));
      const Quaternion yaw   = Quaternion(Vector3F(0.0f, 1.0f, 0.0f), GPM::Tools::Utils::ToRadians(-m_yaw));
      const Quaternion roll  = Quaternion(Vector3F(0.0f, 0.0f, 1.0f), GPM::Tools::Utils::ToRadians(0.0f));
@@ -30,8 +29,6 @@ void Engine::Rendering::Camera::UpdateVectors()
      auto transform = Containers::TransformContainer::GetTransform(m_transformId);
 
      transform->SetRotation((roll * yaw * pitch).Normalize());
-     //const Matrix4F coucou = Matrix4F::CreateRotation((pitch * yaw * roll).Normalize().Conjugate()).Transpose();
-     //transform->SetRotation(Quaternion(Matrix4F{ coucou }));
 }
 
 void Engine::Rendering::Camera::UpdateCameraPosition()
