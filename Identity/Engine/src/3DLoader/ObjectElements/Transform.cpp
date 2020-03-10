@@ -81,6 +81,7 @@ void Engine::ObjectElements::Transform::CalculateAxes()
     m_forward = Vector3F{ -vec3f.x,-vec3f.y, vec3f.z };
     m_right = Vector3F{ vec3r.x,vec3r.y, vec3r.z };
     m_up = Vector3F{ vec3u.x,vec3u.y, -vec3u.z };
-    
+    m_right = Vector3F::Cross(m_up, m_forward);
+    m_up = Vector3F::Cross(m_right, m_forward);
     UpdateWorldTransformMatrix();
 }
