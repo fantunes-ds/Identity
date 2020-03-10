@@ -77,7 +77,7 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         Rendering::Renderer::GetInstance()->SetRenderTarget();
 
         GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
-        mesh->Unbind(Rendering::Renderer::GetInstance()->GetContext());
+        //mesh->Unbind(Rendering::Renderer::GetInstance()->GetContext());
     }
 
     for (auto child : p_sceneNode->GetChildren())

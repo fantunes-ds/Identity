@@ -51,7 +51,7 @@ void Engine::Rendering::Camera::UpdateCameraPosition()
 
     float speed = m_speed;
 
-    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::Space))
+    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::LeftShift))
         speed *= 4.0f;
 
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
