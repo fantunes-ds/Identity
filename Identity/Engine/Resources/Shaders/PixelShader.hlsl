@@ -26,7 +26,7 @@ struct VS_OUT
     float3 pos : Position;
     float3 worldPos : WPos;
     float3 norm : Normal;
-    float2 tex : TxCoord;
+    float2 tex : TexCoord;
 };
 
 static bool blinn = true;

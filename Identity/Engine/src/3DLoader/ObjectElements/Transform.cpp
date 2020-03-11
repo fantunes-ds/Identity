@@ -13,6 +13,15 @@ Engine::ObjectElements::Transform::Transform() :
 
 }
 
+Engine::ObjectElements::Transform::Transform(const std::string& p_name) :
+    m_position{ Vector3F::zero }, m_scale{ Vector3F::one }, m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} }
+{
+    m_forward = Vector3F::forward;
+    m_right = Vector3F::right;
+    m_up = Vector3F::up;
+    SetName(p_name);
+}
+
 Engine::ObjectElements::Transform::Transform(Vector3F& p_position) :
     m_position{ p_position }, m_scale{ Vector3F::one }, m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} }
 {
@@ -25,10 +34,6 @@ Engine::ObjectElements::Transform::Transform(Vector3F& p_position) :
 Engine::ObjectElements::Transform::Transform(const Transform& p_other) :
     m_parent{ p_other.m_parent }, m_forward{ p_other.m_forward }, m_right{ p_other.m_right }, m_up{ p_other.m_up },
     m_scale{ p_other.m_scale }, m_position{ p_other.m_position }, m_rotation{ p_other.m_rotation } {}
-
-/*Engine::ObjectElements::Transform::Transform(const Transform&& p_other) noexcept :
-    m_parent{ p_other.m_parent }, m_forward{ p_other.m_forward }, m_right{ p_other.m_right }, m_up{ p_other.m_up },
-    m_scale{ p_other.m_scale }, m_position{ p_other.m_position }, m_rotation{ p_other.m_rotation } {}*/
 
 void Engine::ObjectElements::Transform::Translate(const Vector3F& p_vector)
 {
@@ -58,6 +63,7 @@ void Engine::ObjectElements::Transform::UpdateWorldTransformMatrix()
     m_worldTransform = Matrix4F::CreateTransformation(m_position,
                                                           m_rotation,
                                                           m_scale);
+
 }
 
 Vector3F Engine::ObjectElements::Transform::GetEuler() const

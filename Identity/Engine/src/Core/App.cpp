@@ -105,7 +105,6 @@ int App::Run() const
 
         DoFrame(renderSystem, fpsCounter.GetDeltaTime());
 
-        m_window.SetTitle(std::to_string(fpsCounter.GetFPS()));
         fpsCounter.Stop();
     }
 }
