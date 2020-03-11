@@ -20,7 +20,8 @@ namespace Engine::Rendering::Buffers
 
         void GenBuffers();
 
-        const PCB& GetVCB() const { return m_pcb; }
+        [[nodiscard]] const PCB& GetPCB() const { return m_pcb; }
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11Buffer>& GetBuffer() const { return m_buffer; }
 
         void Update(const PCB& p_filledBuffer) const;
 

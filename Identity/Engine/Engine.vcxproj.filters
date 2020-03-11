@@ -144,9 +144,6 @@
     <ClInclude Include="include\Containers\IContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Rendering\Material.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Rendering\Materials\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -202,6 +199,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Managers\ResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Rendering\Materials\VertexShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Rendering\Materials\PixelShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Rendering\Materials\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -305,9 +311,6 @@
     <ClCompile Include="src\Rendering\Materials\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\Material.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Rendering\Buffers\PixelConstantBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -354,6 +357,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Managers\ResourceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\Materials\PixelShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\Materials\VertexShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\Materials\Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

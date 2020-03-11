@@ -16,17 +16,17 @@ Engine::Containers::MaterialContainer* Engine::Containers::MaterialContainer::Ge
     return m_instance;
 }
 
-int32_t Engine::Containers::MaterialContainer::AddMaterial(Rendering::Material* p_material)
+int32_t Engine::Containers::MaterialContainer::AddMaterial(Rendering::Materials::Material* p_material)
 {
     int32_t id = p_material->GetID();
-    GetInstance()->m_material.insert_or_assign(id, std::make_shared<Rendering::Material>(*p_material));
+    GetInstance()->m_material.insert_or_assign(id, std::make_shared<Rendering::Materials::Material>(*p_material));
 
     return id;
 }
 
 int32_t Engine::Containers::MaterialContainer::AddMaterial(const std::string& p_name)
 {
-    std::shared_ptr<Rendering::Material> material = std::make_shared<Rendering::Material>();
+    std::shared_ptr<Rendering::Materials::Material> material = std::make_shared<Rendering::Materials::Material>();
     material->SetName(p_name);
     int32_t id = material->GetID();
     GetInstance()->m_material.insert_or_assign(id, material);
@@ -53,7 +53,7 @@ int32_t Engine::Containers::MaterialContainer::FindMaterial(const std::string& p
     return -1;
 }
 
-std::shared_ptr<Engine::Rendering::Material> Engine::Containers::MaterialContainer::GetMaterial(int32_t p_id)
+std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Containers::MaterialContainer::GetMaterial(int32_t p_id)
 {
     if (GetInstance()->m_material.find(p_id) != GetInstance()->m_material.end())
         return GetInstance()->m_material.at(p_id);
@@ -63,7 +63,7 @@ std::shared_ptr<Engine::Rendering::Material> Engine::Containers::MaterialContain
     return nullptr;
 }
 
-std::shared_ptr<Engine::Rendering::Material> Engine::Containers::MaterialContainer::GetMaterial(
+std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Containers::MaterialContainer::GetMaterial(
     const std::string& p_name)
 {
     return GetMaterial(FindMaterial(p_name));

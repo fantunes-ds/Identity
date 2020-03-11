@@ -1,6 +1,6 @@
 #include <stdafx.h>
 #include <Rendering/Materials/Texture.h>
-#include "Tools/DirectX/GraphicsMacros.h"
+#include <Rendering/Renderer.h>
 #include <WICTextureLoader.h>
 
 using namespace Engine::Rendering::Materials;
