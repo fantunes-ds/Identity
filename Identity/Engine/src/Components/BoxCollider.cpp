@@ -5,29 +5,32 @@
 #include <Objects/GameObject.h>
 #include <Containers/ColliderContainer.h>
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject): IComponent{ p_gameObject }
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{ p_gameObject }
 {
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
     btTransform trans;
     auto& position = m_gameObject->GetTransform()->GetPosition();
-    auto positionWithOffset = position;
+    auto& rotation = m_gameObject->GetTransform()->GetRotation();
     auto& scale = m_gameObject->GetTransform()->GetScale();
-    float mass = 1.0f;
 
     trans.setIdentity();
-    trans.setOrigin(btVector3(positionWithOffset.x * scale.x, positionWithOffset.y * scale.y, positionWithOffset.z * scale.z));
-    m_box->calculateLocalInertia(mass, localInertia);
+
+    trans.setOrigin(btVector3(position.x, position.y, position.z));
+    trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
+
+    m_box->calculateLocalInertia(m_mass, localInertia);
+
     m_motionState = new btDefaultMotionState(trans);
-    btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, m_motionState, m_box, localInertia);
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
     m_rigidbody = new btRigidBody(rbInfo);
 
     ObjectElements::Model model = ConstructBox();
 
     m_model = Containers::ModelContainer::AddModel(model);
-    m_transform = m_gameObject->GetTransform();
-    Containers::ColliderContainer::AddCollider(*this);
-    
+
+    Containers::ColliderContainer::AddCollider(this);
+
 }
 
 Engine::Components::BoxCollider::~BoxCollider()
@@ -39,6 +42,7 @@ Engine::Components::BoxCollider::~BoxCollider()
 
 GPM::Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
 {
+    //return m_transform->GetWorldTransformMatrix();
     btScalar m[16];
     btTransform trans;
 
@@ -56,12 +60,63 @@ GPM::Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
     return mat.Transpose();
 }
 
+void Engine::Components::BoxCollider::SetPositionOffset(GPM::Vector3F& p_offset)
+{
+    m_offset = p_offset;
+    btTransform trans;
+    /*m_motionState->getWorldTransform(trans);
+    auto& origin = trans.getOrigin();
+    trans.setOrigin(btVector3{ origin.getX() + p_offset.x, origin.getY() + p_offset.y, origin.getZ() + p_offset.z });
+    m_motionState->setWorldTransform(trans);*/
+}
+
+void Engine::Components::BoxCollider::SetMass(float p_mass)
+{
+    m_mass = p_mass;
+
+    if (m_rigidbody)
+    {
+        Containers::ColliderContainer::GetWorld()->removeRigidBody(m_rigidbody);
+    }
+
+    auto localInertia = btVector3(0.0f, 0.0f, 0.0f);
+
+    if (m_box)
+        m_box->calculateLocalInertia(m_mass, localInertia);
+
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
+    delete m_rigidbody;
+    m_rigidbody = new btRigidBody(rbInfo);
+    Containers::ColliderContainer::GetWorld()->addRigidBody(m_rigidbody);
+}
+
+void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimensions)
+{
+    btVector3 localInertia(0.0f, 0.0f, 0.0f);
+
+    if (m_rigidbody)
+    {
+        delete m_box;
+
+        Containers::ColliderContainer::GetWorld()->removeRigidBody(m_rigidbody);
+        m_box = new btBoxShape(btVector3(p_dimensions.x, p_dimensions.y, p_dimensions.z));
+        m_rigidbody->setCollisionShape(m_box);
+        m_box->calculateLocalInertia(m_mass, localInertia);
+        m_rigidbody->setMassProps(m_mass, localInertia);
+        m_rigidbody->updateInertiaTensor();
+        Containers::ColliderContainer::GetWorld()->addRigidBody(m_rigidbody);
+    }
+
+    ObjectElements::Model model = ConstructBox();
+    Containers::ModelContainer::RemoveModel(m_model->GetID());
+    m_model = Containers::ModelContainer::AddModel(model);
+}
+
 Engine::ObjectElements::Model Engine::Components::BoxCollider::ConstructBox()
 {
     btVector3 a;
     btVector3 b;
     btTransform trans;
-    auto& scale = m_gameObject->GetTransform()->GetScale();
 
     m_motionState->getWorldTransform(trans);
     m_box->getAabb(trans, a, b);

@@ -97,7 +97,6 @@ Engine::Tools::Bullet::BulletDebugRenderer::BulletDebugRenderer()
     auto mesh = std::make_shared<ObjectElements::Mesh>(vertices, indices);
 
     model.AddMesh(mesh);
-    model.SetName("DebugBox");
     Containers::ModelContainer::AddModel(model);
 }
 
@@ -116,11 +115,3 @@ GPM::Matrix4F Engine::Tools::Bullet::BulletDebugRenderer::GetWorldMatrix()
 
     return mat.Transpose();
 }
-
-/*Engine::Tools::Bullet::BulletDebugRenderer* Engine::Tools::Bullet::BulletDebugRenderer::GetInstance()
-{
-    if (!m_instance)
-        m_instance = new BulletDebugRenderer();
-
-    return m_instance;
-}*/

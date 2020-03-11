@@ -21,10 +21,10 @@ Engine::Containers::ColliderContainer* Engine::Containers::ColliderContainer::Ge
 }
 
 std::shared_ptr<Engine::Components::BoxCollider> Engine::Containers::ColliderContainer::AddCollider(
-    Components::BoxCollider& p_collider)
+    Components::BoxCollider* p_collider)
 {
-    auto coll = std::make_shared<Components::BoxCollider>(p_collider);
-    GetInstance()->m_colliders.insert_or_assign(p_collider.GetID(), coll);
+    auto coll = std::shared_ptr<Components::BoxCollider>(p_collider);
+    GetInstance()->m_colliders.insert_or_assign(p_collider->GetID(), coll);
     GetInstance()->m_dynamicsWorld->addRigidBody(coll->GetBtRigidbody());
     return coll;
 }
@@ -33,20 +33,25 @@ void Engine::Containers::ColliderContainer::Update(float p_deltaTime)
 {
     btTransform trans;
 
-    GetInstance()->m_dynamicsWorld->stepSimulation(1.f / 60.f, 10);
-
+    GetInstance()->m_dynamicsWorld->stepSimulation(p_deltaTime / 1000, 10);
+    
     for (auto& collider : GetInstance()->m_colliders)
     {
+        //TODO: wrap all Bullet math variables
         collider.second->GetMotionState()->getWorldTransform(trans);
-        
+        GPM::Vector3F offset = collider.second->GetOffset();
+
         btVector3& collPos = trans.getOrigin();
         btQuaternion collRot = trans.getRotation();
+        btQuaternion quatOffset(offset.x, offset.y, offset.z, 0);
+        btQuaternion qpq = collRot * quatOffset * collRot.inverse();
 
-        collider.second->GetGameObject()->GetTransform()->SetPosition(GPM::Vector3F(collPos.getX(), collPos.getY(), collPos.getZ()));
+        collider.second->GetGameObject()->GetTransform()->SetPosition(GPM::Vector3F(qpq.getX(), qpq.getY(), qpq.getZ()) + GPM::Vector3F(collPos.getX(), collPos.getY(), collPos.getZ()));
         collider.second->GetGameObject()->GetTransform()->SetRotation(GPM::Quaternion(collRot.getX(), collRot.getY(), collRot.getZ(), -collRot.getW()));
 
         collider.second->GetGameObject()->GetTransform()->UpdateWorldTransformMatrix();
     }
+
 }
 
 Engine::Containers::ColliderContainer::ColliderContainer()

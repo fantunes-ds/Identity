@@ -20,10 +20,14 @@ namespace Engine::Components
 
         [[nodiscard]] GPM::Matrix4F GetWorldMatrix() const;
         std::shared_ptr<ObjectElements::Model> GetModel() { return m_model; }
-        std::shared_ptr<ObjectElements::Transform> GetTransform() { return m_transform; }
+        //std::shared_ptr<ObjectElements::Transform> GetTransform() { return m_transform; }
         btRigidBody* GetBtRigidbody() { return m_rigidbody; }
         btDefaultMotionState* GetMotionState() { return m_motionState; }
-        //btTransform& GetBtTransform() { return m_btTransform; }
+        GPM::Vector3F& GetOffset() { return m_offset; }
+
+        void SetPositionOffset(GPM::Vector3F& p_offset); 
+        void SetMass(float p_mass);
+        void SetDimensions(const GPM::Vector3F& p_dimensions);
 
         bool operator==(IComponent* p_other) override { return false; }
         bool DeleteFromMemory() override { return false; }
@@ -31,11 +35,12 @@ namespace Engine::Components
 
     private:
         ObjectElements::Model ConstructBox();
-
+        float m_mass;
+        GPM::Vector3F m_offset;
         btBoxShape* m_box;
         btDefaultMotionState* m_motionState;
         btRigidBody* m_rigidbody;
         std::shared_ptr<ObjectElements::Model> m_model;
-        std::shared_ptr<ObjectElements::Transform> m_transform;
+        //std::shared_ptr<ObjectElements::Transform> m_transform;
     };
 }

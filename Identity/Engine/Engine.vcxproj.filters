@@ -204,9 +204,6 @@
     <ClInclude Include="include\Tools\FPSCounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Systems\CollisionSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Physics\BulletInclude.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -374,9 +371,6 @@
     <ClCompile Include="src\Tools\ASSIMP\AssimpConversion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\CollisionSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Tools\Bullet\BulletDebugRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -388,8 +382,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\Shaders\pDirect2D.hlsl" />
-    <FxCompile Include="Resources\Shaders\vDirect2D.hlsl" />
     <FxCompile Include="Resources\Shaders\PixelShader.hlsl" />
     <FxCompile Include="Resources\Shaders\VertexShader.hlsl" />
   </ItemGroup>
