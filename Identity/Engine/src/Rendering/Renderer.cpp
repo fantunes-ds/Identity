@@ -201,8 +201,6 @@ void Renderer::SetDepthStencilBuffers()
     descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     descDSV.Texture2D.MipSlice = 0u;
     GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &m_pDepthStencilView));
-
-    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
 }
 
 void Renderer::SetViewPort(const float& p_width, const float& p_height) const

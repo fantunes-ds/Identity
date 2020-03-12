@@ -16,6 +16,7 @@ int32_t Engine::Containers::ComponentContainer::AddComponent(Components::ICompon
     {
         if (typeid(*component.second) == typeid(*p_component))
         {
+            //TODO: Not the right way to compare
             if (*component.second == p_component)
             {
                 std::string type = typeid(*p_component).name();
@@ -50,7 +51,7 @@ Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::
     {
         m_instance = new ComponentContainer();
     }
-    
+
     return m_instance;
 }
 

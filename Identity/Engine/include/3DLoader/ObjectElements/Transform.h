@@ -10,6 +10,7 @@ namespace Engine::ObjectElements
     public:
         Transform();
 
+        Transform(const std::string& p_name);
         Transform(Vector3F& p_position);
         ~Transform() = default;
 

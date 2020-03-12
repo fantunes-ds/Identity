@@ -105,7 +105,6 @@ namespace Engine::Rendering
         void Resize(const float p_width, const float p_height);
 
         void GetResolution(int& p_width, int& p_height) const;
-        void SetRenderTarget();
 
         [[nodiscard]] const bool& GetFullscreenState() const { return m_isFullscreen; }
         [[nodiscard]] const Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() const { return m_pDevice; }

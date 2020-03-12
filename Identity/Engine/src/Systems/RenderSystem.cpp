@@ -11,12 +11,18 @@
 #include <Rendering/Buffers/VertexConstantBuffer.h>
 #include <Containers/LightContainer.h>
 #include <Scene/SceneGraph/SceneNode.h>
+#include "Tools/Bullet/BulletDebugRender.h"
+#include "Containers/ColliderContainer.h"
+#include <Components/BoxCollider.h>
 
-constexpr bool DRAW_TO_TEXTURE = true;
+#define DEBUG_MODE true
+
+constexpr bool DRAW_TO_TEXTURE = false;
 
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 {
     HRESULT hr;
+    Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     std::shared_ptr<Rendering::Lights::ILight> ILight = Containers::LightContainer::GetLights().begin()->second;
     std::shared_ptr<Rendering::Lights::Light> light1 = std::dynamic_pointer_cast<Rendering::Lights::Light>(Containers::LightContainer::GetLights().begin()->second);
@@ -73,7 +79,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
         std::vector<unsigned short> quadidx = { 3,2,1,1,2,0 };
 
         //The quad is the screen "camera rect" we might want to store it somewhere later.
-        ObjectElements::Mesh quad{quadvtx, quadidx};
+        ObjectElements::Mesh quad{ quadvtx, quadidx };
         quad.GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
 
         quad.Bind(Rendering::Renderer::GetInstance()->GetContext());
@@ -90,6 +96,46 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 
         Rendering::Renderer::GetInstance()->Bind();
         GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(quad.GetIndices().size()), 0u, 0u));
+    }
+    //TEST
+    if (DEBUG_MODE)
+    {
+        for (auto collider: Containers::ColliderContainer::GetColliders())
+        {
+            auto model = collider.second->GetModel();
+            auto mesh = model->GetMeshes()[0];
+            mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
+            mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
+
+            Matrix4F modelMatrix = collider.second->GetWorldMatrix();
+            Matrix4F normalModel = Matrix4F::Inverse(modelMatrix);
+
+            Matrix4F view = camera->GetViewMatrix();
+            Matrix4F perspective = camera->GetPerspectiveMatrix();
+            
+            Rendering::Buffers::VCB vcb{ modelMatrix, view, normalModel,perspective };
+            mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
+            const Vector3F cameraPos = camera->GetPosition();
+
+            const Rendering::Buffers::PCB pcb{ Vector4F::zero, Vector4F::one, Vector4F::one,
+                                            Vector4F::zero, Vector4F::one,
+                                                            1.0f,Vector3F{},Vector3F::zero, 0.0f };
+            mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
+            Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+
+            if constexpr (!DRAW_TO_TEXTURE)
+            {
+                Rendering::Renderer::GetInstance()->Bind();
+                GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
+            }
+            else
+            {
+                Rendering::Renderer::GetInstance()->Bind(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetTarget(), Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetDepthStencilView());
+                GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
+                Rendering::Renderer::GetInstance()->Bind();
+            }
+            Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        }
     }
 }
 
