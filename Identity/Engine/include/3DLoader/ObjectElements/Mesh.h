@@ -9,7 +9,7 @@
 #include <Objects/IObject.h>
 #include <Rendering/Buffers/InputLayout.h>
 
-#include <Rendering/Material.h>
+#include <Rendering/Materials/Material.h>
 #include <Containers/MaterialContainer.h>
 
 namespace Engine::ObjectElements
@@ -31,7 +31,7 @@ namespace Engine::ObjectElements
         bool operator!=(const Mesh& p_other) const;
 
         Rendering::Buffers::VertexBuffer& GetVertexBuffer() { return m_vertexBuffer; }
-        [[nodiscard]] Rendering::Material& GetMaterial() { return *Containers::MaterialContainer::GetMaterial(m_material); }
+        [[nodiscard]] Rendering::Materials::Material& GetMaterial() { return *Containers::MaterialContainer::GetMaterial(m_material); }
         [[nodiscard]] Rendering::Buffers::IndexBuffer& GetIndexBuffer() { return m_indexBuffer; }
         [[nodiscard]] std::vector<Geometry::Vertex>& GetVertices() { return m_vertices; }
         [[nodiscard]] std::vector<unsigned short>& GetIndices() { return m_indices; }

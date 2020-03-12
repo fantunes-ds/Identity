@@ -1,39 +1,53 @@
 #include <stdafx.h>
-#include <Rendering/Camera.h>
+#include <Components/Camera.h>
 #include <Tools/ImGUI/imgui.h>
 #include <Input/Input.h>
-#include "Containers/EventContainer.h"
+#include <Systems/CameraSystem.h>
 
 
-void Engine::Rendering::Camera::UpdateCamera(const float& p_width, const float& p_height)
+void Engine::Components::Camera::UpdateCamera(const float p_deltaTime, const float& p_width, const float& p_height)
 {
-    UpdateCameraPosition();
-    UpdateVectors();
+    UpdateCameraPosition(p_deltaTime);
     UpdateCameraRotation();
+    UpdateVectors();
     UpdateViewMatrix();
     UpdateResolution(p_width, p_height);
+    needUpdate = false;
 }
 
-Engine::Rendering::Camera::Camera(const int32_t p_transformId, const int p_width, const int p_height) :
-m_transformId(p_transformId), m_width(static_cast<float>(p_width)), m_height(static_cast<float>(p_height))
+Engine::Components::Camera::Camera(Objects::GameObject* p_gameObject, const int p_width, const int p_height) :
+    IComponent{p_gameObject}, m_width(static_cast<float>(p_width)), m_height(static_cast<float>(p_height))
 {
+    Containers::CameraSystem::AddCamera(std::make_shared<Camera>(*this));
     UpdatePerspectiveMatrix();
 }
 
-void Engine::Rendering::Camera::UpdateVectors()
+bool Engine::Components::Camera::operator==(IComponent* p_other)
 {
-     const Quaternion pitch = Quaternion(Vector3F(-1.0f, 0.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_pitch));
-     const Quaternion yaw   = Quaternion(Vector3F(0.0f, 1.0f, 0.0f), GPM::Tools::Utils::ToRadians(-m_yaw));
-     const Quaternion roll  = Quaternion(Vector3F(0.0f, 0.0f, 1.0f), GPM::Tools::Utils::ToRadians(0.0f));
-    
-     auto transform = Containers::TransformContainer::GetTransform(m_transformId);
+    if (this == dynamic_cast<Camera*>(p_other))
+        return true;
 
-     transform->SetRotation((roll * yaw * pitch).Normalize());
+    return false;
 }
 
-void Engine::Rendering::Camera::UpdateCameraPosition()
+bool Engine::Components::Camera::DeleteFromMemory()
 {
-    auto transform = Containers::TransformContainer::GetTransform(m_transformId);
+    return Containers::CameraSystem::RemoveCamera(GetID());
+}
+
+void Engine::Components::Camera::UpdateVectors()
+{
+     const Quaternion pitch = Quaternion(Vector3F(1.0f, 0.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_pitch));
+     const Quaternion yaw   = Quaternion(Vector3F(0.0f, 1.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_yaw));
+     const Quaternion roll  = Quaternion(Vector3F(0.0f, 0.0f, 1.0f), GPM::Tools::Utils::ToRadians(0.0f));
+
+     m_gameObject->GetTransform()->SetRotation((pitch * yaw * roll).Normalize());
+
+}
+
+void Engine::Components::Camera::UpdateCameraPosition(const float p_deltaTime)
+{
+    auto transform = m_gameObject->GetTransform();
 
     float *pos [3] = { &transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z };
     if (ImGui::Begin("Camera Tool"))
@@ -56,31 +70,31 @@ void Engine::Rendering::Camera::UpdateCameraPosition()
 
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
     {
-        transform->Translate(transform->GetForward() * speed);
+        transform->Translate(transform->GetForward() * speed * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
     {
-        transform->Translate(transform->GetForward() * speed * -1);
+        transform->Translate(transform->GetForward() * speed * -1 * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
     {
-        transform->Translate(transform->GetRight() * speed );
+        transform->Translate(transform->GetRight() * speed * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
     {
-        transform->Translate(transform->GetRight() * speed * -1);
+        transform->Translate(transform->GetRight() * speed * -1 * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::E))
     {
-        transform->Translate(transform->GetUp() * speed);
+        transform->Translate(transform->GetUp() * speed * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::Q))
     {
-        transform->Translate(transform->GetUp() * speed * -1);
+        transform->Translate(transform->GetUp() * speed * -1 * p_deltaTime);
     }
 }
 
-void Engine::Rendering::Camera::UpdateCameraRotation()
+void Engine::Components::Camera::UpdateCameraRotation()
 {
     const float sensitivity{ 0.3f };
     float xPos{ static_cast<float>(_INPUT->mouse.GetRawPosition()->x) };
@@ -109,24 +123,23 @@ void Engine::Rendering::Camera::UpdateCameraRotation()
      }ImGui::End();
 }
 
-void Engine::Rendering::Camera::UpdateViewMatrix()
+void Engine::Components::Camera::UpdateViewMatrix()
 {
-
-    auto transform = Containers::TransformContainer::GetTransform(m_transformId);
+    auto transform = m_gameObject->GetTransform();
     const Matrix4F rotation = transform->GetRotation().Conjugate().ToMatrix4().Transpose();
     const Matrix4F translation = Matrix4F::CreateTranslation(Vector3F{ -transform->GetPosition().x, -transform->GetPosition().y, transform->GetPosition().z});
 
     m_viewMatrix = rotation * translation;
 }
 
-void Engine::Rendering::Camera::UpdateResolution(const float p_width, const float p_height)
+void Engine::Components::Camera::UpdateResolution(const float p_width, const float p_height)
 {
     m_width = p_width;
     m_height = p_height;
     UpdatePerspectiveMatrix();
 }
 
-void Engine::Rendering::Camera::UpdatePerspectiveMatrix() noexcept
+void Engine::Components::Camera::UpdatePerspectiveMatrix() noexcept
 {
     const float twoNearZ = m_nearZ + m_nearZ;
     const float fRange = m_farZ / (m_nearZ - m_farZ);

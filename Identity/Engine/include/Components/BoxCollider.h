@@ -6,7 +6,7 @@
 #include <BulletCollision/CollisionShapes/btBoxShape.h>
 #include <LinearMath/btDefaultMotionState.h>
 #include <3DLoader/ObjectElements/Model.h>
-#include "3DLoader/ObjectElements/Transform.h"
+#include <Components/Transform.h>
 
 namespace Engine::Components
 {

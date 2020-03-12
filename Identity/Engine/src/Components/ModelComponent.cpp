@@ -1,5 +1,7 @@
 #include <stdafx.h>
 #include <Components/ModelComponent.h>
+#include <Scene/SceneGraph/SceneNode.h>
+#include <Objects/GameObject.h>
 
 Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name): IComponent{ p_gameObject }
 {
@@ -10,6 +12,10 @@ Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameOb
 {
     Containers::ModelContainer::AddModel(p_file, p_name);
     m_model = Containers::ModelContainer::FindModel(p_name);
+    // m_gameObject->SetTransform(Containers::ModelContainer::GetAllModels().at(m_model)->GetRootNode()->GetTransform());
+    auto test = Containers::ModelContainer::GetAllModels().at(m_model)->GetRootNode();
+    test->SetTransform(m_gameObject->GetTransform()->GetID());
+    std::cout << "test";
 }
 
 bool Engine::Components::ModelComponent::operator==(IComponent* p_other)

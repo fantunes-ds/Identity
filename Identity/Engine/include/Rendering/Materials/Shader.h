@@ -21,7 +21,7 @@ namespace Engine::Rendering::Materials
 
         void GenConstantBuffers();
 
-        const Microsoft::WRL::ComPtr<ID3DBlob>& GetBlob() const { return blob_test; }
+        const Microsoft::WRL::ComPtr<ID3DBlob>& GetBlob() const { return m_blob; }
 
         const Buffers::VertexConstantBuffer& GetVCB() const noexcept { return m_vcb; }
         const Buffers::PixelConstantBuffer& GetPCB() const noexcept { return m_pcb; }
@@ -33,6 +33,6 @@ namespace Engine::Rendering::Materials
         Buffers::VertexConstantBuffer m_vcb;
         Buffers::PixelConstantBuffer m_pcb;
         
-        Microsoft::WRL::ComPtr<ID3DBlob> blob_test;
+        Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
     };
 }

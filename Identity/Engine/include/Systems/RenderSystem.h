@@ -1,6 +1,6 @@
 #pragma once
 #include <Export.h>
-#include <Systems/IECSSystem.h>
+#include <Systems/ISystem.h>
 #include <3DLoader/ObjectElements/Model.h>
 #include <Rendering/Renderer.h>
 #include <Rendering/Lights/Light.h>
@@ -10,7 +10,7 @@
 
 namespace Engine::Systems
 {
-    class API_ENGINE RenderSystem: public IECSSystem
+    class API_ENGINE RenderSystem: public ISystem
     {
     public:
         RenderSystem() = default;
@@ -18,7 +18,7 @@ namespace Engine::Systems
 
         void DrawScene(float p_deltaTime);
         void DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode);
-        void Update(float p_deltaTime) override;
+        void IUpdate(float p_deltaTime) override;
 
         void ResetActiveCamera();
 

@@ -4,7 +4,7 @@
 
 namespace Engine::Containers
 {
-    class CameraContainer;
+    class CameraSystem;
 
     class API_ENGINE EventContainer
     {

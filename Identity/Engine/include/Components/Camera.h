@@ -1,32 +1,31 @@
 #pragma once
 #include <Export.h>
 #include <GPM/GPM.h>
-#include <Objects/IObject.h>
-#include "Containers/TransformContainer.h"
+#include <Components/IComponent.h>
+#include <Objects/GameObject.h>
 
-namespace Engine::Systems
+namespace Engine::Components
 {
-    class RenderSystem;
-}
-
-namespace Engine::Rendering
-{
-    class API_ENGINE Camera : public Objects::IObject
+    class API_ENGINE Camera : public IComponent
     {
-        friend class Systems::RenderSystem;
 
     public:
         Camera() = default;
-        Camera(const int32_t p_tranformId, const int p_width, const int p_height);
+        Camera(Objects::GameObject* p_gameObject, const int p_width, const int p_height);
         ~Camera() = default;
 
-        void UpdateCamera(const float& p_width, const float& p_height);
+        bool operator==(IComponent* p_other) override;
+        bool DeleteFromMemory() override;
+
+        //Will be called by system if needed
+        void UpdateCamera(const float p_deltaTime, const float& p_width, const float& p_height);
+        //------
 
         [[nodiscard]] const Matrix4F& GetPerspectiveMatrix() const noexcept { return m_perspectiveMatrix; }
         [[nodiscard]] const Matrix4F& GetViewMatrix() const { return m_viewMatrix; }
 
-        [[nodiscard]] const Vector3F& GetPosition() const noexcept { return Containers::TransformContainer::GetTransform(m_transformId)->GetPosition(); }
-        [[nodiscard]] const Quaternion& GetRotation() const noexcept { return Containers::TransformContainer::GetTransform(m_transformId)->GetRotation(); }
+        [[nodiscard]] const Vector3F& GetPosition() const noexcept { return m_gameObject->GetTransform()->GetPosition(); }
+        [[nodiscard]] const Quaternion& GetRotation() const noexcept { return m_gameObject->GetTransform()->GetRotation(); }
 
         [[nodiscard]] const float& GetMovementSpeed() const noexcept { return m_speed; }
         [[nodiscard]] const float& GetMouseSensitivity() const noexcept { return m_sensitivity; }
@@ -37,12 +36,12 @@ namespace Engine::Rendering
         void UpdateResolution(const float p_width, const float p_height);
         void UpdatePerspectiveMatrix() noexcept;
         void UpdateVectors();
-        void UpdateCameraPosition();
+        void UpdateCameraPosition(const float p_deltaTime);
         void UpdateCameraRotation();
 
-        int32_t m_transformId;
+        bool needUpdate{ false };
 
-        float m_speed{ 0.05f };
+        float m_speed{ 5.f };
         float m_sensitivity{ 0.05f };
 
         // Perpsective variables

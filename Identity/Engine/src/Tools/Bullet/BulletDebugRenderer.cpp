@@ -3,7 +3,7 @@
 #include <winsetup.h>
 #include "Tools/DirectX/GraphicsMacros.h"
 #include <d3dcompiler.h>
-#include "Containers/CameraContainer.h"
+#include <Systems/CameraSystem.h>
 #include "Containers/ModelContainer.h"
 
 Engine::Tools::Bullet::BulletDebugRenderer::BulletDebugRenderer()

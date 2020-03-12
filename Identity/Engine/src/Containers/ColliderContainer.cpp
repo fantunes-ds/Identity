@@ -3,7 +3,7 @@
 #include <Components/BoxCollider.h>
 #include <BulletCollision/BroadphaseCollision/btDbvtBroadphase.h>
 #include <Objects/GameObject.h>
-#include "Containers/TransformContainer.h"
+#include <Systems/TransformSystem.h>
 
 Engine::Containers::ColliderContainer::~ColliderContainer()
 {
@@ -29,11 +29,11 @@ std::shared_ptr<Engine::Components::BoxCollider> Engine::Containers::ColliderCon
     return coll;
 }
 
-void Engine::Containers::ColliderContainer::Update(float p_deltaTime)
+void Engine::Containers::ColliderContainer::Update(const float p_deltaTime)
 {
     btTransform trans;
 
-    GetInstance()->m_dynamicsWorld->stepSimulation(p_deltaTime / 1000, 10);
+    GetInstance()->m_dynamicsWorld->stepSimulation(p_deltaTime, 10);
     
     for (auto& collider : GetInstance()->m_colliders)
     {
@@ -47,7 +47,7 @@ void Engine::Containers::ColliderContainer::Update(float p_deltaTime)
         btQuaternion qpq = collRot * quatOffset * collRot.inverse();
 
         collider.second->GetGameObject()->GetTransform()->SetPosition(GPM::Vector3F(qpq.getX(), qpq.getY(), qpq.getZ()) + GPM::Vector3F(collPos.getX(), collPos.getY(), collPos.getZ()));
-        collider.second->GetGameObject()->GetTransform()->SetRotation(GPM::Quaternion(collRot.getX(), collRot.getY(), collRot.getZ(), -collRot.getW()));
+        collider.second->GetGameObject()->GetTransform()->SetRotation(GPM::Quaternion(collRot.getX(), collRot.getY(), collRot.getZ(), collRot.getW()));
 
         collider.second->GetGameObject()->GetTransform()->UpdateWorldTransformMatrix();
     }

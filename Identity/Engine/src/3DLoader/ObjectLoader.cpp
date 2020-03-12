@@ -1,10 +1,10 @@
 #include <stdafx.h>
 #include <3DLoader/ObjectLoader.h>
-#include <3DLoader/ObjectElements/Transform.h>
+#include <Components/Transform.h>
 #include <Scene/SceneGraph/SceneNode.h>
 #include <Tools/ASSIMP/ASSIMPConversion.h>
-#include "Containers/ModelContainer.h"
-#include "Containers/TransformContainer.h"
+#include <Containers/ModelContainer.h>
+#include <Systems/TransformSystem.h>
 
 std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(const std::string& p_file)
 {
@@ -16,7 +16,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(c
     const aiScene* scene = importer.ReadFile(p_file,
         aiProcess_CalcTangentSpace
         | aiProcess_OptimizeGraph
- //       | aiProcess_OptimizeMeshes
+ // | aiProcess_OptimizeMeshes
         | aiProcess_Triangulate
         | aiProcess_SortByPType
         | aiProcess_GenNormals
@@ -62,11 +62,13 @@ void Engine::ObjectLoader::ParseForNodes(const aiNode* p_assimpNode, std::shared
 {
     if (!p_sceneNode->IsRoot())
     {
-        auto newTransform = std::make_shared<ObjectElements::Transform>();
+        // auto newTransform = std::make_shared<Components::Transform>();
+        int32_t id = Containers::TransformSystem::AddTransform();
         GPM::Matrix4F local = Tools::ASSIMP::ASSIMPConversion::Mat4x4ToGPM(p_assimpNode->mTransformation);
-        newTransform->SetLocalTransformMatrix(local);
+        Containers::TransformSystem::GetTransform(id)->SetLocalTransformMatrix(local);
+        // newTransform->SetLocalTransformMatrix(local);
 
-        p_sceneNode->SetTransform(Containers::TransformContainer::AddTransform(newTransform));
+        p_sceneNode->SetTransform(id);
     }
     
     p_sceneNode->SetName(p_assimpNode->mName.C_Str()); 

@@ -24,7 +24,7 @@ namespace Engine::Containers
         static std::shared_ptr<Components::BoxCollider> AddCollider(Components::BoxCollider* p_collider);
         static std::map<int32_t, std::shared_ptr<Components::BoxCollider>>& GetColliders() { return GetInstance()->m_colliders; }
         static btDiscreteDynamicsWorld* GetWorld() { return GetInstance()->m_dynamicsWorld; }
-        static void Update(float p_deltaTime);
+        static void Update(const float p_deltaTime);
 
     private:
         ColliderContainer();

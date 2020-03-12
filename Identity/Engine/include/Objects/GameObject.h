@@ -1,6 +1,6 @@
 #pragma once
 #include <Export.h>
-#include <3DLoader/ObjectElements/Transform.h>
+#include <Components/Transform.h>
 #include <3DLoader/ObjectElements/Model.h>
 #include <Containers/ModelContainer.h>
 #include <Containers/ComponentContainer.h>
@@ -84,7 +84,7 @@ namespace Engine::Objects
             return foundComps;
         }
 
-        [[nodiscard]] std::shared_ptr<ObjectElements::Transform> GetTransform() const;
+        [[nodiscard]] std::shared_ptr<Components::Transform> GetTransform() const;
         [[nodiscard]] inline uint32_t GetTransformID() const { return m_transform; }
         [[nodiscard]] std::shared_ptr<ObjectElements::Model> GetModel() const;
 
