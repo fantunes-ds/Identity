@@ -14,7 +14,6 @@
 #include <Components/Camera.h>
 #include <Containers/MaterialContainer.h>
 #include <Components/LightComponent.h>
-#include <Managers/ResourceManager.h>
 
 using namespace Engine::Core;
 

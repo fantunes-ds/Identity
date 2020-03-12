@@ -11,7 +11,7 @@ namespace Engine::Objects
 
         [[nodiscard]] int32_t GetID() const { return m_id; }
         [[nodiscard]] inline const std::string& GetName() const { return m_name; }
-        void SetName(const std::string& p_name) { m_name = p_name; }
+        inline void SetName(const std::string& p_name) { m_name = p_name; }
 
     protected:
         int32_t m_id = -1;

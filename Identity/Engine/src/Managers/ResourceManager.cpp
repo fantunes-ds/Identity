@@ -249,6 +249,55 @@ std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Managers::Resour
     const std::string& p_textureName)
 {
     //TODO when serialization is complete: export the new material in a file
+    for (auto material: GetInstance()->m_materials)
+    {
+        if (material->GetName() == p_name)
+        {
+            const std::string info("The name '" + p_name + "' is already in use, please change the name");
+            MessageBox(nullptr, info.c_str(), "Error", MB_ICONERROR | MB_OK);
+            return nullptr;
+        }
+    }
+
+    if (GetInstance()->GetPixelShader(p_pixelShaderName) == nullptr)
+    {
+        const std::string error("The pixel shader you provided does not exist");
+        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+        return nullptr;
+    }
+
+    if (GetInstance()->GetVertexShader(p_vertexShaderName) == nullptr)
+    {
+        const std::string error("The vertex shader you provided does not exist");
+        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+        return nullptr;
+    }
+
+    if (p_name.length() > 0 && GetInstance()->GetTexture(p_textureName) == nullptr)
+    {
+        const std::string error("The texture you provided does not exist");
+        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+        return nullptr;
+    }
+
+    std::shared_ptr<Rendering::Materials::Material> material = Rendering::Materials::Material::CreateMaterial(GetInstance()->GetPixelShader(p_pixelShaderName),
+                                                                                                             GetInstance()->GetVertexShader(p_vertexShaderName));
+
+    if (material == nullptr)
+    {
+        const std::string error("There was an error in the creation of the material");
+        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+        return nullptr;
+    }
+
+    if (p_name.length() <= 0)
+        material->SetTexture(GetInstance()->GetTexture(p_textureName));
+
+    material->SetName(p_name);
+
+    GetInstance()->m_materials.push_back(material);
+
+    return material;
 }
 
 std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Managers::ResourceManager::GetMaterial(

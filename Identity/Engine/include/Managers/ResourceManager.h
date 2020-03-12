@@ -122,7 +122,7 @@ namespace Engine::Managers
          * @return Return a share_ptr of the created material
          */
         static std::shared_ptr<Rendering::Materials::Material> CreateMaterial(const std::string& p_name, const std::string& p_pixelShaderName,
-                                                                              const std::string& p_vertexShaderName, const std::string& p_textureName = nullptr);
+                                                                              const std::string& p_vertexShaderName, const std::string& p_textureName = "");
         /**
          * @brief Used to get a material from the resource manager
          * @param p_name The name of the material you want to get
