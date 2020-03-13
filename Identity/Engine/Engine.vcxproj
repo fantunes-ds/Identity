@@ -279,7 +279,6 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\TestDependencies.h" />
     <ClInclude Include="include\Tools\ASSIMP\ASSIMPConversion.h" />
-    <ClInclude Include="include\Tools\Bullet\BulletDebugRender.h" />
     <ClInclude Include="include\Tools\DirectX\dxerr.h" />
     <ClInclude Include="include\Tools\DirectX\GraphicsMacros.h" />
     <ClInclude Include="include\Tools\FPSCounter.h" />

@@ -29,9 +29,11 @@ namespace Engine::Containers
     private:
         ColliderContainer();
 
+
         inline static ColliderContainer* m_instance;
         std::map<int32_t, std::shared_ptr<Components::BoxCollider>> m_colliders;
 
+        //TODO: create class that wraps bullet classes
         btDefaultCollisionConfiguration* m_collisionConfiguration;
 
         ///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
@@ -47,6 +49,5 @@ namespace Engine::Containers
 
         //keep track of the shapes, we release memory at exit.
         //make sure to re-use collision shapes among rigid bodies whenever possible!
-        btAlignedObjectArray<btCollisionShape*> m_collisionShapes;
     };
 }
