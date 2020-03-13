@@ -29,10 +29,8 @@ using namespace Engine::Core;
 App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
     btVector3 vec(0.0f, 0.0f, 0.0f);
-    //btDiscreteDynamicsWorld w;
-    //b3PhysicsClientHandle kPhysClient = 0;
+
     Input::Input::InitInput();
-    //btVector3 vec3;
 }
 
 App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name), m_width(p_width), m_height(p_height)
@@ -80,9 +78,8 @@ int App::Run() const
     link.FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(linkOffset);
     link.FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
 
-    lambo.GetTransform()->Translate(Vector3F{5.0f, 5.0f, -4.0f});
+    lambo.GetTransform()->Translate(Vector3F{5.0f, 5.0f, -3.0f});
     lambo.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
-    //lambo.GetTransform()->RotateWithEulerAngles(Vector3F{ 45.f, 45.f, 90.f });
     lambo.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
     lambo.AddComponent<Components::BoxCollider>();
     lambo.FindComponentOfType<Components::BoxCollider>()->SetMass(1);
@@ -105,8 +102,6 @@ int App::Run() const
     dirLight.color = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
     dirLight.shininess = 32.0f;
 
-    // camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    // light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
     light.AddComponent<Components::LightComponent>(dirLight);
 
     for (auto& mesh : link.GetModel()->GetMeshes())
@@ -130,7 +125,6 @@ int App::Run() const
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
         fpsCounter.Start();
-        
         link.GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -0.0f, 0.02f });
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {

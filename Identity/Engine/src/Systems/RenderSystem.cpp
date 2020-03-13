@@ -15,7 +15,7 @@
 
 #define DEBUG_MODE true
 
-constexpr bool DRAW_TO_TEXTURE = true;
+constexpr bool DRAW_TO_TEXTURE = false;
 
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 {
@@ -135,7 +135,6 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
         Rendering::Renderer::GetInstance()->Bind();
         GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(quad.GetIndices().size()), 0u, 0u));
     }
-    //TEST
 }
 
 void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)

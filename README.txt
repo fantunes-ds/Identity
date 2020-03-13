@@ -1,15 +1,21 @@
 Pour télécharger :
 
-• Simplement cloner. S'assurer qu'on a bien le tag Alpha sur le commit actuel.
+• Simplement cloner. S'assurer qu'on a bien le tag Beta sur le commit actuel.
+
+Pour essayer le début d'éditeur, aller dans la branche Editor. (git checkout Editor)
 
 Utilisation :
 
-• Utilisez les touches WASD pour bouger la caméra (translations avant arriere gauche droite seulement).
+• Utilisez les touches WASDQE pour bouger la caméra, 
+w = forward, s = backwards, a = left, d = right, e = up, q = down
+On peut se déplacer plus vite en cliquant sur shift.
 
-• Les menus d'ImGUI permettent de soit bouger la caméra, soit bouger la directional light.
-
-• Les touches RGB permettent toujours de changer la couleur du clearbuffer.
+• Souris pour orienter la caméra en utilisant le clic droit.
+• Les fenêtres sont dockables.
 
 Bugs connus : 
-• Oui, il y a un objet à l'intérieur de l'autre. Nous n'avons pas encore implémenté notre classe Transform/GameObject, ce sera fait très bientôt.
+• Les rotations ne sont pas très précises, parfois même complètement fausses. 
+Il semblerait y avoir un problème d'axes. W.I.P.
 • Le slider de lumière est inversé pour la position X.
+
+• On a la scène qui est dans App::Run, mais elle va être bougée dès qu'on aura la sérialization.

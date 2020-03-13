@@ -48,7 +48,7 @@ namespace Engine::Rendering::Materials
         void UnbindTexture(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
 
         [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTexSRV() const { return m_texSRV; }
-        void SetTexSRV(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> p_otherTexSRV) { m_texSRV = std::move(p_otherTexSRV); }
+        void SetTexSRV(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> p_otherTexSRV) { m_texSRV = p_otherTexSRV; }
         [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11SamplerState> GetSampleState() const { return m_samplerState; }
 
     private:
