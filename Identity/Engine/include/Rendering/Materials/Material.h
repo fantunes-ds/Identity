@@ -33,7 +33,7 @@ namespace Engine::Rendering::Materials
          * @brief Used to add a vertex shader to the current material
          * @param p_device A pointer to the rendering device of the renderer (will soon be removed)
          * @param p_path The pat of the vertex shader you want to add to the current material
-         * @depracated The Resource Manager will soon be available so prepare to make the change
+         * @deprecated The Resource Manager will soon be available so prepare to make the change
          */
         void AddVertexShader(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
 
