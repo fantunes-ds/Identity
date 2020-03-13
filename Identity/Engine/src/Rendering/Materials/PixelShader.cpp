@@ -3,16 +3,6 @@
 #include <Rendering/Renderer.h>
 #include <d3dcompiler.h>
 
-Engine::Rendering::Materials::PixelShader::PixelShader()
-{
-    //TODO
-}
-
-Engine::Rendering::Materials::PixelShader::~PixelShader()
-{
-    //TODO
-}
-
 std::shared_ptr<Engine::Rendering::Materials::PixelShader> Engine::Rendering::Materials::PixelShader::LoadShader(
     const std::string& p_path, const std::string& p_name)
 {
@@ -34,17 +24,27 @@ std::shared_ptr<Engine::Rendering::Materials::PixelShader> Engine::Rendering::Ma
     return tmpPixelShader;
 }
 
-void Engine::Rendering::Materials::PixelShader::LoadShader(const std::string& p_path)
+void Engine::Rendering::Materials::PixelShader::BindShader() const
 {
-    //TODO
+    Rendering::Renderer::GetInstance()->GetContext()->PSSetShader(pixelShader.Get(), nullptr, 0u);
 }
 
-void Engine::Rendering::Materials::PixelShader::BindShader()
+void Engine::Rendering::Materials::PixelShader::UnBindShader()
 {
-    //TODO
+    Rendering::Renderer::GetInstance()->GetContext()->PSSetShader(nullptr, nullptr, 0u);
 }
 
 void Engine::Rendering::Materials::PixelShader::GenerateConstantBuffer()
 {
-    //TODO
+    m_pcb.GenBuffers();
+}
+
+void Engine::Rendering::Materials::PixelShader::BindConstantBuffer() const
+{
+    m_pcb.Bind();
+}
+
+void Engine::Rendering::Materials::PixelShader::UnBindConstantBuffer() const
+{
+    m_pcb.Unbind();
 }

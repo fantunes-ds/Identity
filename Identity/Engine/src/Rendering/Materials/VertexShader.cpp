@@ -3,16 +3,6 @@
 #include <Rendering/Renderer.h>
 #include <d3dcompiler.h>
 
-Engine::Rendering::Materials::VertexShader::VertexShader()
-{
-    //TODO
-}
-
-Engine::Rendering::Materials::VertexShader::~VertexShader()
-{
-    //TODO
-}
-
 std::shared_ptr<Engine::Rendering::Materials::VertexShader> Engine::Rendering::Materials::VertexShader::LoadShader(
     const std::string& p_path, const std::string& p_name)
 {
@@ -29,22 +19,32 @@ std::shared_ptr<Engine::Rendering::Materials::VertexShader> Engine::Rendering::M
         tmpVertexShader->m_blob->GetBufferPointer(),
         tmpVertexShader->m_blob->GetBufferSize(),
         nullptr,
-        &tmpVertexShader->pixelShader);
+        &tmpVertexShader->vertexShader);
 
     return tmpVertexShader;
 }
 
-void Engine::Rendering::Materials::VertexShader::LoadShader(const std::string& p_path)
+void Engine::Rendering::Materials::VertexShader::BindShader() const
 {
-    //TODO
+    Rendering::Renderer::GetInstance()->GetContext()->VSSetShader(vertexShader.Get(), nullptr, 0u);
 }
 
-void Engine::Rendering::Materials::VertexShader::BindShader()
+void Engine::Rendering::Materials::VertexShader::UnBindShader()
 {
-    //TODO
+    Rendering::Renderer::GetInstance()->GetContext()->VSSetShader(nullptr, nullptr, 0u);
 }
 
 void Engine::Rendering::Materials::VertexShader::GenerateConstantBuffer()
 {
-    //TODO
+    m_vcb.GenBuffers();
+}
+
+void Engine::Rendering::Materials::VertexShader::BindConstantBuffer() const
+{
+    m_vcb.Bind();
+}
+
+void Engine::Rendering::Materials::VertexShader::UnBindConstantBuffer() const
+{
+    m_vcb.Unbind();
 }
