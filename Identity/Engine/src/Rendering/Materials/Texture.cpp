@@ -6,14 +6,6 @@
 
 using namespace Engine::Rendering::Materials;
 
-Texture::Texture()
-{
-}
-
-Texture::~Texture()
-{
-}
-
 std::shared_ptr<Texture> Texture::LoadTexture(const std::string& p_path, const std::string& p_name)
 {
     std::wstring wPath(p_path.begin(), p_path.end());
