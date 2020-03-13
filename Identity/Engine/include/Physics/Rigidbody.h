@@ -4,6 +4,9 @@
 
 namespace Engine::Physics
 {
+    /**
+     * @warning Not ready yet, not in use anywhere
+     */
     class API_ENGINE Rigidbody
     {
     public:

@@ -18,6 +18,9 @@ namespace Engine::Components
         BoxCollider(const BoxCollider&) = default;
         ~BoxCollider();
 
+        /***
+         * @brief returns Bullet Physics' Matrix that concerns this BoxCollider.
+         */
         [[nodiscard]] GPM::Matrix4F GetWorldMatrix() const;
         std::shared_ptr<ObjectElements::Model> GetModel() { return m_model; }
         //std::shared_ptr<ObjectElements::Transform> GetTransform() { return m_transform; }
@@ -34,6 +37,9 @@ namespace Engine::Components
 
 
     private:
+        /**
+         * @brief Builds a Model that visually represents this BoxCollider's transform. 
+         */
         ObjectElements::Model ConstructBox();
         float m_mass;
         GPM::Vector3F m_offset;
@@ -41,6 +47,5 @@ namespace Engine::Components
         btDefaultMotionState* m_motionState;
         btRigidBody* m_rigidbody;
         std::shared_ptr<ObjectElements::Model> m_model;
-        //std::shared_ptr<ObjectElements::Transform> m_transform;
     };
 }

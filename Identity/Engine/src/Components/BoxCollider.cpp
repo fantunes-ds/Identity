@@ -42,7 +42,6 @@ Engine::Components::BoxCollider::~BoxCollider()
 
 GPM::Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
 {
-    //return m_transform->GetWorldTransformMatrix();
     btScalar m[16];
     btTransform trans;
 
@@ -64,10 +63,6 @@ void Engine::Components::BoxCollider::SetPositionOffset(GPM::Vector3F& p_offset)
 {
     m_offset = p_offset;
     btTransform trans;
-    /*m_motionState->getWorldTransform(trans);
-    auto& origin = trans.getOrigin();
-    trans.setOrigin(btVector3{ origin.getX() + p_offset.x, origin.getY() + p_offset.y, origin.getZ() + p_offset.z });
-    m_motionState->setWorldTransform(trans);*/
 }
 
 void Engine::Components::BoxCollider::SetMass(float p_mass)

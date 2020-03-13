@@ -4,6 +4,9 @@
 
 namespace Engine::Scene
 {
+    /**
+     * @brief Class that contains all root SceneNodes of objects present in the Scene. Is currently used to draw the Scene as well.
+     */
     class API_ENGINE SceneGraph
     {
     public:
