@@ -75,7 +75,7 @@ void Engine::Rendering::RenderTexture::CreateDepthStencilBuffer(const UINT p_wid
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDSState;
     GFX_THROW_INFO(Rendering::Renderer::GetInstance()->GetDevice()->CreateDepthStencilState(&dsDesc, &pDSState));
 
-    Rendering::Renderer::GetInstance()->GetContext()->OMSetDepthStencilState(pDSState.Get(), 1u);
+    Renderer::GetInstance()->GetContext()->OMSetDepthStencilState(pDSState.Get(), 1u);
 
     Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
     D3D11_TEXTURE2D_DESC descDepth;
