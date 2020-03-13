@@ -3,6 +3,9 @@
 
 namespace Engine::Objects
 {
+    /**
+     * @brief Class inherited by any class that needs an ID and/or a name to be easily identified.
+     */
     class API_ENGINE IObject
     {
     public:

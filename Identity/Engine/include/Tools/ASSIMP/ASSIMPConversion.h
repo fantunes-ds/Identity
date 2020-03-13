@@ -3,6 +3,9 @@
 
 namespace Engine::Tools::ASSIMP
 {
+    /***
+     * @brief static class used to convert ASSIMP values to Identity Engine's types.
+     */
     class API_ENGINE ASSIMPConversion
     {
     public:
