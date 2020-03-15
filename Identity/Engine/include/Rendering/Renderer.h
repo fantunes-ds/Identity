@@ -11,7 +11,7 @@
 namespace Engine::Rendering
 {
     /**
-     @brief Contains the DirectX API
+     @brief Contains the DirectX API, Device and Context
      */
     class API_ENGINE Renderer
     {
@@ -23,7 +23,7 @@ namespace Engine::Rendering
         };
         
         /**
-         * @brief Get the exceptions for the functions wich returns an HRESULT
+         * @brief Get the exceptions for the functions which returns an HRESULT
          */
         class HrException : public Exception
         {
@@ -53,7 +53,7 @@ namespace Engine::Rendering
             std::string m_info;
         };
         /**
-         @brief Get the exceptions for the Renderer driver
+         * @brief Get the exceptions for the Renderer driver
          */
         class DeviceException : public HrException
         {
@@ -70,40 +70,46 @@ namespace Engine::Rendering
         Renderer& operator=(const Renderer&) = delete;
         ~Renderer() = default;
 
+        /**
+         * @brief sets the singleton instance. It needs to be set only after the window has been initialized correctly.
+         */
         static void InitRenderer(const HWND p_hwnd, const int p_clientWidth, const int p_clientHeight);
         static const std::unique_ptr<Renderer>& GetInstance() noexcept { return instance; }
         /**
-         @brief Switch the front buffer with the back buffer
+         * @brief Switch the front buffer with the back buffer
          */
         void EndFrame() const;
         /**
-         @brief Reset the base colour of the back buffer
+         * @brief Reset the base colour of the back buffer
          */
         void ClearBuffers(const float& p_red, const float& p_green, const float& p_blue) const;
 
         /**
-         * @brief Binds default Target View and Depth Buffer to the output merger. Optional use of DefaultDepthStencil.
+         * @brief Attaches default Target View and Depth Buffer to the output merger. Optional use of DefaultDepthStencil.
          */
         void Bind(bool p_bindDefaultDepthStencil = true);
         /**
-         * @brief Binds selected Target View to the output merger. Optional bind to default depthStencil is available.
+         * @brief Attaches selected Target View to the output merger. Optional bind to default depthStencil is available.
          * @warning : If the default depthStencil is already being used by another target, it might cause issues.
          */
         void Bind(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target, bool p_bindDefaultDepthStencil = false) const;
         /**
-         * @brief Binds selected Target View and selected Depth Buffer to the output merger.
+         * @brief Attaches selected Target View and selected Depth Buffer to the output merger.
          */
         void Bind(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target, Microsoft::WRL::ComPtr<ID3D11DepthStencilView> p_ds) const;
 
         /**
-        @brief Set the renderer to fullscreen and call the Resize method
-        */
+         * @brief Set the renderer to fullscreen and call the Resize method
+         */
         void SetFullscreen(const bool& p_state);
         /**
-         @brief Resize the renderer using new resolution.
-        */
+         * @brief Resize the renderer using new resolution.
+         */
         void Resize(const float p_width, const float p_height);
 
+        /**
+         * @brief Use this function to get the resolution of the Renderer.
+         */
         void GetResolution(int& p_width, int& p_height) const;
 
         [[nodiscard]] const bool& GetFullscreenState() const { return m_isFullscreen; }
@@ -119,28 +125,28 @@ namespace Engine::Rendering
 
     private:
         /**
-         @brief Reset the context so we can resize it
+         * @brief Reset the context so we can resize it
          */
         void ResetContext();
         /**
-         @brief Create the SwapChain using the handle to the window
+         * @brief Create the SwapChain using the handle to the window
          */
         void CreateSwapChain(const HWND& p_hwnd);
         /**
-         @brief Set the Depth and the Stencil buffers. Need to be done when resizing
+         * @brief Set the Depth and the Stencil buffers. Need to be done when resizing
          */
         void SetDepthStencilBuffers();
         /**
-         @brief Set the viewport of the renderer
+         * @brief Set the viewport of the renderer
          */
         void SetViewPort(const float& p_width, const float& p_height) const;
         /**
-         @brief Initialize the back buffer and link it to the SwapChain
+         * @brief Initialize the back buffer and link it to the SwapChain
          */
         void SetBackBuffer();
 
         /**
-         @brief Change the fullscreen resolution
+         * @brief Change the fullscreen resolution
          */
         void ChangeResolution();
 

@@ -19,8 +19,17 @@ namespace Engine::Rendering::Buffers
         VertexConstantBuffer() = default;
         ~VertexConstantBuffer() = default;
 
+        /**
+         * @brief Sets parameters and creates the buffers for the vertexConstantBuffer (VCB).
+         */
         void GenBuffers();
+        /**
+         * @brief Attaches the buffer to the current render call.
+         */
         void Bind() const;
+        /**
+         * @brief Detaches the buffer from the current render call.
+         */
         void Unbind() const;
 
         [[nodiscard]] const VCB& GetVCB() const { return m_vcb; }
