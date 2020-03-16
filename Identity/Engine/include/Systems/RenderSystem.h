@@ -1,39 +1,31 @@
 #pragma once
 #include <Export.h>
-#include <Systems/IECSSystem.h>
+#include <Systems/ISystem.h>
 #include <3DLoader/ObjectElements/Model.h>
 #include <Rendering/Renderer.h>
-#include <Rendering/Light.h>
+#include <Rendering/Lights/Light.h>
+#include "Events/Event.h"
+#include "Rendering/Materials/Texture.h"
+#include "Scene/SceneGraph/SceneGraph.h"
 
 namespace Engine::Systems
 {
-    class API_ENGINE RenderSystem: public IECSSystem
+    class API_ENGINE RenderSystem: public ISystem
     {
     public:
-        RenderSystem(Rendering::Renderer* p_renderer);
+        RenderSystem() = default;
         virtual ~RenderSystem() = default;
 
-        void DrawScene();
-        void Update() override;
+        void DrawScene(float p_deltaTime);
+        void DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode);
+        void IUpdate(float p_deltaTime) override;
 
-        /**
-         * @brief Adds a model to the model container.
-         * @return returns the new model's id if successful, -1 if unsuccessful.
-         */
-        uint32_t AddModel(const std::string& p_path, const std::string& p_name);
+        void ResetActiveCamera();
 
-        /**
-         * @brief Adds a light to the light container.
-         * @return returns the new light's id if successful, -1 if unsuccessful.
-         */
-        uint32_t AddLight(Rendering::Light& p_light);
+        void SetActiveCamera(int32_t p_id);
 
     private:
-        std::map<int, std::shared_ptr<ObjectElements::Model>> m_models;
-        std::map<int, std::shared_ptr<Rendering::Light>> m_lights;
-
-        Rendering::Camera m_camera;
-
-        Rendering::Renderer* m_renderer;
+        std::map<int32_t, std::shared_ptr<Rendering::Lights::Light>> m_lights;
+        int32_t m_activeCamera = -1;
     };
 }

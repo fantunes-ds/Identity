@@ -21,6 +21,9 @@ namespace Engine::Input
      */
     class API_ENGINE Keyboard
     {
+   /**
+    * Friending class Window so it can access private functions and members and give input
+    */
     friend class Rendering::Window;
 
     public:
@@ -59,11 +62,11 @@ namespace Engine::Input
             KeyPad7 = VK_NUMPAD7,
             KeyPad8 = VK_NUMPAD8,
             KeyPad9 = VK_NUMPAD9,
-            KeyPadPeriod = VK_OEM_PERIOD,
+            KeyPadPeriod = 110,
             KeyPadDivide = VK_DIVIDE,
             KeyPadMultiply = VK_MULTIPLY,
-            KeyPadMinus = VK_OEM_MINUS,
-            KeyPadPlus = VK_OEM_PLUS,
+            KeyPadMinus = 109,
+            KeyPadPlus = 102,
             KeyPadEnter = VK_RETURN,
             UpArrow = VK_UP,
             DownArrow = VK_DOWN,
@@ -72,8 +75,8 @@ namespace Engine::Input
             Insert = VK_INSERT,
             Home = VK_HOME,
             End = VK_END,
-            PageUp = VK_NAVIGATION_UP,
-            PageDown = VK_NAVIGATION_LEFT,
+            PageUp = 33,
+            PageDown = 34,
             F1 = VK_F1,
             F2 = VK_F2,
             F3 = VK_F3,
@@ -99,7 +102,7 @@ namespace Engine::Input
             Alpha7 = 55,
             Alpha8 = 56,
             Alpha9 = 57,
-            Backslash = VK_OEM_102,
+            Backslash = 220,
             A = 65,
             B = 66,
             C = 67,
@@ -130,12 +133,12 @@ namespace Engine::Input
             Numlock = VK_NUMLOCK,
             CapsLock = VK_CAPITAL,
             ScrollLock = VK_SCROLL,
-            RightShift = VK_RSHIFT,
-            LeftShift = VK_LSHIFT,
-            RightControl = VK_RCONTROL,
-            LeftControl = VK_LCONTROL,
-            RightAlt = 17,
-            LeftAlt = VK_MENU,
+            RightShift = 16,
+            LeftShift = 16,
+            RightControl = 17,
+            LeftControl = 17,
+            RightAlt = 18,
+            LeftAlt = 18,
             LeftWindows = VK_LWIN,
             RightWindows = VK_RWIN,
             Print = VK_PRINT,

@@ -1,4 +1,5 @@
 #include <Core/App.h>
+#include <Tools/IdentityException.h>
 
 int CALLBACK WinMain(
     HINSTANCE hInstance,
@@ -8,7 +9,7 @@ int CALLBACK WinMain(
 {
     try
     {
-        return Engine::Core::App{}.Run();
+        return Engine::Core::App{1280, 720, "Identity (Beta)"}.Run();
     }
     catch(const Engine::Tools::IdentityException& e)
     {

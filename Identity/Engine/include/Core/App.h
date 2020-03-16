@@ -3,7 +3,7 @@
 #include <Rendering/Window.h>
 
 #include <Tools/ImGUI/ImGUIManager.h>
-#include <Managers/ModelManager.h>
+#include <Containers/ModelContainer.h>
 
 namespace Engine {
     namespace Systems {
@@ -29,12 +29,14 @@ namespace Engine::Core
         int Run() const;
 
     private:
-        void DoFrame(Systems::RenderSystem& p_renderSystem) const;
+        void DoFrame(Systems::RenderSystem& p_renderSystem, float p_deltaTime) const;
 
     private:
         Tools::UI::ImGUIManager m_imguiManager;
         Rendering::Window m_window;
         MSG m_msg;
         BOOL m_gResult;
+        int m_width;
+        int m_height;
     };
 }

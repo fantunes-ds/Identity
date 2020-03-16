@@ -1,17 +1,23 @@
+Texture2D shaderTexture;
+SamplerState SampleType;
+
 struct lightSource
 {
-    float3 position;
-    float3 ambient;
-    float3 diffuse;
-    float3 specular;
-    float3 direction;
+    float4 position;
+    float4 ambient;
+    float4 diffuse;
+    float4 specular;
+    float4 color;
+    float shininess;
+    float3 padding;
 };
-static float3 lightColor = float3(0.95f, 0.95f, 0.95f);
+
 cbuffer CBuf
 {
     lightSource light;
-    float shininess;
+    float padding;
     float3 cameraPos;
+    float padding2;
 };
 
 struct VS_OUT
@@ -20,22 +26,38 @@ struct VS_OUT
     float3 pos : Position;
     float3 worldPos : WPos;
     float3 norm : Normal;
+    float2 tex : TexCoord;
 };
+
+static bool blinn = true;
 
 float4 main(VS_OUT f_in) : SV_TARGET
 {
+    // ambient calculations
+    float3 ambient = light.ambient.rgb * light.color.rgb;
+    
+    //diffuse
     f_in.norm = normalize(f_in.norm);
-    float3 lightDir = normalize(light.position - f_in.worldPos);
-    
+    float3 lightDir = normalize(light.position.rgb - f_in.worldPos);
     float diff = max(dot(f_in.norm, lightDir), 0.0);
-    float3 diffuse = diff * lightColor;
+    float3 diffuse = diff * light.color.rgb;
     
+    //specular
     float3 viewDir = normalize(cameraPos - f_in.worldPos);
-    float3 reflectDir = reflect(-lightDir, f_in.norm);
-    
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    float3 specular = light.specular * spec * lightColor;
-    
-    f_in.vertexColor *= float4(light.ambient + diffuse + specular, 1) * f_in.vertexColor;
+    float spec = 0.0f;
+    if (blinn)
+    {
+        float3 halfwayDir = normalize(lightDir + viewDir);
+        spec = pow(max(dot(f_in.norm, halfwayDir), 0.0f), light.shininess);
+    }
+    else
+    {
+        float3 reflectDir = reflect(-lightDir, f_in.norm);
+        spec = pow(max(dot(cameraPos, reflectDir), 0.0f), light.shininess);
+    }
+    float3 specular = light.specular.rgb * spec * light.color.rgb;
+    f_in.vertexColor = shaderTexture.Sample(SampleType, f_in.tex);
+    f_in.vertexColor = float4(ambient + diffuse + specular, 1) * f_in.vertexColor;
     return f_in.vertexColor;
+
 }
