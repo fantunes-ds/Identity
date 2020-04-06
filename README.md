@@ -21,4 +21,8 @@ Near-future plans include, but are not limited to:
 
 Currently, the engine project automatically creates a very simple scene with a car falling on a character, showcasing our renderer, our first version of the editor and our rudimentary (for now) physics. Debug mode is enabled, so the colliders are visible. To run the engine with Visual Studio, set the StartUp Project to Test_Identity and compile. Can run in Debug and Release configurations, but 32bit architecture is not currently supported.
 
-Developped by Lilian Gadeau, Filipe Antunes Da Silva and Gabriel Meloche, from January 2020 to June 2020.
+## Authors
+
+* **Lilian Gadeau** - *Programming*
+* **Filipe Antunes Da Silva** - *Programming* - [GitHub](https://github.com/fantunes-ds)
+* **Gabriel Meloche** - *Programming* - [GitHub](https://github.com/GabMeloche)
