@@ -15,6 +15,10 @@ namespace Engine::ObjectElements
         Model() = default;
         ~Model() = default;
 
+        /**
+         * @brief Add a mesh to the vector of mesh for the selected model
+         * @param p_mesh The mesh to add to the vector of mesh
+         */
         void AddMesh(const std::shared_ptr<Mesh>& p_mesh);
 
         inline std::vector<std::shared_ptr<Mesh>>& GetMeshes() { return m_meshes; }

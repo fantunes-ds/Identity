@@ -13,7 +13,7 @@ Engine::Objects::GameObject::GameObject()
 
 Engine::Objects::GameObject::GameObject(const std::string& p_name)
 {
-    m_transform = Containers::TransformSystem::AddTransform(std::make_shared<Components::Transform>());
+    m_transform = Containers::TransformSystem::AddTransform(std::make_shared<Components::Transform>(p_name));
     Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
     SetName(p_name);
 }

@@ -58,9 +58,7 @@ std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Containers::Mate
     if (GetInstance()->m_material.find(p_id) != GetInstance()->m_material.end())
         return GetInstance()->m_material.at(p_id);
 
-    const std::string error("MaterialContainer::GetMaterial(int32_t p_id): Didn't find Material with ID " + std::to_string(p_id) + '\n');
-    MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
-    return nullptr;
+    return GetMaterial(FindMaterial("missing"));
 }
 
 std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Containers::MaterialContainer::GetMaterial(

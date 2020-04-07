@@ -39,12 +39,12 @@ bool Engine::Containers::CameraSystem::RemoveCamera(int32_t p_id)
     return true;
 }
 
-void Engine::Containers::CameraSystem::Update(float p_deltaTime)
+void Engine::Containers::CameraSystem::Update(const float p_deltaTime)
 {
     GetInstance()->IUpdate(p_deltaTime);
 }
 
-void Engine::Containers::CameraSystem::IUpdate(float p_deltaTime)
+void Engine::Containers::CameraSystem::IUpdate(const float p_deltaTime)
 {
     for (std::shared_ptr<Engine::Components::Camera> camera : GetCameras())
     {

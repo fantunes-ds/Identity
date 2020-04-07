@@ -41,7 +41,7 @@ namespace Engine::Containers
 
             for (const auto component : GetInstance()->m_components)
             {
-                if (std::shared_ptr<T> foundComp = std::dynamic_pointer_cast<std::shared_ptr<T>>(FindComponent(component.first)))
+                if (std::shared_ptr<T> foundComp = std::dynamic_pointer_cast<T>(FindComponent(component.first)))
                     foundComps.push_back(foundComp);
             }
 

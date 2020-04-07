@@ -4,7 +4,7 @@ struct VSOut
     float4 pos : SV_Position;
     float3 worldPos : WPos;
     float3 norm : Normal;
-    float2 tex : TxCoord;
+    float2 tex : TexCoord;
 };
 
 cbuffer CBuf

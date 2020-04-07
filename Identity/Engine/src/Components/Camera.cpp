@@ -37,14 +37,10 @@ bool Engine::Components::Camera::DeleteFromMemory()
 
 void Engine::Components::Camera::UpdateVectors()
 {
-     //Supposedly ok.
      const Quaternion pitch = Quaternion(Vector3F(1.0f, 0.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_pitch));
      const Quaternion yaw   = Quaternion(Vector3F(0.0f, 1.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_yaw));
      const Quaternion roll  = Quaternion(Vector3F(0.0f, 0.0f, 1.0f), GPM::Tools::Utils::ToRadians(0.0f));
-    
-     // auto transform = Containers::TransformSystem::GetTransform(m_transformId);
 
-     // transform->SetRotation((pitch * yaw * roll).Normalize());
      m_gameObject->GetTransform()->SetRotation((pitch * yaw * roll).Normalize());
 
 }
@@ -67,34 +63,34 @@ void Engine::Components::Camera::UpdateCameraPosition(const float p_deltaTime)
         ImGui::Text("Right: %f | %f | %f", transform->GetRight().x, transform->GetRight().y, transform->GetRight().z);
     }ImGui::End();
 
-    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::Space))
-        m_speed = 10.f;
-    else
-        m_speed = 5.f;
+    float speed = m_speed;
+
+    if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::LeftShift))
+        speed *= 4.0f;
 
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::W))
     {
-        transform->Translate(transform->GetForward() * m_speed * p_deltaTime);
+        transform->Translate(transform->GetForward() * speed * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::S))
     {
-        transform->Translate(transform->GetForward() * m_speed * -1 * p_deltaTime);
+        transform->Translate(transform->GetForward() * speed * -1 * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::D))
     {
-        transform->Translate(transform->GetRight() * m_speed * p_deltaTime);
+        transform->Translate(transform->GetRight() * speed * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::A))
     {
-        transform->Translate(transform->GetRight() * m_speed * -1 * p_deltaTime);
+        transform->Translate(transform->GetRight() * speed * -1 * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::E))
     {
-        transform->Translate(transform->GetUp() * m_speed * p_deltaTime);
+        transform->Translate(transform->GetUp() * speed * p_deltaTime);
     }
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::Q))
     {
-        transform->Translate(transform->GetUp() * m_speed * -1 * p_deltaTime);
+        transform->Translate(transform->GetUp() * speed * -1 * p_deltaTime);
     }
 }
 
@@ -130,7 +126,6 @@ void Engine::Components::Camera::UpdateCameraRotation()
 void Engine::Components::Camera::UpdateViewMatrix()
 {
     auto transform = m_gameObject->GetTransform();
-    std::string gopos = "go x : " + std::to_string(transform->GetPosition().x) + "y : " + std::to_string(transform->GetPosition().y) + "z : " + std::to_string(transform->GetPosition().z + '\n');
     const Matrix4F rotation = transform->GetRotation().Conjugate().ToMatrix4().Transpose();
     const Matrix4F translation = Matrix4F::CreateTranslation(Vector3F{ -transform->GetPosition().x, -transform->GetPosition().y, transform->GetPosition().z});
 
@@ -161,6 +156,6 @@ void Engine::Components::Camera::UpdatePerspectiveMatrix() noexcept
 
     m_perspectiveMatrix = Matrix4F{xScale, 0.0f, 0.0f, 0.0f,
                                         0.0f, yScale, 0.0f, 0.0f,
-                                        0.0f, 0.0f, fRange, -1.0f,
-                                        0.0f, 0.0f, m_nearZ * fRange, 0.0f};
+                                        0.0f, 0.0f, fRange, m_nearZ* fRange,
+                                        0.0f, 0.0f, -1.0f , 0.0f};
 }

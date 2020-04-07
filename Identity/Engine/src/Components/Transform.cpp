@@ -14,6 +14,13 @@ Engine::Components::Transform::Transform() : IComponent{nullptr},
     m_position{ Vector3F::zero }, m_forward{ Vector3F::forward }, m_right{ Vector3F::right },
     m_up{ Vector3F::up }, m_scale{ Vector3F::one }, m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} } {}
 
+Engine::Components::Transform::Transform(const std::string& p_name) : IComponent{ nullptr },
+    m_position{ Vector3F::zero }, m_forward{ Vector3F::forward }, m_right{ Vector3F::right },
+    m_up{ Vector3F::up }, m_scale{ Vector3F::one }, m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} }
+{
+    SetName(p_name);
+}
+
 bool Engine::Components::Transform::operator==(IComponent* p_other)
 {
     return true;
@@ -28,7 +35,6 @@ void Engine::Components::Transform::Translate(const Vector3F& p_vector)
 {
     m_position += p_vector;
     needUpdate = true;
-    // UpdateWorldTransformMatrix();
 }
 
 void Engine::Components::Transform::RotateWithEulerAngles(const Vector3F& p_euler)
@@ -39,15 +45,12 @@ void Engine::Components::Transform::RotateWithEulerAngles(const Vector3F& p_eule
     m_rotation *= quat;
     needAxesUpdate = true;
     needUpdate = true;
-    // CalculateAxes();
-    // UpdateWorldTransformMatrix();
 }
 
 void Engine::Components::Transform::Scale(const Vector3F& p_scale)
 {
     m_scale *= p_scale;
     needUpdate = true;
-    // UpdateWorldTransformMatrix();
 }
 
 void Engine::Components::Transform::UpdateWorldTransformMatrix()
@@ -73,6 +76,7 @@ void Engine::Components::Transform::CalculateAxes()
     Quaternion quatf = (m_rotation * Vector3F::forward * m_rotation.Conjugate());
     Quaternion quatr = (m_rotation * Vector3F::right * m_rotation.Conjugate());
     Quaternion quatu = (m_rotation * Vector3F::up * m_rotation.Conjugate());
+
     Vector3F vec3f = quatf.GetRotationAxis();
     Vector3F vec3r = quatr.GetRotationAxis();
     Vector3F vec3u = quatu.GetRotationAxis();
@@ -81,6 +85,8 @@ void Engine::Components::Transform::CalculateAxes()
     m_right = Vector3F{ vec3r.x,vec3r.y, vec3r.z };
     m_up = Vector3F{ vec3u.x,vec3u.y, -vec3u.z };
 
+    m_right = Vector3F::Cross(m_up, m_forward);
+    m_up = Vector3F::Cross(m_right, m_forward);
+
     needAxesUpdate = false;
-    // UpdateWorldTransformMatrix();
 }

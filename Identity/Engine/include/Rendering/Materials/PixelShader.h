@@ -12,14 +12,37 @@ namespace Engine::Rendering::Materials
     class PixelShader : public Objects::IObject
     {
     public:
-        PixelShader();
-        ~PixelShader();
+        PixelShader() = default;
+        ~PixelShader() = default;
 
+        /**
+         * @brief Create a new PixelShader from the path and the name given
+         * @param p_path The path of the PixelShader to load
+         * @param p_name The name you want to give to the PixelShader
+         * @return Return a shared_ptr of the created PixelShader
+         */
         static std::shared_ptr<PixelShader> LoadShader(const std::string& p_path, const std::string& p_name);
-        void LoadShader(const std::string& p_path);
 
-        void BindShader();
+        /**
+         * @brief Used to bind the PixelShader to the rendering context
+         */
+        void BindShader() const;
+        /**
+         * @brief Used to unbind the PixelShader from the rendering context
+         */
+        void UnBindShader();
+        /**
+         * @brief Used to generate the constant buffer of the shader
+         */
         void GenerateConstantBuffer();
+        /**
+         * @brief Used to bind the constant buffer to the rendering context
+         */
+        void BindConstantBuffer() const;
+        /**
+         * @brief Used to unbind the constant buffer from the rendering context
+         */
+        void UnBindConstantBuffer() const;
 
         inline void SetPath(const std::string& p_path) { m_path = p_path; }
         [[nodiscard]] inline const std::string& GetPath() const { return m_path; }

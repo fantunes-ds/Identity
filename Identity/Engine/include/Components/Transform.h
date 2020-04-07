@@ -10,7 +10,8 @@ namespace Engine::Components
     public:
         Transform();
 
-        // Transform(Vector3F& p_position);
+        Transform(const std::string& p_name);
+        Transform(Vector3F& p_position);
         ~Transform() = default;
         Transform(Objects::GameObject* p_gameObject);
         Transform(Objects::GameObject* p_gameObject, const Transform& p_other);

@@ -14,10 +14,17 @@ namespace Engine::Containers
 
         static TransformSystem* GetInstance();
 
+        /**
+         * @brief Update the all transforms contain in the map. Call th IUpdate method
+         * @param p_deltaTime The delta time of the project
+         */
+        static void Update(const float p_deltaTime);
 
-        static void Update(float p_deltaTime);
+        /**
+         * @brief Update the all transforms contain in the map
+         * @param p_deltaTime The delta time of the project
+         */
         void IUpdate(float p_deltaTime) override;
-        // static void Update(float p_deltaTime);
 
         static int32_t AddTransform();
         static int32_t AddTransform(std::shared_ptr<Components::Transform> p_transform);

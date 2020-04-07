@@ -16,11 +16,14 @@ namespace Engine::Scene
         SceneNode(std::shared_ptr<ObjectElements::Mesh> p_mesh);
         ~SceneNode();
 
+        /***
+         * @brief Adds a child node to this SceneNode.
+         */
         void AddChild(std::shared_ptr<SceneNode> p_child);
         void RemoveChild(int32_t p_id);
         void RemoveChild(std::shared_ptr<SceneNode> p_child);
 
-        void Update(float p_deltaTime);
+        void Update(const float p_deltaTime);
         bool IsRoot();
 
         const std::vector<std::shared_ptr<SceneNode>>& GetChildren() const { return m_children; }
@@ -35,6 +38,8 @@ namespace Engine::Scene
         SceneNode* m_parent = nullptr;
         std::vector<std::shared_ptr<SceneNode>> m_children;
         std::shared_ptr<ObjectElements::Mesh> m_mesh = nullptr;
+
+        //TODO: make this into a shared_ptr<Transform>
         int32_t m_transform = -1;
     };
 }

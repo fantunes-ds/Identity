@@ -6,6 +6,6 @@ namespace Engine::Systems
     class API_ENGINE ISystem
     {
     public:
-        virtual void IUpdate(float p_deltaTime) = 0;
+        virtual void IUpdate(const float p_deltaTime) = 0;
     };
 }

@@ -4,6 +4,9 @@
 
 namespace Engine::Tools
 {
+    /***
+     * @brief Class used to keep a tally of assigned IDs and to generate new IDs.
+     */
     class IDCounter
     {
     public:

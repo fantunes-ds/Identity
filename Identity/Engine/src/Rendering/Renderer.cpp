@@ -34,14 +34,15 @@ Renderer::Renderer(const HWND& p_hwnd, const int& p_clientWidth, const int& p_cl
     GFX_THROW_INFO(m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m_4xMsaaQuality));
 
     CreateSwapChain(p_hwnd);
-    SetBackBuffer();
-    SetDepthStencilBuffers();
-
-    m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     SetViewPort(m_width, m_height);
+    SetBackBuffer();
+    SetDepthStencilBuffers();
+    m_pContext->OMSetRenderTargets(0, m_pTarget.GetAddressOf(), nullptr);
 
+    m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
+
 }
 
 void Renderer::EndFrame() const
@@ -56,13 +57,44 @@ void Renderer::EndFrame() const
         }
         throw GFX_EXCEPT(hr);
     }
-}
+}   
 
 void Renderer::ClearBuffers(const float& p_red, const float& p_green, const float& p_blue) const
 {
     const float colour[] = { p_red, p_green, p_blue, 1.0f };
-    m_pContext->ClearRenderTargetView(m_pTarget.Get(), colour);
-    m_pContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
+    
+    m_pContext->ClearRenderTargetView(GetTarget().Get(), colour);
+    m_pContext->ClearDepthStencilView(GetDepthStencilView().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
+
+    for (auto& RT : m_renderTextures)
+    {
+        m_pContext->ClearRenderTargetView(RT.GetTarget().Get(), colour);
+        if(*RT.GetDepthStencilView().GetAddressOf() != nullptr)
+            m_pContext->ClearDepthStencilView(RT.GetDepthStencilView().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
+    }
+}
+
+
+void Renderer::Bind(const bool p_bindDefaultDepthStencil)
+{
+    if (p_bindDefaultDepthStencil)
+        m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
+    else
+        m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), nullptr);
+}
+
+void Renderer::Bind(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target, const bool p_bindDefaultDepthStencil) const
+{
+    if (p_bindDefaultDepthStencil)
+        m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), m_pDepthStencilView.Get());
+    else
+        m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), nullptr);
+
+}
+
+void Renderer::Bind(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target, const Microsoft::WRL::ComPtr<ID3D11DepthStencilView> p_ds) const
+{
+    m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), p_ds.Get());
 }
 
 void Renderer::ResetContext()
@@ -142,7 +174,7 @@ void Renderer::SetDepthStencilBuffers()
     descDepth.Height = m_height;
     descDepth.MipLevels = 1;
     descDepth.ArraySize = 1;
-    descDepth.Format = DXGI_FORMAT_D32_FLOAT;
+    descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
     //with 4x msaa
     if (m_enable4xMSAA)
@@ -162,20 +194,13 @@ void Renderer::SetDepthStencilBuffers()
     descDepth.CPUAccessFlags = 0;
     descDepth.MiscFlags = 0;
 
-    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&descDepth, nullptr, &pDepthStencil));
+    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&descDepth, NULL, &pDepthStencil));
 
     D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
-    descDSV.Format = DXGI_FORMAT_D32_FLOAT;
+    descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
     descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     descDSV.Texture2D.MipSlice = 0u;
     GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &m_pDepthStencilView));
-
-    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
-}
-
-void Renderer::SetRenderTarget()
-{
-    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
 }
 
 void Renderer::SetViewPort(const float& p_width, const float& p_height) const
@@ -195,7 +220,10 @@ void Renderer::InitRenderer(const HWND p_hwnd, const int p_clientWidth, const in
     if (instance != nullptr)
         MessageBox(p_hwnd, "ERROR : Singleton duplication !?", "An instance was already found for Renderer. It is forbidden to have two singletons.", MB_OK | MB_ICONERROR);
     else
+    {
         instance = std::make_unique<Renderer>(p_hwnd, p_clientWidth, p_clientHeight);
+        instance->CreateRenderTexture();
+    }
 }
 
 void Renderer::SetBackBuffer()
@@ -207,16 +235,25 @@ void Renderer::SetBackBuffer()
     GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
 }
 
-void Renderer::Resize(const float& p_width, const float& p_height)
+void Renderer::CreateRenderTexture()
+{
+    const RenderTexture sceneRenderTexture{ static_cast<UINT>(m_width), static_cast<UINT>(m_height), true };
+    m_renderTextures.push_back(sceneRenderTexture);
+}
+
+void Renderer::Resize(const float p_width, const float p_height)
 {
     HRESULT hr;
+
+    if (p_width == 0.0f || p_height == 0.0f)
+        return;
 
     m_width = p_width;
     m_height = p_height;
 
     ResetContext();
 
-    if (isFullscreen)
+    if (m_isFullscreen)
     {
         GFX_THROW_INFO(m_pSwapChain->ResizeBuffers(
             0,
@@ -238,18 +275,15 @@ void Renderer::Resize(const float& p_width, const float& p_height)
         ));
         SetViewPort(m_width, m_height);
     }
-    m_pSwapChain->SetFullscreenState(isFullscreen, nullptr);
+    m_pSwapChain->SetFullscreenState(m_isFullscreen, nullptr);
 
     SetBackBuffer();
-
     SetDepthStencilBuffers();
 }
 
-void Renderer::GetResolution(int& p_width, int& p_height)
+void Renderer::GetResolution(int& p_width, int& p_height) const
 {
-    ChangeResolution();
-
-    if (isFullscreen)
+    if (m_isFullscreen)
     {
         p_width = static_cast<int>(m_fullWidth);
         p_height = static_cast<int>(m_fullHeight);
@@ -263,7 +297,7 @@ void Renderer::GetResolution(int& p_width, int& p_height)
 
 void Renderer::SetFullscreen(const bool& p_state)
 {
-    isFullscreen = p_state;
+    m_isFullscreen = p_state;
 
     Resize(m_fullWidth, m_fullHeight);
 }
@@ -272,24 +306,6 @@ void Renderer::ChangeResolution()
 {
     const char* res[] = { "1920x1080", "1280x720", "800x600" };
     static const char* currentItem = "1920x1080";
-
-    if (ImGui::Begin("Render Tool"))
-    {
-        // ImGui::SliderFloat("Camera FOV", &angle, 10.f, 180.f, "%1.f");
-        if (ImGui::BeginCombo("Fullscreen Resolution", currentItem, ImGuiComboFlags_NoArrowButton))
-        {
-            for (auto& re : res)
-            {
-                const bool isSelected = (currentItem == re); // You can store your selection however you want, outside or inside your objects
-                if (ImGui::Selectable(re, isSelected))
-                    currentItem = re;
-                if (isSelected)
-                    ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
-            }
-
-            ImGui::EndCombo();
-        }
-    }ImGui::End();
 
     std::string selected = currentItem;
     std::replace(selected.begin(), selected.end(), 'x', ' ');
@@ -307,12 +323,11 @@ void Renderer::ChangeResolution()
 }
 
 
-
 #pragma region ExceptionsClass
 
 #pragma region HrExceptionClass
-Renderer::HrException::HrException(int p_line, const char* p_file, HRESULT p_hr,
-    std::vector<std::string> p_infoMsg) noexcept
+Renderer::HrException::HrException(int p_line, const char* p_file, const HRESULT p_hr,
+                                   const std::vector<std::string>& p_infoMsg) noexcept
     : Exception(p_line, p_file),
     m_hr(p_hr)
 {
@@ -375,7 +390,7 @@ std::string Renderer::HrException::GetErrorInfo() const noexcept
 #pragma endregion
 
 #pragma region InfoExceptionClass
-Renderer::InfoException::InfoException(int p_line, const char* p_file, std::vector<std::string> p_infoMsg) noexcept
+Renderer::InfoException::InfoException(const int p_line, const char* p_file, const std::vector<std::string>& p_infoMsg) noexcept
     : Exception(p_line, p_file)
 {
     for (const auto& msg : p_infoMsg)

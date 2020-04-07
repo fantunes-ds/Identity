@@ -13,7 +13,14 @@ namespace Engine::Tools
         void Start();
         void Stop();
 
+        /**
+         * @return Frames per second.
+         */
         int GetFPS() const;
+
+        /***
+         * @return Time taken to finish a frame, in milliseconds.
+         */
         float GetDeltaTime() const { return m_deltaTime / 1000.f; }
 
     private:

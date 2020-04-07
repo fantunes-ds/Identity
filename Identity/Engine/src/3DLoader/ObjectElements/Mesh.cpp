@@ -31,6 +31,14 @@ void Engine::ObjectElements::Mesh::Bind(const Microsoft::WRL::ComPtr<ID3D11Devic
     m_inputLayout.Bind(p_context);
 }
 
+void Engine::ObjectElements::Mesh::Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
+{
+    m_inputLayout.Unbind(p_context);
+    m_indexBuffer.Unbind(p_context);
+    m_vertexBuffer.Unbind(p_context);
+    GetMaterial().Unbind(p_context);
+}
+
 void Engine::ObjectElements::Mesh::SetMaterial(const int32_t p_material)
 {
     m_material = p_material;

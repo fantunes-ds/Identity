@@ -17,7 +17,7 @@ Engine::Containers::TransformSystem* Engine::Containers::TransformSystem::GetIns
     return m_instance;
 }
 
-void Engine::Containers::TransformSystem::Update(float p_deltaTime)
+void Engine::Containers::TransformSystem::Update(const float p_deltaTime)
 {
     GetInstance()->IUpdate(p_deltaTime);
 }
@@ -60,9 +60,7 @@ int32_t Engine::Containers::TransformSystem::AddTransform()
 int32_t Engine::Containers::TransformSystem::AddTransform(std::shared_ptr<Components::Transform> p_transform)
 {
     //TODO: Fix this stupidity
-    // Matrix4F& matrix = p_transform->GetWorldTransformMatrix();
     GetInstance()->m_transforms.insert_or_assign(p_transform->GetID(), p_transform);
-    // FindTransform(p_transform->GetID())->SetWorldTransformMatrix(matrix);
 
     return p_transform->GetID();
 }
