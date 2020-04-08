@@ -15,7 +15,7 @@
 
 #define DEBUG_MODE true
 
-constexpr bool DRAW_TO_TEXTURE = false;
+constexpr bool DRAW_TO_TEXTURE = true;
 
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 {
@@ -46,7 +46,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
         ImGui::SliderFloat("Ambient LightZ", &light.ambient.z, 0.0f, 1.0f, "%.1f");
     }ImGui::End();
 
-/* W.I.P. 
+    /* W.I.P. 
     for (auto& gameObject : Containers::GameObjectContainer::GetAllGameObjects())
     {
         if (ImGui::Begin("ObjectInfo"))
@@ -109,31 +109,22 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
     {
         auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
 
-        // I have to invert Y value for some reason I don't understand yet.
-        std::vector<Geometry::Vertex> quadvtx{ Geometry::Vertex{ Vector3F{-1.0f, 1.0f, 0.f}, Vector2F{0.0f, -1.0f}, Vector3F::zero },
-                                               Geometry::Vertex{ Vector3F{1.0f, 1.0f, 0.f}, Vector2F{1.0f, -1.0f}, Vector3F::zero },
-                                               Geometry::Vertex{ Vector3F{-1.0f, -1.0f, 0.f}, Vector2F{0.0f, 0.0f}, Vector3F::zero },
-                                               Geometry::Vertex{ Vector3F{1.0f, -1.0f, 0.f}, Vector2F{1.0f, 0.0f}, Vector3F::zero } };
-        std::vector<unsigned short> quadidx = { 3,2,1,1,2,0 };
+        std::shared_ptr<ObjectElements::Mesh> quad = Rendering::Renderer::GetInstance()->GetRect();
 
-        //The quad is the screen "camera rect" we might want to store it somewhere later.
-        ObjectElements::Mesh quad{ quadvtx, quadidx };
-        quad.GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
-
-        quad.Bind(Rendering::Renderer::GetInstance()->GetContext());
+        quad->Bind(Rendering::Renderer::GetInstance()->GetContext());
 
         const Rendering::Buffers::VCB vcb{ Matrix4F::identity, Matrix4F::identity, Matrix4F::identity,Matrix4F::identity };
-        quad.GetMaterial().GetShader().GetVCB().Update(vcb);
+        quad->GetMaterial().GetShader().GetVCB().Update(vcb);
 
         const Rendering::Buffers::PCB pcb{ Vector4F::zero, Vector4F::one, Vector4F::one,
                                             Vector4F::zero, Vector4F::one,
                                                             1.0f,Vector3F{},Vector3F::zero, 0.0f };
-        quad.GetMaterial().GetShader().GetPCB().Update(pcb);
+        quad->GetMaterial().GetShader().GetPCB().Update(pcb);
 
-        quad.GetMaterial().GetTexture().SetTexSRV(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
+        quad->GetMaterial().GetTexture().SetTexSRV(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
 
         Rendering::Renderer::GetInstance()->Bind();
-        GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(quad.GetIndices().size()), 0u, 0u));
+        GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(quad->GetIndices().size()), 0u, 0u));
     }
 }
 

@@ -122,6 +122,7 @@ namespace Engine::Rendering
         [[nodiscard]] const float& GetWidth() const { return m_width; }
         [[nodiscard]] const float& GetHeight() const { return m_height; }
         [[nodiscard]] const std::vector<RenderTexture>& GetRenderTextures() const { return m_renderTextures; }
+        [[nodiscard]] const std::shared_ptr<ObjectElements::Mesh> GetRect() const { if (m_tempInit) { return m_rect; } else { m_rect->GenerateBuffers(GetDevice()); return m_rect; } }
 
     private:
         /**
@@ -151,6 +152,7 @@ namespace Engine::Rendering
         void ChangeResolution();
 
         void CreateRenderTexture();
+        void CreateRect();
 
         Microsoft::WRL::ComPtr<ID3D11Device>           m_pDevice;
         Microsoft::WRL::ComPtr<IDXGISwapChain>         m_pSwapChain;
@@ -160,6 +162,9 @@ namespace Engine::Rendering
         Microsoft::WRL::ComPtr<ID3DBlob>               m_blob;
         std::vector<RenderTexture>                     m_renderTextures;
 
+        std::shared_ptr<ObjectElements::Mesh>          m_rect;
+        //todo once Lilian has finished his changes on default material I have to remove this bool
+        bool m_tempInit = false;
 
         bool m_isFullscreen = false;
         bool m_enable4xMSAA = false;

@@ -49,7 +49,7 @@ void Renderer::EndFrame() const
 {
     HRESULT hr;
 
-    if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
+    if (FAILED(hr = m_pSwapChain->Present(0u, 0u)))
     {
         if (hr == DXGI_ERROR_DEVICE_REMOVED)
         {
@@ -78,7 +78,7 @@ void Renderer::ClearBuffers(const float& p_red, const float& p_green, const floa
 void Renderer::Bind(const bool p_bindDefaultDepthStencil)
 {
     if (p_bindDefaultDepthStencil)
-        m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
+        m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), *m_pDepthStencilView.GetAddressOf());
     else
         m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), nullptr);
 }
@@ -86,7 +86,7 @@ void Renderer::Bind(const bool p_bindDefaultDepthStencil)
 void Renderer::Bind(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target, const bool p_bindDefaultDepthStencil) const
 {
     if (p_bindDefaultDepthStencil)
-        m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), m_pDepthStencilView.Get());
+        m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), *m_pDepthStencilView.GetAddressOf());
     else
         m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), nullptr);
 
@@ -94,7 +94,7 @@ void Renderer::Bind(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target, con
 
 void Renderer::Bind(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target, const Microsoft::WRL::ComPtr<ID3D11DepthStencilView> p_ds) const
 {
-    m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), p_ds.Get());
+    m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), *p_ds.GetAddressOf());
 }
 
 void Renderer::ResetContext()
@@ -223,6 +223,7 @@ void Renderer::InitRenderer(const HWND p_hwnd, const int p_clientWidth, const in
     {
         instance = std::make_unique<Renderer>(p_hwnd, p_clientWidth, p_clientHeight);
         instance->CreateRenderTexture();
+        instance->CreateRect();
     }
 }
 
@@ -239,6 +240,19 @@ void Renderer::CreateRenderTexture()
 {
     const RenderTexture sceneRenderTexture{ static_cast<UINT>(m_width), static_cast<UINT>(m_height), true };
     m_renderTextures.push_back(sceneRenderTexture);
+}
+
+void Renderer::CreateRect()
+{
+    // I have to invert Y value for some reason I don't understand yet.
+    std::vector<Geometry::Vertex> quadvtx{ Geometry::Vertex{ Vector3F{-1.0f, 1.0f, 0.f}, Vector2F{0.0f, -1.0f}, Vector3F::zero },
+                                           Geometry::Vertex{ Vector3F{1.0f, 1.0f, 0.f}, Vector2F{1.0f, -1.0f}, Vector3F::zero },
+                                           Geometry::Vertex{ Vector3F{-1.0f, -1.0f, 0.f}, Vector2F{0.0f, 0.0f}, Vector3F::zero },
+                                           Geometry::Vertex{ Vector3F{1.0f, -1.0f, 0.f}, Vector2F{1.0f, 0.0f}, Vector3F::zero } };
+    std::vector<unsigned short> quadidx = { 3,2,1,1,2,0 };
+
+    //The quad is the screen "camera rect" we might want to store it somewhere later.
+    m_rect = std::make_shared<ObjectElements::Mesh>(quadvtx, quadidx);
 }
 
 void Renderer::Resize(const float p_width, const float p_height)
