@@ -1,4 +1,4 @@
-WIP) A DirectX game engine with an editor developped for academic purposes.
+(WIP) A DirectX game engine with an editor developped for academic purposes.
 
 The Identity Engine has been named as such because one of the primary features the development team wanted to see is a very user-friendly and simple, uncluttered and straightforward experience for the user, reminiscent of an identity matrix.
 
