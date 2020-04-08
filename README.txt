@@ -1,22 +1,23 @@
-Pour télécharger :
+WIP) A DirectX game engine with an editor developped for academic purposes.
 
-• Simplement cloner. S'assurer qu'on a bien le tag Beta sur le commit actuel.
+The Identity Engine has been named as such because one of the primary features the development team wanted to see is a very user-friendly and simple, uncluttered and straightforward experience for the user, reminiscent of an identity matrix.
 
-Pour essayer le début d'éditeur, aller dans la branche Editor. (git checkout Editor)
+One of the main goals the team has set for itself is to make a very optimised engine. Therefore, the engine is being developped with an ECS architecture and will be event-driven as much as possible to avoid unnecessary checks at every frame update.
 
-Utilisation :
+The external libraries used are:
 
-• Utilisez les touches WASDQE pour bouger la caméra, 
-w = forward, s = backwards, a = left, d = right, e = up, q = down
-On peut se déplacer plus vite en cliquant sur shift.
+    GPM (homemade library) for math.
+    Bullet for physics.
+    IrrKlang for audio.
+    Assimp for model loading.
+    ImGUI for the editor.
 
-• Souris pour orienter la caméra en utilisant le clic droit.
-• Les fenêtres sont dockables.
+Near-future plans include, but are not limited to:
 
-Bugs connus : 
-• Les rotations ne sont pas très précises, parfois même complètement fausses. 
-Il semblerait y avoir un problème d'axes. W.I.P.
-• Le slider de lumière est inversé pour la position X.
+    Frustrum culling
+    Serialization
+    User scripting
 
-• On a la scène qui est dans App::Run, mais elle va être bougée dès qu'on aura la sérialization.
-• On a la scène qui est dans App::Run, mais elle va être bougée dès qu'on aura la sérialization.
+Currently, the engine project automatically creates a very simple scene with a car falling on a character, showcasing our renderer, our first version of the editor and our rudimentary (for now) physics. Debug mode is enabled, so the colliders are visible. To run the engine with Visual Studio, set the StartUp Project to Test_Identity and compile. Can run in Debug and Release configurations, but 32bit architecture is not currently supported.
+
+Developped by Lilian Gadeau, Filipe Antunes Da Silva and Gabriel Meloche, from January 2020 to June 2020.
