@@ -275,7 +275,6 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
         case WM_LBUTTONDOWN:
             {
                 _INPUT->mouse.OnLeftPressed();
-                const POINTS pt = MAKEPOINTS(p_lParam);
                 break;
             }
         case WM_RBUTTONDOWN:

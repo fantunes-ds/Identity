@@ -34,15 +34,13 @@ Renderer::Renderer(const HWND& p_hwnd, const int& p_clientWidth, const int& p_cl
     GFX_THROW_INFO(m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m_4xMsaaQuality));
 
     CreateSwapChain(p_hwnd);
-    //m_pSwapChain->SetFullscreenState(isFullscreen, nullptr);
 
     SetViewPort(m_width, m_height);
     SetBackBuffer();
-    //ResetContext();
-    //SetDepthStencilBuffers();
+    SetDepthStencilBuffers();
     m_pContext->OMSetRenderTargets(0, m_pTarget.GetAddressOf(), nullptr);
 
-    //m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
 
 }
@@ -51,7 +49,7 @@ void Renderer::EndFrame() const
 {
     HRESULT hr;
 
-    if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
+    if (FAILED(hr = m_pSwapChain->Present(0u, 0u)))
     {
         if (hr == DXGI_ERROR_DEVICE_REMOVED)
         {
@@ -80,7 +78,7 @@ void Renderer::ClearBuffers(const float& p_red, const float& p_green, const floa
 void Renderer::Bind(const bool p_bindDefaultDepthStencil)
 {
     if (p_bindDefaultDepthStencil)
-        m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
+        m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), *m_pDepthStencilView.GetAddressOf());
     else
         m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), nullptr);
 }
@@ -88,7 +86,7 @@ void Renderer::Bind(const bool p_bindDefaultDepthStencil)
 void Renderer::Bind(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target, const bool p_bindDefaultDepthStencil) const
 {
     if (p_bindDefaultDepthStencil)
-        m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), m_pDepthStencilView.Get());
+        m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), *m_pDepthStencilView.GetAddressOf());
     else
         m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), nullptr);
 
@@ -96,7 +94,7 @@ void Renderer::Bind(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target, con
 
 void Renderer::Bind(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target, const Microsoft::WRL::ComPtr<ID3D11DepthStencilView> p_ds) const
 {
-    m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), p_ds.Get());
+    m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), *p_ds.GetAddressOf());
 }
 
 void Renderer::ResetContext()
@@ -118,7 +116,7 @@ void Renderer::CreateSwapChain(const HWND& p_hwnd)
     swapChainDesc.BufferDesc.Width = 0;
     swapChainDesc.BufferDesc.Height = 0;
     swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-    swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
+    swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
     swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
     swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
@@ -203,10 +201,7 @@ void Renderer::SetDepthStencilBuffers()
     descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     descDSV.Texture2D.MipSlice = 0u;
     GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &m_pDepthStencilView));
-
-    m_pContext->OMSetRenderTargets(1u, m_pTarget.GetAddressOf(), m_pDepthStencilView.Get());
 }
-
 
 void Renderer::SetViewPort(const float& p_width, const float& p_height) const
 {
@@ -228,6 +223,7 @@ void Renderer::InitRenderer(const HWND p_hwnd, const int p_clientWidth, const in
     {
         instance = std::make_unique<Renderer>(p_hwnd, p_clientWidth, p_clientHeight);
         instance->CreateRenderTexture();
+        instance->CreateRect();
     }
 }
 
@@ -246,9 +242,25 @@ void Renderer::CreateRenderTexture()
     m_renderTextures.push_back(sceneRenderTexture);
 }
 
-void Renderer::Resize(const float& p_width, const float& p_height)
+void Renderer::CreateRect()
+{
+    // I have to invert Y value for some reason I don't understand yet.
+    std::vector<Geometry::Vertex> quadvtx{ Geometry::Vertex{ Vector3F{-1.0f, 1.0f, 0.f}, Vector2F{0.0f, -1.0f}, Vector3F::zero },
+                                           Geometry::Vertex{ Vector3F{1.0f, 1.0f, 0.f}, Vector2F{1.0f, -1.0f}, Vector3F::zero },
+                                           Geometry::Vertex{ Vector3F{-1.0f, -1.0f, 0.f}, Vector2F{0.0f, 0.0f}, Vector3F::zero },
+                                           Geometry::Vertex{ Vector3F{1.0f, -1.0f, 0.f}, Vector2F{1.0f, 0.0f}, Vector3F::zero } };
+    std::vector<unsigned short> quadidx = { 3,2,1,1,2,0 };
+
+    //The quad is the screen "camera rect" we might want to store it somewhere later.
+    m_rect = std::make_shared<ObjectElements::Mesh>(quadvtx, quadidx);
+}
+
+void Renderer::Resize(const float p_width, const float p_height)
 {
     HRESULT hr;
+
+    if (p_width == 0.0f || p_height == 0.0f)
+        return;
 
     m_width = p_width;
     m_height = p_height;
@@ -264,7 +276,7 @@ void Renderer::Resize(const float& p_width, const float& p_height)
             DXGI_FORMAT_UNKNOWN,
             0
         ));
-        SetViewPort(m_fullWidth, m_height);
+        SetViewPort(m_fullWidth, m_fullHeight);
     }
     else
     {

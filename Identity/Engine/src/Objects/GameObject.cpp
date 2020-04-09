@@ -1,26 +1,26 @@
 #include <stdafx.h>
 #include <Objects/GameObject.h>
 #include <Containers/ModelContainer.h>
-#include <Containers/TransformContainer.h>
-#include "Components/ModelComponent.h"
-#include "Containers/GameObjectContainer.h"
+#include <Systems/TransformSystem.h>
+#include <Components/ModelComponent.h>
+#include <Containers/GameObjectContainer.h>
 
 Engine::Objects::GameObject::GameObject()
 {
-    m_transform = Containers::TransformContainer::AddTransform(std::make_shared<ObjectElements::Transform>());
+    m_transform = Containers::TransformSystem::AddTransform(std::make_shared<Components::Transform>());
     Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
 }
 
 Engine::Objects::GameObject::GameObject(const std::string& p_name)
 {
-    m_transform = Containers::TransformContainer::AddTransform(std::make_shared<ObjectElements::Transform>());
+    m_transform = Containers::TransformSystem::AddTransform(std::make_shared<Components::Transform>(p_name));
     Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
     SetName(p_name);
 }
 
-std::shared_ptr<Engine::ObjectElements::Transform> Engine::Objects::GameObject::GetTransform() const
+std::shared_ptr<Engine::Components::Transform> Engine::Objects::GameObject::GetTransform() const
 {
-    return Containers::TransformContainer::GetTransform(m_transform);
+    return Containers::TransformSystem::GetTransform(m_transform);
 }
 
 std::shared_ptr<Engine::ObjectElements::Model> Engine::Objects::GameObject::GetModel() const
@@ -40,6 +40,13 @@ bool Engine::Objects::GameObject::operator==(GameObject& p_other) const
         return true;
 
     return false;
+}
+
+void Engine::Objects::GameObject::SetParentObject(GameObject& p_parent)
+{
+    auto rootNode = Containers::ModelContainer::FindModel(FindComponentOfType<Components::ModelComponent>()->GetModel())->GetRootNode();
+    auto parentNode = Containers::ModelContainer::FindModel(p_parent.FindComponentOfType<Components::ModelComponent>()->GetModel())->GetRootNode();
+    rootNode->SetParent(&*parentNode);
 }
 
 bool Engine::Objects::GameObject::RemoveComponent(int32_t p_id)

@@ -2,12 +2,12 @@
 
 #include <3DLoader/ObjectElements/Mesh.h>
 #include <Tools/DirectX/GraphicsMacros.h>
-#include <Containers/TransformContainer.h>
+#include <Systems/TransformSystem.h>
 
 Engine::ObjectElements::Mesh::Mesh(std::vector<Engine::Geometry::Vertex>& p_vertices, std::vector<unsigned short>& p_indices) :
     m_vertices { p_vertices }, m_indices { p_indices }
 {
-    m_transform = Containers::TransformContainer::AddTransform();
+    m_transform = Containers::TransformSystem::AddTransform();
 }
 
 Engine::ObjectElements::Mesh::Mesh(const Mesh& p_other):
@@ -29,6 +29,14 @@ void Engine::ObjectElements::Mesh::Bind(const Microsoft::WRL::ComPtr<ID3D11Devic
     m_vertexBuffer.Bind(p_context);
     m_indexBuffer.Bind(p_context);
     m_inputLayout.Bind(p_context);
+}
+
+void Engine::ObjectElements::Mesh::Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
+{
+    m_inputLayout.Unbind(p_context);
+    m_indexBuffer.Unbind(p_context);
+    m_vertexBuffer.Unbind(p_context);
+    GetMaterial().Unbind(p_context);
 }
 
 void Engine::ObjectElements::Mesh::SetMaterial(const int32_t p_material)

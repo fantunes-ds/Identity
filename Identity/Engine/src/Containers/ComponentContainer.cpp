@@ -16,6 +16,7 @@ int32_t Engine::Containers::ComponentContainer::AddComponent(Components::ICompon
     {
         if (typeid(*component.second) == typeid(*p_component))
         {
+            //TODO: Not the right way to compare
             if (*component.second == p_component)
             {
                 std::string type = typeid(*p_component).name();
@@ -26,7 +27,6 @@ int32_t Engine::Containers::ComponentContainer::AddComponent(Components::ICompon
                     MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
                     return component.first;
                 }
-                //GetInstance()->m_components.insert_or_assign(p_component->GetID(), std::shared_ptr<Engine::Components::IComponent>(p_component));
             }
         }
     }
@@ -51,11 +51,18 @@ Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::
     {
         m_instance = new ComponentContainer();
     }
-    
+
     return m_instance;
 }
 
 std::shared_ptr<Engine::Components::IComponent> Engine::Containers::ComponentContainer::FindComponent(int32_t p_id)
 {
+    if (GetAllComponents().find(p_id) == GetAllComponents().end())
+    {
+        const std::string error("ComponentContainer::FindComponent(int32_t p_id): could not find Component with ID " + p_id);
+        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+        return nullptr;
+    }
+
     return GetAllComponents().at(p_id);
 }

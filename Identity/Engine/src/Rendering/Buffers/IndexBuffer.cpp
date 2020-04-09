@@ -21,3 +21,8 @@ void Engine::Rendering::Buffers::IndexBuffer::Bind(const Microsoft::WRL::ComPtr<
 {
     p_context->IASetIndexBuffer(m_buffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
 }
+
+void Engine::Rendering::Buffers::IndexBuffer::Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const
+{
+    p_context->IASetIndexBuffer(nullptr, DXGI_FORMAT_R16_UINT, 0u);
+}

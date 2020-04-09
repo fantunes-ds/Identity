@@ -26,6 +26,11 @@ void Engine::Rendering::Buffers::VertexBuffer::Bind(const Microsoft::WRL::ComPtr
     p_context->IASetVertexBuffers(0u, 1u, m_buffer.GetAddressOf(), &m_stride, &m_offset);
 }
 
+void Engine::Rendering::Buffers::VertexBuffer::Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
+{
+   p_context->IASetVertexBuffers(0u, 0, nullptr, nullptr, nullptr);
+}
+
 bool Engine::Rendering::Buffers::VertexBuffer::operator==(const VertexBuffer& p_other) const
 {
     if (m_stride == p_other.m_stride && m_offset == p_other.m_offset)

@@ -1,3 +1,5 @@
+#define DEBUG_MODE true;
+
 #include <stdafx.h>
 
 #include <Core/App.h>
@@ -5,19 +7,29 @@
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
+#include <Tools/FPSCounter.h>
 
 #include <Systems/RenderSystem.h>
+
 #include <Input/Input.h>
 #include <Objects/GameObject.h>
 #include <Components/ModelComponent.h>
-#include <Components/CameraComponent.h>
+#include <Components/Camera.h>
 #include <Containers/MaterialContainer.h>
 #include <Components/LightComponent.h>
+#include <LinearMath/btVector3.h>
+#include <Systems/CameraSystem.h>
+#include <Systems/TransformSystem.h>
+
+#include "Components/BoxCollider.h"
+#include "Containers/ColliderContainer.h"
 
 using namespace Engine::Core;
 
 App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
+    btVector3 vec(0.0f, 0.0f, 0.0f);
+
     Input::Input::InitInput();
 }
 
@@ -29,10 +41,13 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 int App::Run() const
 {
     Systems::RenderSystem renderSystem;
-    Objects::GameObject gameObject;
-    Objects::GameObject gameObject2;
+    Tools::FPSCounter fpsCounter(200);
+
+    Objects::GameObject link("link");
+    Objects::GameObject lambo("lambo");
     Objects::GameObject camera;
     Objects::GameObject light;
+
 
     Containers::MaterialContainer::AddMaterial("missing");
     Containers::MaterialContainer::GetMaterial("missing")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/missing.png");
@@ -49,143 +64,101 @@ int App::Run() const
     Containers::MaterialContainer::GetMaterial("LamboTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
     Containers::MaterialContainer::GetMaterial("LamboTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
 
-    camera.AddComponent<Components::CameraComponent>(m_width, m_height);
+    camera.AddComponent<Components::Camera>(m_width, m_height);
 
     Containers::LightContainer* test = Containers::LightContainer::GetInstance();
 
-    gameObject.GetTransform()->Translate(Vector3F{3.0f, -5.0f, 4.0f});
-    gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
+    link.GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
+    link.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    link.GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
+    link.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
+    link.AddComponent<Components::BoxCollider>();
+    link.FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 0.5f, 1.0f, 0.5f });
+    GPM::Vector3F linkOffset{ 0.0f, -1.0f, 0.0f };
+    link.FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(linkOffset);
+    link.FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
 
-    gameObject2.GetTransform()->Translate(Vector3F{6.0f, 5.0f, -4.0f});
-    gameObject2.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
-    gameObject2.GetTransform()->RotateWithEulerAngles(Vector3F{ 45.f, 45.f, 90.f });
-    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+    lambo.GetTransform()->Translate(Vector3F{5.0f, 5.0f, -3.0f});
+    lambo.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
+    lambo.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+    lambo.AddComponent<Components::BoxCollider>();
+    lambo.FindComponentOfType<Components::BoxCollider>()->SetMass(1);
+    lambo.FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 2.0f, 1.0f, 5.0f });
+    GPM::Vector3F lamboOffset{ 0.0f, -1.5f, 0.0f };
+    lambo.FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
 
-    camera.GetTransform()->Translate(Vector3F{ 0.0f, 0.0f, -10.0f });
 
-    light.GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
-    light.GetTransform()->Scale(Vector3F{0.1f, 0.1f, 0.1f});
+    camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
+
+    light.GetTransform()->Translate(Vector3F{ 10.0f, 4.0f, -10.0f });
+    light.GetTransform()->Scale(Vector3F{ 0.01f, 0.01f, 0.01f });
 
     Rendering::Lights::Light::LightData dirLight;
 
-    dirLight.position  = Vector4F(light.GetTransform()->GetPosition().x * -1, light.GetTransform()->GetPosition().y, light.GetTransform()->GetPosition().z * -1, 1.0f);
-    dirLight.ambient   = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
-    dirLight.diffuse   = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
-    dirLight.specular  = Vector4F(0.5f, 0.5f ,0.5f, 1.0f);
-    dirLight.color     = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
+    dirLight.position = Vector4F(light.GetTransform()->GetPosition().x * -1, light.GetTransform()->GetPosition().y, light.GetTransform()->GetPosition().z * -1, 1.0f);
+    dirLight.ambient = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
+    dirLight.diffuse = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
+    dirLight.specular = Vector4F(0.5f, 0.5f, 0.5f, 1.0f);
+    dirLight.color = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
     dirLight.shininess = 32.0f;
 
-    camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    // gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
-    // gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
-    light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
     light.AddComponent<Components::LightComponent>(dirLight);
 
-    for (auto& mesh : gameObject.GetModel()->GetMeshes())
+    for (auto& mesh : link.GetModel()->GetMeshes())
     {
         mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LinkTexture"));
     }
 
-    for (auto& mesh : gameObject2.GetModel()->GetMeshes())
+    for (auto& mesh : lambo.GetModel()->GetMeshes())
     {
         mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LamboTexture"));
     }
 
-    renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::CameraComponent>()->GetCamera()->GetID());
+    renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
+
+
+    lambo.GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
 
     while (true)
     {
+        ImGui_ImplDX11_NewFrame();
+        ImGui_ImplWin32_NewFrame();
+        ImGui::NewFrame();
+        fpsCounter.Start();
+        link.GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -0.0f, 0.02f });
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;
         }
+        Containers::ColliderContainer::Update(fpsCounter.GetDeltaTime());
+        Containers::TransformSystem::Update(fpsCounter.GetDeltaTime());
+        Containers::CameraSystem::Update(fpsCounter.GetDeltaTime());
 
-        DoFrame(renderSystem);
+
+        DoFrame(renderSystem, fpsCounter.GetDeltaTime());
+
+        fpsCounter.Stop();
     }
 }
 
-void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
+void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTime) const
 {
     Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
 
     if (_INPUT->keyboard.IsKeyDown('F'))
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());
 
-    ImGui_ImplDX11_NewFrame();
-    ImGui_ImplWin32_NewFrame();
-    ImGui::NewFrame();
-    ImGuiIO& io = ImGui::GetIO();
+    p_renderSystem.IUpdate(p_deltaTime);
 
-    //static bool opt_fullscreen_persistant = true;
-    //bool opt_fullscreen = opt_fullscreen_persistant;
-    //static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
-
-    //// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
-    //// because it would be confusing to have two docking targets within each others.
-    //ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-    //if (opt_fullscreen)
-    //{
-    //    ImGuiViewport* viewport = ImGui::GetMainViewport();
-    //    ImGui::SetNextWindowPos(viewport->Pos);
-    //    ImGui::SetNextWindowSize(viewport->Size);
-    //    ImGui::SetNextWindowViewport(viewport->ID);
-    //    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-    //    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    //    window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-    //    window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-    //}
-
-    //// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background 
-    //// and handle the pass-thru hole, so we ask Begin() to not render a background.
-    //if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-    //    window_flags |= ImGuiWindowFlags_NoBackground;
-    //static bool test = true;
-    //// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-    //// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
-    //// all active windows docked into it will lose their parent and become undocked.
-    //// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
-    //// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
-    //ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    //ImGui::Begin("DockSpace Demo", &test, window_flags);
-    //ImGui::PopStyleVar();
-
-    //if (opt_fullscreen)
-    //    ImGui::PopStyleVar(2);
-
-    //// DockSpace
-    //if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-    //{
-    //    ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-    //    ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-
-    //    if (ImGui::BeginMenuBar())
-    //    {
-    //        if (ImGui::BeginMenu("File"))
-    //        {
-    //            ImGui::MenuItem("Open", "", nullptr);
-    //            ImGui::MenuItem("Save", "", nullptr);
-    //            ImGui::MenuItem("Exit", "", nullptr);
-    //            ImGui::Separator();
-    //            ImGui::EndMenu();
- 
-    //        }
-    //        if (ImGui::BeginMenu("Edit"))
-    //        {
-    //            ImGui::MenuItem("Just Another Menu here", "", nullptr);
-    //            ImGui::Separator();
-    //            ImGui::EndMenu();
-    //        }
-
-    //        ImGui::EndMenuBar();
-    //    }
-    //}
-    //ImGui::End();
-    p_renderSystem.Update();
+    static bool show_demo_window = true;
+    ImGui::Begin("Identity UI Tools");
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::End();
 
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         ImGui::UpdatePlatformWindows();
