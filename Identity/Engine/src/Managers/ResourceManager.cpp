@@ -107,7 +107,6 @@ Engine::Managers::ResourceManager::ResourceManager()
     CreateMaterialNS("default", "defaultPS", "defaultVS");
 }
 
-
 std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager::AddModelNS(const std::string& p_path,
     const std::string& p_name)
 {
@@ -159,6 +158,8 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager
             return model;
     }
 
+    const std::string error("The model: " + p_name + " does not exist");
+    MessageBox(nullptr, error.c_str(), "Error", MB_ICONERROR | MB_OK);
     return nullptr;
 }
 
@@ -215,6 +216,8 @@ std::shared_ptr<Engine::Rendering::Materials::Texture> Engine::Managers::Resourc
             return texture;
     }
 
+    const std::string error("The texture: " + p_name + " does not exist");
+    MessageBox(nullptr, error.c_str(), "Error", MB_ICONERROR | MB_OK);
     return nullptr;
 }
 
@@ -276,6 +279,8 @@ std::shared_ptr<Engine::Rendering::Materials::PixelShader> Engine::Managers::Res
             return pShader;
     }
 
+    const std::string error("The pixel shader: " + p_name + " does not exist");
+    MessageBox(nullptr, error.c_str(), "Error", MB_ICONERROR | MB_OK);
     return nullptr;
 }
 
@@ -338,6 +343,8 @@ std::shared_ptr<Engine::Rendering::Materials::VertexShader> Engine::Managers::Re
             return vShader;
     }
 
+    const std::string error("The vertex shader: " + p_name + " does not exist");
+    MessageBox(nullptr, error.c_str(), "Error", MB_ICONERROR | MB_OK);
     return nullptr;
 }
 
@@ -411,6 +418,8 @@ std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Managers::Resour
             return material;
     }
 
+    const std::string error("The material: " + p_name + " does not exist");
+    MessageBox(nullptr, error.c_str(), "Error", MB_ICONERROR | MB_OK);
     return nullptr;
 }
 

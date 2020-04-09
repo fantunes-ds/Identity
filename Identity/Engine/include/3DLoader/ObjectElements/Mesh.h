@@ -25,19 +25,16 @@ namespace Engine::ObjectElements
         void GenerateBuffers(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device);
         void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
         void Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
-        void SetMaterial(const int32_t p_material);
-        void SetMaterialWIP(std::shared_ptr<Rendering::Materials::Material> p_material) { m_materialWIP = p_material; }
+        void SetMaterial(std::shared_ptr<Rendering::Materials::Material> p_material);
 
         bool operator==(const Mesh& p_other) const;
         bool operator!=(const Mesh& p_other) const;
 
         Rendering::Buffers::VertexBuffer& GetVertexBuffer() { return m_vertexBuffer; }
-        [[nodiscard]] Rendering::Materials::Material& GetMaterial() { return *Containers::MaterialContainer::GetMaterial(m_material); }
         [[nodiscard]] Rendering::Buffers::IndexBuffer& GetIndexBuffer() { return m_indexBuffer; }
         [[nodiscard]] std::vector<Geometry::Vertex>& GetVertices() { return m_vertices; }
         [[nodiscard]] std::vector<unsigned short>& GetIndices() { return m_indices; }
-
-        [[nodiscard]] std::shared_ptr<Rendering::Materials::Material> GetMaterialWIP() { return m_materialWIP; }
+        [[nodiscard]] std::shared_ptr<Rendering::Materials::Material> GetMaterial() { return m_material; }
 
 
         void SetTransform(int32_t p_transform) { m_transform = p_transform; }
@@ -48,11 +45,7 @@ namespace Engine::ObjectElements
         Rendering::Buffers::IndexBuffer m_indexBuffer;
         Rendering::Buffers::InputLayout m_inputLayout;
 
-        //--WIP--
-        // Rendering::Material m_material;
-        int32_t m_material{-1};
-        std::shared_ptr<Rendering::Materials::Material> m_materialWIP{ nullptr };
-        //-------
+        std::shared_ptr<Rendering::Materials::Material> m_material{ nullptr };
 
         //data
         std::vector<Geometry::Vertex> m_vertices;
