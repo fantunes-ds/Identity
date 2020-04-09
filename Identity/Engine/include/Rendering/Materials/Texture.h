@@ -28,14 +28,6 @@ namespace Engine::Rendering::Materials
         static std::shared_ptr<Texture> LoadTexture(const std::string& p_path, const std::string& p_name);
 
         /**
-         * @brief Load a texture file to the current texture object
-         * @param p_device A pointer to the rendering device of the renderer (will soon be removed)
-         * @param p_path The path of the texture to load
-         * @deprecated The Resource Manager will soon be available so prepare to make the change
-         */
-        void LoadTexture(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
-
-        /**
          * @brief Bind the texture to the rendering context
          */
         void BindTexture();
@@ -46,14 +38,14 @@ namespace Engine::Rendering::Materials
          */
         void UnbindTexture();
 
-        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTexSRV() const { return m_texSRV; }
-        void SetTexSRV(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> p_otherTexSRV) { m_texSRV = p_otherTexSRV; }
+        [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTextureShaderResourceView() const { return m_textureShaderResourceView; }
+        void SetTextureShaderResourceView(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> p_textureShaderResourceView) { m_textureShaderResourceView = p_textureShaderResourceView; }
         [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11SamplerState> GetSampleState() const { return m_samplerState; }
 
     private:
         std::string m_path{};
-        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texSRV;
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_textureShaderResourceView;
         Microsoft::WRL::ComPtr<ID3D11SamplerState> m_samplerState;
-        Microsoft::WRL::ComPtr<ID3D11Resource> m_text;
+        Microsoft::WRL::ComPtr<ID3D11Resource> m_texture;
     };
 }

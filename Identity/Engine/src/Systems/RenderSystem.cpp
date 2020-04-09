@@ -86,7 +86,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 
             const Rendering::Buffers::PCB pcb{ Vector4F::zero, Vector4F::one, Vector4F::one,
                                             Vector4F::zero, Vector4F::one,
-                                                            1.0f,Vector3F{},Vector3F::zero, 0.0f };
+                                                            1.0f,Vector3F{},Vector3F::zero, mesh->GetMaterial()->GetTextureState() };
             mesh->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
             Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
@@ -130,7 +130,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
                                                             1.0f,Vector3F{},Vector3F::zero, 0.0f };
         quad.GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
 
-        quad.GetMaterial()->GetTexture()->SetTexSRV(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
+        quad.GetMaterial()->GetTexture()->SetTextureShaderResourceView(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
 
         Rendering::Renderer::GetInstance()->Bind();
         GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(quad.GetIndices().size()), 0u, 0u));
@@ -162,7 +162,7 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         const Vector4F reversedXLightPos = Vector4F(light.position.x, light.position.y, -light.position.z, 1.0f);
         const Rendering::Buffers::PCB pcb{ reversedXLightPos, light.ambient, light.diffuse,
                                             light.specular , light.color,
-                                                            light.shininess,Vector3F{},Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, 0.0f };
+                                                            light.shininess,Vector3F{},Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, static_cast<float>(mesh->GetMaterial()->GetTextureState())};
 
 
         mesh->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);

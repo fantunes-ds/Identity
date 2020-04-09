@@ -97,7 +97,7 @@ int App::Run() const
 
     for (auto& mesh : link.GetModel()->GetMeshes())
     {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LnkMat"));
+        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
     }
 
     for (auto& mesh : lambo.GetModel()->GetMeshes())

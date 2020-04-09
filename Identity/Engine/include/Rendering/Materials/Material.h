@@ -35,14 +35,17 @@ namespace Engine::Rendering::Materials
 
         inline void SetPixelShader(const std::shared_ptr<PixelShader> p_pixelShader) { m_pixelShader = p_pixelShader; }
         inline void SetVertexShader(const std::shared_ptr<VertexShader> p_vertexShader) { m_vertexShader = p_vertexShader; }
-        inline void SetTexture(const std::shared_ptr<Texture> p_texture) { m_texture = p_texture; }
+        inline void SetTexture(const std::shared_ptr<Texture> p_texture) { m_texture = p_texture; m_textureState = true; }
 
         [[nodiscard]] const Microsoft::WRL::ComPtr<ID3DBlob> GetBlob();
         [[nodiscard]] inline const std::shared_ptr<PixelShader> GetPixelShader() const { return m_pixelShader; }
         [[nodiscard]] inline const std::shared_ptr<VertexShader> GetVertexShader() const { return m_vertexShader; }
         [[nodiscard]] inline const std::shared_ptr<Texture> GetTexture() const { return m_texture; }
+        [[nodiscard]] inline const bool GetTextureState() const { return m_textureState; }
 
     private:
+        bool m_textureState{ false };
+
         std::shared_ptr<Texture> m_texture{};
         std::shared_ptr<PixelShader> m_pixelShader{};
         std::shared_ptr<VertexShader> m_vertexShader{};
