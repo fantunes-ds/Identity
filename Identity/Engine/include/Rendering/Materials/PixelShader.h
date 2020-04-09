@@ -46,6 +46,8 @@ namespace Engine::Rendering::Materials
 
         inline void SetPath(const std::string& p_path) { m_path = p_path; }
         [[nodiscard]] inline const std::string& GetPath() const { return m_path; }
+        [[nodiscard]] inline const Buffers::PixelConstantBuffer GetPCB() const { return m_pcb; }
+        [[nodiscard]] inline const Microsoft::WRL::ComPtr<ID3DBlob> GetBlob() const { return m_blob; }
 
     private:
         std::string m_path{};

@@ -3,6 +3,7 @@
 #include <3DLoader/ObjectElements/Mesh.h>
 #include <Tools/DirectX/GraphicsMacros.h>
 #include <Systems/TransformSystem.h>
+#include "Managers/ResourceManager.h"
 
 Engine::ObjectElements::Mesh::Mesh(std::vector<Engine::Geometry::Vertex>& p_vertices, std::vector<unsigned short>& p_indices) :
     m_vertices { p_vertices }, m_indices { p_indices }
@@ -15,17 +16,19 @@ Engine::ObjectElements::Mesh::Mesh(const Mesh& p_other):
 
 void Engine::ObjectElements::Mesh::GenerateBuffers(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device)
 {
-    if (m_material < 0)
-        SetMaterial(Containers::MaterialContainer::FindMaterial("missing"));
+    // if (m_material < 0)
+        // SetMaterial(Containers::MaterialContainer::FindMaterial("missing"));
+    if (m_materialWIP == nullptr)
+        SetMaterialWIP(Managers::ResourceManager::GetMaterial("basic"));
 
     m_vertexBuffer.Generate(p_device, m_vertices);
     m_indexBuffer.Generate(p_device, m_indices);
-    m_inputLayout.Generate(p_device, GetMaterial().GetShader().GetBlob());
+    m_inputLayout.Generate(p_device, GetMaterialWIP()->GetBlob());
 }
 
 void Engine::ObjectElements::Mesh::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
 {
-    GetMaterial().Bind(p_context);
+    GetMaterialWIP()->Bind(p_context);
     m_vertexBuffer.Bind(p_context);
     m_indexBuffer.Bind(p_context);
     m_inputLayout.Bind(p_context);
@@ -36,7 +39,7 @@ void Engine::ObjectElements::Mesh::Unbind(const Microsoft::WRL::ComPtr<ID3D11Dev
     m_inputLayout.Unbind(p_context);
     m_indexBuffer.Unbind(p_context);
     m_vertexBuffer.Unbind(p_context);
-    GetMaterial().Unbind(p_context);
+    GetMaterialWIP()->Unbind(p_context);
 }
 
 void Engine::ObjectElements::Mesh::SetMaterial(const int32_t p_material)

@@ -45,14 +45,14 @@ void Texture::LoadTexture(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, 
     p_device->CreateSamplerState(&samplerDesc, &m_samplerState);
 }
 
-void Texture::BindTexture(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
+void Texture::BindTexture()
 {
-    p_context->PSSetShaderResources(0, 1, m_texSRV.GetAddressOf());
-    p_context->PSSetSamplers(0, 1, m_samplerState.GetAddressOf());
+    Renderer::GetInstance()->GetContext()->PSSetShaderResources(0, 1, m_texSRV.GetAddressOf());
+    Renderer::GetInstance()->GetContext()->PSSetSamplers(0, 1, m_samplerState.GetAddressOf());
 }
 
-void Texture::UnbindTexture(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
+void Texture::UnbindTexture()
 {
-    p_context->PSSetShaderResources(0, 0, nullptr);
-    p_context->PSSetSamplers(0, 0, nullptr);
+    Renderer::GetInstance()->GetContext()->PSSetShaderResources(0, 0, nullptr);
+    Renderer::GetInstance()->GetContext()->PSSetSamplers(0, 0, nullptr);
 }

@@ -37,15 +37,14 @@ namespace Engine::Rendering::Materials
 
         /**
          * @brief Bind the texture to the rendering context
-         * @param p_context A pointer to the device context of the renderer (will soon be removed)
          */
-        void BindTexture(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
+        void BindTexture();
 
         /**
          * @brief Used to unbind texture from the rendering context
          * @param p_context A pointer to the device context of the renderer (will soon be removed)
          */
-        void UnbindTexture(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
+        void UnbindTexture();
 
         [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTexSRV() const { return m_texSRV; }
         void SetTexSRV(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> p_otherTexSRV) { m_texSRV = p_otherTexSRV; }
