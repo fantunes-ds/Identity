@@ -122,7 +122,7 @@ namespace Engine::Rendering
         [[nodiscard]] const float& GetWidth() const { return m_width; }
         [[nodiscard]] const float& GetHeight() const { return m_height; }
         [[nodiscard]] const std::vector<RenderTexture>& GetRenderTextures() const { return m_renderTextures; }
-        [[nodiscard]] const std::shared_ptr<ObjectElements::Mesh> GetRect() const { if (m_tempInit) { return m_rect; } else { m_rect->GenerateBuffers(GetDevice()); return m_rect; } }
+        [[nodiscard]] std::shared_ptr<ObjectElements::Mesh> GetRect() { if (m_tempInit) { return m_rect; } else { m_rect->GenerateBuffers(GetDevice()); m_tempInit = true; return m_rect; } }
 
     private:
         /**
