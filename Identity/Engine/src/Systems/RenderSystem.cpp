@@ -81,13 +81,13 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
             Matrix4F perspective = camera->GetPerspectiveMatrix();
             
             Rendering::Buffers::VCB vcb{ modelMatrix, view, normalModel,perspective };
-            mesh->GetMaterial().GetVertexShader()->GetVCB().Update(vcb);
+            mesh->GetMaterialWIP()->GetVertexShader()->GetVCB().Update(vcb);
             const Vector3F cameraPos = camera->GetPosition();
 
             const Rendering::Buffers::PCB pcb{ Vector4F::zero, Vector4F::one, Vector4F::one,
                                             Vector4F::zero, Vector4F::one,
                                                             1.0f,Vector3F{},Vector3F::zero, 0.0f };
-            mesh->GetMaterial().GetPixelShader()->GetPCB().Update(pcb);
+            mesh->GetMaterialWIP()->GetPixelShader()->GetPCB().Update(pcb);
             Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
             if (DRAW_TO_TEXTURE)

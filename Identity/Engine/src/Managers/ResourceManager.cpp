@@ -102,9 +102,9 @@ GetAllMaterials()
 
 Engine::Managers::ResourceManager::ResourceManager()
 {
-    AddPixelShaderNS("../Engine/Resources/Shaders/PixelShader.cso", "basicPS");
-    AddVertexShaderNS("../Engine/Resources/Shaders/VertexShader.cso", "basicVS");
-    CreateMaterialNS("basic", "basicPS", "basicVS");
+    AddPixelShaderNS("../Engine/Resources/Shaders/PixelShader.cso", "defaultPS");
+    AddVertexShaderNS("../Engine/Resources/Shaders/VertexShader.cso", "defaultVS");
+    CreateMaterialNS("default", "defaultPS", "defaultVS");
 }
 
 
@@ -247,6 +247,8 @@ std::shared_ptr<Engine::Rendering::Materials::PixelShader> Engine::Managers::Res
     std::shared_ptr<Rendering::Materials::PixelShader> pShader = Rendering::Materials::PixelShader::
         LoadShader(p_path, p_name);
 
+    pShader->GenerateConstantBuffer();
+
     if (pShader == nullptr)
     {
         const std::string
@@ -306,6 +308,8 @@ std::shared_ptr<Engine::Rendering::Materials::VertexShader> Engine::Managers::Re
 
     std::shared_ptr<Rendering::Materials::VertexShader> vShader = Rendering::Materials::VertexShader::
         LoadShader(p_path, p_name);
+
+    vShader->GenerateConstantBuffer();
 
     if (vShader == nullptr)
     {

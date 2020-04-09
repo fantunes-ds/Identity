@@ -19,7 +19,7 @@ void Engine::ObjectElements::Mesh::GenerateBuffers(const Microsoft::WRL::ComPtr<
     // if (m_material < 0)
         // SetMaterial(Containers::MaterialContainer::FindMaterial("missing"));
     if (m_materialWIP == nullptr)
-        SetMaterialWIP(Managers::ResourceManager::GetMaterial("basic"));
+        SetMaterialWIP(Managers::ResourceManager::GetMaterial("default"));
 
     m_vertexBuffer.Generate(p_device, m_vertices);
     m_indexBuffer.Generate(p_device, m_indices);
