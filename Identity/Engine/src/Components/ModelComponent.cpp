@@ -13,9 +13,9 @@ Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameOb
     Containers::ModelContainer::AddModel(p_file, p_name);
     m_model = Containers::ModelContainer::FindModel(p_name);
     // m_gameObject->SetTransform(Containers::ModelContainer::GetAllModels().at(m_model)->GetRootNode()->GetTransform());
-    auto test = Containers::ModelContainer::GetAllModels().at(m_model)->GetRootNode();
+    /*auto test = Containers::ModelContainer::GetAllModels().at(m_model)->GetRootNode();
     test->SetTransform(m_gameObject->GetTransform()->GetID());
-    std::cout << "test";
+    std::cout << "test";*/
 }
 
 bool Engine::Components::ModelComponent::operator==(IComponent* p_other)

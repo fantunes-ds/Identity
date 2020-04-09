@@ -19,7 +19,7 @@ namespace Engine::Objects
         ~GameObject() = default;
 
         //TODO: works when modifying parent's transform, but doesn't work when modifying child's transform
-        void SetParentObject(GameObject& p_parent);
+        //void SetParentObject(GameObject& p_parent);
 
         /**
          * @brief Deletes component.
@@ -49,8 +49,8 @@ namespace Engine::Objects
 
             if (std::is_same_v<T, Components::ModelComponent>)
             {
-                std::shared_ptr<Components::ModelComponent> modelComp = std::dynamic_pointer_cast<Components::ModelComponent>(Containers::ComponentContainer::FindComponent(id));
-                Containers::ModelContainer::FindModel(modelComp->GetModel())->GetRootNode()->SetTransform(m_transform);
+                //std::shared_ptr<Components::ModelComponent> modelComp = std::dynamic_pointer_cast<Components::ModelComponent>(Containers::ComponentContainer::FindComponent(id));
+                //Containers::ModelContainer::FindModel(modelComp->GetModel())->GetRootNode()->SetTransform(m_transform);
             }
 
             if (id > 0)

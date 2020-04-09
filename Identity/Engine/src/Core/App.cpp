@@ -23,6 +23,8 @@
 
 #include "Components/BoxCollider.h"
 #include "Containers/ColliderContainer.h"
+#include <Scene/Scene.h>
+#include <Managers/SceneManager.h>
 
 using namespace Engine::Core;
 
@@ -43,8 +45,12 @@ int App::Run() const
     Systems::RenderSystem renderSystem;
     Tools::FPSCounter fpsCounter(200);
 
-    Objects::GameObject link("link");
-    Objects::GameObject lambo("lambo");
+    auto scene = std::make_shared<Scene::Scene>();
+	
+    auto link = std::make_shared<Objects::GameObject>("link");
+    Managers::SceneManager::AddScene(scene);
+    Managers::SceneManager::SetActiveScene(scene);
+    auto lambo = std::make_shared<Objects::GameObject>("lambo");
     Objects::GameObject camera;
     Objects::GameObject light;
 
@@ -68,24 +74,26 @@ int App::Run() const
 
     Containers::LightContainer* test = Containers::LightContainer::GetInstance();
 
-    link.GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
-    link.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    link.GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
-    link.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
-    link.AddComponent<Components::BoxCollider>();
-    link.FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 0.5f, 1.0f, 0.5f });
+    link->GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
+    link->GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    link->GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
+    link->AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
+    link->AddComponent<Components::BoxCollider>();
+    link->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 0.5f, 1.0f, 0.5f });
     GPM::Vector3F linkOffset{ 0.0f, -1.0f, 0.0f };
-    link.FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(linkOffset);
-    link.FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
+    link->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(linkOffset);
+    link->FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
+    scene->AddGameObject(link);
 
-    lambo.GetTransform()->Translate(Vector3F{5.0f, 5.0f, -3.0f});
-    lambo.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
-    lambo.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
-    lambo.AddComponent<Components::BoxCollider>();
-    lambo.FindComponentOfType<Components::BoxCollider>()->SetMass(1);
-    lambo.FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 2.0f, 1.0f, 5.0f });
+    lambo->GetTransform()->Translate(Vector3F{5.0f, 5.0f, -3.0f});
+    lambo->GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
+    lambo->AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+    lambo->AddComponent<Components::BoxCollider>();
+    lambo->FindComponentOfType<Components::BoxCollider>()->SetMass(1);
+    lambo->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 2.0f, 1.0f, 5.0f });
     GPM::Vector3F lamboOffset{ 0.0f, -1.5f, 0.0f };
-    lambo.FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
+    lambo->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
+    scene->AddGameObject(lambo);
 
 
     camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
@@ -104,12 +112,12 @@ int App::Run() const
 
     light.AddComponent<Components::LightComponent>(dirLight);
 
-    for (auto& mesh : link.GetModel()->GetMeshes())
+    for (auto& mesh : link->GetModel()->GetMeshes())
     {
         mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LinkTexture"));
     }
 
-    for (auto& mesh : lambo.GetModel()->GetMeshes())
+    for (auto& mesh : lambo->GetModel()->GetMeshes())
     {
         mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LamboTexture"));
     }
@@ -117,7 +125,7 @@ int App::Run() const
     renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
 
 
-    lambo.GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
+    lambo->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
 
     while (true)
     {
@@ -125,7 +133,7 @@ int App::Run() const
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
         fpsCounter.Start();
-        link.GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -0.0f, 0.02f });
+        link->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -0.0f, 0.02f });
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;

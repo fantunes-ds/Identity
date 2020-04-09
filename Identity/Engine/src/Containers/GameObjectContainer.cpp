@@ -13,7 +13,7 @@ int32_t Engine::Containers::GameObjectContainer::AddGameObject(std::shared_ptr<O
     {
         if (*p_gameObject == *gameObject.second)
         {
-            const std::string error("GameObjectContainer::AddGameObject(Objects::GameObject& p_gameObject): Failed to add GameObject because it already exists");
+            const std::string error("GameObjectContainer::AddGameObjectToScene(Objects::GameObject& p_gameObject): Failed to add GameObject because it already exists");
             MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
             return -1;
         }

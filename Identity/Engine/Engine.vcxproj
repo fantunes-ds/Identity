@@ -229,6 +229,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Components\LightComponent.h" />
     <ClInclude Include="include\Components\ModelComponent.h" />
     <ClInclude Include="include\Managers\ResourceManager.h" />
+    <ClInclude Include="include\Managers\SceneManager.h" />
     <ClInclude Include="include\Rendering\Materials\PixelShader.h" />
     <ClInclude Include="include\Rendering\Materials\VertexShader.h" />
     <ClInclude Include="include\Systems\CameraSystem.h" />
@@ -301,6 +302,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Components\IComponent.cpp" />
     <ClCompile Include="src\Containers\ColliderContainer.cpp" />
     <ClCompile Include="src\Managers\ResourceManager.cpp" />
+    <ClCompile Include="src\Managers\SceneManager.cpp" />
     <ClCompile Include="src\Rendering\Lights\Light.cpp" />
     <ClCompile Include="src\Components\LightComponent.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
@@ -310,6 +312,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Components\ModelComponent.cpp" />
     <ClCompile Include="src\Rendering\Materials\PixelShader.cpp" />
     <ClCompile Include="src\Rendering\Materials\VertexShader.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Systems\CameraSystem.cpp" />
     <ClCompile Include="src\Core\App.cpp" />
     <ClCompile Include="src\Containers\ComponentContainer.cpp" />

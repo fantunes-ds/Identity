@@ -50,7 +50,6 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager
         mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
 
     GetInstance()->m_models.push_back(model);
-    Scene::SceneGraph::GetInstance()->AddRootSceneNode(model->GetRootNode());
 
     return model;
 }
