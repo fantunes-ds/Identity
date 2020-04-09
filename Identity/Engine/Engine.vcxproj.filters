@@ -1,374 +1,144 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\Export.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TestDependencies.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\WinSetup.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Rendering\Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Geometry\Vertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Input\Keyboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Input\Mouse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Core\App.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\3DLoader\ObjectElements\Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\3DLoader\ObjectElements\Transform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Objects\GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Rendering\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Events\IEventCallback.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Events\Event.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tools\IdentityException.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tools\ImGUI\imgui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tools\ImGUI\imgui_impl_dx11.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tools\ImGUI\imgui_impl_win32.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tools\ImGUI\imgui_internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tools\ImGUI\imstb_rectpack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tools\ImGUI\imstb_textedit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tools\ImGUI\imstb_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tools\DirectX\dxerr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tools\ImGUI\imconfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tools\ImGUI\ImGUIManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Rendering\Buffers\VertexBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tools\DirectX\GraphicsMacros.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Rendering\Buffers\IndexBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Rendering\Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Input\Input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Systems\IECSSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Systems\RenderSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\3DLoader\ObjectLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\App.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tools\IDCounter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Components\ModelComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Rendering\Buffers\InputLayout.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Components\CameraComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Containers\ComponentContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Containers\GameObjectContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Containers\ModelContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Containers\TransformContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Containers\CameraContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Objects\IObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Containers\EventContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Containers\LightContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Containers\IContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Rendering\Material.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Rendering\Materials\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Rendering\Buffers\VertexConstantBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Rendering\Buffers\PixelConstantBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Rendering\Materials\Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Components\IComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Scene\SceneGraph\SceneNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Scene\SceneGraph\SceneGraph.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Containers\MaterialContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Components\LightComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Rendering\Lights\ILight.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tools\ASSIMP\ASSIMPConversion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Scene\Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\TestDependencies.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Input\Keyboard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Input\Mouse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\3DLoader\ObjectElements\Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\3DLoader\ObjectElements\Model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tools\IdentityException.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\3DLoader\ObjectElements\Transform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\3DLoader\ObjectLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Events\Event.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tools\ImGUI\imgui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tools\ImGUI\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tools\ImGUI\imgui_draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tools\ImGUI\imgui_impl_dx11.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tools\ImGUI\imgui_impl_win32.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tools\ImGUI\imgui_widgets.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tools\DirectX\dxerr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tools\ImGUI\ImGUIManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Buffers\VertexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Buffers\IndexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Systems\RenderSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Input\Input.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\App.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Buffers\InputLayout.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Objects\GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Components\ModelComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Containers\ComponentContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Containers\GameObjectContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Containers\ModelContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Containers\TransformContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Containers\CameraContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Components\CameraComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Objects\IObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Containers\EventContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Containers\LightContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Materials\Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Material.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Buffers\PixelConstantBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Buffers\VertexConstantBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Materials\Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\SceneGraph\SceneNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\SceneGraph\SceneGraph.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Lights\Light.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Components\LightComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Containers\MaterialContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Components\IComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tools\ASSIMP\AssimpConversion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <FxCompile Include="Resources\Shaders\PixelShader.hlsl" />
     <FxCompile Include="Resources\Shaders\VertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\Tools\DirectX\DXGetErrorDescription.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Tools\DirectX\DXGetErrorString.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Tools\DirectX\DXTrace.inl">
-      <Filter>Header Files</Filter>
-    </None>
+    <ClCompile Include="src\Components\BoxCollider.cpp" />
+    <ClCompile Include="src\Components\IComponent.cpp" />
+    <ClCompile Include="src\Containers\ColliderContainer.cpp" />
+    <ClCompile Include="src\Managers\ResourceManager.cpp" />
+    <ClCompile Include="src\Rendering\Lights\Light.cpp" />
+    <ClCompile Include="src\Components\LightComponent.cpp" />
+    <ClCompile Include="src\Containers\EventContainer.cpp" />
+    <ClCompile Include="src\Containers\LightContainer.cpp" />
+    <ClCompile Include="src\Containers\MaterialContainer.cpp" />
+    <ClCompile Include="src\Objects\IObject.cpp" />
+    <ClCompile Include="src\Components\ModelComponent.cpp" />
+    <ClCompile Include="src\Rendering\Materials\PixelShader.cpp" />
+    <ClCompile Include="src\Rendering\Materials\VertexShader.cpp" />
+    <ClCompile Include="src\Systems\CameraSystem.cpp" />
+    <ClCompile Include="src\Core\App.cpp" />
+    <ClCompile Include="src\Containers\ComponentContainer.cpp" />
+    <ClCompile Include="src\Containers\GameObjectContainer.cpp" />
+    <ClCompile Include="src\Containers\ModelContainer.cpp" />
+    <ClCompile Include="src\3DLoader\ObjectElements\Model.cpp" />
+    <ClCompile Include="src\3DLoader\ObjectElements\Mesh.cpp" />
+    <ClCompile Include="src\Components\Transform.cpp" />
+    <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
+    <ClCompile Include="src\Rendering\RenderTexture.cpp" />
+    <ClCompile Include="src\UI\UIManager.cpp" />
+    <ClCompile Include="src\Rendering\Buffers\InputLayout.cpp" />
+    <ClCompile Include="src\Systems\TransformSystem.cpp" />
+    <ClCompile Include="src\Objects\GameObject.cpp" />
+    <ClCompile Include="src\Rendering\Buffers\PixelConstantBuffer.cpp" />
+    <ClCompile Include="src\Rendering\Buffers\VertexConstantBuffer.cpp" />
+    <ClCompile Include="src\Rendering\Materials\Material.cpp" />
+    <ClCompile Include="src\Rendering\Materials\Shader.cpp" />
+    <ClCompile Include="src\Rendering\Materials\Texture.cpp" />
+    <ClCompile Include="src\Scene\SceneGraph\SceneGraph.cpp" />
+    <ClCompile Include="src\Scene\SceneGraph\SceneNode.cpp" />
+    <ClCompile Include="src\Systems\RenderSystem.cpp" />
+    <ClCompile Include="src\Events\Event.cpp" />
+    <ClCompile Include="src\Input\Input.cpp" />
+    <ClCompile Include="src\Input\Mouse.cpp" />
+    <ClCompile Include="src\Input\Keyboard.cpp" />
+    <ClCompile Include="src\Rendering\Buffers\IndexBuffer.cpp" />
+    <ClCompile Include="src\Rendering\Buffers\VertexBuffer.cpp" />
+    <ClCompile Include="src\Components\Camera.cpp" />
+    <ClCompile Include="src\Rendering\Renderer.cpp" />
+    <ClCompile Include="src\Rendering\Window.cpp" />
+    <ClCompile Include="src\TestDependencies.cpp" />
+    <ClCompile Include="src\Tools\ASSIMP\AssimpConversion.cpp" />
+    <ClCompile Include="src\Tools\DirectX\dxerr.cpp" />
+    <ClCompile Include="src\Tools\FPSCounter.cpp" />
+    <ClCompile Include="src\Tools\IdentityException.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\imgui.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\ImGUIManager.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\imgui_demo.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\imgui_impl_dx11.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\imgui_impl_win32.cpp" />
+    <ClCompile Include="src\Tools\ImGUI\imgui_widgets.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Components\IComponent.h" />
+    <ClInclude Include="include\Components\LightComponent.h" />
+    <ClInclude Include="include\Components\ModelComponent.h" />
+    <ClInclude Include="include\Managers\ResourceManager.h" />
+    <ClInclude Include="include\Rendering\Materials\PixelShader.h" />
+    <ClInclude Include="include\Rendering\Materials\VertexShader.h" />
+    <ClInclude Include="include\Systems\CameraSystem.h" />
+    <ClInclude Include="include\Containers\ColliderContainer.h" />
+    <ClInclude Include="include\Containers\ComponentContainer.h" />
+    <ClInclude Include="include\Containers\EventContainer.h" />
+    <ClInclude Include="include\Containers\GameObjectContainer.h" />
+    <ClInclude Include="include\Containers\IContainer.h" />
+    <ClInclude Include="include\Containers\LightContainer.h" />
+    <ClInclude Include="include\Containers\MaterialContainer.h" />
+    <ClInclude Include="include\Containers\ModelContainer.h" />
+    <ClInclude Include="include\Components\Transform.h" />
+    <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
+    <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />
+    <ClInclude Include="include\Components\BoxCollider.h" />
+    <ClInclude Include="include\Physics\BulletInclude.h" />
+    <ClInclude Include="include\Physics\Rigidbody.h" />
+    <ClInclude Include="include\Rendering\Buffers\InputLayout.h" />
+    <ClInclude Include="include\Systems\TransformSystem.h" />
+    <ClInclude Include="include\Objects\IObject.h" />
+    <ClInclude Include="include\Rendering\Buffers\PixelConstantBuffer.h" />
+    <ClInclude Include="include\Rendering\Buffers\VertexConstantBuffer.h" />
+    <ClInclude Include="include\Rendering\Lights\ILight.h" />
+    <ClInclude Include="include\Rendering\Materials\Material.h" />
+    <ClInclude Include="include\Rendering\Materials\Shader.h" />
+    <ClInclude Include="include\Rendering\Materials\Texture.h" />
+    <ClInclude Include="include\Scene\Scene.h" />
+    <ClInclude Include="include\Rendering\RenderTexture.h" />
+    <ClInclude Include="include\Scene\SceneGraph\SceneGraph.h" />
+    <ClInclude Include="include\Scene\SceneGraph\SceneNode.h" />
+    <ClInclude Include="include\Systems\ISystem.h" />
+    <ClInclude Include="include\Systems\RenderSystem.h" />
+    <ClInclude Include="include\3DLoader\ObjectLoader.h" />
+    <ClInclude Include="include\Core\App.h" />
+    <ClInclude Include="include\Events\Event.h" />
+    <ClInclude Include="include\Events\IEventCallback.h" />
+    <ClInclude Include="include\Export.h" />
+    <ClInclude Include="include\Geometry\Vertex.h" />
+    <ClInclude Include="include\Input\Input.h" />
+    <ClInclude Include="include\Input\Keyboard.h" />
+    <ClInclude Include="include\Input\Mouse.h" />
+    <ClInclude Include="include\Objects\GameObject.h" />
+    <ClInclude Include="include\Rendering\Buffers\IndexBuffer.h" />
+    <ClInclude Include="include\Rendering\Buffers\VertexBuffer.h" />
+    <ClInclude Include="include\Components\Camera.h" />
+    <ClInclude Include="include\Rendering\Renderer.h" />
+    <ClInclude Include="include\Rendering\Window.h" />
+    <ClInclude Include="include\stdafx.h" />
+    <ClInclude Include="include\TestDependencies.h" />
+    <ClInclude Include="include\Tools\ASSIMP\ASSIMPConversion.h" />
+    <ClInclude Include="include\Tools\DirectX\dxerr.h" />
+    <ClInclude Include="include\Tools\DirectX\GraphicsMacros.h" />
+    <ClInclude Include="include\Tools\FPSCounter.h" />
+    <ClInclude Include="include\Tools\IDCounter.h" />
+    <ClInclude Include="include\Tools\IdentityException.h" />
+    <ClInclude Include="include\Tools\ImGUI\imconfig.h" />
+    <ClInclude Include="include\Tools\ImGUI\imgui.h" />
+    <ClInclude Include="include\Tools\ImGUI\ImGUIManager.h" />
+    <ClInclude Include="include\Tools\ImGUI\imgui_impl_dx11.h" />
+    <ClInclude Include="include\Tools\ImGUI\imgui_impl_win32.h" />
+    <ClInclude Include="include\Tools\ImGUI\imgui_internal.h" />
+    <ClInclude Include="include\Tools\ImGUI\imstb_rectpack.h" />
+    <ClInclude Include="include\Tools\ImGUI\imstb_textedit.h" />
+    <ClInclude Include="include\Tools\ImGUI\imstb_truetype.h" />
+    <ClInclude Include="include\UI\UIManager.h" />
+    <ClInclude Include="include\WinSetup.h" />
+    <ClInclude Include="src\Core\App.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />
+    <None Include="include\Tools\DirectX\DXGetErrorString.inl" />
+    <None Include="include\Tools\DirectX\DXTrace.inl" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Resources\Shaders\PixelShader.hlsl" />
-    <FxCompile Include="Resources\Shaders\VertexShader.hlsl" />
   </ItemGroup>
 </Project>

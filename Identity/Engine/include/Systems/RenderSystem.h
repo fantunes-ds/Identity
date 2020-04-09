@@ -1,6 +1,6 @@
 #pragma once
 #include <Export.h>
-#include <Systems/IECSSystem.h>
+#include <Systems/ISystem.h>
 #include <3DLoader/ObjectElements/Model.h>
 #include <Rendering/Renderer.h>
 #include <Rendering/Lights/Light.h>
@@ -10,22 +10,15 @@
 
 namespace Engine::Systems
 {
-    class API_ENGINE RenderSystem: public IECSSystem
+    class API_ENGINE RenderSystem: public ISystem
     {
     public:
-        RenderSystem();
+        RenderSystem() = default;
         virtual ~RenderSystem() = default;
 
-        void DrawScene();
+        void DrawScene(float p_deltaTime);
         void DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode);
-
-        void Update() override;
-
-        /**
-         * @brief As soon as we have a LightContainer, this method should be deleted.
-         * @return returns the new light's id if successful, -1 if unsuccessful.
-         */
-        uint32_t AddLight(Rendering::Lights::Light& p_light);
+        void IUpdate(float p_deltaTime) override;
 
         void ResetActiveCamera();
 

@@ -1,3 +1,5 @@
+#define DEBUG_MODE true;
+
 #include <stdafx.h>
 
 #include <Core/App.h>
@@ -5,19 +7,29 @@
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
+#include <Tools/FPSCounter.h>
 
 #include <Systems/RenderSystem.h>
+
 #include <Input/Input.h>
 #include <Objects/GameObject.h>
 #include <Components/ModelComponent.h>
-#include <Components/CameraComponent.h>
+#include <Components/Camera.h>
 #include <Containers/MaterialContainer.h>
 #include <Components/LightComponent.h>
+#include <LinearMath/btVector3.h>
+#include <Systems/CameraSystem.h>
+#include <Systems/TransformSystem.h>
+
+#include "Components/BoxCollider.h"
+#include "Containers/ColliderContainer.h"
 
 using namespace Engine::Core;
 
 App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
+    btVector3 vec(0.0f, 0.0f, 0.0f);
+
     Input::Input::InitInput();
 }
 
@@ -29,10 +41,13 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 int App::Run() const
 {
     Systems::RenderSystem renderSystem;
-    Objects::GameObject statue;
-    Objects::GameObject lambo("car");
-    Objects::GameObject camera("Camera");
-    Objects::GameObject light("Light");
+    Tools::FPSCounter fpsCounter(200);
+
+    Objects::GameObject link("link");
+    Objects::GameObject lambo("lambo");
+    Objects::GameObject camera;
+    Objects::GameObject light;
+
 
     Containers::MaterialContainer::AddMaterial("missing");
     Containers::MaterialContainer::GetMaterial("missing")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/missing.png");
@@ -49,17 +64,31 @@ int App::Run() const
     Containers::MaterialContainer::GetMaterial("LamboTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
     Containers::MaterialContainer::GetMaterial("LamboTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
 
-    camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-
+    camera.AddComponent<Components::Camera>(m_width, m_height);
 
     Containers::LightContainer* test = Containers::LightContainer::GetInstance();
 
-    statue.GetTransform()->Translate(Vector3F{ 3.0f, 0.0f, 4.0f });
-    statue.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
+    link.GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
+    link.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    link.GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
+    link.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
+    link.AddComponent<Components::BoxCollider>();
+    link.FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 0.5f, 1.0f, 0.5f });
+    GPM::Vector3F linkOffset{ 0.0f, -1.0f, 0.0f };
+    link.FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(linkOffset);
+    link.FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
 
-    lambo.GetTransform()->Translate(Vector3F{ 6.0f, 0.0f, -4.0f });
+    lambo.GetTransform()->Translate(Vector3F{5.0f, 5.0f, -3.0f});
     lambo.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
+    lambo.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+    lambo.AddComponent<Components::BoxCollider>();
+    lambo.FindComponentOfType<Components::BoxCollider>()->SetMass(1);
+    lambo.FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 2.0f, 1.0f, 5.0f });
+    GPM::Vector3F lamboOffset{ 0.0f, -1.5f, 0.0f };
+    lambo.FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
 
+
+    camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
 
     light.GetTransform()->Translate(Vector3F{ 10.0f, 4.0f, -10.0f });
     light.GetTransform()->Scale(Vector3F{ 0.01f, 0.01f, 0.01f });
@@ -73,60 +102,53 @@ int App::Run() const
     dirLight.color = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
     dirLight.shininess = 32.0f;
 
-    int32_t cameraComponentID = camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    statue.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
-    lambo.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
-    //light.AddComponent<Components::ModelComponent>("../Engine/Resources/Wood_Box.fbx", "cube");
     light.AddComponent<Components::LightComponent>(dirLight);
 
-    lambo.SetParentObject(statue);
-
-    /*for (auto& mesh : gameObject.GetModel()->GetMeshes())
+    for (auto& mesh : link.GetModel()->GetMeshes())
     {
         mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LinkTexture"));
-    }*/
+    }
 
     for (auto& mesh : lambo.GetModel()->GetMeshes())
     {
         mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LamboTexture"));
     }
 
-    renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::CameraComponent>()->GetCamera()->GetID());
+    renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
 
 
+    lambo.GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
 
     while (true)
     {
-        lambo.GetTransform()->RotateWithEulerAngles(GPM::Vector3F(0.0f, 0.5f, 0.0f));
+        ImGui_ImplDX11_NewFrame();
+        ImGui_ImplWin32_NewFrame();
+        ImGui::NewFrame();
+        fpsCounter.Start();
+        link.GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -0.0f, 0.02f });
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;
         }
+        Containers::ColliderContainer::Update(fpsCounter.GetDeltaTime());
+        Containers::TransformSystem::Update(fpsCounter.GetDeltaTime());
+        Containers::CameraSystem::Update(fpsCounter.GetDeltaTime());
 
-        DoFrame(renderSystem);
+
+        DoFrame(renderSystem, fpsCounter.GetDeltaTime());
+
+        fpsCounter.Stop();
     }
 }
 
-void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
+void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTime) const
 {
-    Rendering::Renderer::GetInstance()->ClearBuffer(0.3f, 0.3f, 0.3f);
-    if (_INPUT->keyboard.IsKeyHeld('R'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(1.0f, 0.0f, 0.0f);
-
-    if (_INPUT->keyboard.IsKeyHeld('G'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(0.0f, 1.0f, 0.0f);
-
-    if (_INPUT->keyboard.IsKeyHeld('B'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(0.0f, 0.0f, 1.0f);
+    Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
 
     if (_INPUT->keyboard.IsKeyDown('F'))
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());
 
-    ImGui_ImplDX11_NewFrame();
-    ImGui_ImplWin32_NewFrame();
-    ImGui::NewFrame();
-
-    p_renderSystem.Update();
+    p_renderSystem.IUpdate(p_deltaTime);
 
     static bool show_demo_window = true;
     ImGui::Begin("Identity UI Tools");

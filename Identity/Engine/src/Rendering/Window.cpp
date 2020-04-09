@@ -46,7 +46,7 @@ Window::WindowClass::~WindowClass()
 
 Window::Window(int p_width, int p_height, const char* p_name) : m_width(p_width), m_height(p_height)
 {
-    //adjust the size ot he window so the coosen resolution is for the user view and not for the entire window
+    //adjust the size ot he window so the chosen resolution is for the user view and not for the entire window
     RECT wr;
     wr.left   = 100;
     wr.right  = p_width + wr.left;
@@ -244,6 +244,18 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
                     {
                         SetCapture(p_hwnd);
                         _INPUT->mouse.OnMouseEnter();
+                    }
+
+                    if (_INPUT->mouse.m_leftIsPressed)
+                    {
+                        if (pt.x >= m_width)
+                            SetCursorPos(2, pt.y);
+                        if (pt.x <= 0)
+                            SetCursorPos(m_width - 2, pt.y);
+                        if (pt.y >= m_height)
+                            SetCursorPos(pt.x, 2);
+                        if (pt.y <= 0)
+                            SetCursorPos(pt.x, m_width - 2);
                     }
                 }
                 else
