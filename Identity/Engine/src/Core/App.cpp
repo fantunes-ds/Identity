@@ -7,7 +7,7 @@
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
-#include <Tools/FPSCounter.h>
+#include <Tools/Time.h>
 
 #include <Systems/RenderSystem.h>
 
@@ -43,7 +43,6 @@ App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_he
 int App::Run() const
 {
     Systems::RenderSystem renderSystem;
-    Tools::FPSCounter fpsCounter(200);
 
     auto scene = std::make_shared<Scene::Scene>();
 	
@@ -78,6 +77,7 @@ int App::Run() const
     link->GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
     link->GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
     link->AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
+	
     link->AddComponent<Components::BoxCollider>();
     link->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 0.5f, 1.0f, 0.5f });
     GPM::Vector3F linkOffset{ 0.0f, -1.0f, 0.0f };
@@ -88,8 +88,9 @@ int App::Run() const
     lambo->GetTransform()->Translate(Vector3F{5.0f, 5.0f, -3.0f});
     lambo->GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
     lambo->AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+	
     lambo->AddComponent<Components::BoxCollider>();
-    lambo->FindComponentOfType<Components::BoxCollider>()->SetMass(1);
+    lambo->FindComponentOfType<Components::BoxCollider>()->SetMass(80);
     lambo->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 2.0f, 1.0f, 5.0f });
     GPM::Vector3F lamboOffset{ 0.0f, -1.5f, 0.0f };
     lambo->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
@@ -124,28 +125,40 @@ int App::Run() const
 
     renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
 
-
     lambo->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
 
+    static float fixedUpdateTimer = 0.0f;
+	
     while (true)
     {
         ImGui_ImplDX11_NewFrame();
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
-        fpsCounter.Start();
-        link->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -0.0f, 0.02f });
+        Tools::Time::Start();
+        //link->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -0.0f, 0.02f });
+    	
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;
         }
-        Containers::ColliderContainer::Update(fpsCounter.GetDeltaTime());
-        Containers::TransformSystem::Update(fpsCounter.GetDeltaTime());
-        Containers::CameraSystem::Update(fpsCounter.GetDeltaTime());
 
+        float deltaTime = Tools::Time::GetDeltaTime();
+        Containers::ColliderContainer::Update(deltaTime);
+        Containers::TransformSystem::Update(deltaTime);
+        Containers::CameraSystem::Update(deltaTime);
+        //Containers::ColliderContainer::FixedUpdate();
 
-        DoFrame(renderSystem, fpsCounter.GetDeltaTime());
+    	//TODO: WTF WHY DOES THIS NOT WORK
+        fixedUpdateTimer += deltaTime;
 
-        fpsCounter.Stop();
+    	if (fixedUpdateTimer >= 1.0f)
+    	{
+            Containers::ColliderContainer::FixedUpdate();
+            fixedUpdateTimer = 0.0f;
+    	}
+        DoFrame(renderSystem, deltaTime);
+
+        Tools::Time::Stop();
     }
 }
 

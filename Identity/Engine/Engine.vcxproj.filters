@@ -52,7 +52,6 @@
     <ClCompile Include="src\TestDependencies.cpp" />
     <ClCompile Include="src\Tools\ASSIMP\AssimpConversion.cpp" />
     <ClCompile Include="src\Tools\DirectX\dxerr.cpp" />
-    <ClCompile Include="src\Tools\FPSCounter.cpp" />
     <ClCompile Include="src\Tools\IdentityException.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui.cpp" />
     <ClCompile Include="src\Tools\ImGUI\ImGUIManager.cpp" />
@@ -63,6 +62,7 @@
     <ClCompile Include="src\Tools\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Managers\SceneManager.cpp" />
+    <ClCompile Include="src\Tools\Time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Components\IComponent.h" />
@@ -121,7 +121,6 @@
     <ClInclude Include="include\Tools\ASSIMP\ASSIMPConversion.h" />
     <ClInclude Include="include\Tools\DirectX\dxerr.h" />
     <ClInclude Include="include\Tools\DirectX\GraphicsMacros.h" />
-    <ClInclude Include="include\Tools\FPSCounter.h" />
     <ClInclude Include="include\Tools\IDCounter.h" />
     <ClInclude Include="include\Tools\IdentityException.h" />
     <ClInclude Include="include\Tools\ImGUI\imconfig.h" />
@@ -137,6 +136,7 @@
     <ClInclude Include="include\WinSetup.h" />
     <ClInclude Include="src\Core\App.h" />
     <ClInclude Include="include\Managers\SceneManager.h" />
+    <ClInclude Include="include\Tools\Time.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />

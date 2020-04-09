@@ -282,7 +282,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Tools\ASSIMP\ASSIMPConversion.h" />
     <ClInclude Include="include\Tools\DirectX\dxerr.h" />
     <ClInclude Include="include\Tools\DirectX\GraphicsMacros.h" />
-    <ClInclude Include="include\Tools\FPSCounter.h" />
+    <ClInclude Include="include\Tools\Time.h" />
     <ClInclude Include="include\Tools\IDCounter.h" />
     <ClInclude Include="include\Tools\IdentityException.h" />
     <ClInclude Include="include\Tools\ImGUI\imconfig.h" />
@@ -348,7 +348,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\TestDependencies.cpp" />
     <ClCompile Include="src\Tools\ASSIMP\AssimpConversion.cpp" />
     <ClCompile Include="src\Tools\DirectX\dxerr.cpp" />
-    <ClCompile Include="src\Tools\FPSCounter.cpp" />
+    <ClCompile Include="src\Tools\Time.cpp" />
     <ClCompile Include="src\Tools\IdentityException.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui.cpp" />
     <ClCompile Include="src\Tools\ImGUI\ImGUIManager.cpp" />
