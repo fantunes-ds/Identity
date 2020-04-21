@@ -16,6 +16,7 @@
 #define DEBUG_MODE true
 
 constexpr bool DRAW_TO_TEXTURE = true;
+constexpr bool EDITOR = true;
 
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 {
@@ -107,28 +108,40 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 
     if (DRAW_TO_TEXTURE)
     {
-        auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
+        //todo move all this to editor
+        if (EDITOR)
+        {
+            static bool open = true;
+            ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | !ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+            ImGui::Begin("Scene", &open, window_flags);
+            ImGui::SetScrollX(ImGui::GetScrollMaxX() * 0.5f);
+            ImGui::SetScrollY(ImGui::GetScrollMaxY() * 0.5f);
+            ImGui::Image(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView().Get(), ImVec2(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetRect().x,
+                Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetRect().y));
+            ImGui::End();
+        }
+        else
+        {
+            auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
 
-        std::shared_ptr<ObjectElements::Mesh> quad = Rendering::Renderer::GetInstance()->GetRect();
+            std::shared_ptr<ObjectElements::Mesh> quad = Rendering::Renderer::GetInstance()->GetRect();
 
-        quad->Bind(Rendering::Renderer::GetInstance()->GetContext());
+            quad->Bind(Rendering::Renderer::GetInstance()->GetContext());
 
-        const Rendering::Buffers::VCB vcb{ Matrix4F::identity, Matrix4F::identity, Matrix4F::identity,Matrix4F::identity };
-        quad->GetMaterial().GetShader().GetVCB().Update(vcb);
+            const Rendering::Buffers::VCB vcb{ Matrix4F::identity, Matrix4F::identity, Matrix4F::identity,Matrix4F::identity };
+            quad->GetMaterial().GetShader().GetVCB().Update(vcb);
 
-        const Rendering::Buffers::PCB pcb{ Vector4F::zero, Vector4F::one, Vector4F::one,
-                                            Vector4F::zero, Vector4F::one,
-                                                            1.0f,Vector3F{},Vector3F::zero, 0.0f };
-        quad->GetMaterial().GetShader().GetPCB().Update(pcb);
+            const Rendering::Buffers::PCB pcb{ Vector4F::zero, Vector4F::one, Vector4F::one,
+                                                Vector4F::zero, Vector4F::one,
+                                                                1.0f,Vector3F{},Vector3F::zero, 0.0f };
+            quad->GetMaterial().GetShader().GetPCB().Update(pcb);
 
-        quad->GetMaterial().GetTexture().SetTexSRV(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
+            quad->GetMaterial().GetTexture().SetTexSRV(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
 
-        ImGui::Begin("Scene");
-        ImGui::Image(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView().Get(), ImVec2(Rendering::Renderer::GetInstance()->GetWidth(), Rendering::Renderer::GetInstance()->GetHeight()));
-        ImGui::End();
+            Rendering::Renderer::GetInstance()->Bind();
 
-        Rendering::Renderer::GetInstance()->Bind();
-        GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(quad->GetIndices().size()), 0u, 0u));
+            GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(quad->GetIndices().size()), 0u, 0u));
+        }
     }
 }
 
