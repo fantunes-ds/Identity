@@ -123,6 +123,10 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 
         quad->GetMaterial().GetTexture().SetTexSRV(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
 
+        ImGui::Begin("Scene");
+        ImGui::Image(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView().Get(), ImVec2(Rendering::Renderer::GetInstance()->GetWidth(), Rendering::Renderer::GetInstance()->GetHeight()));
+        ImGui::End();
+
         Rendering::Renderer::GetInstance()->Bind();
         GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(quad->GetIndices().size()), 0u, 0u));
     }
