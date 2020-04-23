@@ -27,6 +27,7 @@ namespace Editor::Core
          * Here we have the editor loop, mainly for what needs to be updated every frame.
          */
         int Update();
-    Engine::Core::App m_engine{1920, 1080, "Identity Engine"};
+
+        Engine::Core::App m_engine{1920, 1080, "Identity Engine", true};
     };
 }

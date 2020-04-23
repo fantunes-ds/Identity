@@ -22,7 +22,7 @@ namespace Engine::Core
     public:
         App();
         ~App() = default;
-        App(int p_width, int p_height, const char* p_name);
+        App(int p_width, int p_height, const char* p_name, bool p_isEditor = false);
         App(const App&) = delete;
         App& operator=(const App&) = delete;
 
@@ -38,5 +38,6 @@ namespace Engine::Core
         BOOL m_gResult;
         int m_width;
         int m_height;
+        bool m_isEditor;
     };
 }

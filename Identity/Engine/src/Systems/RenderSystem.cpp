@@ -13,12 +13,9 @@
 #include "Containers/ColliderContainer.h"
 #include <Components/BoxCollider.h>
 
-#define DEBUG_MODE true
+#define DEBUG_MODE false
 
-constexpr bool DRAW_TO_TEXTURE = true;
-constexpr bool EDITOR = true;
-
-void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
+void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
 {
     HRESULT hr;
     Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -30,7 +27,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 
     auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
 
-    float* pos[3] = { &light.position.x, &light.position.y, &light.position.z };
+    float* pos[3] = {&light.position.x, &light.position.y, &light.position.z};
 
     //TODO: Light will be moved soon
     if (ImGui::Begin("Lighting Tool"))
@@ -45,7 +42,8 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
         ImGui::SliderFloat("Ambient LightX", &light.ambient.x, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("Ambient LightY", &light.ambient.y, 0.0f, 1.0f, "%.1f");
         ImGui::SliderFloat("Ambient LightZ", &light.ambient.z, 0.0f, 1.0f, "%.1f");
-    }ImGui::End();
+    }
+    ImGui::End();
 
     /* W.I.P. 
     for (auto& gameObject : Containers::GameObjectContainer::GetAllGameObjects())
@@ -68,80 +66,82 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 
     if (DEBUG_MODE)
     {
-        for (auto collider: Containers::ColliderContainer::GetColliders())
+        for (auto collider : Containers::ColliderContainer::GetColliders())
         {
             auto model = collider.second->GetModel();
-            auto mesh = model->GetMeshes()[0];
+            auto mesh  = model->GetMeshes()[0];
             mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
             mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
 
             Matrix4F modelMatrix = collider.second->GetWorldMatrix();
             Matrix4F normalModel = Matrix4F::Inverse(modelMatrix);
 
-            Matrix4F view = camera->GetViewMatrix();
+            Matrix4F view        = camera->GetViewMatrix();
             Matrix4F perspective = camera->GetPerspectiveMatrix();
-            
-            Rendering::Buffers::VCB vcb{ modelMatrix, view, normalModel,perspective };
+
+            Rendering::Buffers::VCB vcb{modelMatrix, view, normalModel, perspective};
             mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
             const Vector3F cameraPos = camera->GetPosition();
 
-            const Rendering::Buffers::PCB pcb{ Vector4F::zero, Vector4F::one, Vector4F::one,
-                                            Vector4F::zero, Vector4F::one,
-                                                            1.0f,Vector3F{},Vector3F::zero, 0.0f };
+            const Rendering::Buffers::PCB pcb{
+                Vector4F::zero, Vector4F::one, Vector4F::one,
+                Vector4F::zero, Vector4F::one,
+                1.0f, Vector3F{}, Vector3F::zero, 0.0f
+            };
             mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
-            Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+            Rendering::Renderer::GetInstance()
+                    ->GetContext()->
+                    IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
-            if (DRAW_TO_TEXTURE)
-            {
-                Rendering::Renderer::GetInstance()->Bind(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetTarget(), Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetDepthStencilView());
-                GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
-                Rendering::Renderer::GetInstance()->Bind();
-            }
-            else
-            {
-                Rendering::Renderer::GetInstance()->Bind();
-                GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
-            }
+
+            Rendering::Renderer::GetInstance()->Bind(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetTarget(),Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetDepthStencilView());
+
+            GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
+
+            Rendering::Renderer::GetInstance()->Bind();
+
             Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         }
     }
 
-    if (DRAW_TO_TEXTURE)
+    //Draw to ImGUI Image but not to screen rect
+    if (p_isEditor)
     {
-        //todo move all this to editor
-        if (EDITOR)
-        {
-            static bool open = true;
-            ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | !ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
-            ImGui::Begin("Scene", &open, window_flags);
-            ImGui::SetScrollX(ImGui::GetScrollMaxX() * 0.5f);
-            ImGui::SetScrollY(ImGui::GetScrollMaxY() * 0.5f);
-            ImGui::Image(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView().Get(), ImVec2(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetRect().x,
-                Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetRect().y));
-            ImGui::End();
-        }
-        else
-        {
-            auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
+        static bool      open         = true;
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | !ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+        ImGui::Begin("Scene", &open, window_flags);
+        ImGui::SetScrollX(ImGui::GetScrollMaxX() * 0.5f);
+        ImGui::SetScrollY(ImGui::GetScrollMaxY() * 0.5f);
+        const Vector2F& rect = Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetRect();
+        ImGui::Image(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView().Get(),ImVec2(rect.x, rect.y));
+        ImGui::End();
+    }
+    //Draw to Screen Rect
+    else
+    {
+        auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
 
-            std::shared_ptr<ObjectElements::Mesh> quad = Rendering::Renderer::GetInstance()->GetRect();
+        std::shared_ptr<ObjectElements::Mesh> screenRect = Rendering::Renderer::GetInstance()->GetRect();
 
-            quad->Bind(Rendering::Renderer::GetInstance()->GetContext());
+        screenRect->Bind(Rendering::Renderer::GetInstance()->GetContext());
 
-            const Rendering::Buffers::VCB vcb{ Matrix4F::identity, Matrix4F::identity, Matrix4F::identity,Matrix4F::identity };
-            quad->GetMaterial().GetShader().GetVCB().Update(vcb);
+        const Rendering::Buffers::VCB vcb{Matrix4F::identity, Matrix4F::identity,
+                                      Matrix4F::identity, Matrix4F::identity};
 
-            const Rendering::Buffers::PCB pcb{ Vector4F::zero, Vector4F::one, Vector4F::one,
-                                                Vector4F::zero, Vector4F::one,
-                                                                1.0f,Vector3F{},Vector3F::zero, 0.0f };
-            quad->GetMaterial().GetShader().GetPCB().Update(pcb);
+        screenRect->GetMaterial().GetShader().GetVCB().Update(vcb);
 
-            quad->GetMaterial().GetTexture().SetTexSRV(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
+        const Rendering::Buffers::PCB pcb{
+            Vector4F::zero, Vector4F::one, Vector4F::one,
+            Vector4F::zero, Vector4F::one,
+            1.0f, Vector3F{}, Vector3F::zero, 0.0f
+        };
+        screenRect->GetMaterial().GetShader().GetPCB().Update(pcb);
 
-            Rendering::Renderer::GetInstance()->Bind();
+        screenRect->GetMaterial().GetTexture().SetTexSRV(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
 
-            GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(quad->GetIndices().size()), 0u, 0u));
-        }
+        Rendering::Renderer::GetInstance()->Bind();
+
+        GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(screenRect->GetIndices().size()), 0u, 0u));
     }
 }
 
@@ -172,19 +172,11 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
                                             light.specular , light.color,
                                                             light.shininess,Vector3F{},Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, 0.0f };
 
-
         mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
-        if (DRAW_TO_TEXTURE)
-        {
-            Rendering::Renderer::GetInstance()->Bind(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetTarget(), Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetDepthStencilView());
-            GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
-            Rendering::Renderer::GetInstance()->Bind();
-        }
-        else
-        {
-            Rendering::Renderer::GetInstance()->Bind();
-            GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
-        }
+
+        Rendering::Renderer::GetInstance()->Bind(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetTarget(), Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetDepthStencilView());
+        GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
+        Rendering::Renderer::GetInstance()->Bind();
     }
 
     for (auto child : p_sceneNode->GetChildren())
@@ -193,10 +185,10 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
     }
 }
 
-void Engine::Systems::RenderSystem::IUpdate(float p_deltaTime)
+void Engine::Systems::RenderSystem::IUpdate(float p_deltaTime, bool p_isEditor)
 {
     Scene::SceneGraph::GetInstance()->UpdateScene(p_deltaTime);
-    DrawScene(p_deltaTime);
+    DrawScene(p_deltaTime, p_isEditor);
 }
 
 void Engine::Systems::RenderSystem::ResetActiveCamera()
