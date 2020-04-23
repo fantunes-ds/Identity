@@ -134,6 +134,15 @@
     <ClInclude Include="include\UI\UIManager.h" />
     <ClInclude Include="include\WinSetup.h" />
     <ClInclude Include="src\Core\App.h" />
+    <ClInclude Include="include\UI\Dockspace.h" />
+    <ClInclude Include="include\UI\UIElements\FloatField.h" />
+    <ClInclude Include="include\UI\UIElements\Vector2Field.h" />
+    <ClInclude Include="include\UI\UIElements\Vector3Field.h" />
+    <ClInclude Include="include\UI\UIElements\Vector4Field.h" />
+    <ClInclude Include="include\UI\UIElements\Slider.h" />
+    <ClInclude Include="include\UI\UIElements\Dropdown.h" />
+    <ClInclude Include="include\UI\UIElements\Tickbox.h" />
+    <ClInclude Include="include\UI\UIElements\ColorField.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />

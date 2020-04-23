@@ -227,7 +227,7 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTi
     if (_INPUT->keyboard.IsKeyDown('F'))
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());
 
-    p_renderSystem.IUpdate(p_deltaTime);
+    p_renderSystem.IUpdate(p_deltaTime, m_isEditor);
 
     ImGui::Begin("Identity UI Tools");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

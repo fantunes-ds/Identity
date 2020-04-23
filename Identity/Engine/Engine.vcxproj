@@ -293,6 +293,15 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Tools\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="include\Tools\ImGUI\imstb_textedit.h" />
     <ClInclude Include="include\Tools\ImGUI\imstb_truetype.h" />
+    <ClInclude Include="include\UI\Dockspace.h" />
+    <ClInclude Include="include\UI\UIElements\ColorField.h" />
+    <ClInclude Include="include\UI\UIElements\Dropdown.h" />
+    <ClInclude Include="include\UI\UIElements\FloatField.h" />
+    <ClInclude Include="include\UI\UIElements\Slider.h" />
+    <ClInclude Include="include\UI\UIElements\Tickbox.h" />
+    <ClInclude Include="include\UI\UIElements\Vector2Field.h" />
+    <ClInclude Include="include\UI\UIElements\Vector3Field.h" />
+    <ClInclude Include="include\UI\UIElements\Vector4Field.h" />
     <ClInclude Include="include\UI\UIManager.h" />
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>

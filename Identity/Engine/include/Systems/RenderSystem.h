@@ -16,7 +16,7 @@ namespace Engine::Systems
         RenderSystem() = default;
         virtual ~RenderSystem() = default;
 
-        void DrawScene(float p_deltaTime, bool p_isEditor = false);
+        void DrawScene(float p_deltaTime, bool p_isEditor);
         void DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode);
         void IUpdate(float p_deltaTime, bool p_isEditor = false) override;
 
