@@ -85,15 +85,6 @@ int App::Run() const
     lambo->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
     scene->AddGameObject(lambo);
 
-    //model and texture
-    const int32_t idLambo = Managers::ResourceManager::AddModel("../Engine/Resources/Lambo.obj", "lambo");
-    lambo.AddComponent<Components::ModelComponent>(idLambo);
-    for (auto& mesh : lambo.GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
-    }
-    //-----------
-
     //--CAMERA--
     camera.AddComponent<Components::Camera>(m_width, m_height);
     camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });

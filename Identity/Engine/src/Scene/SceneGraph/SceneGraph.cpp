@@ -12,7 +12,7 @@ void Engine::Scene::SceneGraph::AddRootSceneNode(std::shared_ptr<SceneNode> p_sc
 void Engine::Scene::SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::GameObject> p_gameObject)
 {
     int modelID = p_gameObject->FindComponentOfType<Components::ModelComponent>()->GetModel();
-    auto model = Containers::ModelContainer::FindModel(modelID);
+    auto model = Managers::ResourceManager::FindModel(modelID);
 
     auto rootNode = std::make_shared<SceneNode>();
 

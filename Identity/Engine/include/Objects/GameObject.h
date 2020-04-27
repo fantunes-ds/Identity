@@ -50,7 +50,7 @@ namespace Engine::Objects
             {
                 //TODO change this to use the resource manager
                 std::shared_ptr<Components::ModelComponent> modelComp = std::dynamic_pointer_cast<Components::ModelComponent>(Containers::ComponentContainer::FindComponent(id));
-                Managers::ResourceManager::FindModel(modelComp->GetModel())->GetRootNode()->SetTransform(m_transform);
+                // Managers::ResourceManager::FindModel(modelComp->GetModel())->GetRootNode()->SetTransform(m_transform);
             }
 
             if (id > 0)
