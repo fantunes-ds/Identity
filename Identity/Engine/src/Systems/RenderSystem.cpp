@@ -2,7 +2,7 @@
 #include <Systems/RenderSystem.h>
 #include <Containers/ModelContainer.h>
 #include <Tools/DirectX/GraphicsMacros.h>
-#include <Rendering/Lights/Light.h>
+#include <Rendering/Lights/DirectionalLight.h>
 #include <Tools/ImGUI/imgui.h>
 #include <Input/Input.h>
 #include <Systems/TransformSystem.h>
@@ -27,9 +27,9 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime)
 	Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	std::shared_ptr<Rendering::Lights::ILight> ILight = Containers::LightContainer::GetLights().begin()->second;
-	std::shared_ptr<Rendering::Lights::Light> light1 = std::dynamic_pointer_cast<Rendering::Lights::Light>(Containers::LightContainer::GetLights().begin()->second);
+	std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
 
-	Rendering::Lights::Light::LightData& light = light1->GetLightData();
+	Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
 
 	auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
 
@@ -130,8 +130,8 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
 {
 	auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
 	auto mesh = p_sceneNode->GetMesh();
-	std::shared_ptr<Rendering::Lights::Light> light1 = std::dynamic_pointer_cast<Rendering::Lights::Light>(Containers::LightContainer::GetLights().begin()->second);
-	Rendering::Lights::Light::LightData& light = light1->GetLightData();
+	std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
+	Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
 
 	if (mesh != nullptr)
 	{

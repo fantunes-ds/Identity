@@ -9,8 +9,6 @@
     <ClCompile Include="src\Components\IComponent.cpp" />
     <ClCompile Include="src\Containers\ColliderContainer.cpp" />
     <ClCompile Include="src\Managers\ResourceManager.cpp" />
-    <ClCompile Include="src\Rendering\Lights\Light.cpp" />
-    <ClCompile Include="src\Components\LightComponent.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
     <ClCompile Include="src\Containers\LightContainer.cpp" />
     <ClCompile Include="src\Containers\MaterialContainer.cpp" />
@@ -63,10 +61,12 @@
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Managers\SceneManager.cpp" />
     <ClCompile Include="src\Tools\Time.cpp" />
+    <ClCompile Include="src\Components\Light.cpp" />
+    <ClCompile Include="src\Rendering\Lights\DirectionalLight.cpp" />
+    <ClCompile Include="src\Systems\LightSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Components\IComponent.h" />
-    <ClInclude Include="include\Components\LightComponent.h" />
     <ClInclude Include="include\Components\ModelComponent.h" />
     <ClInclude Include="include\Managers\ResourceManager.h" />
     <ClInclude Include="include\Rendering\Materials\PixelShader.h" />
@@ -137,6 +137,9 @@
     <ClInclude Include="src\Core\App.h" />
     <ClInclude Include="include\Managers\SceneManager.h" />
     <ClInclude Include="include\Tools\Time.h" />
+    <ClInclude Include="include\Components\Light.h" />
+    <ClInclude Include="include\Rendering\Lights\DirectionalLight.h" />
+    <ClInclude Include="include\Systems\LightSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />

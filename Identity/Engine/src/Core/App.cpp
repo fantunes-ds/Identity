@@ -16,7 +16,7 @@
 #include <Components/ModelComponent.h>
 #include <Components/Camera.h>
 #include <Containers/MaterialContainer.h>
-#include <Components/LightComponent.h>
+#include <Components/Light.h>
 #include <LinearMath/btVector3.h>
 #include <Systems/CameraSystem.h>
 #include <Systems/TransformSystem.h>
@@ -63,8 +63,6 @@ int App::Run() const
 
     camera.AddComponent<Components::Camera>(m_width, m_height);
 
-    Containers::LightContainer* test = Containers::LightContainer::GetInstance();
-
     link->GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
     link->GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
     link->GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
@@ -94,7 +92,7 @@ int App::Run() const
     light.GetTransform()->Translate(Vector3F{ 10.0f, 4.0f, -10.0f });
     light.GetTransform()->Scale(Vector3F{ 0.01f, 0.01f, 0.01f });
 
-    Rendering::Lights::Light::LightData dirLight;
+    Rendering::Lights::DirectionalLight::LightData dirLight;
 
     dirLight.position = Vector4F(light.GetTransform()->GetPosition().x * -1, light.GetTransform()->GetPosition().y, light.GetTransform()->GetPosition().z * -1, 1.0f);
     dirLight.ambient = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
@@ -103,7 +101,7 @@ int App::Run() const
     dirLight.color = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
     dirLight.shininess = 32.0f;
 
-    light.AddComponent<Components::LightComponent>(dirLight);
+    light.AddComponent<Components::Light>(dirLight);
 
     for (auto& mesh : link->GetModel()->GetMeshes())
     {

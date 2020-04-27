@@ -226,10 +226,11 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Components\IComponent.h" />
-    <ClInclude Include="include\Components\LightComponent.h" />
+    <ClInclude Include="include\Components\Light.h" />
     <ClInclude Include="include\Components\ModelComponent.h" />
     <ClInclude Include="include\Managers\ResourceManager.h" />
     <ClInclude Include="include\Managers\SceneManager.h" />
+    <ClInclude Include="include\Rendering\Lights\DirectionalLight.h" />
     <ClInclude Include="include\Rendering\Materials\PixelShader.h" />
     <ClInclude Include="include\Rendering\Materials\VertexShader.h" />
     <ClInclude Include="include\Systems\CameraSystem.h" />
@@ -248,6 +249,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Physics\BulletInclude.h" />
     <ClInclude Include="include\Physics\Rigidbody.h" />
     <ClInclude Include="include\Rendering\Buffers\InputLayout.h" />
+    <ClInclude Include="include\Systems\LightSystem.h" />
     <ClInclude Include="include\Systems\TransformSystem.h" />
     <ClInclude Include="include\Objects\IObject.h" />
     <ClInclude Include="include\Rendering\Buffers\PixelConstantBuffer.h" />
@@ -303,8 +305,8 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Containers\ColliderContainer.cpp" />
     <ClCompile Include="src\Managers\ResourceManager.cpp" />
     <ClCompile Include="src\Managers\SceneManager.cpp" />
-    <ClCompile Include="src\Rendering\Lights\Light.cpp" />
-    <ClCompile Include="src\Components\LightComponent.cpp" />
+    <ClCompile Include="src\Rendering\Lights\DirectionalLight.cpp" />
+    <ClCompile Include="src\Components\Light.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
     <ClCompile Include="src\Containers\LightContainer.cpp" />
     <ClCompile Include="src\Containers\MaterialContainer.cpp" />
@@ -323,6 +325,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Components\Transform.cpp" />
     <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
     <ClCompile Include="src\Rendering\RenderTexture.cpp" />
+    <ClCompile Include="src\Systems\LightSystem.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
     <ClInclude Include="src\Core\App.h" />
     <ClCompile Include="src\Rendering\Buffers\InputLayout.cpp" />

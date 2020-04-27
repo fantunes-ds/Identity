@@ -1,6 +1,6 @@
 #include <stdafx.h>
 #include <Containers/LightContainer.h>
-#include <Rendering/Lights/Light.h>
+#include <Rendering/Lights/DirectionalLight.h>
 
 Engine::Containers::LightContainer::~LightContainer()
 {
