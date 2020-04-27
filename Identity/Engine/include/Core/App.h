@@ -29,7 +29,9 @@ namespace Engine::Core
         int Run() const;
 
     private:
+        void StartFrame() const;
         void DoFrame(Systems::RenderSystem& p_renderSystem, float p_deltaTime) const;
+        void EndFrame() const;
 
     private:
         Tools::UI::ImGUIManager m_imguiManager;
@@ -39,5 +41,6 @@ namespace Engine::Core
         int m_width;
         int m_height;
         bool m_isEditor;
+        bool m_applicationIsRunning;
     };
 }

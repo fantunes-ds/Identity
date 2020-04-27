@@ -120,13 +120,12 @@ int App::Run() const
 
     while (true)
     {
-        ImGui_ImplDX11_NewFrame();
-        ImGui_ImplWin32_NewFrame();
-        ImGui::NewFrame();
+        fpsCounter.Start();
+        StartFrame();
 
+        //todo move below code to an UI class on Engine and call from Editor.
         if (m_isEditor)
         {
-            //todo move below code to an UI class on Engine and call from Editor.
 
             static bool opt_fullscreen_persistant = true;
             bool opt_fullscreen = opt_fullscreen_persistant;
@@ -203,31 +202,41 @@ int App::Run() const
             }
         }
 
-       fpsCounter.Start();
-       link.GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -0.0f, 0.02f });
-       if (const auto eCode = Rendering::Window::ProcessMessage())
-       {
-           return *eCode;
-       }
-       Containers::ColliderContainer::Update(fpsCounter.GetDeltaTime());
-       Containers::TransformSystem::Update(fpsCounter.GetDeltaTime());
-       Containers::CameraSystem::Update(fpsCounter.GetDeltaTime());
+        if (const auto eCode = Rendering::Window::ProcessMessage())
+        {
+            return *eCode;
+        }
 
-       DoFrame(renderSystem, fpsCounter.GetDeltaTime());
+        Containers::ColliderContainer::Update(fpsCounter.GetDeltaTime());
+        Containers::TransformSystem::Update(fpsCounter.GetDeltaTime());
+        Containers::CameraSystem::Update(fpsCounter.GetDeltaTime());
         
-       fpsCounter.Stop();
+        DoFrame(renderSystem, fpsCounter.GetDeltaTime());
+        EndFrame();
+        fpsCounter.Stop();
     }
+}
+
+void App::StartFrame() const
+{
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
 }
 
 void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTime) const
 {
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
     Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
 
     if (_INPUT->keyboard.IsKeyDown('F'))
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());
 
     p_renderSystem.IUpdate(p_deltaTime, m_isEditor);
+}
+
+void App::EndFrame() const
+{
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     ImGui::Begin("Identity UI Tools");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
