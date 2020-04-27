@@ -49,38 +49,61 @@ int App::Run() const
     Objects::GameObject camera;
     Objects::GameObject light;
 
-
     Managers::ResourceManager::AddTexture("../Engine/Resources/link.png", "LinkText");
     Managers::ResourceManager::AddTexture("../Engine/Resources/lambo_text.jpeg", "LamboText");
     Managers::ResourceManager::CreateMaterial("LinkMat", "defaultPS", "defaultVS", "LinkText");
     Managers::ResourceManager::CreateMaterial("LamboMat", "defaultPS", "defaultVS", "LamboText");
 
-    camera.AddComponent<Components::Camera>(m_width, m_height);
-
-    Containers::LightContainer* test = Containers::LightContainer::GetInstance();
-
+    //---LINK---
+    //positioning
     link.GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
     link.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
     link.GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
-    link.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
+    
+    //box collider
     link.AddComponent<Components::BoxCollider>();
     link.FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 0.5f, 1.0f, 0.5f });
     GPM::Vector3F linkOffset{ 0.0f, -1.0f, 0.0f };
     link.FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(linkOffset);
     link.FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
+    
+    //model and texture
+    const int32_t idLink = Managers::ResourceManager::AddModel("../Engine/Resources/YoungLink.obj", "statue");
+    link.AddComponent<Components::ModelComponent>(idLink);
+    for (auto& mesh : link.GetModel()->GetMeshes())
+    {
+        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
+    }
+    //----------
 
+    //---LAMBO---
+    //positioning
     lambo.GetTransform()->Translate(Vector3F{5.0f, 5.0f, -3.0f});
     lambo.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
-    lambo.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
+
+    //box collider
     lambo.AddComponent<Components::BoxCollider>();
     lambo.FindComponentOfType<Components::BoxCollider>()->SetMass(1);
     lambo.FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 2.0f, 1.0f, 5.0f });
     GPM::Vector3F lamboOffset{ 0.0f, -1.5f, 0.0f };
     lambo.FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
+    lambo.GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
 
+    //model and texture
+    const int32_t idLambo = Managers::ResourceManager::AddModel("../Engine/Resources/Lambo.obj", "lambo");
+    lambo.AddComponent<Components::ModelComponent>(idLambo);
+    for (auto& mesh : lambo.GetModel()->GetMeshes())
+    {
+        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
+    }
+    //-----------
 
+    //--CAMERA--
+    camera.AddComponent<Components::Camera>(m_width, m_height);
     camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
+    //----------
 
+    //---LIGHT---
     light.GetTransform()->Translate(Vector3F{ 10.0f, 4.0f, -10.0f });
     light.GetTransform()->Scale(Vector3F{ 0.01f, 0.01f, 0.01f });
 
@@ -94,21 +117,9 @@ int App::Run() const
     dirLight.shininess = 32.0f;
 
     light.AddComponent<Components::LightComponent>(dirLight);
-
-    for (auto& mesh : link.GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
-    }
-
-    for (auto& mesh : lambo.GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
-    }
+    //-----------
 
     renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
-
-
-    lambo.GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
 
     while (true)
     {
@@ -116,7 +127,6 @@ int App::Run() const
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
         fpsCounter.Start();
-        link.GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -0.0f, 0.02f });
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;
@@ -124,7 +134,6 @@ int App::Run() const
         Containers::ColliderContainer::Update(fpsCounter.GetDeltaTime());
         Containers::TransformSystem::Update(fpsCounter.GetDeltaTime());
         Containers::CameraSystem::Update(fpsCounter.GetDeltaTime());
-
 
         DoFrame(renderSystem, fpsCounter.GetDeltaTime());
 

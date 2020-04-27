@@ -1,6 +1,5 @@
 #include <stdafx.h>
 #include <Systems/RenderSystem.h>
-#include <Containers/ModelContainer.h>
 #include <Tools/DirectX/GraphicsMacros.h>
 #include <Rendering/Lights/Light.h>
 #include <Tools/ImGUI/imgui.h>

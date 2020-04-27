@@ -27,7 +27,9 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
 
     ObjectElements::Model model = ConstructBox();
 
-    m_model = Containers::ModelContainer::AddModel(model);
+    //TODO add a "AddModel" that take a model as parametre
+    const int32_t id = Managers::ResourceManager::AddModel(model);
+    m_model = Managers::ResourceManager::FindModel(id);
 
     Containers::ColliderContainer::AddCollider(this);
 
@@ -103,8 +105,9 @@ void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimen
     }
 
     ObjectElements::Model model = ConstructBox();
-    Containers::ModelContainer::RemoveModel(m_model->GetID());
-    m_model = Containers::ModelContainer::AddModel(model);
+    Managers::ResourceManager::RemoveModel(m_model->GetID());
+    const int32_t id = Managers::ResourceManager::AddModel(model);
+    m_model = Managers::ResourceManager::FindModel(id);
 }
 
 Engine::ObjectElements::Model Engine::Components::BoxCollider::ConstructBox()

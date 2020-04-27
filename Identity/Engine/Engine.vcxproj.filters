@@ -22,7 +22,6 @@
     <ClCompile Include="src\Core\App.cpp" />
     <ClCompile Include="src\Containers\ComponentContainer.cpp" />
     <ClCompile Include="src\Containers\GameObjectContainer.cpp" />
-    <ClCompile Include="src\Containers\ModelContainer.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Model.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Mesh.cpp" />
     <ClCompile Include="src\Components\Transform.cpp" />
@@ -77,7 +76,6 @@
     <ClInclude Include="include\Containers\IContainer.h" />
     <ClInclude Include="include\Containers\LightContainer.h" />
     <ClInclude Include="include\Containers\MaterialContainer.h" />
-    <ClInclude Include="include\Containers\ModelContainer.h" />
     <ClInclude Include="include\Components\Transform.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />

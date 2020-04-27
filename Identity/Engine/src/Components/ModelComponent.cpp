@@ -3,27 +3,27 @@
 #include <Scene/SceneGraph/SceneNode.h>
 #include <Objects/GameObject.h>
 
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const int32_t p_id): IComponent{ p_gameObject }
+{
+    m_model = p_id;
+}
+
 Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name): IComponent{ p_gameObject }
 {
-    m_model = Containers::ModelContainer::FindModel(p_name);
+    m_model = Managers::ResourceManager::GetModel(p_name);
 }
 
 Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file, const std::string& p_name): IComponent{ p_gameObject }
 {
-    Containers::ModelContainer::AddModel(p_file, p_name);
-    m_model = Containers::ModelContainer::FindModel(p_name);
-    // m_gameObject->SetTransform(Containers::ModelContainer::GetAllModels().at(m_model)->GetRootNode()->GetTransform());
-    auto test = Containers::ModelContainer::GetAllModels().at(m_model)->GetRootNode();
-    test->SetTransform(m_gameObject->GetTransform()->GetID());
-    std::cout << "test";
+    m_model = Managers::ResourceManager::AddModel(p_file, p_name);
 }
 
 bool Engine::Components::ModelComponent::operator==(IComponent* p_other)
 {
     if (ModelComponent* other = dynamic_cast<ModelComponent*>(p_other))
     {
-        auto thisModel = Containers::ModelContainer::FindModel(m_model)->GetMeshes();
-        auto otherModel = Containers::ModelContainer::FindModel(other->m_model)->GetMeshes();
+        auto thisModel = Managers::ResourceManager::FindModel(m_model)->GetMeshes();
+        auto otherModel = Managers::ResourceManager::FindModel(other->m_model)->GetMeshes();
 
         if (thisModel.size() != otherModel.size())
             return false;
@@ -42,5 +42,5 @@ bool Engine::Components::ModelComponent::operator==(IComponent* p_other)
 
 bool Engine::Components::ModelComponent::DeleteFromMemory()
 {
-    return Containers::ModelContainer::RemoveModel(m_model);
+    return Managers::ResourceManager::RemoveModel(m_model);
 }
