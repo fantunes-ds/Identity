@@ -18,7 +18,7 @@ namespace Engine::Objects
         ~GameObject() = default;
 
         //TODO: works when modifying parent's transform, but doesn't work when modifying child's transform
-        void SetParentObject(GameObject& p_parent);
+        //void SetParentObject(GameObject& p_parent);
 
         /**
          * @brief Deletes component.

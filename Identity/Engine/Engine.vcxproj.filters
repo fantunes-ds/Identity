@@ -9,8 +9,6 @@
     <ClCompile Include="src\Components\IComponent.cpp" />
     <ClCompile Include="src\Containers\ColliderContainer.cpp" />
     <ClCompile Include="src\Managers\ResourceManager.cpp" />
-    <ClCompile Include="src\Rendering\Lights\Light.cpp" />
-    <ClCompile Include="src\Components\LightComponent.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
     <ClCompile Include="src\Containers\LightContainer.cpp" />
     <ClCompile Include="src\Containers\MaterialContainer.cpp" />
@@ -51,7 +49,6 @@
     <ClCompile Include="src\TestDependencies.cpp" />
     <ClCompile Include="src\Tools\ASSIMP\AssimpConversion.cpp" />
     <ClCompile Include="src\Tools\DirectX\dxerr.cpp" />
-    <ClCompile Include="src\Tools\FPSCounter.cpp" />
     <ClCompile Include="src\Tools\IdentityException.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui.cpp" />
     <ClCompile Include="src\Tools\ImGUI\ImGUIManager.cpp" />
@@ -60,10 +57,15 @@
     <ClCompile Include="src\Tools\ImGUI\imgui_impl_dx11.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui_impl_win32.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui_widgets.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Managers\SceneManager.cpp" />
+    <ClCompile Include="src\Tools\Time.cpp" />
+    <ClCompile Include="src\Components\Light.cpp" />
+    <ClCompile Include="src\Rendering\Lights\DirectionalLight.cpp" />
+    <ClCompile Include="src\Systems\LightSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Components\IComponent.h" />
-    <ClInclude Include="include\Components\LightComponent.h" />
     <ClInclude Include="include\Components\ModelComponent.h" />
     <ClInclude Include="include\Managers\ResourceManager.h" />
     <ClInclude Include="include\Rendering\Materials\PixelShader.h" />
@@ -117,7 +119,6 @@
     <ClInclude Include="include\Tools\ASSIMP\ASSIMPConversion.h" />
     <ClInclude Include="include\Tools\DirectX\dxerr.h" />
     <ClInclude Include="include\Tools\DirectX\GraphicsMacros.h" />
-    <ClInclude Include="include\Tools\FPSCounter.h" />
     <ClInclude Include="include\Tools\IDCounter.h" />
     <ClInclude Include="include\Tools\IdentityException.h" />
     <ClInclude Include="include\Tools\ImGUI\imconfig.h" />
@@ -132,6 +133,11 @@
     <ClInclude Include="include\UI\UIManager.h" />
     <ClInclude Include="include\WinSetup.h" />
     <ClInclude Include="src\Core\App.h" />
+    <ClInclude Include="include\Managers\SceneManager.h" />
+    <ClInclude Include="include\Tools\Time.h" />
+    <ClInclude Include="include\Components\Light.h" />
+    <ClInclude Include="include\Rendering\Lights\DirectionalLight.h" />
+    <ClInclude Include="include\Systems\LightSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />

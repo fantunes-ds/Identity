@@ -4,7 +4,7 @@
 
 namespace Engine::Rendering::Lights
 {
-    class Light : public ILight
+    class DirectionalLight : public ILight
     {
     public:
         struct LightData
@@ -18,10 +18,10 @@ namespace Engine::Rendering::Lights
             Vector3F padding;
         };
 
-        Light() = default;
-        Light(const Vector4F& p_position, const Vector4F&  p_ambient, const Vector4F& p_diffuse, const Vector4F& p_specular,
-              const Vector4F& p_direction, const Vector4F& p_color, const float&      p_shininess);
-        Light(const LightData& p_lightData);
+        DirectionalLight() = default;
+        DirectionalLight(const Vector4F& p_position, const Vector4F&  p_ambient, const Vector4F& p_diffuse, const Vector4F& p_specular,
+              const Vector4F& p_direction, const Vector4F& p_color, const float& p_shininess);
+        DirectionalLight(const LightData& p_lightData);
 
 
         inline LightData& GetLightData() { return m_lightData; }
