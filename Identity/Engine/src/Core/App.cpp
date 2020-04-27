@@ -26,6 +26,8 @@
 #include <Scene/Scene.h>
 #include <Managers/SceneManager.h>
 
+#include <Managers/ResourceManager.h>
+
 using namespace Engine::Core;
 
 App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
@@ -54,20 +56,10 @@ int App::Run() const
     Objects::GameObject light;
 
 
-    Containers::MaterialContainer::AddMaterial("missing");
-    Containers::MaterialContainer::GetMaterial("missing")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/missing.png");
-    Containers::MaterialContainer::GetMaterial("missing")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
-    Containers::MaterialContainer::GetMaterial("missing")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
-
-    Containers::MaterialContainer::AddMaterial("LinkTexture");
-    Containers::MaterialContainer::GetMaterial("LinkTexture")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/link.png");
-    Containers::MaterialContainer::GetMaterial("LinkTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
-    Containers::MaterialContainer::GetMaterial("LinkTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
-
-    Containers::MaterialContainer::AddMaterial("LamboTexture");
-    Containers::MaterialContainer::GetMaterial("LamboTexture")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/lambo_text.jpeg");
-    Containers::MaterialContainer::GetMaterial("LamboTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
-    Containers::MaterialContainer::GetMaterial("LamboTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
+    Managers::ResourceManager::AddTexture("../Engine/Resources/link.png", "LinkText");
+    Managers::ResourceManager::AddTexture("../Engine/Resources/lambo_text.jpeg", "LamboText");
+    Managers::ResourceManager::CreateMaterial("LinkMat", "defaultPS", "defaultVS", "LinkText");
+    Managers::ResourceManager::CreateMaterial("LamboMat", "defaultPS", "defaultVS", "LamboText");
 
     camera.AddComponent<Components::Camera>(m_width, m_height);
 
@@ -115,12 +107,12 @@ int App::Run() const
 
     for (auto& mesh : link->GetModel()->GetMeshes())
     {
-        mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LinkTexture"));
+        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
     }
 
     for (auto& mesh : lambo->GetModel()->GetMeshes())
     {
-        mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LamboTexture"));
+        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
     }
 
     renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
@@ -135,7 +127,6 @@ int App::Run() const
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
         Tools::Time::Start();
-        //link->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -0.0f, 0.02f });
     	
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
@@ -146,12 +137,10 @@ int App::Run() const
         Containers::ColliderContainer::Update(deltaTime);
         Containers::TransformSystem::Update(deltaTime);
         Containers::CameraSystem::Update(deltaTime);
-        //Containers::ColliderContainer::FixedUpdate();
 
-    	//TODO: WTF WHY DOES THIS NOT WORK
         fixedUpdateTimer += deltaTime;
 
-    	if (fixedUpdateTimer >= 1.0f)
+    	if (fixedUpdateTimer >= 0.0001f)
     	{
             Containers::ColliderContainer::FixedUpdate();
             fixedUpdateTimer = 0.0f;

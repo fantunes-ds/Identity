@@ -44,6 +44,7 @@ void Engine::Rendering::Materials::Shader::BindShader(const Microsoft::WRL::ComP
     p_context->VSSetShader(vertexShader.Get(), nullptr, 0u);
     p_context->PSSetShader(pixelShader.Get(), nullptr, 0u);
 }
+
 void Engine::Rendering::Materials::Shader::UnbindShader(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const
 {
     p_context->VSSetShader(nullptr, nullptr, 0u);

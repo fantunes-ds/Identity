@@ -15,9 +15,8 @@ struct lightSource
 cbuffer CBuf
 {
     lightSource light;
-    float padding;
     float3 cameraPos;
-    float padding2;
+    float textureState;
 };
 
 struct VS_OUT
@@ -56,8 +55,12 @@ float4 main(VS_OUT f_in) : SV_TARGET
         spec = pow(max(dot(cameraPos, reflectDir), 0.0f), light.shininess);
     }
     float3 specular = light.specular.rgb * spec * light.color.rgb;
-    f_in.vertexColor = shaderTexture.Sample(SampleType, f_in.tex);
-    f_in.vertexColor = float4(ambient + diffuse + specular, 1) * f_in.vertexColor;
-    return f_in.vertexColor;
 
+    if (textureState != 0.0f)
+    {
+        f_in.vertexColor = shaderTexture.Sample(SampleType, f_in.tex) * f_in.vertexColor;
+    }
+    f_in.vertexColor = float4(ambient + diffuse + specular, 1) * f_in.vertexColor;
+    
+    return f_in.vertexColor;
 }

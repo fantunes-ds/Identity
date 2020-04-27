@@ -11,7 +11,7 @@ namespace Engine::Rendering::Buffers
     {
         Rendering::Lights::Light::LightData lightSource;
         Vector3F                            cameraPos;
-        float                               padding;
+        float                               textureState;
     };
 
     class PixelConstantBuffer

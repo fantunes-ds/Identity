@@ -74,7 +74,6 @@ void Renderer::ClearBuffers(const float& p_red, const float& p_green, const floa
     }
 }
 
-
 void Renderer::Bind(const bool p_bindDefaultDepthStencil)
 {
     if (p_bindDefaultDepthStencil)
@@ -335,7 +334,6 @@ void Renderer::ChangeResolution()
 
     Resize(m_width, m_height);
 }
-
 
 #pragma region ExceptionsClass
 
