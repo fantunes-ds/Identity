@@ -2,12 +2,11 @@
 #include <Export.h>
 #include <Components/Transform.h>
 #include <3DLoader/ObjectElements/Model.h>
-#include <Containers/ModelContainer.h>
 #include <Containers/ComponentContainer.h>
-#include <Containers/ModelContainer.h>
 #include <Components/IComponent.h>
 #include <Components/ModelComponent.h>
 #include <Scene/SceneGraph/SceneNode.h>
+#include "Managers/ResourceManager.h"
 
 namespace Engine::Objects
 {
@@ -49,8 +48,9 @@ namespace Engine::Objects
 
             if (std::is_same_v<T, Components::ModelComponent>)
             {
+                //TODO change this to use the resource manager
                 std::shared_ptr<Components::ModelComponent> modelComp = std::dynamic_pointer_cast<Components::ModelComponent>(Containers::ComponentContainer::FindComponent(id));
-                Containers::ModelContainer::FindModel(modelComp->GetModel())->GetRootNode()->SetTransform(m_transform);
+                Managers::ResourceManager::FindModel(modelComp->GetModel())->GetRootNode()->SetTransform(m_transform);
             }
 
             if (id > 0)

@@ -1,6 +1,5 @@
 #include <stdafx.h>
 #include <Objects/GameObject.h>
-#include <Containers/ModelContainer.h>
 #include <Systems/TransformSystem.h>
 #include <Components/ModelComponent.h>
 #include <Containers/GameObjectContainer.h>
@@ -28,7 +27,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Objects::GameObject::GetM
     for (auto& component: m_components)
     {
         if (Components::ModelComponent * modelComp = dynamic_cast<Components::ModelComponent*>(&*Containers::ComponentContainer::FindComponent(component)))
-            return Containers::ModelContainer::FindModel(modelComp->GetModel());
+            return Managers::ResourceManager::FindModel(modelComp->GetModel());
     }
 
     return nullptr;
@@ -44,8 +43,8 @@ bool Engine::Objects::GameObject::operator==(GameObject& p_other) const
 
 void Engine::Objects::GameObject::SetParentObject(GameObject& p_parent)
 {
-    auto rootNode = Containers::ModelContainer::FindModel(FindComponentOfType<Components::ModelComponent>()->GetModel())->GetRootNode();
-    auto parentNode = Containers::ModelContainer::FindModel(p_parent.FindComponentOfType<Components::ModelComponent>()->GetModel())->GetRootNode();
+    auto rootNode = Managers::ResourceManager::FindModel(FindComponentOfType<Components::ModelComponent>()->GetModel())->GetRootNode();
+    auto parentNode = Managers::ResourceManager::FindModel(p_parent.FindComponentOfType<Components::ModelComponent>()->GetModel())->GetRootNode();
     rootNode->SetParent(&*parentNode);
 }
 

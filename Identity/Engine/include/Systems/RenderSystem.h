@@ -4,9 +4,8 @@
 #include <3DLoader/ObjectElements/Model.h>
 #include <Rendering/Renderer.h>
 #include <Rendering/Lights/Light.h>
-#include "Events/Event.h"
-#include "Rendering/Materials/Texture.h"
-#include "Scene/SceneGraph/SceneGraph.h"
+#include <Events/Event.h>
+#include <Scene/SceneGraph/SceneGraph.h>
 
 namespace Engine::Systems
 {
