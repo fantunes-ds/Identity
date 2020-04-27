@@ -315,7 +315,7 @@ constexpr void GPM::operator+=(Vector2<T>& p_vector2Left, Vector2<U> const& p_ve
 template<typename T>
 constexpr GPM::Vector2<T> GPM::operator-(Vector2<T> const& p_vector2Left, Vector2<T> const& p_vector2Right)
 {
-	return GPM::Vector2<T>::Subtract(p_vector2Left, p_vector2Right );
+	return GPM::Vector2<T>::Subtract( p_vector2Left, p_vector2Right );
 }
 
 template<typename T, typename U>

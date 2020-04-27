@@ -23,6 +23,7 @@
 
 #include "Components/BoxCollider.h"
 #include "Containers/ColliderContainer.h"
+#include "Managers/ResourceManager.h"
 
 using namespace Engine::Core;
 
@@ -43,26 +44,16 @@ int App::Run() const
     Systems::RenderSystem renderSystem;
     Tools::FPSCounter fpsCounter(200);
 
-    // ----  will be removed once we have serialization
     Objects::GameObject link("link");
     Objects::GameObject lambo("lambo");
     Objects::GameObject camera;
     Objects::GameObject light;
 
-    Containers::MaterialContainer::AddMaterial("missing");
-    Containers::MaterialContainer::GetMaterial("missing")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/missing.png");
-    Containers::MaterialContainer::GetMaterial("missing")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
-    Containers::MaterialContainer::GetMaterial("missing")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
 
-    Containers::MaterialContainer::AddMaterial("LinkTexture");
-    Containers::MaterialContainer::GetMaterial("LinkTexture")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/link.png");
-    Containers::MaterialContainer::GetMaterial("LinkTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
-    Containers::MaterialContainer::GetMaterial("LinkTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
-
-    Containers::MaterialContainer::AddMaterial("LamboTexture");
-    Containers::MaterialContainer::GetMaterial("LamboTexture")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/lambo_text.jpeg");
-    Containers::MaterialContainer::GetMaterial("LamboTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
-    Containers::MaterialContainer::GetMaterial("LamboTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
+    Managers::ResourceManager::AddTexture("../Engine/Resources/link.png", "LinkText");
+    Managers::ResourceManager::AddTexture("../Engine/Resources/lambo_text.jpeg", "LamboText");
+    Managers::ResourceManager::CreateMaterial("LinkMat", "defaultPS", "defaultVS", "LinkText");
+    Managers::ResourceManager::CreateMaterial("LamboMat", "defaultPS", "defaultVS", "LamboText");
 
     camera.AddComponent<Components::Camera>(m_width, m_height);
 
@@ -87,6 +78,7 @@ int App::Run() const
     GPM::Vector3F lamboOffset{ 0.0f, -1.5f, 0.0f };
     lambo.FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
 
+
     camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
 
     light.GetTransform()->Translate(Vector3F{ 10.0f, 4.0f, -10.0f });
@@ -105,18 +97,18 @@ int App::Run() const
 
     for (auto& mesh : link.GetModel()->GetMeshes())
     {
-        mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LinkTexture"));
+        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
     }
 
     for (auto& mesh : lambo.GetModel()->GetMeshes())
     {
-        mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LamboTexture"));
+        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
     }
 
     renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
 
     lambo.GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
-    // î ----  î will be removed once we have serialization
+    // ï¿½ ----  ï¿½ will be removed once we have serialization
 
     while (true)
     {
@@ -206,6 +198,9 @@ int App::Run() const
         {
             return *eCode;
         }
+        Containers::ColliderContainer::Update(fpsCounter.GetDeltaTime());
+        Containers::TransformSystem::Update(fpsCounter.GetDeltaTime());
+        Containers::CameraSystem::Update(fpsCounter.GetDeltaTime());
 
         Containers::ColliderContainer::Update(fpsCounter.GetDeltaTime());
         Containers::TransformSystem::Update(fpsCounter.GetDeltaTime());

@@ -13,7 +13,7 @@
 #include "Containers/ColliderContainer.h"
 #include <Components/BoxCollider.h>
 
-#define DEBUG_MODE false
+#define DEBUG_MODE true
 
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
 {
@@ -80,7 +80,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
             Matrix4F perspective = camera->GetPerspectiveMatrix();
 
             Rendering::Buffers::VCB vcb{modelMatrix, view, normalModel, perspective};
-            mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
+            mesh->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
             const Vector3F cameraPos = camera->GetPosition();
 
             const Rendering::Buffers::PCB pcb{
@@ -88,7 +88,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
                 Vector4F::zero, Vector4F::one,
                 1.0f, Vector3F{}, Vector3F::zero, 0.0f
             };
-            mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
+            mesh->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
             Rendering::Renderer::GetInstance()
                     ->GetContext()->
                     IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
@@ -128,16 +128,16 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         const Rendering::Buffers::VCB vcb{Matrix4F::identity, Matrix4F::identity,
                                       Matrix4F::identity, Matrix4F::identity};
 
-        screenRect->GetMaterial().GetShader().GetVCB().Update(vcb);
+        screenRect->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
 
         const Rendering::Buffers::PCB pcb{
             Vector4F::zero, Vector4F::one, Vector4F::one,
             Vector4F::zero, Vector4F::one,
             1.0f, Vector3F{}, Vector3F::zero, 0.0f
         };
-        screenRect->GetMaterial().GetShader().GetPCB().Update(pcb);
+        screenRect->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
 
-        screenRect->GetMaterial().GetTexture().SetTexSRV(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
+        screenRect->GetMaterial()->GetTexture()->SetTextureShaderResourceView(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
 
         Rendering::Renderer::GetInstance()->Bind();
 
@@ -164,7 +164,7 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         Matrix4F perspective = camera->GetPerspectiveMatrix();
 
         Rendering::Buffers::VCB vcb{ model, view, normalModel,perspective };
-        mesh->GetMaterial().GetShader().GetVCB().Update(vcb);
+        mesh->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
         const Vector3F cameraPos = camera->GetPosition();
 
         const Vector4F reversedXLightPos = Vector4F(light.position.x, light.position.y, -light.position.z, 1.0f);
@@ -172,7 +172,7 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
                                             light.specular , light.color,
                                                             light.shininess,Vector3F{},Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, 0.0f };
 
-        mesh->GetMaterial().GetShader().GetPCB().Update(pcb);
+        mesh->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
 
         Rendering::Renderer::GetInstance()->Bind(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetTarget(), Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetDepthStencilView());
         GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));

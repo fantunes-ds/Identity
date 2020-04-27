@@ -3,7 +3,6 @@
 #include <Tools/ImGUI/imgui.h>
 #include <Input/Input.h>
 #include <Systems/CameraSystem.h>
-#include "Tools/FPSCounter.h"
 
 
 void Engine::Components::Camera::UpdateCamera(const float p_deltaTime, const float& p_width, const float& p_height)
