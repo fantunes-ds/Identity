@@ -158,7 +158,7 @@ const int32_t Engine::Managers::ResourceManager::AddModelNS(const std::string& p
         mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
 
     m_models.insert_or_assign(model->GetID(), model);
-    Scene::SceneGraph::GetInstance()->AddRootSceneNode(model->GetRootNode());
+    // Scene::SceneGraph::GetInstance()->AddRootSceneNode(model->GetRootNode());
 
     return model->GetID();
 }

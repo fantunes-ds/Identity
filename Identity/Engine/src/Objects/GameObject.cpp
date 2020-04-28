@@ -41,12 +41,12 @@ bool Engine::Objects::GameObject::operator==(GameObject& p_other) const
     return false;
 }
 
-void Engine::Objects::GameObject::SetParentObject(GameObject& p_parent)
+/*void Engine::Objects::GameObject::SetParentObject(GameObject& p_parent)
 {
     auto rootNode = Managers::ResourceManager::FindModel(FindComponentOfType<Components::ModelComponent>()->GetModel())->GetRootNode();
     auto parentNode = Managers::ResourceManager::FindModel(p_parent.FindComponentOfType<Components::ModelComponent>()->GetModel())->GetRootNode();
     rootNode->SetParent(&*parentNode);
-}
+}*/
 
 bool Engine::Objects::GameObject::RemoveComponent(int32_t p_id)
 {

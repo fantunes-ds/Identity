@@ -18,7 +18,7 @@ namespace Engine::Objects
         ~GameObject() = default;
 
         //TODO: works when modifying parent's transform, but doesn't work when modifying child's transform
-        void SetParentObject(GameObject& p_parent);
+        //void SetParentObject(GameObject& p_parent);
 
         /**
          * @brief Deletes component.
@@ -50,7 +50,7 @@ namespace Engine::Objects
             {
                 //TODO change this to use the resource manager
                 std::shared_ptr<Components::ModelComponent> modelComp = std::dynamic_pointer_cast<Components::ModelComponent>(Containers::ComponentContainer::FindComponent(id));
-                Managers::ResourceManager::FindModel(modelComp->GetModel())->GetRootNode()->SetTransform(m_transform);
+                // Managers::ResourceManager::FindModel(modelComp->GetModel())->GetRootNode()->SetTransform(m_transform);
             }
 
             if (id > 0)

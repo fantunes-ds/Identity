@@ -315,13 +315,13 @@ constexpr void GPM::operator+=(Vector2<T>& p_vector2Left, Vector2<U> const& p_ve
 template<typename T>
 constexpr GPM::Vector2<T> GPM::operator-(Vector2<T> const& p_vector2Left, Vector2<T> const& p_vector2Right)
 {
-	return GPM::Vector2<T>::Subtract{ p_vector2Left, p_vector2Right };
+	return GPM::Vector2<T>::Subtract( p_vector2Left, p_vector2Right );
 }
 
 template<typename T, typename U>
 constexpr GPM::Vector2<T> GPM::operator-(Vector2<T> const& p_vector2Left, Vector2<U> const& p_vector2Right)
 {
-	return GPM::Vector2<T>::Subtract{ p_vector2Left, p_vector2Right };
+	return GPM::Vector2<T>::Subtract( p_vector2Left, p_vector2Right );
 }
 
 template<typename T, typename U>
@@ -339,13 +339,13 @@ constexpr GPM::Vector2<T> GPM::operator-(U const& p_scalar, Vector2<T> const& p_
 template<typename T, typename U>
 constexpr GPM::Vector2<U> GPM::operator*(T const& p_scalar, Vector2<U> const& p_vector2)
 {
-	return Vector2<T>::Multiply{ p_vector2, p_scalar };
+	return Vector2<T>::Multiply( p_vector2, p_scalar );
 }
 
 template<typename T, typename U>
 constexpr GPM::Vector2<T> GPM::operator*(Vector2<T> const& p_vector2, U const& p_scalar)
 {
-	return GPM::Vector2<T>::Multiply{ p_vector2, static_cast<T>(p_scalar) };
+	return GPM::Vector2<T>::Multiply( p_vector2, static_cast<T>(p_scalar) );
 }
 
 template<typename T, typename U>
@@ -360,7 +360,7 @@ constexpr GPM::Vector2<T> GPM::operator/(Vector2<T> const& p_vector2, const U& p
 	if (p_scalar == 0)
 		throw std::logic_error("Vector2::operator/ attempted division by zero");
 
-	return GPM::Vector2<T>::Divide{ p_vector2, p_scalar };
+	return GPM::Vector2<T>::Divide( p_vector2, p_scalar );
 }
 
 #pragma region Arithmetic Operations

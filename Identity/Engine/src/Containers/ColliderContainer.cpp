@@ -5,6 +5,10 @@
 #include <Objects/GameObject.h>
 #include <Systems/TransformSystem.h>
 
+
+#include "Containers/EventContainer.h"
+#include "Tools/Time.h"
+
 Engine::Containers::ColliderContainer::~ColliderContainer()
 {
     delete m_instance;
@@ -15,6 +19,7 @@ Engine::Containers::ColliderContainer* Engine::Containers::ColliderContainer::Ge
     if (m_instance == nullptr)
     {
         m_instance = new ColliderContainer();
+        //EventContainer::GetEvent("CallFixedUpdate").AddListener(&*m_instance, &ColliderContainer::FixedUpdate);
     }
 
     return m_instance;
@@ -31,10 +36,14 @@ std::shared_ptr<Engine::Components::BoxCollider> Engine::Containers::ColliderCon
 
 void Engine::Containers::ColliderContainer::Update(const float p_deltaTime)
 {
+}
+
+void Engine::Containers::ColliderContainer::FixedUpdate()
+{
     btTransform trans;
 
-    GetInstance()->m_dynamicsWorld->stepSimulation(p_deltaTime, 10);
-    
+    GetInstance()->m_dynamicsWorld->stepSimulation(1.0f / 60.0f, 0);
+
     for (auto& collider : GetInstance()->m_colliders)
     {
         //TODO: wrap all Bullet math variables
@@ -51,7 +60,6 @@ void Engine::Containers::ColliderContainer::Update(const float p_deltaTime)
 
         collider.second->GetGameObject()->GetTransform()->UpdateWorldTransformMatrix();
     }
-
 }
 
 Engine::Containers::ColliderContainer::ColliderContainer()
