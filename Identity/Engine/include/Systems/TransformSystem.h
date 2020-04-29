@@ -23,8 +23,9 @@ namespace Engine::Containers
         /**
          * @brief Update the all transforms contain in the map
          * @param p_deltaTime The delta time of the project
+         * @param p_isEditor Are we in an editor build ?
          */
-        void IUpdate(float p_deltaTime) override;
+        void IUpdate(float p_deltaTime, bool p_isEditor = false) override;
 
         static int32_t AddTransform();
         static int32_t AddTransform(std::shared_ptr<Components::Transform> p_transform);

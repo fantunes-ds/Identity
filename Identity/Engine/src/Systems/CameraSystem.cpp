@@ -44,7 +44,7 @@ void Engine::Containers::CameraSystem::Update(const float p_deltaTime)
     GetInstance()->IUpdate(p_deltaTime);
 }
 
-void Engine::Containers::CameraSystem::IUpdate(const float p_deltaTime)
+void Engine::Containers::CameraSystem::IUpdate(const float p_deltaTime, bool p_isEditor)
 {
     for (std::shared_ptr<Engine::Components::Camera> camera : GetCameras())
     {

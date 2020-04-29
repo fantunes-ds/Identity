@@ -63,4 +63,5 @@ float4 main(VS_OUT f_in) : SV_TARGET
     f_in.vertexColor = float4(ambient + diffuse + specular, 1) * f_in.vertexColor;
     
     return f_in.vertexColor;
+
 }

@@ -15,7 +15,8 @@
 #include <Objects/GameObject.h>
 #include <Components/ModelComponent.h>
 #include <Components/Camera.h>
-#include <Containers/MaterialContainer.h>
+#include <UI/Dockspace.h>
+
 #include <Components/Light.h>
 #include <LinearMath/btVector3.h>
 #include <Systems/CameraSystem.h>
@@ -37,7 +38,7 @@ App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
     Input::Input::InitInput();
 }
 
-App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name), m_width(p_width), m_height(p_height)
+App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) : m_window(p_width, p_height, p_name), m_width(p_width), m_height(p_height), m_isEditor(p_isEditor)
 {
     Input::Input::InitInput();
 }
@@ -59,8 +60,6 @@ int App::Run() const
     Managers::ResourceManager::AddTexture("../Engine/Resources/lambo_text.jpeg", "LamboText");
     Managers::ResourceManager::CreateMaterial("LinkMat", "defaultPS", "defaultVS", "LinkText");
     Managers::ResourceManager::CreateMaterial("LamboMat", "defaultPS", "defaultVS", "LamboText");
-
-    camera.AddComponent<Components::Camera>(m_width, m_height);
 
     link->GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
     link->GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
@@ -119,36 +118,46 @@ int App::Run() const
 
     lambo->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
 
-    static float fixedUpdateTimer = 0.0f;
+    float fixedUpdateTimer = 0.0f;
 	
     while (true)
     {
-        ImGui_ImplDX11_NewFrame();
-        ImGui_ImplWin32_NewFrame();
-        ImGui::NewFrame();
         Tools::Time::Start();
-    	
+        StartFrame();
+
+        if (m_isEditor)
+            Engine::UI::Dockspace::CreateDockspace();
+
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;
         }
 
         float deltaTime = Tools::Time::GetDeltaTime();
+
         Containers::ColliderContainer::Update(deltaTime);
         Containers::TransformSystem::Update(deltaTime);
         Containers::CameraSystem::Update(deltaTime);
 
         fixedUpdateTimer += deltaTime;
-
-    	if (fixedUpdateTimer >= 0.0001f)
-    	{
+        //todo this should never go below 0
+        if (fixedUpdateTimer >= 0.00069f || fixedUpdateTimer < 0)
+        {
             Containers::ColliderContainer::FixedUpdate();
             fixedUpdateTimer = 0.0f;
-    	}
+        }
+        
         DoFrame(renderSystem, deltaTime);
-
+        EndFrame();
         Tools::Time::Stop();
     }
+}
+
+void App::StartFrame() const
+{
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
 }
 
 void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTime) const
@@ -158,9 +167,13 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTi
     if (_INPUT->keyboard.IsKeyDown('F'))
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());
 
-    p_renderSystem.IUpdate(p_deltaTime);
+    p_renderSystem.IUpdate(p_deltaTime, m_isEditor);
+}
 
-    static bool show_demo_window = true;
+void App::EndFrame() const
+{
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+
     ImGui::Begin("Identity UI Tools");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::End();
@@ -168,7 +181,6 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTi
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         ImGui::UpdatePlatformWindows();

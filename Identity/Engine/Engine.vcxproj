@@ -283,7 +283,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Tools\ASSIMP\ASSIMPConversion.h" />
     <ClInclude Include="include\Tools\DirectX\dxerr.h" />
     <ClInclude Include="include\Tools\DirectX\GraphicsMacros.h" />
-    <ClInclude Include="include\Tools\Time.h" />
+    <ClInclude Include="include\Tools\FPSCounter.h" />
     <ClInclude Include="include\Tools\IDCounter.h" />
     <ClInclude Include="include\Tools\IdentityException.h" />
     <ClInclude Include="include\Tools\ImGUI\imconfig.h" />
@@ -295,22 +295,24 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Tools\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="include\Tools\ImGUI\imstb_textedit.h" />
     <ClInclude Include="include\Tools\ImGUI\imstb_truetype.h" />
+    <ClInclude Include="include\Tools\Time.h" />
+    <ClInclude Include="include\UI\Dockspace.h" />
     <ClInclude Include="include\UI\UIManager.h" />
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Components\BoxCollider.cpp" />
     <ClCompile Include="src\Components\IComponent.cpp" />
+    <ClCompile Include="src\Components\Light.cpp" />
     <ClCompile Include="src\Containers\ColliderContainer.cpp" />
     <ClCompile Include="src\Managers\ResourceManager.cpp" />
-    <ClCompile Include="src\Managers\SceneManager.cpp" />
-    <ClCompile Include="src\Rendering\Lights\DirectionalLight.cpp" />
-    <ClCompile Include="src\Components\Light.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
     <ClCompile Include="src\Containers\LightContainer.cpp" />
     <ClCompile Include="src\Containers\MaterialContainer.cpp" />
+    <ClCompile Include="src\Managers\SceneManager.cpp" />
     <ClCompile Include="src\Objects\IObject.cpp" />
     <ClCompile Include="src\Components\ModelComponent.cpp" />
+    <ClCompile Include="src\Rendering\Lights\DirectionalLight.cpp" />
     <ClCompile Include="src\Rendering\Materials\PixelShader.cpp" />
     <ClCompile Include="src\Rendering\Materials\VertexShader.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
@@ -324,6 +326,8 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
     <ClCompile Include="src\Rendering\RenderTexture.cpp" />
     <ClCompile Include="src\Systems\LightSystem.cpp" />
+    <ClCompile Include="src\Tools\Time.cpp" />
+    <ClCompile Include="src\UI\Dockspace.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
     <ClInclude Include="src\Core\App.h" />
     <ClCompile Include="src\Rendering\Buffers\InputLayout.cpp" />
@@ -349,7 +353,6 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\TestDependencies.cpp" />
     <ClCompile Include="src\Tools\ASSIMP\AssimpConversion.cpp" />
     <ClCompile Include="src\Tools\DirectX\dxerr.cpp" />
-    <ClCompile Include="src\Tools\Time.cpp" />
     <ClCompile Include="src\Tools\IdentityException.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui.cpp" />
     <ClCompile Include="src\Tools\ImGUI\ImGUIManager.cpp" />
