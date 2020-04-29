@@ -141,7 +141,6 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         screenRect->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
 
         screenRect->GetMaterial()->GetTexture()->SetTextureShaderResourceView(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
-        screenRect->GetMaterial()->SetTextureState(true);
 
         Rendering::Renderer::GetInstance()->Bind();
 
@@ -171,6 +170,9 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         mesh->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
 
         const Vector3F cameraPos = camera->GetPosition();
+
+        float txt = static_cast<float>(mesh->GetMaterial()->GetTextureState());
+
         const Vector4F reversedXLightPos = Vector4F(light.position.x,
                                                     light.position.y,
                                                     -light.position.z, 1.0f);
