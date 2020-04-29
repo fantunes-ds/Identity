@@ -109,10 +109,10 @@ int App::Run() const
         mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
     }
 
-    for (auto& mesh : lambo->GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
-    }
+    // for (auto& mesh : lambo->GetModel()->GetMeshes())
+    // {
+    //     mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
+    // }
 
     renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
 
