@@ -3,7 +3,6 @@
 #include <Components/Transform.h>
 #include <Scene/SceneGraph/SceneNode.h>
 #include <Tools/ASSIMP/ASSIMPConversion.h>
-#include <Containers/ModelContainer.h>
 #include <Systems/TransformSystem.h>
 
 std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(const std::string& p_file)
@@ -42,7 +41,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(c
         model.AddMesh(mesh);
     }
 
-    model.SetRootNode(rootSceneNode);
+    /*model.SetRootNode(rootSceneNode);
     ParseForNodes(scene->mRootNode, rootSceneNode, model);
 
     //If Assimp didn't create a node hierarchy while parsing
@@ -52,7 +51,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::ObjectLoader::LoadModel(c
         {
             rootSceneNode->AddChild(std::make_shared<Scene::SceneNode>(model.GetMeshes()[i]));
         }
-    }
+    }*/
 
 
     return std::make_shared<Engine::ObjectElements::Model>(model);

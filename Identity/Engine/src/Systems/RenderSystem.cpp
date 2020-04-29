@@ -1,8 +1,7 @@
 #include <stdafx.h>
 #include <Systems/RenderSystem.h>
-#include <Containers/ModelContainer.h>
 #include <Tools/DirectX/GraphicsMacros.h>
-#include <Rendering/Lights/Light.h>
+#include <Rendering/Lights/DirectionalLight.h>
 #include <Tools/ImGUI/imgui.h>
 #include <Input/Input.h>
 #include <Systems/TransformSystem.h>
@@ -12,6 +11,10 @@
 #include <Scene/SceneGraph/SceneNode.h>
 #include "Containers/ColliderContainer.h"
 #include <Components/BoxCollider.h>
+
+#include "Managers/ResourceManager.h"
+#include "Managers/SceneManager.h"
+#include <Scene/Scene.h>
 
 #define DEBUG_MODE true
 
@@ -147,21 +150,21 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
 void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
 {
-    auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
-    auto mesh = p_sceneNode->GetMesh();
-    std::shared_ptr<Rendering::Lights::Light> light1 = std::dynamic_pointer_cast<Rendering::Lights::Light>(Containers::LightContainer::GetLights().begin()->second);
-    Rendering::Lights::Light::LightData& light = light1->GetLightData();
+	auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
+	auto mesh = p_sceneNode->GetMesh();
+	std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
+	Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
 
-    if (mesh != nullptr)
-    {
-        mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
+	if (mesh != nullptr)
+	{
+		mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
 
-        Matrix4F model = Containers::TransformSystem::FindTransform(p_sceneNode->GetTransform())->GetWorldTransformMatrix();
+		Matrix4F model = Containers::TransformSystem::FindTransform(p_sceneNode->GetTransform())->GetWorldTransformMatrix();
 
-        Matrix4F normalModel = Matrix4F::Inverse(model);
+		Matrix4F normalModel = Matrix4F::Inverse(model);
 
-        Matrix4F view = camera->GetViewMatrix();
-        Matrix4F perspective = camera->GetPerspectiveMatrix();
+		Matrix4F view = camera->GetViewMatrix();
+		Matrix4F perspective = camera->GetPerspectiveMatrix();
 
         Rendering::Buffers::VCB vcb{ model, view, normalModel,perspective };
         mesh->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
@@ -179,10 +182,10 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         Rendering::Renderer::GetInstance()->Bind();
     }
 
-    for (auto child : p_sceneNode->GetChildren())
-    {
-        DrawSceneNode(child);
-    }
+	for (auto child : p_sceneNode->GetChildren())
+	{
+		DrawSceneNode(child);
+	}
 }
 
 void Engine::Systems::RenderSystem::IUpdate(float p_deltaTime, bool p_isEditor)
@@ -193,10 +196,10 @@ void Engine::Systems::RenderSystem::IUpdate(float p_deltaTime, bool p_isEditor)
 
 void Engine::Systems::RenderSystem::ResetActiveCamera()
 {
-    m_activeCamera = -1;
+	m_activeCamera = -1;
 }
 
 void Engine::Systems::RenderSystem::SetActiveCamera(int32_t p_id)
 {
-    m_activeCamera = p_id;
+	m_activeCamera = p_id;
 }

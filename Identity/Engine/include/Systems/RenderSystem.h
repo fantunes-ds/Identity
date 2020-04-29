@@ -3,7 +3,7 @@
 #include <Systems/ISystem.h>
 #include <3DLoader/ObjectElements/Model.h>
 #include <Rendering/Renderer.h>
-#include <Rendering/Lights/Light.h>
+#include <Rendering/Lights/DirectionalLight.h>
 #include "Events/Event.h"
 #include "Rendering/Materials/Texture.h"
 #include "Scene/SceneGraph/SceneGraph.h"
@@ -25,7 +25,7 @@ namespace Engine::Systems
         void SetActiveCamera(int32_t p_id);
 
     private:
-        std::map<int32_t, std::shared_ptr<Rendering::Lights::Light>> m_lights;
+        //std::map<int32_t, std::shared_ptr<Rendering::Lights::DirectionalLight>> m_lights;
         int32_t m_activeCamera = -1;
     };
 }

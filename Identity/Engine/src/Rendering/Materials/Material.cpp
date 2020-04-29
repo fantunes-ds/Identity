@@ -2,6 +2,12 @@
 #include <Rendering/Materials/Material.h>
 #include <d3dcompiler.inl>
 
+Engine::Rendering::Materials::Material::Material()
+{
+    m_pixelShader = std::make_shared<PixelShader>();
+    m_vertexShader = std::make_shared < VertexShader>();
+    m_texture = std::make_shared<Texture>();
+}
 
 std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Rendering::Materials::Material::CreateMaterial(
     const std::shared_ptr<PixelShader> p_pixelShader, const std::shared_ptr<VertexShader> p_vertexShader)

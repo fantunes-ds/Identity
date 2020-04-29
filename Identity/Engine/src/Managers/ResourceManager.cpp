@@ -12,20 +12,34 @@ std::unique_ptr<Engine::Managers::ResourceManager>& Engine::Managers::ResourceMa
     return m_instance;
 }
 
-std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager::AddModel(const std::string& p_path,
-                                                                                           const std::string& p_name)
+const int32_t Engine::Managers::ResourceManager::AddModel(const std::string& p_path, const std::string& p_name)
 {
     return GetInstance()->AddModelNS(p_path, p_name);
 }
 
-std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager::GetModel(const std::string& p_name)
+const int32_t Engine::Managers::ResourceManager::AddModel(const ObjectElements::Model& p_model)
+{
+    return GetInstance()->AddModelNS(p_model);
+}
+
+const int32_t Engine::Managers::ResourceManager::GetModel(const std::string& p_name)
 {
     return GetInstance()->GetModelNS(p_name);
+}
+
+std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager::FindModel(const int32_t p_id)
+{
+    return GetInstance()->FindModelNS(p_id);
 }
 
 std::vector<std::shared_ptr<Engine::ObjectElements::Model>> Engine::Managers::ResourceManager::GetAllModels()
 {
     return GetInstance()->GetAllModelsNS();
+}
+
+bool Engine::Managers::ResourceManager::RemoveModel(const int32_t p_id)
+{
+    return GetInstance()->RemoveModelNS(p_id);
 }
 
 std::shared_ptr<Engine::Rendering::Materials::Texture> Engine::Managers::ResourceManager::AddTexture(
@@ -107,23 +121,22 @@ Engine::Managers::ResourceManager::ResourceManager()
     CreateMaterialNS("default", "defaultPS", "defaultVS");
 }
 
-std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager::AddModelNS(const std::string& p_path,
-    const std::string& p_name)
+const int32_t Engine::Managers::ResourceManager::AddModelNS(const std::string& p_path, const std::string& p_name)
 {
     for (auto model : m_models)
     {
-        if (model->GetPath() == p_path)
+        if (model.second->GetPath() == p_path)
         {
             const std::string info("The model located at " + p_path + " is already loaded and will be returned");
             MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
-            return model;
+            return model.first;
         }
 
-        if (model->GetName() == p_name)
+        if (model.second->GetName() == p_name)
         {
             const std::string info("The name '" + p_name + "' is already in use, please change the name");
             MessageBox(nullptr, info.c_str(), "Error", MB_ICONERROR | MB_OK);
-            return nullptr;
+            return -1;
         }
     }
 
@@ -135,7 +148,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager
             error("ResourceManager::AddModel(const std::string& p_path, const std::string& p_name): Could not load model at "
                 + p_path + " because there was no object to be found at that path");
         MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
-        return nullptr;
+        return -1;
     }
 
     model->SetName(p_name);
@@ -144,28 +157,67 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager
     for (auto& mesh : model->GetMeshes())
         mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
 
-    m_models.push_back(model);
-    Scene::SceneGraph::GetInstance()->AddRootSceneNode(model->GetRootNode());
+    m_models.insert_or_assign(model->GetID(), model);
+    // Scene::SceneGraph::GetInstance()->AddRootSceneNode(model->GetRootNode());
 
-    return model;
+    return model->GetID();
 }
 
-std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager::GetModelNS(const std::string& p_name)
+const int32_t Engine::Managers::ResourceManager::AddModelNS(const ObjectElements::Model& p_model)
+{
+    auto model = std::make_shared<ObjectElements::Model>(p_model);
+    GetInstance()->m_models.insert_or_assign(p_model.GetID(), model);
+    return model->GetID();
+}
+
+const int32_t Engine::Managers::ResourceManager::GetModelNS(const std::string& p_name)
 {
     for (auto model : m_models)
     {
-        if (model->GetName() == p_name)
-            return model;
+        if (model.second->GetName() == p_name)
+            return model.first;
     }
 
     const std::string error("The model: " + p_name + " does not exist");
+    MessageBox(nullptr, error.c_str(), "Error", MB_ICONERROR | MB_OK);
+    return -1;
+}
+
+std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager::FindModelNS(const int32_t p_id)
+{
+    for (auto model : m_models)
+    {
+        if (model.first == p_id)
+            return model.second;
+    }
+
+    const std::string error("The model with id: " + std::to_string(p_id) + " does not exist");
     MessageBox(nullptr, error.c_str(), "Error", MB_ICONERROR | MB_OK);
     return nullptr;
 }
 
 std::vector<std::shared_ptr<Engine::ObjectElements::Model>> Engine::Managers::ResourceManager::GetAllModelsNS()
 {
-    return m_models;
+    std::vector<std::shared_ptr<Engine::ObjectElements::Model>> tmpVec;
+
+    for (auto model : m_models)
+    {
+        tmpVec.push_back(model.second);
+    }
+
+    return tmpVec;
+}
+
+bool Engine::Managers::ResourceManager::RemoveModelNS(const int32_t p_id)
+{
+    const size_t sizeBefore = GetInstance()->m_models.size();
+    GetInstance()->m_models.erase(p_id);
+    const size_t sizeAfter = GetInstance()->m_models.size();
+
+    if (sizeBefore == sizeAfter)
+        return false;
+
+    return true;
 }
 
 std::shared_ptr<Engine::Rendering::Materials::Texture> Engine::Managers::ResourceManager::AddTextureNS(
