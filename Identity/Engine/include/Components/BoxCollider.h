@@ -41,6 +41,7 @@ namespace Engine::Components
          * @brief Builds a Model that visually represents this BoxCollider's transform. 
          */
         ObjectElements::Model ConstructBox();
+    	
         float m_mass;
         GPM::Vector3F m_offset;
         btBoxShape* m_box;
