@@ -13,7 +13,7 @@ namespace Engine::Rendering::Materials
     class Texture : public Objects::IObject
     {
     public:
-        Texture() = default;
+        Texture();
         ~Texture() = default;
 
         inline void SetPath(const std::string& p_path) { m_path = p_path; }
