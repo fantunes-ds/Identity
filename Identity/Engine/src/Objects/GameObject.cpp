@@ -4,6 +4,8 @@
 #include <Systems/TransformSystem.h>
 #include <Components/ModelComponent.h>
 #include <Containers/GameObjectContainer.h>
+#include <Scene/Scene.h>
+#include <Managers/SceneManager.h>
 
 Engine::Objects::GameObject::GameObject()
 {
@@ -25,9 +27,9 @@ std::shared_ptr<Engine::Components::Transform> Engine::Objects::GameObject::GetT
 
 std::shared_ptr<Engine::ObjectElements::Model> Engine::Objects::GameObject::GetModel() const
 {
-    for (auto& component: m_components)
+    for (auto& component : m_components)
     {
-        if (Components::ModelComponent * modelComp = dynamic_cast<Components::ModelComponent*>(&*Containers::ComponentContainer::FindComponent(component)))
+        if (Components::ModelComponent* modelComp = dynamic_cast<Components::ModelComponent*>(&*Containers::ComponentContainer::FindComponent(component)))
             return Containers::ModelContainer::FindModel(modelComp->GetModel());
     }
 
@@ -42,12 +44,11 @@ bool Engine::Objects::GameObject::operator==(GameObject& p_other) const
     return false;
 }
 
-/*void Engine::Objects::GameObject::SetParentObject(GameObject& p_parent)
+void Engine::Objects::GameObject::SetParentObject(std::shared_ptr<GameObject> p_parent)
 {
-    auto rootNode = Containers::ModelContainer::FindModel(FindComponentOfType<Components::ModelComponent>()->GetModel())->GetRootNode();
-    auto parentNode = Containers::ModelContainer::FindModel(p_parent.FindComponentOfType<Components::ModelComponent>()->GetModel())->GetRootNode();
-    rootNode->SetParent(&*parentNode);
-}*/
+    p_parent->GetSceneNode()->AddChild(m_rootNode);
+    //Managers::SceneManager::GetActiveScene()->GetSceneGraph().UpdateScene(0.0f);
+}
 
 bool Engine::Objects::GameObject::RemoveComponent(int32_t p_id)
 {

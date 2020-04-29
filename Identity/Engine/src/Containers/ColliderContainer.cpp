@@ -3,11 +3,25 @@
 #include <Components/BoxCollider.h>
 #include <BulletCollision/BroadphaseCollision/btDbvtBroadphase.h>
 #include <Objects/GameObject.h>
-#include <Systems/TransformSystem.h>
+#include <Tools/Time.h>
 
+Engine::Containers::ColliderContainer::ColliderContainer()
+{
+    m_collisionConfiguration = new btDefaultCollisionConfiguration();
 
-#include "Containers/EventContainer.h"
-#include "Tools/Time.h"
+    ///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
+    m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
+
+    ///btDbvtBroadphase is a good general purpose broadphase. You can also try out btAxis3Sweep.
+    m_overlappingPairCache = new btDbvtBroadphase();
+
+    ///the default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded)
+    m_solver = new btSequentialImpulseConstraintSolver;
+
+    m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher, m_overlappingPairCache, m_solver, m_collisionConfiguration);
+
+    m_dynamicsWorld->setGravity(btVector3(0.0f, -10.0f, 0.0f));
+}
 
 Engine::Containers::ColliderContainer::~ColliderContainer()
 {
@@ -19,7 +33,6 @@ Engine::Containers::ColliderContainer* Engine::Containers::ColliderContainer::Ge
     if (m_instance == nullptr)
     {
         m_instance = new ColliderContainer();
-        //EventContainer::GetEvent("CallFixedUpdate").AddListener(&*m_instance, &ColliderContainer::FixedUpdate);
     }
 
     return m_instance;
@@ -36,6 +49,11 @@ std::shared_ptr<Engine::Components::BoxCollider> Engine::Containers::ColliderCon
 
 void Engine::Containers::ColliderContainer::Update(const float p_deltaTime)
 {
+    for (auto& collider : GetInstance()->m_colliders)
+    {
+        //collider.second->GetWorldMatrix().
+
+    }
 }
 
 void Engine::Containers::ColliderContainer::FixedUpdate()
@@ -60,22 +78,4 @@ void Engine::Containers::ColliderContainer::FixedUpdate()
 
         collider.second->GetGameObject()->GetTransform()->UpdateWorldTransformMatrix();
     }
-}
-
-Engine::Containers::ColliderContainer::ColliderContainer()
-{
-    m_collisionConfiguration = new btDefaultCollisionConfiguration();
-
-    ///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
-    m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
-
-    ///btDbvtBroadphase is a good general purpose broadphase. You can also try out btAxis3Sweep.
-    m_overlappingPairCache = new btDbvtBroadphase();
-
-    ///the default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded)
-    m_solver = new btSequentialImpulseConstraintSolver;
-
-    m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher, m_overlappingPairCache, m_solver, m_collisionConfiguration);
-
-    m_dynamicsWorld->setGravity(btVector3(0.0f, -10.0f, 0.0f));
 }
