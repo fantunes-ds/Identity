@@ -9,6 +9,8 @@
 
 using namespace Engine::Rendering;
 
+constexpr bool V_SYNC = true;
+
 std::unique_ptr<Renderer> Renderer::instance;
 Renderer::Renderer(const HWND& p_hwnd, const int& p_clientWidth, const int& p_clientHeight) :
     m_width(static_cast<float>(p_clientWidth)), m_height(static_cast<float>(p_clientHeight))
@@ -49,13 +51,27 @@ void Renderer::EndFrame() const
 {
     HRESULT hr;
 
-    if (FAILED(hr = m_pSwapChain->Present(0u, 0u)))
+    if (V_SYNC)
     {
-        if (hr == DXGI_ERROR_DEVICE_REMOVED)
+        if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
         {
-            throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
+            if (hr == DXGI_ERROR_DEVICE_REMOVED)
+            {
+                throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
+            }
+            throw GFX_EXCEPT(hr);
         }
-        throw GFX_EXCEPT(hr);
+    }
+    else
+    {
+        if (FAILED(hr = m_pSwapChain->Present(0u, 0u)))
+        {
+            if (hr == DXGI_ERROR_DEVICE_REMOVED)
+            {
+                throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
+            }
+            throw GFX_EXCEPT(hr);
+        }
     }
 }   
 

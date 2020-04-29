@@ -18,7 +18,7 @@ namespace Engine::Containers
         static bool RemoveCamera(int32_t p_id);
 
         static void Update(const float p_deltaTime);
-        void IUpdate(const float p_deltaTime) override;
+        void IUpdate(const float p_deltaTime, bool p_isEditor = false) override;
 
         static CameraSystem* GetInstance();
         static std::shared_ptr<Components::Camera> GetCamera(int32_t p_id);

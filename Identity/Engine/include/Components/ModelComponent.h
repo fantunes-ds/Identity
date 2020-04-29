@@ -2,13 +2,13 @@
 #include <Export.h>
 #include <Components/IComponent.h>
 #include "3DLoader/ObjectElements/Model.h"
-#include <Containers/ModelContainer.h>
 
 namespace Engine::Components
 {
     class API_ENGINE ModelComponent: public IComponent
     {
     public:
+        ModelComponent(Objects::GameObject* p_gameObject, const int32_t p_id);
         ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name);
         ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file, const std::string& p_name);
         virtual ~ModelComponent() = default;

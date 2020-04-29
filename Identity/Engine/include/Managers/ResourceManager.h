@@ -34,18 +34,30 @@ namespace Engine::Managers
          * @param p_name The name you want to give to the model
          * @return Return a shared_ptr of the loaded model
          */
-        static std::shared_ptr<ObjectElements::Model> AddModel(const std::string& p_path, const std::string& p_name);
+        static const int32_t AddModel(const std::string& p_path, const std::string& p_name);
+
+        //TODO add comments here
+        static const int32_t AddModel(const ObjectElements::Model& p_model);
+
         /**
          * @brief Used to get a model from the resource manager
          * @param p_name The name of the model you want to get
          * @return Return a shared_ptr of the model or nullptr if it was not found
          */
-        static std::shared_ptr<ObjectElements::Model> GetModel(const std::string& p_name);
+        static const int32_t GetModel(const std::string& p_name);
+
+        //TODO add comments here
+        static std::shared_ptr<ObjectElements::Model> FindModel(const int32_t p_id);
+
         /**
          * @brief Used to get all model from the resource manager
          * @return Return a vector of shared_ptr of all the model
          */
         static std::vector<std::shared_ptr<ObjectElements::Model>> GetAllModels();
+
+        //TODO add model here
+        static bool RemoveModel(const int32_t p_id);
+
 #pragma endregion
 
 #pragma region Texture
@@ -147,20 +159,32 @@ namespace Engine::Managers
          * @brief Used to add a model to the resource manager
          * @param p_path The path of the model you want to load
          * @param p_name The name you want to give to the model
-         * @return Return a shared_ptr of the loaded model
+         * @return Return a int32_t of the loaded model
          */
-        std::shared_ptr<ObjectElements::Model> AddModelNS(const std::string& p_path, const std::string& p_name);
+        const int32_t AddModelNS(const std::string& p_path, const std::string& p_name);
+
+        //TODO add comments here
+        const int32_t AddModelNS(const ObjectElements::Model& p_model);
+
         /**
          * @brief Used to get a model from the resource manager
          * @param p_name The name of the model you want to get
-         * @return Return a shared_ptr of the model or nullptr if it was not found
+         * @return Return a int32_t of the model or -1 if it was not found
          */
-        std::shared_ptr<ObjectElements::Model> GetModelNS(const std::string& p_name);
+        const int32_t GetModelNS(const std::string& p_name);
+
+        //TODO add comments here
+        std::shared_ptr<ObjectElements::Model> FindModelNS(const int32_t p_id);
+
         /**
          * @brief Used to get all model from the resource manager
          * @return Return a vector of shared_ptr of all the model
          */
         std::vector<std::shared_ptr<ObjectElements::Model>> GetAllModelsNS();
+
+        //TODO add comments here
+        bool RemoveModelNS(const int32_t p_id);
+
 #pragma endregion
 
 #pragma region Texture
@@ -256,7 +280,7 @@ namespace Engine::Managers
 
         inline static std::unique_ptr<ResourceManager> m_instance{ nullptr };
 
-        std::vector<std::shared_ptr<ObjectElements::Model>> m_models;
+        std::map<int32_t, std::shared_ptr<ObjectElements::Model>> m_models;
         std::vector<std::shared_ptr<Rendering::Materials::Texture>> m_textures;
         std::vector<std::shared_ptr<Rendering::Materials::PixelShader>> m_pixelShaders;
         std::vector<std::shared_ptr<Rendering::Materials::VertexShader>> m_vertexShaders;

@@ -22,7 +22,7 @@ void Engine::Containers::TransformSystem::Update(const float p_deltaTime)
     GetInstance()->IUpdate(p_deltaTime);
 }
 
-void Engine::Containers::TransformSystem::IUpdate(float p_deltaTime)
+void Engine::Containers::TransformSystem::IUpdate(float p_deltaTime, bool p_isEditor)
 {
     for (std::shared_ptr<Engine::Components::Transform> transform : GetTransforms())
     {

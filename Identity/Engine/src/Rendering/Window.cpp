@@ -172,7 +172,6 @@ LRESULT Window::HandleMsgThunk(const HWND p_hwnd, const UINT p_msg, const WPARAM
 }
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
-
 LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam)
 {
     if (ImGui_ImplWin32_WndProcHandler(p_hwnd, p_msg, p_wParam, p_lParam))
@@ -244,18 +243,6 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
                     {
                         SetCapture(p_hwnd);
                         _INPUT->mouse.OnMouseEnter();
-                    }
-
-                    if (_INPUT->mouse.m_leftIsPressed)
-                    {
-                        if (pt.x >= m_width)
-                            SetCursorPos(2, pt.y);
-                        if (pt.x <= 0)
-                            SetCursorPos(m_width - 2, pt.y);
-                        if (pt.y >= m_height)
-                            SetCursorPos(pt.x, 2);
-                        if (pt.y <= 0)
-                            SetCursorPos(pt.x, m_width - 2);
                     }
                 }
                 else

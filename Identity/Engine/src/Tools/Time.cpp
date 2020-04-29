@@ -10,13 +10,12 @@ Engine::Tools::Time::Time(int p_numberOfSamples = 10) : m_numberOfSamples{ p_num
 
 void Engine::Tools::Time::Start()
 {
-    GetInstance()->m_startTime = std::chrono::system_clock::now();
-    GetInstance()->m_updateFrameTime = std::chrono::system_clock::now();
+    GetInstance()->m_startTime = std::chrono::high_resolution_clock::now();
 }
 
 void Engine::Tools::Time::Stop()
 {
-    GetInstance()->m_endTime = std::chrono::system_clock::now();
+    GetInstance()->m_updateFrameTime = std::chrono::high_resolution_clock::now();
     GetInstance()->m_deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(GetInstance()->m_endTime - GetInstance()->m_startTime).count();
     GetInstance()->m_previousTimes.push_back(GetInstance()->m_deltaTime);
 
@@ -25,13 +24,13 @@ void Engine::Tools::Time::Stop()
         GetInstance()->m_previousTimes.pop_front();
     }
 
-    GetInstance()->m_updateFrameTime = std::chrono::system_clock::now();
+    GetInstance()->m_updateFrameTime = std::chrono::high_resolution_clock::now();
     const std::chrono::duration<float> time = GetInstance()->m_updateFrameTime - GetInstance()->m_lastUpdateFrameTime;
 
 
     if (time.count() >= 1)
     {
-        GetInstance()->m_lastUpdateFrameTime = std::chrono::system_clock::now();
+        GetInstance()->m_lastUpdateFrameTime = std::chrono::high_resolution_clock::now();
 
         float totalTime = 0.0f;
 
@@ -42,6 +41,7 @@ void Engine::Tools::Time::Stop()
 
         GetInstance()->m_FPS = totalTime / GetInstance()->m_previousTimes.size();
     }
+    GetInstance()->m_endTime = std::chrono::high_resolution_clock::now();
 }
 
 void Engine::Tools::Time::Update()
@@ -65,10 +65,10 @@ int Engine::Tools::Time::GetFPS()
 
 float Engine::Tools::Time::GetDeltaTime()
 {
-    float deltaTime = GetInstance()->m_deltaTime / 1000.0f;
+    float deltaTime = GetInstance()->m_deltaTime;
 
     if (1.0f / deltaTime > GetInstance()->m_fpsLimiter)
-        deltaTime = 1.0f / GetInstance()->m_fpsLimiter / 1000.0f;
+        deltaTime = 1.0f / GetInstance()->m_fpsLimiter;
 	
     return deltaTime;
 }

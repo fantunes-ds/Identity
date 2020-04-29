@@ -1,6 +1,5 @@
 #include <stdafx.h>
 #include <Objects/GameObject.h>
-#include <Containers/ModelContainer.h>
 #include <Systems/TransformSystem.h>
 #include <Components/ModelComponent.h>
 #include <Containers/GameObjectContainer.h>
