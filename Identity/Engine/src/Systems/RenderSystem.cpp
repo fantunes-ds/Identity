@@ -24,9 +24,9 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
     Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     std::shared_ptr<Rendering::Lights::ILight> ILight = Containers::LightContainer::GetLights().begin()->second;
-    std::shared_ptr<Rendering::Lights::Light> light1 = std::dynamic_pointer_cast<Rendering::Lights::Light>(Containers::LightContainer::GetLights().begin()->second);
+    std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
 
-    Rendering::Lights::Light::LightData& light = light1->GetLightData();
+    Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
 
     auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
 
@@ -62,7 +62,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         }ImGui::End();
     }*/
 
-    for (auto& sceneNode : Scene::SceneGraph::GetInstance()->GetRootSceneNodes())
+    for (auto& sceneNode : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
     {
         DrawSceneNode(sceneNode.second);
     }
@@ -89,7 +89,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
             const Rendering::Buffers::PCB pcb{
                 Vector4F::zero, Vector4F::one, Vector4F::one,
                 Vector4F::zero, Vector4F::one,
-                1.0f, Vector3F{}, Vector3F::zero, 0.0f
+                1.0f, Vector3F{}, Vector3F::zero, static_cast<float>(mesh->GetMaterial()->GetTextureState())
             };
             mesh->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
             Rendering::Renderer::GetInstance()
@@ -136,11 +136,12 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         const Rendering::Buffers::PCB pcb{
             Vector4F::zero, Vector4F::one, Vector4F::one,
             Vector4F::zero, Vector4F::one,
-            1.0f, Vector3F{}, Vector3F::zero, 0.0f
+            1.0f, Vector3F{}, Vector3F::zero, static_cast<float>(screenRect->GetMaterial()->GetTextureState())
         };
         screenRect->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
 
         screenRect->GetMaterial()->GetTexture()->SetTextureShaderResourceView(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
+        screenRect->GetMaterial()->SetTextureState(true);
 
         Rendering::Renderer::GetInstance()->Bind();
 
@@ -150,30 +151,33 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
 void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
 {
-	auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
-	auto mesh = p_sceneNode->GetMesh();
-	std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
-	Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
+    auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
+    auto mesh = p_sceneNode->GetMesh();
+    std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
+    Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
 
-	if (mesh != nullptr)
-	{
-		mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
+    if (mesh != nullptr)
+    {
+        mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
 
-		Matrix4F model = Containers::TransformSystem::FindTransform(p_sceneNode->GetTransform())->GetWorldTransformMatrix();
+        Matrix4F model = Containers::TransformSystem::FindTransform(p_sceneNode->GetTransform())->GetWorldTransformMatrix();
 
-		Matrix4F normalModel = Matrix4F::Inverse(model);
+        Matrix4F normalModel = Matrix4F::Inverse(model);
 
-		Matrix4F view = camera->GetViewMatrix();
-		Matrix4F perspective = camera->GetPerspectiveMatrix();
+        Matrix4F view        = camera->GetViewMatrix();
+        Matrix4F perspective = camera->GetPerspectiveMatrix();
 
-        Rendering::Buffers::VCB vcb{ model, view, normalModel,perspective };
+        Rendering::Buffers::VCB vcb{model, view, normalModel, perspective};
         mesh->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
-        const Vector3F cameraPos = camera->GetPosition();
 
-        const Vector4F reversedXLightPos = Vector4F(light.position.x, light.position.y, -light.position.z, 1.0f);
-        const Rendering::Buffers::PCB pcb{ reversedXLightPos, light.ambient, light.diffuse,
-                                            light.specular , light.color,
-                                                            light.shininess,Vector3F{},Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, 0.0f };
+        const Vector3F cameraPos = camera->GetPosition();
+        const Vector4F reversedXLightPos = Vector4F(light.position.x,
+                                                    light.position.y,
+                                                    -light.position.z, 1.0f);
+        const Rendering::Buffers::PCB pcb{reversedXLightPos, light.ambient, light.diffuse,
+            light.specular, light.color,light.shininess, Vector3F{},
+            Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, static_cast<float>(mesh->GetMaterial()->GetTextureState())
+        };
 
         mesh->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
 
@@ -182,24 +186,24 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         Rendering::Renderer::GetInstance()->Bind();
     }
 
-	for (auto child : p_sceneNode->GetChildren())
-	{
-		DrawSceneNode(child);
-	}
+    for (auto child : p_sceneNode->GetChildren())
+    {
+        DrawSceneNode(child);
+    }
 }
 
 void Engine::Systems::RenderSystem::IUpdate(float p_deltaTime, bool p_isEditor)
 {
-    Scene::SceneGraph::GetInstance()->UpdateScene(p_deltaTime);
+    Managers::SceneManager::GetActiveScene()->GetSceneGraph().UpdateScene(p_deltaTime);
     DrawScene(p_deltaTime, p_isEditor);
 }
 
 void Engine::Systems::RenderSystem::ResetActiveCamera()
 {
-	m_activeCamera = -1;
+    m_activeCamera = -1;
 }
 
 void Engine::Systems::RenderSystem::SetActiveCamera(int32_t p_id)
 {
-	m_activeCamera = p_id;
+    m_activeCamera = p_id;
 }

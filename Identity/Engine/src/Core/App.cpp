@@ -37,7 +37,7 @@ App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
     Input::Input::InitInput();
 }
 
-App::App(int p_width, int p_height, const char* p_name, bool p_isEditor) : m_window(p_width, p_height, p_name), m_width(p_width), m_height(p_height), m_isEditor(p_isEditor)
+App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) : m_window(p_width, p_height, p_name), m_width(p_width), m_height(p_height), m_isEditor(p_isEditor)
 {
     Input::Input::InitInput();
 }
@@ -59,8 +59,6 @@ int App::Run() const
     Managers::ResourceManager::AddTexture("../Engine/Resources/lambo_text.jpeg", "LamboText");
     Managers::ResourceManager::CreateMaterial("LinkMat", "defaultPS", "defaultVS", "LinkText");
     Managers::ResourceManager::CreateMaterial("LamboMat", "defaultPS", "defaultVS", "LamboText");
-
-    camera.AddComponent<Components::Camera>(m_width, m_height);
 
     link->GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
     link->GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
@@ -119,11 +117,11 @@ int App::Run() const
 
     lambo->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
 
-    static float fixedUpdateTimer = 0.0f;
+    float fixedUpdateTimer = 0.0f;
 	
     while (true)
     {
-        fpsCounter.Start();
+        Tools::Time::Start();
         StartFrame();
 
         if (const auto eCode = Rendering::Window::ProcessMessage())
@@ -132,17 +130,20 @@ int App::Run() const
         }
 
         float deltaTime = Tools::Time::GetDeltaTime();
+
         Containers::ColliderContainer::Update(deltaTime);
         Containers::TransformSystem::Update(deltaTime);
         Containers::CameraSystem::Update(deltaTime);
+
         fixedUpdateTimer += deltaTime;
-    	if (fixedUpdateTimer >= 0.0001f)
-    	{
+        //todo this should never go below 0
+        if (fixedUpdateTimer >= 0.00069f || fixedUpdateTimer < 0)
+        {
             Containers::ColliderContainer::FixedUpdate();
             fixedUpdateTimer = 0.0f;
-    	}
+        }
         
-        DoFrame(renderSystem, fpsCounter.GetDeltaTime());
+        DoFrame(renderSystem, deltaTime);
         EndFrame();
         Tools::Time::Stop();
     }

@@ -40,11 +40,11 @@ namespace Engine::Tools
         float m_fpsLimiter = 125.0f;
         float m_fixedUpdateCounter = 0.0f;
     	
-        std::chrono::time_point<std::chrono::system_clock> m_startTime;
-        std::chrono::time_point<std::chrono::system_clock> m_endTime;
+        std::chrono::time_point<std::chrono::high_resolution_clock> m_startTime;
+        std::chrono::time_point<std::chrono::high_resolution_clock> m_endTime;
 
-        std::chrono::time_point<std::chrono::system_clock> m_updateFrameTime;
-        std::chrono::time_point<std::chrono::system_clock> m_lastUpdateFrameTime;   
+        std::chrono::time_point<std::chrono::high_resolution_clock> m_updateFrameTime;
+        std::chrono::time_point<std::chrono::high_resolution_clock> m_lastUpdateFrameTime;
     	
         std::deque<float> m_previousTimes;
     };

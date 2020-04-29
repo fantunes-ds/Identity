@@ -57,12 +57,15 @@
     <ClCompile Include="src\Tools\ImGUI\imgui_impl_dx11.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui_impl_win32.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui_widgets.cpp" />
-    <ClCompile Include="src\Scene\Scene.cpp" />
-    <ClCompile Include="src\Managers\SceneManager.cpp" />
-    <ClCompile Include="src\Tools\Time.cpp" />
+    <ClCompile Include="src\Containers\ModelContainer.cpp" />
+    <ClCompile Include="src\Tools\FPSCounter.cpp" />
     <ClCompile Include="src\Components\Light.cpp" />
+    <ClCompile Include="src\Managers\SceneManager.cpp" />
     <ClCompile Include="src\Rendering\Lights\DirectionalLight.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Systems\LightSystem.cpp" />
+    <ClCompile Include="src\Tools\Time.cpp" />
+    <ClCompile Include="src\UI\Dockspace.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Components\IComponent.h" />
@@ -142,6 +145,12 @@
     <ClInclude Include="include\UI\UIElements\Dropdown.h" />
     <ClInclude Include="include\UI\UIElements\Tickbox.h" />
     <ClInclude Include="include\UI\UIElements\ColorField.h" />
+    <ClInclude Include="include\Tools\FPSCounter.h" />
+    <ClInclude Include="include\Tools\Time.h" />
+    <ClInclude Include="include\Systems\LightSystem.h" />
+    <ClInclude Include="include\Rendering\Lights\DirectionalLight.h" />
+    <ClInclude Include="include\Managers\SceneManager.h" />
+    <ClInclude Include="include\Components\Light.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />
