@@ -57,8 +57,6 @@
     <ClCompile Include="src\Tools\ImGUI\imgui_impl_dx11.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui_impl_win32.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui_widgets.cpp" />
-    <ClCompile Include="src\Containers\ModelContainer.cpp" />
-    <ClCompile Include="src\Tools\FPSCounter.cpp" />
     <ClCompile Include="src\Components\Light.cpp" />
     <ClCompile Include="src\Managers\SceneManager.cpp" />
     <ClCompile Include="src\Rendering\Lights\DirectionalLight.cpp" />
@@ -136,21 +134,13 @@
     <ClInclude Include="include\UI\UIManager.h" />
     <ClInclude Include="include\WinSetup.h" />
     <ClInclude Include="src\Core\App.h" />
-    <ClInclude Include="include\UI\Dockspace.h" />
-    <ClInclude Include="include\UI\UIElements\FloatField.h" />
-    <ClInclude Include="include\UI\UIElements\Vector2Field.h" />
-    <ClInclude Include="include\UI\UIElements\Vector3Field.h" />
-    <ClInclude Include="include\UI\UIElements\Vector4Field.h" />
-    <ClInclude Include="include\UI\UIElements\Slider.h" />
-    <ClInclude Include="include\UI\UIElements\Dropdown.h" />
-    <ClInclude Include="include\UI\UIElements\Tickbox.h" />
-    <ClInclude Include="include\UI\UIElements\ColorField.h" />
     <ClInclude Include="include\Tools\FPSCounter.h" />
     <ClInclude Include="include\Tools\Time.h" />
     <ClInclude Include="include\Systems\LightSystem.h" />
     <ClInclude Include="include\Rendering\Lights\DirectionalLight.h" />
     <ClInclude Include="include\Managers\SceneManager.h" />
     <ClInclude Include="include\Components\Light.h" />
+    <ClInclude Include="include\UI\Dockspace.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />

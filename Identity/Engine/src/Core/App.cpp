@@ -15,7 +15,8 @@
 #include <Objects/GameObject.h>
 #include <Components/ModelComponent.h>
 #include <Components/Camera.h>
-#include <Containers/MaterialContainer.h>
+#include <UI/Dockspace.h>
+
 #include <Components/Light.h>
 #include <LinearMath/btVector3.h>
 #include <Systems/CameraSystem.h>
@@ -123,6 +124,9 @@ int App::Run() const
     {
         Tools::Time::Start();
         StartFrame();
+
+        if (m_isEditor)
+            Engine::UI::Dockspace::CreateDockspace();
 
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
