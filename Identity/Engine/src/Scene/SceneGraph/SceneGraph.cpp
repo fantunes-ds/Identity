@@ -1,8 +1,7 @@
 #include <stdafx.h>
 #include <Scene/SceneGraph/SceneGraph.h>
 #include <Objects/GameObject.h>
-
-#include "Managers/ResourceManager.h"
+#include <Managers/ResourceManager.h>
 
 void Engine::Scene::SceneGraph::AddRootSceneNode(std::shared_ptr<SceneNode> p_sceneNode)
 {
@@ -18,7 +17,7 @@ void Engine::Scene::SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::Ga
     if (p_gameObject->FindComponentOfType<Components::ModelComponent>())
     {
         int modelID = p_gameObject->FindComponentOfType<Components::ModelComponent>()->GetModel();
-        auto model = Containers::ModelContainer::FindModel(modelID);
+        auto model = Managers::ResourceManager::FindModel(modelID);
     	
         for (auto& mesh : model->GetMeshes())
         {

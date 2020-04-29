@@ -5,6 +5,7 @@
 #include <Containers/GameObjectContainer.h>
 #include <Scene/Scene.h>
 #include <Managers/SceneManager.h>
+#include <Managers/ResourceManager.h>
 
 Engine::Objects::GameObject::GameObject()
 {
@@ -29,7 +30,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Objects::GameObject::GetM
     for (auto& component : m_components)
     {
         if (Components::ModelComponent* modelComp = dynamic_cast<Components::ModelComponent*>(&*Containers::ComponentContainer::FindComponent(component)))
-            return Containers::ModelContainer::FindModel(modelComp->GetModel());
+            return Managers::ResourceManager::FindModel(modelComp->GetModel());
     }
 
     return nullptr;

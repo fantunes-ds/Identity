@@ -51,8 +51,7 @@ void Engine::Containers::ColliderContainer::Update(const float p_deltaTime)
 {
     for (auto& collider : GetInstance()->m_colliders)
     {
-        //collider.second->GetWorldMatrix().
-
+        
     }
 }
 
