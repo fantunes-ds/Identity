@@ -18,6 +18,11 @@
 
 #define DEBUG_MODE true
 
+Engine::Systems::RenderSystem::~RenderSystem()
+{
+    delete m_instance;
+}
+
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
 {
     HRESULT hr;
@@ -28,7 +33,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
     Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
 
-    auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
+    auto camera = Containers::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
 
     float* pos[3] = {&light.position.x, &light.position.y, &light.position.z};
 
@@ -122,7 +127,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
     //Draw to Screen Rect
     else
     {
-        auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
+        auto camera = Containers::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
 
         std::shared_ptr<ObjectElements::Mesh> screenRect = Rendering::Renderer::GetInstance()->GetRect();
 
@@ -150,7 +155,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
 void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
 {
-    auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
+    auto camera = Containers::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
     auto mesh = p_sceneNode->GetMesh();
     std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
     Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
@@ -202,10 +207,20 @@ void Engine::Systems::RenderSystem::IUpdate(float p_deltaTime, bool p_isEditor)
 
 void Engine::Systems::RenderSystem::ResetActiveCamera()
 {
-    m_activeCamera = -1;
+    GetInstance()->m_activeCamera = -1;
 }
 
 void Engine::Systems::RenderSystem::SetActiveCamera(int32_t p_id)
 {
-    m_activeCamera = p_id;
+    GetInstance()->m_activeCamera = p_id;
+}
+
+Engine::Systems::RenderSystem* Engine::Systems::RenderSystem::GetInstance()
+{
+    if (m_instance == nullptr)
+    {
+        m_instance = new RenderSystem();
+    }
+
+    return m_instance;
 }

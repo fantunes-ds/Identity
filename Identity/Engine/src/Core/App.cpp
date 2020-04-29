@@ -45,8 +45,6 @@ App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) :
 
 int App::Run() const
 {
-    Systems::RenderSystem renderSystem;
-
     auto scene = std::make_shared<Scene::Scene>();
 	
     auto link = std::make_shared<Objects::GameObject>("link");
@@ -114,7 +112,7 @@ int App::Run() const
     //     mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
     // }
 
-    renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
+    Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
 
     lambo->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
 
@@ -147,7 +145,7 @@ int App::Run() const
             fixedUpdateTimer = 0.0f;
         }
         
-        DoFrame(renderSystem, deltaTime);
+        DoFrame(deltaTime);
         EndFrame();
         Tools::Time::Stop();
     }
@@ -160,14 +158,14 @@ void App::StartFrame() const
     ImGui::NewFrame();
 }
 
-void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTime) const
+void App::DoFrame(float p_deltaTime) const
 {
     Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
 
     if (_INPUT->keyboard.IsKeyDown('F'))
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());
 
-    p_renderSystem.IUpdate(p_deltaTime, m_isEditor);
+    Systems::RenderSystem::GetInstance()->IUpdate(p_deltaTime, m_isEditor);
 }
 
 void App::EndFrame() const
