@@ -6,8 +6,11 @@
 #include <Tools/ImGUI/imgui_impl_dx11.h>
 #include <3DLoader/ObjectLoader.h>
 #include <Tools/DirectX/GraphicsMacros.h>
+#include "Managers/ResourceManager.h"
 
 using namespace Engine::Rendering;
+
+constexpr bool V_SYNC = true;
 
 std::unique_ptr<Renderer> Renderer::instance;
 Renderer::Renderer(const HWND& p_hwnd, const int& p_clientWidth, const int& p_clientHeight) :
@@ -49,13 +52,27 @@ void Renderer::EndFrame() const
 {
     HRESULT hr;
 
-    if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
+    if (V_SYNC)
     {
-        if (hr == DXGI_ERROR_DEVICE_REMOVED)
+        if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
         {
-            throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
+            if (hr == DXGI_ERROR_DEVICE_REMOVED)
+            {
+                throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
+            }
+            throw GFX_EXCEPT(hr);
         }
-        throw GFX_EXCEPT(hr);
+    }
+    else
+    {
+        if (FAILED(hr = m_pSwapChain->Present(0u, 0u)))
+        {
+            if (hr == DXGI_ERROR_DEVICE_REMOVED)
+            {
+                throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
+            }
+            throw GFX_EXCEPT(hr);
+        }
     }
 }   
 
@@ -252,6 +269,8 @@ void Renderer::CreateRect()
 
     //The quad is the screen "camera rect" we might want to store it somewhere later.
     m_rect = std::make_shared<ObjectElements::Mesh>(quadvtx, quadidx);
+    m_rect->SetMaterial(Managers::ResourceManager::GetMaterial("RenderText"));
+    m_rect->GetMaterial()->SetTextureState(true);
 }
 
 void Renderer::Resize(const float p_width, const float p_height)
