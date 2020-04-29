@@ -26,18 +26,8 @@ namespace Engine::Scene
 
         const std::map<int32_t, std::shared_ptr<SceneNode>>& GetRootSceneNodes() const { return m_rootSceneNodes; }
 
-        /*static SceneGraph* GetInstance()
-        {
-            if (m_instance == nullptr)
-            {
-                m_instance = new SceneGraph();
-            }
-
-            return m_instance;
-        }*/
     private:
         std::map<int32_t, std::shared_ptr<SceneNode>> m_rootSceneNodes;
-        //inline static SceneGraph* m_instance;
     };
 }
 

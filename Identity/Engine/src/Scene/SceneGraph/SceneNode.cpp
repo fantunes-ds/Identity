@@ -1,17 +1,23 @@
 #include <stdafx.h>
 #include <Scene/SceneGraph/SceneNode.h>
 #include <Systems/TransformSystem.h>
+#include <Objects/GameObject.h>
 
-Engine::Scene::SceneNode::SceneNode(std::shared_ptr<ObjectElements::Mesh> p_mesh) : m_mesh{ p_mesh } {}
-
-Engine::Scene::SceneNode::~SceneNode()
+Engine::Scene::SceneNode::SceneNode(std::shared_ptr<Objects::GameObject> p_gameObject) :
+	m_gameObject{ p_gameObject }
 {
 }
 
+Engine::Scene::SceneNode::SceneNode(std::shared_ptr<ObjectElements::Mesh> p_mesh) : m_mesh{ p_mesh } {}
+
 void Engine::Scene::SceneNode::AddChild(std::shared_ptr<SceneNode> p_child)
 {
+    if (!p_child)
+        return;
+	
+    p_child->SetGameObject(std::make_shared<Objects::GameObject>());
     p_child->SetTransform(Containers::TransformSystem::AddTransform());
-
+	
     m_children.push_back(p_child);
     p_child->m_parent = this;
 }
@@ -27,7 +33,10 @@ void Engine::Scene::SceneNode::RemoveChild(int32_t p_id)
 
 void Engine::Scene::SceneNode::RemoveChild(std::shared_ptr<SceneNode> p_child)
 {
-    for (auto it = m_children.begin(); it != m_children.end(); ++it)
+    if (!p_child)
+        return;
+	
+	for (auto it = m_children.begin(); it != m_children.end(); ++it)
     {
         if (it->get()->GetID() == p_child->GetID())
         {

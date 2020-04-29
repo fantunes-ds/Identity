@@ -119,6 +119,7 @@ Engine::Managers::ResourceManager::ResourceManager()
     AddPixelShaderNS("../Engine/Resources/Shaders/PixelShader.cso", "defaultPS");
     AddVertexShaderNS("../Engine/Resources/Shaders/VertexShader.cso", "defaultVS");
     CreateMaterialNS("default", "defaultPS", "defaultVS");
+    CreateMaterialNS("RenderText", "defaultPS", "defaultVS");
 }
 
 const int32_t Engine::Managers::ResourceManager::AddModelNS(const std::string& p_path, const std::string& p_name)
@@ -158,7 +159,6 @@ const int32_t Engine::Managers::ResourceManager::AddModelNS(const std::string& p
         mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
 
     m_models.insert_or_assign(model->GetID(), model);
-    // Scene::SceneGraph::GetInstance()->AddRootSceneNode(model->GetRootNode());
 
     return model->GetID();
 }

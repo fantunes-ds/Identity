@@ -9,7 +9,7 @@
 #include <Rendering/Buffers/VertexConstantBuffer.h>
 #include <Containers/LightContainer.h>
 #include <Scene/SceneGraph/SceneNode.h>
-#include "Containers/ColliderContainer.h"
+#include <Systems/PhysicsSystem.h>
 #include <Components/BoxCollider.h>
 
 #include "Managers/ResourceManager.h"
@@ -69,7 +69,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
     if (DEBUG_MODE)
     {
-        for (auto collider : Containers::ColliderContainer::GetColliders())
+        for (auto collider : Containers::PhysicsSystem::GetColliders())
         {
             auto model = collider.second->GetModel();
             auto mesh  = model->GetMeshes()[0];
@@ -141,7 +141,6 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         screenRect->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
 
         screenRect->GetMaterial()->GetTexture()->SetTextureShaderResourceView(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
-        screenRect->GetMaterial()->SetTextureState(true);
 
         Rendering::Renderer::GetInstance()->Bind();
 
@@ -171,6 +170,9 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         mesh->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
 
         const Vector3F cameraPos = camera->GetPosition();
+
+        float txt = static_cast<float>(mesh->GetMaterial()->GetTextureState());
+
         const Vector4F reversedXLightPos = Vector4F(light.position.x,
                                                     light.position.y,
                                                     -light.position.z, 1.0f);

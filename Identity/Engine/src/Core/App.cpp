@@ -22,8 +22,8 @@
 #include <Systems/CameraSystem.h>
 #include <Systems/TransformSystem.h>
 
-#include "Components/BoxCollider.h"
-#include "Containers/ColliderContainer.h"
+#include <Components/BoxCollider.h>
+#include <Systems/PhysicsSystem.h>
 #include <Scene/Scene.h>
 #include <Managers/SceneManager.h>
 
@@ -109,10 +109,10 @@ int App::Run() const
         mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
     }
 
-    for (auto& mesh : lambo->GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
-    }
+    // for (auto& mesh : lambo->GetModel()->GetMeshes())
+    // {
+    //     mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
+    // }
 
     renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
 
@@ -135,7 +135,7 @@ int App::Run() const
 
         float deltaTime = Tools::Time::GetDeltaTime();
 
-        Containers::ColliderContainer::Update(deltaTime);
+        Containers::PhysicsSystem::Update(deltaTime);
         Containers::TransformSystem::Update(deltaTime);
         Containers::CameraSystem::Update(deltaTime);
 
@@ -143,7 +143,7 @@ int App::Run() const
         //todo this should never go below 0
         if (fixedUpdateTimer >= 0.00069f || fixedUpdateTimer < 0)
         {
-            Containers::ColliderContainer::FixedUpdate();
+            Containers::PhysicsSystem::FixedUpdate();
             fixedUpdateTimer = 0.0f;
         }
         
