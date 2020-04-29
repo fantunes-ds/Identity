@@ -16,7 +16,7 @@
 #include "Managers/SceneManager.h"
 #include <Scene/Scene.h>
 
-#define DEBUG_MODE true
+#define DEBUG_MODE false
 
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
 {
@@ -122,16 +122,14 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
     //Draw to Screen Rect
     else
     {
-        auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
-
         std::shared_ptr<ObjectElements::Mesh> screenRect = Rendering::Renderer::GetInstance()->GetRect();
-
         screenRect->Bind(Rendering::Renderer::GetInstance()->GetContext());
 
         const Rendering::Buffers::VCB vcb{Matrix4F::identity, Matrix4F::identity,
                                       Matrix4F::identity, Matrix4F::identity};
 
         screenRect->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
+        screenRect->GetMaterial()->SetTextureState(true);
 
         const Rendering::Buffers::PCB pcb{
             Vector4F::zero, Vector4F::one, Vector4F::one,
@@ -141,11 +139,11 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         screenRect->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
 
         screenRect->GetMaterial()->GetTexture()->SetTextureShaderResourceView(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
-        screenRect->GetMaterial()->SetTextureState(true);
 
         Rendering::Renderer::GetInstance()->Bind();
 
         GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(screenRect->GetIndices().size()), 0u, 0u));
+        screenRect->Unbind(Rendering::Renderer::GetInstance()->GetContext());
     }
 }
 
@@ -174,9 +172,10 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         const Vector4F reversedXLightPos = Vector4F(light.position.x,
                                                     light.position.y,
                                                     -light.position.z, 1.0f);
+        float txst = static_cast<float>(mesh->GetMaterial()->GetTextureState());
         const Rendering::Buffers::PCB pcb{reversedXLightPos, light.ambient, light.diffuse,
             light.specular, light.color,light.shininess, Vector3F{},
-            Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, static_cast<float>(mesh->GetMaterial()->GetTextureState())
+            Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, txst
         };
 
         mesh->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);

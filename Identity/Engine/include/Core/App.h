@@ -26,7 +26,7 @@ namespace Engine::Core
         App& operator=(const App&) = delete;
 
         int Run() const;
-
+        void Init();
     private:
         void StartFrame() const;
         void DoFrame(Systems::RenderSystem& p_renderSystem, float p_deltaTime) const;

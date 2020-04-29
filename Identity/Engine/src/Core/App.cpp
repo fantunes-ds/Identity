@@ -43,17 +43,19 @@ App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) :
     Input::Input::InitInput();
 }
 
+void App::Init()
+{
+    Containers::EventContainer::AddEvent("OnGUI");
+}
+
 int App::Run() const
 {
-    Systems::RenderSystem renderSystem;
-
     auto scene = std::make_shared<Scene::Scene>();
-	
+
     auto link = std::make_shared<Objects::GameObject>("link");
     Managers::SceneManager::AddScene(scene);
     Managers::SceneManager::SetActiveScene(scene);
     auto lambo = std::make_shared<Objects::GameObject>("lambo");
-    Objects::GameObject camera;
     Objects::GameObject light;
 
     Managers::ResourceManager::AddTexture("../Engine/Resources/link.png", "LinkText");
@@ -61,11 +63,11 @@ int App::Run() const
     Managers::ResourceManager::CreateMaterial("LinkMat", "defaultPS", "defaultVS", "LinkText");
     Managers::ResourceManager::CreateMaterial("LamboMat", "defaultPS", "defaultVS", "LamboText");
 
-    link->GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
-    link->GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    link->GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
+    link->GetTransform()->Translate(Vector3F{ 4.0f, -5.0f, -4.0f });
+    link->GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
+    link->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.02f, -45.0f, 0.02f });
     link->AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
-	
+
     link->AddComponent<Components::BoxCollider>();
     link->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 0.5f, 1.0f, 0.5f });
     GPM::Vector3F linkOffset{ 0.0f, -1.0f, 0.0f };
@@ -73,21 +75,16 @@ int App::Run() const
     link->FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
     scene->AddGameObject(link);
 
-    lambo->GetTransform()->Translate(Vector3F{5.0f, 5.0f, -3.0f});
+    lambo->GetTransform()->Translate(Vector3F{ 5.0f, 5.0f, -3.0f });
     lambo->GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
     lambo->AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
-	
+
     lambo->AddComponent<Components::BoxCollider>();
     lambo->FindComponentOfType<Components::BoxCollider>()->SetMass(80);
     lambo->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 2.0f, 1.0f, 5.0f });
     GPM::Vector3F lamboOffset{ 0.0f, -1.5f, 0.0f };
     lambo->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
     scene->AddGameObject(lambo);
-
-    //--CAMERA--
-    camera.AddComponent<Components::Camera>(m_width, m_height);
-    camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
-    //----------
 
     //---LIGHT---
     light.GetTransform()->Translate(Vector3F{ 10.0f, 4.0f, -10.0f });
@@ -109,14 +106,22 @@ int App::Run() const
         mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
     }
 
-    for (auto& mesh : lambo->GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
-    }
+    //for (auto& mesh : lambo->GetModel()->GetMeshes())
+    //{
+    //    mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
+    //}
 
-    renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
 
     lambo->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
+    //--CAMERA--
+    Objects::GameObject camera;
+
+    camera.AddComponent<Components::Camera>(m_width, m_height);
+    camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
+    //----------
+    Systems::RenderSystem renderSystem;
+    renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
+
 
     float fixedUpdateTimer = 0.0f;
 	
@@ -125,8 +130,9 @@ int App::Run() const
         Tools::Time::Start();
         StartFrame();
 
-        if (m_isEditor)
-            Engine::UI::Dockspace::CreateDockspace();
+        // Events
+        // (will be moved below DoFrame once we get rid of all ImGUI calls on Engine)
+        Containers::EventContainer::GetEvent("OnGUI").Fire();
 
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
@@ -135,6 +141,7 @@ int App::Run() const
 
         float deltaTime = Tools::Time::GetDeltaTime();
 
+        //Systems
         Containers::ColliderContainer::Update(deltaTime);
         Containers::TransformSystem::Update(deltaTime);
         Containers::CameraSystem::Update(deltaTime);
@@ -148,6 +155,7 @@ int App::Run() const
         }
         
         DoFrame(renderSystem, deltaTime);
+
         EndFrame();
         Tools::Time::Stop();
     }

@@ -64,6 +64,8 @@ void Engine::Components::Camera::UpdateCameraPosition(const float p_deltaTime)
         ImGui::Text("Right: %f | %f | %f", transform->GetRight().x, transform->GetRight().y, transform->GetRight().z);
     }ImGui::End();
 
+
+    //todo all below code is SCRIPTING BEHAVIOUR. A camera DOES NOT have to receive input to be a camera.
     float speed = m_speed;
 
     if (_INPUT->keyboard.IsKeyHeld(Input::Keyboard::LeftShift))
