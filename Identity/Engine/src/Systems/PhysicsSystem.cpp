@@ -1,11 +1,11 @@
 #include <stdafx.h>
-#include <Containers/ColliderContainer.h>
+#include <Systems/PhysicsSystem.h>
 #include <Components/BoxCollider.h>
 #include <BulletCollision/BroadphaseCollision/btDbvtBroadphase.h>
 #include <Objects/GameObject.h>
 #include <Tools/Time.h>
 
-Engine::Containers::ColliderContainer::ColliderContainer()
+Engine::Containers::PhysicsSystem::PhysicsSystem()
 {
     m_collisionConfiguration = new btDefaultCollisionConfiguration();
 
@@ -23,22 +23,22 @@ Engine::Containers::ColliderContainer::ColliderContainer()
     m_dynamicsWorld->setGravity(btVector3(0.0f, -10.0f, 0.0f));
 }
 
-Engine::Containers::ColliderContainer::~ColliderContainer()
+Engine::Containers::PhysicsSystem::~PhysicsSystem()
 {
     delete m_instance;
 }
 
-Engine::Containers::ColliderContainer* Engine::Containers::ColliderContainer::GetInstance()
+Engine::Containers::PhysicsSystem* Engine::Containers::PhysicsSystem::GetInstance()
 {
     if (m_instance == nullptr)
     {
-        m_instance = new ColliderContainer();
+        m_instance = new PhysicsSystem();
     }
 
     return m_instance;
 }
 
-std::shared_ptr<Engine::Components::BoxCollider> Engine::Containers::ColliderContainer::AddCollider(
+std::shared_ptr<Engine::Components::BoxCollider> Engine::Containers::PhysicsSystem::AddCollider(
     Components::BoxCollider* p_collider)
 {
     auto coll = std::shared_ptr<Components::BoxCollider>(p_collider);
@@ -47,7 +47,7 @@ std::shared_ptr<Engine::Components::BoxCollider> Engine::Containers::ColliderCon
     return coll;
 }
 
-void Engine::Containers::ColliderContainer::Update(const float p_deltaTime)
+void Engine::Containers::PhysicsSystem::Update(const float p_deltaTime)
 {
     for (auto& collider : GetInstance()->m_colliders)
     {
@@ -55,7 +55,7 @@ void Engine::Containers::ColliderContainer::Update(const float p_deltaTime)
     }
 }
 
-void Engine::Containers::ColliderContainer::FixedUpdate()
+void Engine::Containers::PhysicsSystem::FixedUpdate()
 {
     btTransform trans;
 

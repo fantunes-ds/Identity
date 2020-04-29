@@ -7,7 +7,6 @@
   <ItemGroup>
     <ClCompile Include="src\Components\BoxCollider.cpp" />
     <ClCompile Include="src\Components\IComponent.cpp" />
-    <ClCompile Include="src\Containers\ColliderContainer.cpp" />
     <ClCompile Include="src\Managers\ResourceManager.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
     <ClCompile Include="src\Containers\LightContainer.cpp" />
@@ -64,6 +63,7 @@
     <ClCompile Include="src\Systems\LightSystem.cpp" />
     <ClCompile Include="src\Tools\Time.cpp" />
     <ClCompile Include="src\UI\Dockspace.cpp" />
+    <ClCompile Include="src\Systems\PhysicsSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Components\IComponent.h" />
@@ -72,7 +72,6 @@
     <ClInclude Include="include\Rendering\Materials\PixelShader.h" />
     <ClInclude Include="include\Rendering\Materials\VertexShader.h" />
     <ClInclude Include="include\Systems\CameraSystem.h" />
-    <ClInclude Include="include\Containers\ColliderContainer.h" />
     <ClInclude Include="include\Containers\ComponentContainer.h" />
     <ClInclude Include="include\Containers\EventContainer.h" />
     <ClInclude Include="include\Containers\GameObjectContainer.h" />
@@ -141,6 +140,7 @@
     <ClInclude Include="include\Managers\SceneManager.h" />
     <ClInclude Include="include\Components\Light.h" />
     <ClInclude Include="include\UI\Dockspace.h" />
+    <ClInclude Include="include\Systems\PhysicsSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />

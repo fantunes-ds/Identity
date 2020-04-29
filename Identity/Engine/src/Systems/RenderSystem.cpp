@@ -9,7 +9,7 @@
 #include <Rendering/Buffers/VertexConstantBuffer.h>
 #include <Containers/LightContainer.h>
 #include <Scene/SceneGraph/SceneNode.h>
-#include "Containers/ColliderContainer.h"
+#include <Systems/PhysicsSystem.h>
 #include <Components/BoxCollider.h>
 
 #include "Managers/ResourceManager.h"
@@ -69,7 +69,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
     if (DEBUG_MODE)
     {
-        for (auto collider : Containers::ColliderContainer::GetColliders())
+        for (auto collider : Containers::PhysicsSystem::GetColliders())
         {
             auto model = collider.second->GetModel();
             auto mesh  = model->GetMeshes()[0];

@@ -14,12 +14,12 @@ namespace Engine {
 
 namespace Engine::Containers
 {
-    class API_ENGINE ColliderContainer
+    class API_ENGINE PhysicsSystem
     {
     public:
-        ~ColliderContainer();
+        ~PhysicsSystem();
 
-        static ColliderContainer* GetInstance();
+        static PhysicsSystem* GetInstance();
 
         static std::shared_ptr<Components::BoxCollider> AddCollider(Components::BoxCollider* p_collider);
         static std::map<int32_t, std::shared_ptr<Components::BoxCollider>>& GetColliders() { return GetInstance()->m_colliders; }
@@ -28,11 +28,11 @@ namespace Engine::Containers
         static void FixedUpdate();
 
     private:
-        ColliderContainer();
+        PhysicsSystem();
 
         float m_fixedUpdateCounter = 0.0f;
 
-        inline static ColliderContainer* m_instance;
+        inline static PhysicsSystem* m_instance;
         std::map<int32_t, std::shared_ptr<Components::BoxCollider>> m_colliders;
 
         //TODO: create class that wraps bullet classes

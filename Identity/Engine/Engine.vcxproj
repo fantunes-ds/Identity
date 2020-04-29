@@ -234,7 +234,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Rendering\Materials\PixelShader.h" />
     <ClInclude Include="include\Rendering\Materials\VertexShader.h" />
     <ClInclude Include="include\Systems\CameraSystem.h" />
-    <ClInclude Include="include\Containers\ColliderContainer.h" />
+    <ClInclude Include="include\Systems\PhysicsSystem.h" />
     <ClInclude Include="include\Containers\ComponentContainer.h" />
     <ClInclude Include="include\Containers\EventContainer.h" />
     <ClInclude Include="include\Containers\GameObjectContainer.h" />
@@ -304,7 +304,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Components\BoxCollider.cpp" />
     <ClCompile Include="src\Components\IComponent.cpp" />
     <ClCompile Include="src\Components\Light.cpp" />
-    <ClCompile Include="src\Containers\ColliderContainer.cpp" />
+    <ClCompile Include="src\Systems\PhysicsSystem.cpp" />
     <ClCompile Include="src\Managers\ResourceManager.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
     <ClCompile Include="src\Containers\LightContainer.cpp" />
