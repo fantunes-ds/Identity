@@ -15,7 +15,7 @@ std::shared_ptr<Engine::Scene::Scene> Engine::Managers::SceneManager::GetScene(c
 {
 	for (auto& scene : GetInstance()->m_scenes)
 	{
-		if (scene->GetName == p_name)
+		if (scene->GetName() == p_name)
 			return scene;
 	}
 
