@@ -128,16 +128,15 @@ int App::Run() const
     while (true)
     {
         Tools::Time::Start();
+        if (const auto eCode = Rendering::Window::ProcessMessage())
+        {
+            return *eCode;
+        }
         StartFrame();
 
         // Events
         // (will be moved below DoFrame once we get rid of all ImGUI calls on Engine)
         Containers::EventContainer::GetEvent("OnGUI").Fire();
-
-        if (const auto eCode = Rendering::Window::ProcessMessage())
-        {
-            return *eCode;
-        }
 
         float deltaTime = Tools::Time::GetDeltaTime();
 
