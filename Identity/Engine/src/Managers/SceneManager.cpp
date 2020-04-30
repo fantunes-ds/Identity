@@ -11,6 +11,17 @@ std::unique_ptr<Engine::Managers::SceneManager>& Engine::Managers::SceneManager:
 	return m_instance;
 }
 
+std::shared_ptr<Engine::Scene::Scene> Engine::Managers::SceneManager::GetScene(const std::string& p_name)
+{
+	for (auto& scene : GetInstance()->m_scenes)
+	{
+		if (scene->GetName == p_name)
+			return scene;
+	}
+
+	return nullptr;
+}
+
 void Engine::Managers::SceneManager::AddScene(const std::shared_ptr<Scene::Scene> p_scene)
 {
 	GetInstance()->m_scenes.push_back(p_scene);
