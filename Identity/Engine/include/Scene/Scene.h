@@ -13,6 +13,7 @@ namespace Engine::Scene
     {
     public:
         Scene() = default;
+        Scene(const std::string& p_name);
         ~Scene() = default;
 
         void AddGameObject(std::shared_ptr<Objects::GameObject> p_gameObject);
