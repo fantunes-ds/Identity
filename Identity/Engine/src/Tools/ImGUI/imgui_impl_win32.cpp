@@ -68,7 +68,7 @@ static void ImGui_ImplWin32_ShutdownPlatformInterface();
 static void ImGui_ImplWin32_UpdateMonitors();
 
 // Functions
-bool    ImGui_ImplWin32_Init(void* hwnd)
+bool    ImGui_ImplWin32_Init(HWND hwnd)
 {
     if (!::QueryPerformanceFrequency((LARGE_INTEGER *)&g_TicksPerSecond))
         return false;
@@ -84,7 +84,7 @@ bool    ImGui_ImplWin32_Init(void* hwnd)
     io.BackendPlatformName = "imgui_impl_win32";
 
     // Our mouse update function expect PlatformHandle to be filled for the main viewport
-    g_hWnd = (HWND)hwnd;
+    g_hWnd = hwnd;
     ImGuiViewport* main_viewport = ImGui::GetMainViewport();
     main_viewport->PlatformHandle = main_viewport->PlatformHandleRaw = (void*)g_hWnd;
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -476,9 +476,9 @@ float ImGui_ImplWin32_GetDpiScaleForMonitor(void* monitor)
     return xdpi / 96.0f;
 }
 
-float ImGui_ImplWin32_GetDpiScaleForHwnd(void* hwnd)
+float ImGui_ImplWin32_GetDpiScaleForHwnd(HWND hwnd)
 {
-    HMONITOR monitor = ::MonitorFromWindow((HWND)hwnd, MONITOR_DEFAULTTONEAREST);
+    HMONITOR monitor = ::MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
     return ImGui_ImplWin32_GetDpiScaleForMonitor(monitor);
 }
 

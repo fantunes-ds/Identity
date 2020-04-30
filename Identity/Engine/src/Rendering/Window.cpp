@@ -171,11 +171,11 @@ LRESULT Window::HandleMsgThunk(const HWND p_hwnd, const UINT p_msg, const WPARAM
     return window->HandleMsg(p_hwnd, p_msg, p_wParam, p_lParam);
 }
 
-extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
 LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam)
 {
     if (ImGui_ImplWin32_WndProcHandler(p_hwnd, p_msg, p_wParam, p_lParam))
         return true;
+
     // no default switch case because windows sends a lot of different
     // random unknown messages, and we don't need to filter them all.
     switch (p_msg)
@@ -214,20 +214,25 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
                 }
             }
             break;
-            /*********** KEYBOARD MESSAGES ***********/
+
+        /*********** KEYBOARD MESSAGES ***********/
         case WM_KEYDOWN:
-            // sys-key commands need to be handled to track ALT key (VK_MENU) and F10
         case WM_SYSKEYDOWN:
+
             if (!(p_lParam & 0x40000000) || _INPUT->keyboard.IsAutoRepeatEnabled()) // filter auto-repeat
             {
                 _INPUT->keyboard.OnKeyPressed(static_cast<unsigned char>(p_wParam));
             }
             break;
+
         case WM_KEYUP:
         case WM_SYSKEYUP:
+
             _INPUT->keyboard.OnKeyReleased(static_cast<unsigned char>(p_wParam));
             break;
+
         case WM_CHAR:
+
             _INPUT->keyboard.OnChar(static_cast<unsigned char>(p_wParam));
             break;
             /*********** END KEYBOARD MESSAGES ***********/
