@@ -18,6 +18,7 @@ namespace Engine::Managers
 		SceneManager(const SceneManager&) = delete;
 		SceneManager(const SceneManager&&) = delete;
 
+		static std::shared_ptr<Scene::Scene> GetScene(const std::string& p_name);
 		static void AddScene(const std::shared_ptr<Scene::Scene> p_scene);
 		
 		static std::unique_ptr<SceneManager>& GetInstance();
@@ -27,6 +28,7 @@ namespace Engine::Managers
 		static void SetActiveScene(const std::string& p_name);
 		static void SetActiveScene(const int32_t p_id);
 		static void SetActiveScene(std::shared_ptr<Scene::Scene> p_scene) { GetInstance()->m_activeScene = p_scene; }
+
 		
 	private:
 		inline static std::unique_ptr<SceneManager> m_instance{ nullptr };

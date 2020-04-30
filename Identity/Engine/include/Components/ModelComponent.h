@@ -19,6 +19,7 @@ namespace Engine::Components
         inline int32_t GetModel() const { return m_model; }
 
         bool DeleteFromMemory() override;
+        void SetActive(bool p_active) override { m_isActive = p_active; }
 
     private:
         int32_t m_model;

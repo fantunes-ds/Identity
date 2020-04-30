@@ -34,7 +34,7 @@ namespace Engine::Components
 
         bool operator==(IComponent* p_other) override { return false; }
         bool DeleteFromMemory() override { return false; }
-
+        void SetActive(bool p_active) override { m_isActive = p_active; }
 
     private:
         /**

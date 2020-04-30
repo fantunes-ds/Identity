@@ -1,4 +1,5 @@
 #include <stdafx.h>
+#include <Windows.h>
 #include <Components/Transform.h>
 #include <Systems/TransformSystem.h>
 
@@ -29,6 +30,12 @@ bool Engine::Components::Transform::operator==(IComponent* p_other)
 bool Engine::Components::Transform::DeleteFromMemory()
 {
     return true;
+}
+
+void Engine::Components::Transform::SetActive(bool p_active)
+{
+    std::string message("Transform components cannot be deactivated.\n");
+    MessageBox(nullptr, message.c_str(), "Error", MB_ICONWARNING | MB_OK);
 }
 
 void Engine::Components::Transform::Translate(const Vector3F& p_vector)

@@ -63,12 +63,13 @@ int App::Run() const
     link->GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
     link->GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
     link->AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
-	
+
     link->AddComponent<Components::BoxCollider>();
     link->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 0.5f, 1.0f, 0.5f });
     GPM::Vector3F linkOffset{ 0.0f, -1.0f, 0.0f };
     link->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(linkOffset);
     link->FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
+    link->FindComponentOfType<Components::BoxCollider>()->SetActive(false);
     scene->AddGameObject(link);
 
     lambo->GetTransform()->Translate(Vector3F{5.0f, 5.0f, -3.0f});
