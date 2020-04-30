@@ -6,6 +6,7 @@
 #include <Tools/ImGUI/imgui_impl_dx11.h>
 #include <3DLoader/ObjectLoader.h>
 #include <Tools/DirectX/GraphicsMacros.h>
+#include "Managers/ResourceManager.h"
 
 using namespace Engine::Rendering;
 
@@ -268,6 +269,8 @@ void Renderer::CreateRect()
 
     //The quad is the screen "camera rect" we might want to store it somewhere later.
     m_rect = std::make_shared<ObjectElements::Mesh>(quadvtx, quadidx);
+    m_rect->SetMaterial(Managers::ResourceManager::GetMaterial("RenderText"));
+    m_rect->GetMaterial()->SetTextureState(true);
 }
 
 void Renderer::Resize(const float p_width, const float p_height)

@@ -9,7 +9,7 @@
 #include <Rendering/Buffers/VertexConstantBuffer.h>
 #include <Containers/LightContainer.h>
 #include <Scene/SceneGraph/SceneNode.h>
-#include "Containers/ColliderContainer.h"
+#include <Systems/PhysicsSystem.h>
 #include <Components/BoxCollider.h>
 
 #include "Managers/ResourceManager.h"
@@ -17,6 +17,11 @@
 #include <Scene/Scene.h>
 
 #define DEBUG_MODE true
+
+Engine::Systems::RenderSystem::~RenderSystem()
+{
+    delete m_instance;
+}
 
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
 {
@@ -28,7 +33,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
     Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
 
-    auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
+    auto camera = Containers::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
 
     float* pos[3] = {&light.position.x, &light.position.y, &light.position.z};
 
@@ -56,7 +61,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
     if (DEBUG_MODE)
     {
-        for (auto collider : Containers::ColliderContainer::GetColliders())
+        for (auto collider : Containers::PhysicsSystem::GetColliders())
         {
             auto model = collider.second->GetModel();
             auto mesh  = model->GetMeshes()[0];
@@ -109,7 +114,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
     //Draw to Screen Rect
     else
     {
-        auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
+        auto camera = Containers::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
 
         std::shared_ptr<ObjectElements::Mesh> screenRect = Rendering::Renderer::GetInstance()->GetRect();
 
@@ -128,7 +133,6 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         screenRect->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
 
         screenRect->GetMaterial()->GetTexture()->SetTextureShaderResourceView(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
-        screenRect->GetMaterial()->SetTextureState(true);
 
         Rendering::Renderer::GetInstance()->Bind();
 
@@ -138,7 +142,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
 void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
 {
-    auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
+    auto camera = Containers::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
     auto mesh = p_sceneNode->GetMesh();
     std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
     Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
@@ -158,6 +162,9 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         mesh->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
 
         const Vector3F cameraPos = camera->GetPosition();
+
+        float txt = static_cast<float>(mesh->GetMaterial()->GetTextureState());
+
         const Vector4F reversedXLightPos = Vector4F(light.position.x,
                                                     light.position.y,
                                                     -light.position.z, 1.0f);
@@ -187,10 +194,20 @@ void Engine::Systems::RenderSystem::IUpdate(float p_deltaTime, bool p_isEditor)
 
 void Engine::Systems::RenderSystem::ResetActiveCamera()
 {
-    m_activeCamera = -1;
+    GetInstance()->m_activeCamera = -1;
 }
 
 void Engine::Systems::RenderSystem::SetActiveCamera(int32_t p_id)
 {
-    m_activeCamera = p_id;
+    GetInstance()->m_activeCamera = p_id;
+}
+
+Engine::Systems::RenderSystem* Engine::Systems::RenderSystem::GetInstance()
+{
+    if (m_instance == nullptr)
+    {
+        m_instance = new RenderSystem();
+    }
+
+    return m_instance;
 }

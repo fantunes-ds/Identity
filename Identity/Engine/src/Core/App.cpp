@@ -22,8 +22,8 @@
 #include <Systems/CameraSystem.h>
 #include <Systems/TransformSystem.h>
 
-#include "Components/BoxCollider.h"
-#include "Containers/ColliderContainer.h"
+#include <Components/BoxCollider.h>
+#include <Systems/PhysicsSystem.h>
 #include <Scene/Scene.h>
 #include <Managers/SceneManager.h>
 
@@ -45,8 +45,6 @@ App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) :
 
 int App::Run() const
 {
-    Systems::RenderSystem renderSystem;
-
     auto scene = std::make_shared<Scene::Scene>();
 	
     auto link = std::make_shared<Objects::GameObject>("link");
@@ -110,12 +108,12 @@ int App::Run() const
         mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
     }
 
-    for (auto& mesh : lambo->GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
-    }
+    // for (auto& mesh : lambo->GetModel()->GetMeshes())
+    // {
+    //     mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
+    // }
 
-    renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
+    Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
 
     lambo->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
 
@@ -136,7 +134,7 @@ int App::Run() const
 
         float deltaTime = Tools::Time::GetDeltaTime();
 
-        Containers::ColliderContainer::Update(deltaTime);
+        Containers::PhysicsSystem::Update(deltaTime);
         Containers::TransformSystem::Update(deltaTime);
         Containers::CameraSystem::Update(deltaTime);
 
@@ -144,11 +142,11 @@ int App::Run() const
         //todo this should never go below 0
         if (fixedUpdateTimer >= 0.00069f || fixedUpdateTimer < 0)
         {
-            Containers::ColliderContainer::FixedUpdate();
+            Containers::PhysicsSystem::FixedUpdate();
             fixedUpdateTimer = 0.0f;
         }
         
-        DoFrame(renderSystem, deltaTime);
+        DoFrame(deltaTime);
         EndFrame();
         Tools::Time::Stop();
     }
@@ -161,14 +159,14 @@ void App::StartFrame() const
     ImGui::NewFrame();
 }
 
-void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTime) const
+void App::DoFrame(float p_deltaTime) const
 {
     Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
 
     if (_INPUT->keyboard.IsKeyDown('F'))
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());
 
-    p_renderSystem.IUpdate(p_deltaTime, m_isEditor);
+    Systems::RenderSystem::GetInstance()->IUpdate(p_deltaTime, m_isEditor);
 }
 
 void App::EndFrame() const

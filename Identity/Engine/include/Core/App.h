@@ -29,7 +29,7 @@ namespace Engine::Core
 
     private:
         void StartFrame() const;
-        void DoFrame(Systems::RenderSystem& p_renderSystem, float p_deltaTime) const;
+        void DoFrame(float p_deltaTime) const;
         void EndFrame() const;
 
     private:
