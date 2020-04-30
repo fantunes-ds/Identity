@@ -21,6 +21,7 @@ namespace Engine::Components
         //---WIP---
         bool operator==(IComponent* p_other) override;
         bool DeleteFromMemory() override;
+        void SetActive(bool p_active) override;
         //---------
 
 

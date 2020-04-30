@@ -48,23 +48,10 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
     }
     ImGui::End();
 
-    /* W.I.P. 
-    for (auto& gameObject : Containers::GameObjectContainer::GetAllGameObjects())
-    {
-        if (ImGui::Begin("ObjectInfo"))
-        {
-            ImGui::Text(gameObject.second->GetName().c_str());
-            ImGui::Text("Forward: %f | %f | %f", gameObject.second->GetTransform()->GetForward().x, gameObject.second->GetTransform()->GetForward().y, gameObject.second->GetTransform()->GetForward().z);
-            ImGui::Text("Up: %f | %f | %f", gameObject.second->GetTransform()->GetUp().x, gameObject.second->GetTransform()->GetUp().y, gameObject.second->GetTransform()->GetUp().z);
-            ImGui::Text("Right: %f | %f | %f", gameObject.second->GetTransform()->GetRight().x, gameObject.second->GetTransform()->GetRight().y, gameObject.second->GetTransform()->GetRight().z);
-            ImGui::Text("Position: %f | %f | %f", gameObject.second->GetTransform()->GetPosition().x, gameObject.second->GetTransform()->GetPosition().y, gameObject.second->GetTransform()->GetPosition().z);
-
-        }ImGui::End();
-    }*/
-
     for (auto& sceneNode : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
     {
-        DrawSceneNode(sceneNode.second);
+        if (sceneNode.second->GetGameObject()->FindComponentOfType<Components::ModelComponent>()->IsActive())
+            DrawSceneNode(sceneNode.second);
     }
 
     if (DEBUG_MODE)
