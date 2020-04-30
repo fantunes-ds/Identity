@@ -63,18 +63,21 @@ void Engine::Containers::PhysicsSystem::FixedUpdate()
 
     for (auto& collider : GetInstance()->m_colliders)
     {
-        //TODO: wrap all Bullet math variables
-        collider.second->GetMotionState()->getWorldTransform(trans);
-        GPM::Vector3F offset = collider.second->GetOffset();
+        if (collider.second->IsActive())
+        {
+            //TODO: wrap all Bullet math variables
+            collider.second->GetMotionState()->getWorldTransform(trans);
+            GPM::Vector3F offset = collider.second->GetOffset();
 
-        btVector3& collPos = trans.getOrigin();
-        btQuaternion collRot = trans.getRotation();
-        btQuaternion quatOffset(offset.x, offset.y, offset.z, 0);
-        btQuaternion qpq = collRot * quatOffset * collRot.inverse();
+            btVector3& collPos = trans.getOrigin();
+            btQuaternion collRot = trans.getRotation();
+            btQuaternion quatOffset(offset.x, offset.y, offset.z, 0);
+            btQuaternion qpq = collRot * quatOffset * collRot.inverse();
 
-        collider.second->GetGameObject()->GetTransform()->SetPosition(GPM::Vector3F(qpq.getX(), qpq.getY(), qpq.getZ()) + GPM::Vector3F(collPos.getX(), collPos.getY(), collPos.getZ()));
-        collider.second->GetGameObject()->GetTransform()->SetRotation(GPM::Quaternion(collRot.getX(), collRot.getY(), collRot.getZ(), collRot.getW()));
+            collider.second->GetGameObject()->GetTransform()->SetPosition(GPM::Vector3F(qpq.getX(), qpq.getY(), qpq.getZ()) + GPM::Vector3F(collPos.getX(), collPos.getY(), collPos.getZ()));
+            collider.second->GetGameObject()->GetTransform()->SetRotation(GPM::Quaternion(collRot.getX(), collRot.getY(), collRot.getZ(), collRot.getW()));
 
-        collider.second->GetGameObject()->GetTransform()->UpdateWorldTransformMatrix();
+            collider.second->GetGameObject()->GetTransform()->UpdateWorldTransformMatrix();
+        }
     }
 }

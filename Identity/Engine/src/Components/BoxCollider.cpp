@@ -32,7 +32,6 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
     m_model = Managers::ResourceManager::FindModel(id);
 
     Containers::PhysicsSystem::AddCollider(this);
-
 }
 
 Engine::Components::BoxCollider::~BoxCollider()
@@ -107,6 +106,22 @@ void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimen
     Managers::ResourceManager::RemoveModel(m_model->GetID());
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
+}
+
+void Engine::Components::BoxCollider::SetActive(bool p_active)
+{
+    m_isActive = p_active;
+
+    if (!m_isActive)
+    {
+        m_rigidbody->forceActivationState(DISABLE_SIMULATION);
+        m_rigidbody->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
+    }
+    else
+    {
+        m_rigidbody->forceActivationState(ACTIVE_TAG);
+        m_rigidbody->setCollisionFlags(!btCollisionObject::CF_NO_CONTACT_RESPONSE);
+    }
 }
 
 Engine::ObjectElements::Model Engine::Components::BoxCollider::ConstructBox()

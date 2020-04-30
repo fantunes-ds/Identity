@@ -48,10 +48,10 @@ void Engine::Containers::CameraSystem::IUpdate(const float p_deltaTime, bool p_i
 {
     for (std::shared_ptr<Engine::Components::Camera> camera : GetCameras())
     {
-        int width, height;
-        Rendering::Renderer::GetInstance()->GetResolution(width, height);
-        for (auto camera : GetCameras())
+        if (camera->IsActive())
         {
+            int width, height;
+            Rendering::Renderer::GetInstance()->GetResolution(width, height);
             camera->UpdateCamera(p_deltaTime, width, height);
         }
     }

@@ -34,14 +34,14 @@ namespace Engine::Components
 
         bool operator==(IComponent* p_other) override { return false; }
         bool DeleteFromMemory() override { return false; }
-        void SetActive(bool p_active) override { m_isActive = p_active; }
+        void SetActive(bool p_active) override;
 
     private:
         /**
          * @brief Builds a Model that visually represents this BoxCollider's transform. 
          */
         ObjectElements::Model ConstructBox();
-    	
+
         float m_mass;
         GPM::Vector3F m_offset;
         btBoxShape* m_box;
