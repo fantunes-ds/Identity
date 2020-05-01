@@ -11,6 +11,8 @@ Engine::Objects::GameObject::GameObject()
 {
     m_transform = Containers::TransformSystem::AddTransform(std::make_shared<Components::Transform>());
     Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
+    auto trm = Containers::TransformSystem::GetTransform(m_transform);
+    Containers::ComponentContainer::AddComponent(trm.get());
 }
 
 Engine::Objects::GameObject::GameObject(const std::string& p_name)
@@ -18,6 +20,8 @@ Engine::Objects::GameObject::GameObject(const std::string& p_name)
     m_transform = Containers::TransformSystem::AddTransform(std::make_shared<Components::Transform>(p_name));
     Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
     SetName(p_name);
+    auto trm = Containers::TransformSystem::GetTransform(m_transform);
+    Containers::ComponentContainer::AddComponent(trm.get());
 }
 
 std::shared_ptr<Engine::Components::Transform> Engine::Objects::GameObject::GetTransform() const

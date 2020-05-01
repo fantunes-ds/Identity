@@ -55,8 +55,11 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
     for (auto& sceneNode : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
     {
-        if (sceneNode.second->GetGameObject()->FindComponentOfType<Components::ModelComponent>()->IsActive())
-            DrawSceneNode(sceneNode.second);
+        if (sceneNode.second->GetGameObject()->FindComponentOfType<Components::ModelComponent>())
+        {
+            if (sceneNode.second->GetGameObject()->FindComponentOfType<Components::ModelComponent>()->IsActive())
+                DrawSceneNode(sceneNode.second);
+        }
     }
 
     if (DEBUG_MODE)

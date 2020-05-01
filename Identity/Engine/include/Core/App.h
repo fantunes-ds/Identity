@@ -25,12 +25,20 @@ namespace Engine::Core
         App(const App&) = delete;
         App& operator=(const App&) = delete;
 
-        int Run() const;
+        int Run();
 
     private:
         void StartFrame() const;
         void DoFrame(float p_deltaTime) const;
         void EndFrame() const;
+
+        //testing
+        void InitScene(bool play = false);
+        void InitPlay();
+        void InitEditor();
+        void TestingSimulation();
+        bool RunBullet{ false };
+        //-------
 
     private:
         Tools::UI::ImGUIManager m_imguiManager;

@@ -22,9 +22,12 @@ namespace Engine::Containers
 
             //TODO: Possible memory leak here
             T* newComp = new T(p_gameObject, p_args...);
+            // T* newCompEditor = new T(p_gameObject, p_args...);
 
             if (dynamic_cast<Components::IComponent*>(newComp)->GetID() >= 0)
                 id = ComponentContainer::AddComponent(newComp);
+            // if (dynamic_cast<Components::IComponent*>(newComp)->GetID() >= 0)
+                // ComponentContainer::AddComponentEditor(newCompEditor);
 
             return id;
         }
@@ -48,11 +51,18 @@ namespace Engine::Containers
             return foundComps;
         }
 
+        static void CopyComp() { GetInstance()->CopyCompNS(); }
+        static void SwitchComp() { GetInstance()->SwitchCompNS(); }
+        void CopyCompNS();
+        void SwitchCompNS();
+
+        static int32_t AddComponent(Components::IComponent* p_component);
+        static int32_t AddComponentEditor(Components::IComponent* p_component);
     private:
         ComponentContainer() = default;
-        static int32_t AddComponent(Components::IComponent* p_component);
 
         inline static ComponentContainer* m_instance = nullptr;
         std::map<int32_t, std::shared_ptr<Components::IComponent>> m_components;
+        std::map<int32_t, std::shared_ptr<Components::IComponent>> m_componentsEditor;
     };
 }

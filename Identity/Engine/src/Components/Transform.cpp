@@ -34,8 +34,9 @@ bool Engine::Components::Transform::DeleteFromMemory()
 
 void Engine::Components::Transform::SetActive(bool p_active)
 {
-    std::string message("Transform components cannot be deactivated.\n");
-    MessageBox(nullptr, message.c_str(), "Error", MB_ICONWARNING | MB_OK);
+    m_isActive = p_active;
+    // std::string message("Transform components cannot be deactivated.\n");
+    // MessageBox(nullptr, message.c_str(), "Error", MB_ICONWARNING | MB_OK);
 }
 
 void Engine::Components::Transform::Translate(const Vector3F& p_vector)
