@@ -28,7 +28,7 @@ namespace Engine::Scene
 
         std::list<std::shared_ptr<Objects::GameObject>> GetAllGameObjectsInScene();
 
-        void SetActivateOnAll(bool p_active);
+        void SetActiveOnAll(bool p_active);
 
     private:
         SceneGraph m_sceneGraph;
