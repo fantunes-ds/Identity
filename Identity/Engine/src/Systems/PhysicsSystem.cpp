@@ -5,7 +5,7 @@
 #include <Objects/GameObject.h>
 #include <Tools/Time.h>
 
-Engine::Containers::PhysicsSystem::PhysicsSystem()
+Engine::Systems::PhysicsSystem::PhysicsSystem()
 {
     m_collisionConfiguration = new btDefaultCollisionConfiguration();
 
@@ -23,12 +23,12 @@ Engine::Containers::PhysicsSystem::PhysicsSystem()
     m_dynamicsWorld->setGravity(btVector3(0.0f, -10.0f, 0.0f));
 }
 
-Engine::Containers::PhysicsSystem::~PhysicsSystem()
+Engine::Systems::PhysicsSystem::~PhysicsSystem()
 {
     delete m_instance;
 }
 
-Engine::Containers::PhysicsSystem* Engine::Containers::PhysicsSystem::GetInstance()
+Engine::Systems::PhysicsSystem* Engine::Systems::PhysicsSystem::GetInstance()
 {
     if (m_instance == nullptr)
     {
@@ -38,7 +38,7 @@ Engine::Containers::PhysicsSystem* Engine::Containers::PhysicsSystem::GetInstanc
     return m_instance;
 }
 
-std::shared_ptr<Engine::Components::BoxCollider> Engine::Containers::PhysicsSystem::AddCollider(
+std::shared_ptr<Engine::Components::BoxCollider> Engine::Systems::PhysicsSystem::AddCollider(
     Components::BoxCollider* p_collider)
 {
     auto coll = std::shared_ptr<Components::BoxCollider>(p_collider);
@@ -47,7 +47,12 @@ std::shared_ptr<Engine::Components::BoxCollider> Engine::Containers::PhysicsSyst
     return coll;
 }
 
-void Engine::Containers::PhysicsSystem::Update(const float p_deltaTime)
+void Engine::Systems::PhysicsSystem::RemoveCollider(int32_t p_id)
+{
+    GetInstance()->m_colliders.erase(p_id);
+}
+
+void Engine::Systems::PhysicsSystem::Update(const float p_deltaTime)
 {
     for (auto& collider : GetInstance()->m_colliders)
     {
@@ -55,7 +60,7 @@ void Engine::Containers::PhysicsSystem::Update(const float p_deltaTime)
     }
 }
 
-void Engine::Containers::PhysicsSystem::FixedUpdate()
+void Engine::Systems::PhysicsSystem::FixedUpdate()
 {
     btTransform trans;
 

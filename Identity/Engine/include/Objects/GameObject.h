@@ -33,24 +33,19 @@ namespace Engine::Objects
 		template <class T, typename ...Args>
 		int32_t AddComponent(Args& ... p_args)
 		{
-			if (std::is_same_v<T, Components::ModelComponent>&& FindComponentOfType<Components::ModelComponent>())
+			if (std::is_same_v<T, Components::ModelComponent> && FindComponentOfType<Components::ModelComponent>())
 			{
 				std::string error("Tried to add a ModelComponent on object " + m_name + " while it already has one. Second ModelComponent has not been added.");
 				MessageBox(nullptr, error.c_str(), "Warning", MB_OK | MB_ICONWARNING);
 				return -1;
 			}
 
-			/**
-			* @brief Creates a new Component and adds it to the GameObject and the ComponentContainer.
-			* @return ID of the newly created Component.
-			 */
 			int32_t id = Containers::ComponentContainer::AddComponent<T>(this, p_args...);
 
             if (std::is_same_v<T, Components::ModelComponent>)
             {
                 //TODO change this to use the resource manager
                 std::shared_ptr<Components::ModelComponent> modelComp = std::dynamic_pointer_cast<Components::ModelComponent>(Containers::ComponentContainer::FindComponent(id));
-                // Managers::ResourceManager::FindModel(modelComp->GetModel())->GetRootNode()->SetTransform(m_transform);
             }
 
 			if (id > 0)
@@ -102,6 +97,8 @@ namespace Engine::Objects
 
 			return foundComps;
 		}
+
+		void DeleteFromMemory();
 
 		[[nodiscard]] std::shared_ptr<Components::Transform> GetTransform() const;
 		[[nodiscard]] inline uint32_t GetTransformID() const { return m_transform; }

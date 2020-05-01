@@ -66,7 +66,7 @@ void Engine::Containers::ComponentContainer::RemoveComponent(int32_t p_id, bool 
 {
     if (p_deleteFromMemory)
     {
-        GetInstance()->m_components.at(p_id)->DeleteFromMemory();
+        GetInstance()->FindComponent(p_id)->DeleteFromMemory();
     }
 
     GetInstance()->m_components.erase(p_id);

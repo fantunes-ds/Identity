@@ -23,6 +23,8 @@ namespace Engine::Scene
         ~Scene() = default;
 
         void AddGameObject(std::shared_ptr<Objects::GameObject> p_gameObject);
+        void RemoveGameObject(std::shared_ptr<Objects::GameObject> p_gameObject);
+        void RemoveGameObject(int32_t p_id);
 
         SceneGraph& GetSceneGraph() { return m_sceneGraph; }
 

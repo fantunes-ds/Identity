@@ -33,7 +33,7 @@ namespace Engine::Components
         void SetDimensions(const GPM::Vector3F& p_dimensions);
 
         bool operator==(IComponent* p_other) override { return false; }
-        bool DeleteFromMemory() override { return false; }
+        bool DeleteFromMemory() override;
         void SetActive(bool p_active) override;
 
     private:

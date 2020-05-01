@@ -4,6 +4,7 @@
 #include <BulletCollision/CollisionShapes/btBoxShape.h>
 #include <Objects/GameObject.h>
 #include <Systems/PhysicsSystem.h>
+#include <Managers/ResourceManager.h>
 
 Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{ p_gameObject }
 {
@@ -31,14 +32,15 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
 
-    Containers::PhysicsSystem::AddCollider(this);
+    Systems::PhysicsSystem::AddCollider(this);
 }
 
 Engine::Components::BoxCollider::~BoxCollider()
 {
-    delete m_box;
+    Engine::Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
+    /*delete m_box;
     delete m_rigidbody;
-    delete m_motionState;
+    delete m_motionState;*/
 }
 
 GPM::Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
@@ -62,6 +64,9 @@ GPM::Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
 
 void Engine::Components::BoxCollider::SetPositionOffset(GPM::Vector3F& p_offset)
 {
+    if (this == nullptr)
+        return;
+
     m_offset = p_offset;
 }
 
@@ -71,7 +76,7 @@ void Engine::Components::BoxCollider::SetMass(float p_mass)
 
     if (m_rigidbody)
     {
-        Containers::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
+        Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
     }
 
     auto localInertia = btVector3(0.0f, 0.0f, 0.0f);
@@ -82,30 +87,40 @@ void Engine::Components::BoxCollider::SetMass(float p_mass)
     btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
     delete m_rigidbody;
     m_rigidbody = new btRigidBody(rbInfo);
-    Containers::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
+    Systems::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
 }
 
 void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimensions)
 {
+    if (this == nullptr)
+        return;
+
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
 
     if (m_rigidbody)
     {
         delete m_box;
 
-        Containers::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
+        Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
         m_box = new btBoxShape(btVector3(p_dimensions.x, p_dimensions.y, p_dimensions.z));
         m_rigidbody->setCollisionShape(m_box);
         m_box->calculateLocalInertia(m_mass, localInertia);
         m_rigidbody->setMassProps(m_mass, localInertia);
         m_rigidbody->updateInertiaTensor();
-        Containers::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
+        Systems::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
     }
 
     ObjectElements::Model model = ConstructBox();
     Managers::ResourceManager::RemoveModel(m_model->GetID());
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
+}
+
+bool Engine::Components::BoxCollider::DeleteFromMemory()
+{
+    Systems::PhysicsSystem::RemoveCollider(GetID());
+    Managers::ResourceManager::RemoveModel(m_model->GetID());
+    return true;
 }
 
 void Engine::Components::BoxCollider::SetActive(bool p_active)

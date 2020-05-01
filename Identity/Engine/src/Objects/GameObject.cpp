@@ -6,6 +6,7 @@
 #include <Scene/Scene.h>
 #include <Managers/SceneManager.h>
 #include <Managers/ResourceManager.h>
+#include <Containers/ComponentContainer.h>
 
 Engine::Objects::GameObject::GameObject()
 {
@@ -24,6 +25,19 @@ Engine::Objects::GameObject::GameObject(const std::string& p_name)
     Containers::ComponentContainer::AddComponent(trm.get());
 }
 
+void Engine::Objects::GameObject::DeleteFromMemory()
+{
+    for (auto& component : m_components)
+    {
+        auto p = Containers::ComponentContainer::FindComponent(component);
+        Containers::ComponentContainer::RemoveComponent(component);
+    }
+
+    Containers::GameObjectContainer::RemoveGameObject(GetID());
+
+    Managers::SceneManager::GetActiveScene()->RemoveGameObject(GetID());
+}
+
 std::shared_ptr<Engine::Components::Transform> Engine::Objects::GameObject::GetTransform() const
 {
     return Containers::TransformSystem::GetTransform(m_transform);
@@ -31,6 +45,9 @@ std::shared_ptr<Engine::Components::Transform> Engine::Objects::GameObject::GetT
 
 std::shared_ptr<Engine::ObjectElements::Model> Engine::Objects::GameObject::GetModel() const
 {
+    if (this == nullptr)
+        return nullptr;
+
     for (auto& component : m_components)
     {
         if (Components::ModelComponent* modelComp = dynamic_cast<Components::ModelComponent*>(&*Containers::ComponentContainer::FindComponent(component)))
