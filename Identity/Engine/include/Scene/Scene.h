@@ -20,16 +20,13 @@ namespace Engine::Scene
     public:
         Scene() = default;
         Scene(const std::string& p_name);
-        ~Scene() = default;
+        ~Scene();
 
         void AddGameObject(std::shared_ptr<Objects::GameObject> p_gameObject);
 
-        SceneGraph& GetSceneGraph() { return m_sceneGraph; }
-
+        SceneGraph& GetSceneGraph() { return m_sceneGraph; }
         std::list<std::shared_ptr<Objects::GameObject>> GetAllGameObjectsInScene();
-
         void SetActiveOnAll(bool p_active);
-
     private:
         SceneGraph m_sceneGraph;
     };

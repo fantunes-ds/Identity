@@ -63,78 +63,6 @@ int App::Run()
 
     InitScene();
 
-    // auto link = std::make_shared<Objects::GameObject>("link");
-    // auto lambo = std::make_shared<Objects::GameObject>("lambo");
-    // Objects::GameObject camera;
-    // Objects::GameObject light;
-    //
-    //
-    //
-    // //---LINK---
-    // link->GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
-    // link->GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    // link->GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
-    //
-    // link->AddComponent<Components::BoxCollider>();
-    // link->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 0.5f, 1.0f, 0.5f });
-    // GPM::Vector3F linkOffset{ 0.0f, -1.0f, 0.0f };
-    // link->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(linkOffset);
-    // link->FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
-    // link->FindComponentOfType<Components::BoxCollider>()->SetActive(false);
-    //
-    // link->AddComponent<Components::ModelComponent>("Link");
-    // for (auto& mesh : link->GetModel()->GetMeshes())
-    // {
-    //     mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
-    // }
-    // scene->AddGameObject(link);
-    // //----------
-    //
-    // //---LAMBO---
-    // lambo->GetTransform()->Translate(Vector3F{5.0f, 5.0f, -3.0f});
-    // lambo->GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
-    // lambo->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
-    //
-    // lambo->AddComponent<Components::BoxCollider>();
-    // lambo->FindComponentOfType<Components::BoxCollider>()->SetMass(80);
-    // lambo->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 2.0f, 1.0f, 5.0f });
-    // GPM::Vector3F lamboOffset{ 0.0f, -1.5f, 0.0f };
-    // lambo->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
-    //
-    // lambo->AddComponent<Components::ModelComponent>("Lambo");
-    // for (auto& mesh : lambo->GetModel()->GetMeshes())
-    // {
-    //     mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
-    // }
-    // scene2->AddGameObject(lambo);
-    // //-----------
-    //
-    // //--CAMERA--
-    // camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
-    // camera.AddComponent<Components::Camera>(m_width, m_height);
-    // //----------
-    //
-    // //---LIGHT---
-    // light.GetTransform()->Translate(Vector3F{ 10.0f, 4.0f, -10.0f });
-    // light.GetTransform()->Scale(Vector3F{ 0.01f, 0.01f, 0.01f });
-    //
-    // Rendering::Lights::DirectionalLight::LightData dirLight
-    // {
-    // Vector4F(light.GetTransform()->GetPosition().x * -1, light.GetTransform()->GetPosition().y, light.GetTransform()->GetPosition().z * -1, 1.0f),
-    // Vector4F(0.1f, 0.1f, 0.1f, 1.0f),
-    // Vector4F(1.0f, 1.0f, 0.95f, 1.0f),
-    // Vector4F(0.5f, 0.5f, 0.5f, 1.0f),
-    // Vector4F(1.0f, 1.0f, 1.0f, 1.0f),
-    // 32.0f
-    // };
-    //
-    // light.AddComponent<Components::Light>(dirLight);
-    // //-----------
-    //
-    // Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
-    //
-    // // lambo->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
-
     float fixedUpdateTimer = 0.0f;
     while (true)
     {
@@ -386,6 +314,7 @@ void App::TestingSimulation()
         Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
 
         //TODO delete old play scene
+        Managers::SceneManager::DeletePlayScene();
 
 
         RunBullet = false;
