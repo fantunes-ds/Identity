@@ -27,8 +27,14 @@ namespace Engine::Core
         void Init();
     private:
         void StartFrame() const;
-        void DoFrame(Systems::RenderSystem& p_renderSystem, float p_deltaTime) const;
+        void DoFrame(float p_deltaTime) const;
         void EndFrame() const;
+
+        //testing
+        void InitEditor();
+        void TestingSimulation();
+        bool RunBullet{ false };
+        //-------
 
     private:
         Tools::UI::ImGUIManager m_imguiManager;

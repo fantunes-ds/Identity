@@ -72,4 +72,22 @@ bool Engine::Scene::SceneNode::IsRoot()
     return true;
 }
 
+std::vector<std::shared_ptr<Engine::Scene::SceneNode>> Engine::Scene::SceneNode::GetAllChildren()
+{
+    std::vector<std::shared_ptr<SceneNode>> children;
+
+    for (auto& node : m_children)
+    {
+        children.emplace_back(node);
+
+        if (node->GetChildren().size() > 0)
+        {
+            std::vector<std::shared_ptr<SceneNode>> nodeChildren = node->GetAllChildren();
+            children.insert(children.end(), nodeChildren.begin(), nodeChildren.end());
+        }
+    }
+
+    return std::move(children);
+}
+
 

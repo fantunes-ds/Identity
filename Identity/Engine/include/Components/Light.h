@@ -12,10 +12,12 @@ namespace Engine::Components
     public:
         Light(Objects::GameObject* p_gameObject);
         Light(Objects::GameObject* p_gameObject, Rendering::Lights::DirectionalLight::LightData& p_lightData);
-        bool operator==(IComponent* p_other) override;
-        bool DeleteFromMemory() override;
 
         [[nodiscard]] std::shared_ptr<Rendering::Lights::ILight> GetLight() const { return nullptr; }
+
+        bool operator==(IComponent* p_other) override;
+        bool DeleteFromMemory() override;
+        void SetActive(bool p_active) override { m_isActive = p_active; }
 
     private:
         int32_t m_light;

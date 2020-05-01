@@ -12,7 +12,10 @@ void Engine::Components::Camera::UpdateCamera(const float p_deltaTime, const flo
     UpdateCameraRotation();
     UpdateVectors();
     UpdateViewMatrix();
-    UpdateResolution(p_width, p_height);
+
+    // if (p_width != m_width || p_height != m_height)
+        UpdateResolution(p_width, p_height);
+
     needUpdate = false;
 }
 

@@ -1,4 +1,5 @@
 #include <stdafx.h>
+#include <Windows.h>
 #include <Components/Transform.h>
 #include <Systems/TransformSystem.h>
 
@@ -21,6 +22,18 @@ Engine::Components::Transform::Transform(const std::string& p_name) : IComponent
     SetName(p_name);
 }
 
+void Engine::Components::Transform::CopyFrom(std::shared_ptr<Transform> p_other)
+{
+    m_position = p_other->m_position;
+    m_forward = p_other->m_forward;
+    m_right = p_other->m_right;
+    m_up = p_other->m_up;
+    m_scale = p_other->m_scale;
+    m_rotation = p_other->m_rotation;
+
+    needUpdate = true;
+}
+
 bool Engine::Components::Transform::operator==(IComponent* p_other)
 {
     return true;
@@ -29,6 +42,13 @@ bool Engine::Components::Transform::operator==(IComponent* p_other)
 bool Engine::Components::Transform::DeleteFromMemory()
 {
     return true;
+}
+
+void Engine::Components::Transform::SetActive(bool p_active)
+{
+    m_isActive = p_active;
+    // std::string message("Transform components cannot be deactivated.\n");
+    // MessageBox(nullptr, message.c_str(), "Error", MB_ICONWARNING | MB_OK);
 }
 
 void Engine::Components::Transform::Translate(const Vector3F& p_vector)

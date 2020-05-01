@@ -16,11 +16,15 @@ namespace Engine::Components
 
         virtual bool operator==(IComponent* p_other) = 0;
         virtual bool DeleteFromMemory() = 0;
-        void SetGameObject(std::shared_ptr<Objects::GameObject> p_gameObject);
-        [[nodiscard]] std::shared_ptr<Objects::GameObject> GetGameObject() const;
+        virtual void SetActive(bool p_active) = 0;
+
+        void SetGameObject(Objects::GameObject* p_gameObject);
+        [[nodiscard]] Objects::GameObject* GetGameObject() const;
+
+        virtual bool IsActive() { return m_isActive; }
 
     protected:
-        std::shared_ptr<Objects::GameObject> m_gameObject;
-        //Objects::GameObject* m_gameObject;
+        Objects::GameObject* m_gameObject;
+        bool m_isActive = true;
     };
 }

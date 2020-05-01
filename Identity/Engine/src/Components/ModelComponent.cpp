@@ -8,6 +8,13 @@ Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameOb
     m_model = p_id;
 }
 
+
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject,
+    std::shared_ptr<ModelComponent> p_other) : IComponent{ p_gameObject }
+{
+    m_model = p_other->m_model;
+}
+
 Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name): IComponent{ p_gameObject }
 {
     m_model = Managers::ResourceManager::GetModel(p_name);
