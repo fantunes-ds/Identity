@@ -26,7 +26,7 @@ std::list<std::shared_ptr<Engine::Objects::GameObject>> Engine::Scene::Scene::Ge
     return GOs;
 }
 
-void Engine::Scene::Scene::SetActivateOnAll(bool p_active)
+void Engine::Scene::Scene::SetActiveOnAll(bool p_active)
 {
 	for (auto& go : GetAllGameObjectsInScene())
 	{
