@@ -26,9 +26,6 @@ int Editor::Core::Core::Update()
     try
     {
         m_engine.Init();
-        for (auto& ref : Engine::Containers::EventContainer::GetAllEvents())
-            OutputDebugString(ref.first.c_str());
-
         Engine::Containers::EventContainer::GetEvent("OnGUI").AddListener(this, &Core::EditorBase);
         return m_engine.Run();
     }

@@ -15,7 +15,6 @@
 #include <Objects/GameObject.h>
 #include <Components/ModelComponent.h>
 #include <Components/Camera.h>
-#include <UI/Dockspace.h>
 
 #include <Components/Light.h>
 #include <LinearMath/btVector3.h>
@@ -28,6 +27,7 @@
 #include <Managers/SceneManager.h>
 
 #include <Managers/ResourceManager.h>
+#include <Rendering/Renderer.h>
 
 using namespace Engine::Core;
 
@@ -48,7 +48,7 @@ void App::Init()
     Containers::EventContainer::AddEvent("OnGUI");
 }
 
-int App::Run() const
+int App::Run()
 {
     auto scene = std::make_shared<Scene::Scene>();
 
@@ -122,7 +122,6 @@ int App::Run() const
     Systems::RenderSystem renderSystem;
     renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
 
-
     float fixedUpdateTimer = 0.0f;
 	
     while (true)
@@ -137,6 +136,23 @@ int App::Run() const
         // Events
         // (will be moved below DoFrame once we get rid of all ImGUI calls on Engine)
         Containers::EventContainer::GetEvent("OnGUI").Fire();
+
+        static bool show_demo_window = true;
+
+        static char buffer[1024];
+
+        if (show_demo_window)
+        {
+            ImGui::ShowDemoWindow(&show_demo_window);
+        }
+        if (ImGui::Begin("Hierarchy"))
+        {
+                int i = 0;
+                for (auto& node : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
+                    DisplayNextChild(node.second, i);
+
+        }ImGui::End();
+
 
         float deltaTime = Tools::Time::GetDeltaTime();
 
@@ -158,6 +174,63 @@ int App::Run() const
         EndFrame();
         Tools::Time::Stop();
     }
+}
+
+std::shared_ptr<Engine::Scene::SceneNode> App::DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child, int& p_i)
+{
+        static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+        static int selection_mask = (1 << 2);
+        int node_clicked = -1;
+        ImGuiTreeNodeFlags node_flags = base_flags;
+        static bool test_drag_and_drop = true;
+        const bool is_selected = (selection_mask & (1 << p_i)) != 0;
+        if (is_selected)
+            node_flags |= ImGuiTreeNodeFlags_Selected;
+
+        if (!p_child->GetChildren().empty())
+        {
+            bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)p_i, node_flags, "%s", p_child->GetName().c_str());
+            {
+                if (ImGui::IsItemClicked())
+                    node_clicked = p_i;
+                if (test_drag_and_drop && ImGui::BeginDragDropSource())
+                {
+                    ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
+                    ImGui::Text("%s", p_child->GetName().c_str());
+                    ImGui::EndDragDropSource();
+                }
+                if (node_open)
+                {
+                    for (auto& child : p_child->GetChildren())
+                        DisplayNextChild(child, p_i);
+                    ImGui::TreePop();
+                }
+                p_i++;
+            }
+        }
+        else
+        {
+            node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
+            ImGui::TreeNodeEx((void*)(intptr_t)p_i, node_flags, "%s", p_child->GetName().c_str());
+            if (ImGui::IsItemClicked())
+                node_clicked = p_i;
+            if (test_drag_and_drop && ImGui::BeginDragDropSource())
+            {
+                ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
+                ImGui::Text("%s", p_child->GetName().c_str());
+                ImGui::EndDragDropSource();
+            }
+            p_i++;
+        }
+        if (node_clicked != -1)
+        {
+            if (ImGui::GetIO().KeyCtrl)
+                selection_mask ^= (1 << node_clicked);          // CTRL+click to toggle
+            else if (!(selection_mask & (1 << node_clicked))) 
+                selection_mask = (1 << node_clicked);           // Click to single-select
+        }
+    
+    return p_child;
 }
 
 void App::StartFrame() const
