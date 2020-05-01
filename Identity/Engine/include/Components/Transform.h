@@ -11,7 +11,6 @@ namespace Engine::Components
         Transform();
 
         Transform(const std::string& p_name);
-        Transform(Vector3F& p_position);
         ~Transform() = default;
         Transform(Objects::GameObject* p_gameObject);
         Transform(Objects::GameObject* p_gameObject, const Transform& p_other);
@@ -19,6 +18,7 @@ namespace Engine::Components
 
 
         //---WIP---
+        void CopyFrom(std::shared_ptr<Transform> p_other);
         bool operator==(IComponent* p_other) override;
         bool DeleteFromMemory() override;
         void SetActive(bool p_active) override;

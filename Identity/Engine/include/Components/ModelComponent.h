@@ -8,6 +8,7 @@ namespace Engine::Components
     class API_ENGINE ModelComponent: public IComponent
     {
     public:
+        ModelComponent(Objects::GameObject* p_gameObject, std::shared_ptr<ModelComponent> p_other);
         ModelComponent(Objects::GameObject* p_gameObject, const int32_t p_id);
         ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name);
         ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file, const std::string& p_name);

@@ -35,6 +35,40 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
     Systems::PhysicsSystem::AddCollider(this);
 }
 
+
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{ p_gameObject }
+{
+    //init data
+    btVector3 localInertia(0.0f, 0.0f, 0.0f);
+    m_mass = p_other->m_mass;
+    m_offset = p_other->m_offset;
+    m_box = p_other->m_box;
+
+    btTransform trans;
+    auto& position = m_gameObject->GetTransform()->GetPosition();
+    auto& rotation = m_gameObject->GetTransform()->GetRotation();
+    auto& scale = m_gameObject->GetTransform()->GetScale();
+
+
+    trans.setIdentity();
+    trans.setOrigin(btVector3(position.x, position.y, position.z));
+    trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
+
+    m_box->calculateLocalInertia(m_mass, localInertia);
+
+    m_motionState = new btDefaultMotionState(trans);
+
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
+    m_rigidbody = new btRigidBody(rbInfo);
+
+    ObjectElements::Model model = ConstructBox();
+    //TODO add a "AddModel" that take a model as parametre
+    const int32_t id = Managers::ResourceManager::AddModel(model);
+    m_model = Managers::ResourceManager::FindModel(id);
+
+    Containers::PhysicsSystem::AddCollider(this);
+}
+
 Engine::Components::BoxCollider::~BoxCollider()
 {
     Engine::Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);

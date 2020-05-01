@@ -35,6 +35,7 @@ namespace Engine::Managers
         static void SetPlayScene(std::shared_ptr<Scene::Scene> p_scene) { GetInstance()->m_playScene = p_scene; }
 
         static bool DeletePlayScene();
+        static void DuplicateScene(std::shared_ptr<Scene::Scene>& p_destination, std::shared_ptr<Scene::Scene>& p_source);
 
     private:
         bool DeletePlaySceneNS();

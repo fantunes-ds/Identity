@@ -2,11 +2,12 @@
 #include <Export.h>
 #include <list>
 #include <Scene/SceneGraph/SceneGraph.h>
+#include <Objects/GameObject.h>
 
-namespace Engine::Objects
-{
-    class GameObject;
-}
+// namespace Engine::Objects
+// {
+//     class GameObject;
+// }
 
 namespace Engine::Components
 {

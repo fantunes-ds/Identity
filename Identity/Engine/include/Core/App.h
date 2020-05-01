@@ -33,8 +33,6 @@ namespace Engine::Core
         void EndFrame() const;
 
         //testing
-        void InitScene(bool play = false);
-        void InitPlay();
         void InitEditor();
         void TestingSimulation();
         bool RunBullet{ false };

@@ -61,9 +61,10 @@ int App::Run()
     Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
     //----------
 
-    InitScene();
+    InitEditor();
 
     float fixedUpdateTimer = 0.0f;
+    Containers::PhysicsSystem::FixedUpdate();
     while (true)
     {
         Tools::Time::Start();
@@ -138,88 +139,6 @@ void App::EndFrame() const
     Rendering::Renderer::GetInstance()->EndFrame();
 }
 
-void App::InitScene(bool play)
-{
-    if (play)
-    {
-        InitPlay();
-    }
-    else
-    {
-        InitEditor();
-    }
-}
-
-
-void App::InitPlay()
-{
-    auto scene = std::make_shared<Scene::Scene>();
-    scene->SetName("scene2");
-    Managers::SceneManager::AddScene(scene);
-    Managers::SceneManager::SetPlayScene(scene);
-
-    auto link2 = std::make_shared<Objects::GameObject>("link");
-    auto lambo2 = std::make_shared<Objects::GameObject>("lambo");
-    auto light2 = std::make_shared<Objects::GameObject>("light");
-
-    //---LINK---
-    link2->GetTransform()->Translate(Vector3F{ 4.0f, 0.0f, -4.0f });
-    link2->GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
-    link2->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.02f, -45.0f, 0.02f });
-
-    link2->AddComponent<Components::BoxCollider>();
-    link2->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 0.5f, 1.0f, 0.5f });
-    GPM::Vector3F linkOffset{ 0.0f, -1.0f, 0.0f };
-    link2->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(linkOffset);
-    link2->FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
-    link2->FindComponentOfType<Components::BoxCollider>()->SetActive(true);
-
-    link2->AddComponent<Components::ModelComponent>("Link");
-    for (auto& mesh : link2->GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
-    }
-    scene->AddGameObject(link2);
-    //----------
-
-    //---LAMBO---
-    lambo2->GetTransform()->Translate(Vector3F{ 5.0f, 5.0f, -3.0f });
-    lambo2->GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
-    lambo2->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
-
-    lambo2->AddComponent<Components::BoxCollider>();
-    lambo2->FindComponentOfType<Components::BoxCollider>()->SetMass(80);
-    lambo2->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 2.0f, 1.0f, 5.0f });
-    GPM::Vector3F lamboOffset{ 0.0f, -1.5f, 0.0f };
-    lambo2->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
-
-    lambo2->AddComponent<Components::ModelComponent>("Lambo");
-    for (auto& mesh : lambo2->GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
-    }
-    scene->AddGameObject(lambo2);
-    //-----------
-
-    //---LIGHT---
-    light2->GetTransform()->Translate(Vector3F{ 10.0f, 4.0f, -10.0f });
-    light2->GetTransform()->Scale(Vector3F{ 0.01f, 0.01f, 0.01f });
-
-    Rendering::Lights::DirectionalLight::LightData dirLight
-    {
-    Vector4F(light2->GetTransform()->GetPosition().x * -1, light2->GetTransform()->GetPosition().y, light2->GetTransform()->GetPosition().z * -1, 1.0f),
-    Vector4F(0.1f, 0.1f, 0.1f, 1.0f),
-    Vector4F(1.0f, 1.0f, 0.95f, 1.0f),
-    Vector4F(0.5f, 0.5f, 0.5f, 1.0f),
-    Vector4F(1.0f, 1.0f, 1.0f, 1.0f),
-    32.0f
-    };
-
-    light2->AddComponent<Components::Light>(dirLight);
-    scene->AddGameObject(light2);
-    //-----------
-}
-
 void App::InitEditor()
 {
     auto scene = std::make_shared<Scene::Scene>();
@@ -292,17 +211,23 @@ void App::TestingSimulation()
 {
     if (_INPUT->keyboard.IsKeyDown('P') && !RunBullet)
     {
-        if (!Managers::SceneManager::GetPlayScene())
-            InitScene(true);
+        // if (!Managers::SceneManager::GetPlayScene())
+            // InitScene(true);
 
-        auto active = Managers::SceneManager::GetActiveScene();
+        auto playScene = std::make_shared<Scene::Scene>();
+        playScene->SetName("scene2");
+        auto activeScene = Managers::SceneManager::GetActiveScene();
+        Managers::SceneManager::DuplicateScene(playScene, activeScene);
+        Managers::SceneManager::AddScene(playScene);
+        Managers::SceneManager::SetActiveScene(playScene);
+        Managers::SceneManager::SetPlayScene(activeScene);
+        Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
+        Managers::SceneManager::GetPlayScene()->SetActiveOnAll(false);
 
         //deactivate editor scene
 
-        Managers::SceneManager::SetActiveScene(Managers::SceneManager::GetPlayScene());
-        Managers::SceneManager::SetPlayScene(active);
-        Managers::SceneManager::GetPlayScene()->SetActiveOnAll(false);
-        Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
+        // Managers::SceneManager::SetActiveScene(Managers::SceneManager::GetPlayScene());
+        // Managers::SceneManager::SetPlayScene(activeScene);
         RunBullet = true;
     }
     else if (_INPUT->keyboard.IsKeyDown('O') && RunBullet)

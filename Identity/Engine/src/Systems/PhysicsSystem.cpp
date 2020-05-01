@@ -66,6 +66,9 @@ void Engine::Systems::PhysicsSystem::FixedUpdate()
 
     GetInstance()->m_dynamicsWorld->stepSimulation(1.0f / 60.0f, 0);
 
+    auto colliders = GetInstance()->m_colliders;
+    std::cout << "this is for test";
+
     for (auto& collider : GetInstance()->m_colliders)
     {
         if (collider.second->IsActive())

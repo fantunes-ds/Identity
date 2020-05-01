@@ -14,6 +14,7 @@ namespace Engine::Components
     class API_ENGINE BoxCollider: public IComponent
     {
     public:
+        BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other);
         BoxCollider(Objects::GameObject* p_gameObject);
         BoxCollider(const BoxCollider&) = default;
         ~BoxCollider();
