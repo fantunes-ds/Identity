@@ -86,3 +86,25 @@ void Engine::Managers::SceneManager::SetPlayScene(const int32_t p_id)
 	const std::string info("SceneManager::SetPlayScene(const int32_t p_id): Could not set active scene to " + std::to_string(p_id) + " because a scene with this name could not be found\n");
 	MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
 }
+
+bool Engine::Managers::SceneManager::DeletePlayScene()
+{
+	return GetInstance()->DeletePlaySceneNS();
+}
+
+bool Engine::Managers::SceneManager::DeletePlaySceneNS()
+{
+    int id = -1;
+    for (int i = 0; i < m_scenes.size(); ++i)
+    {
+        if (m_scenes[i] == m_playScene)
+            id = i;
+    }
+
+	if (id < 0)
+		return false;
+
+	m_scenes[id].reset();
+    m_playScene.reset();
+	return true;
+}
