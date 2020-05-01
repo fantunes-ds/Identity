@@ -36,6 +36,16 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Objects::GameObject::GetM
     return nullptr;
 }
 
+inline void Engine::Objects::GameObject::SetActive(bool p_active)
+{
+    for (auto& component : GetAllComponents())
+    {
+        Containers::ComponentContainer::FindComponent(component)->SetActive(p_active);
+    }
+
+    m_isActive = p_active;
+}
+
 bool Engine::Objects::GameObject::operator==(GameObject& p_other) const
 {
     if (m_transform == p_other.m_transform && m_components == p_other.m_components)

@@ -111,10 +111,12 @@ namespace Engine::Objects
 		
 		inline void SetTransform(int32_t p_transform) { m_transform = p_transform; }
 		inline void SetSceneNode(std::shared_ptr<Scene::SceneNode> p_rootNode) { m_rootNode = p_rootNode; }
-		
+		inline void SetActive(bool p_active);
+
 		bool operator==(GameObject& p_other) const;
 
 	private:
+		bool m_isActive = true;
 		int32_t m_transform = -1;
 		std::vector<int32_t> m_components;
 		std::shared_ptr<Scene::SceneNode> m_rootNode = nullptr;
