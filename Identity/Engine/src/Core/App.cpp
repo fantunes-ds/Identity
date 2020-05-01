@@ -370,10 +370,11 @@ void App::TestingSimulation()
         auto active = Managers::SceneManager::GetActiveScene();
 
         //deactivate editor scene
-        active->SetActiveOnAll(false);
 
         Managers::SceneManager::SetActiveScene(Managers::SceneManager::GetPlayScene());
         Managers::SceneManager::SetPlayScene(active);
+        Managers::SceneManager::GetPlayScene()->SetActiveOnAll(false);
+        Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
         RunBullet = true;
     }
     else if (_INPUT->keyboard.IsKeyDown('O') && RunBullet)
@@ -381,6 +382,7 @@ void App::TestingSimulation()
         auto active = Managers::SceneManager::GetActiveScene();
         Managers::SceneManager::SetActiveScene(Managers::SceneManager::GetPlayScene());
         Managers::SceneManager::SetPlayScene(active);
+        Managers::SceneManager::GetPlayScene()->SetActiveOnAll(false);
         Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
 
         //TODO delete old play scene
