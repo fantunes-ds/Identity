@@ -22,6 +22,18 @@ Engine::Components::Transform::Transform(const std::string& p_name) : IComponent
     SetName(p_name);
 }
 
+void Engine::Components::Transform::CopyFrom(std::shared_ptr<Transform> p_other)
+{
+    m_position = p_other->m_position;
+    m_forward = p_other->m_forward;
+    m_right = p_other->m_right;
+    m_up = p_other->m_up;
+    m_scale = p_other->m_scale;
+    m_rotation = p_other->m_rotation;
+
+    needUpdate = true;
+}
+
 bool Engine::Components::Transform::operator==(IComponent* p_other)
 {
     return true;
