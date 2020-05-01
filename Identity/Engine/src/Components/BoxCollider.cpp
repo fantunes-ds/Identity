@@ -66,7 +66,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
 
-    Containers::PhysicsSystem::AddCollider(this);
+    Systems::PhysicsSystem::AddCollider(this);
 }
 
 Engine::Components::BoxCollider::~BoxCollider()
