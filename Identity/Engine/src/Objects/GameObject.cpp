@@ -1,31 +1,34 @@
 #include <stdafx.h>
+
+#include <Containers/ComponentContainer.h>
+#include <Containers/GameObjectContainer.h>
+#include <Components/ModelComponent.h>
+#include <Managers/ResourceManager.h>
+#include <Managers/SceneManager.h>
 #include <Objects/GameObject.h>
 #include <Systems/TransformSystem.h>
-#include <Components/ModelComponent.h>
-#include <Containers/GameObjectContainer.h>
 #include <Scene/Scene.h>
-#include <Managers/SceneManager.h>
-#include <Managers/ResourceManager.h>
-#include <Containers/ComponentContainer.h>
 
-Engine::Objects::GameObject::GameObject()
+using namespace Engine::Objects;
+
+GameObject::GameObject()
 {
-    m_transform = Containers::TransformSystem::AddTransform(std::make_shared<Components::Transform>());
+    m_transform = Systems::TransformSystem::AddTransform(std::make_shared<Components::Transform>());
     Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
-    auto trm = Containers::TransformSystem::GetTransform(m_transform);
+    auto trm = Systems::TransformSystem::GetTransform(m_transform);
     Containers::ComponentContainer::AddComponent(trm.get());
 }
 
-Engine::Objects::GameObject::GameObject(const std::string& p_name)
+GameObject::GameObject(const std::string& p_name)
 {
-    m_transform = Containers::TransformSystem::AddTransform(std::make_shared<Components::Transform>(p_name));
+    m_transform = Systems::TransformSystem::AddTransform(std::make_shared<Components::Transform>(p_name));
     Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
     SetName(p_name);
-    auto trm = Containers::TransformSystem::GetTransform(m_transform);
+    auto trm = Systems::TransformSystem::GetTransform(m_transform);
     Containers::ComponentContainer::AddComponent(trm.get());
 }
 
-void Engine::Objects::GameObject::DeleteFromMemory()
+void GameObject::DeleteFromMemory()
 {
     for (auto& component : m_components)
     {
@@ -38,12 +41,12 @@ void Engine::Objects::GameObject::DeleteFromMemory()
     Managers::SceneManager::GetActiveScene()->RemoveGameObject(GetID());
 }
 
-std::shared_ptr<Engine::Components::Transform> Engine::Objects::GameObject::GetTransform() const
+std::shared_ptr<Engine::Components::Transform> GameObject::GetTransform() const
 {
-    return Containers::TransformSystem::GetTransform(m_transform);
+    return Systems::TransformSystem::GetTransform(m_transform);
 }
 
-std::shared_ptr<Engine::ObjectElements::Model> Engine::Objects::GameObject::GetModel() const
+std::shared_ptr<Engine::ObjectElements::Model> GameObject::GetModel() const
 {
     if (this == nullptr)
         return nullptr;
@@ -57,7 +60,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Objects::GameObject::GetM
     return nullptr;
 }
 
-inline void Engine::Objects::GameObject::SetActive(bool p_active)
+inline void GameObject::SetActive(bool p_active)
 {
     for (auto& component : GetAllComponents())
     {
@@ -67,7 +70,7 @@ inline void Engine::Objects::GameObject::SetActive(bool p_active)
     m_isActive = p_active;
 }
 
-bool Engine::Objects::GameObject::operator==(GameObject& p_other) const
+bool GameObject::operator==(GameObject& p_other) const
 {
     if (m_transform == p_other.m_transform && m_components == p_other.m_components)
         return true;
@@ -75,13 +78,13 @@ bool Engine::Objects::GameObject::operator==(GameObject& p_other) const
     return false;
 }
 
-void Engine::Objects::GameObject::SetParentObject(std::shared_ptr<GameObject> p_parent)
+void GameObject::SetParentObject(std::shared_ptr<GameObject> p_parent)
 {
     p_parent->GetSceneNode()->AddChild(m_rootNode);
     //Managers::SceneManager::GetActiveScene()->GetSceneGraph().UpdateScene(0.0f);
 }
 
-bool Engine::Objects::GameObject::RemoveComponent(int32_t p_id)
+bool GameObject::RemoveComponent(int32_t p_id)
 {
     for (size_t i = 0; i < m_components.size(); ++i)
     {

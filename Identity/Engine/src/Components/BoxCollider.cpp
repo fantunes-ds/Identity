@@ -1,19 +1,23 @@
 #include <stdafx.h>
-#include <Components/BoxCollider.h>
+
 #include <LinearMath/btVector3.h>
 #include <BulletCollision/CollisionShapes/btBoxShape.h>
+
+#include <Components/BoxCollider.h>
 #include <Objects/GameObject.h>
 #include <Systems/PhysicsSystem.h>
 #include <Managers/ResourceManager.h>
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{ p_gameObject }
+using namespace Engine::Components;
+
+BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameObject}
 {
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
     btTransform trans;
-    auto& position = m_gameObject->GetTransform()->GetPosition();
-    auto& rotation = m_gameObject->GetTransform()->GetRotation();
-    auto& scale = m_gameObject->GetTransform()->GetScale();
+    auto&       position = m_gameObject->GetTransform()->GetPosition();
+    auto&       rotation = m_gameObject->GetTransform()->GetRotation();
+    auto&       scale    = m_gameObject->GetTransform()->GetScale();
 
     trans.setIdentity();
 
@@ -30,24 +34,24 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
 
     //TODO add a "AddModel" that take a model as parametre
     const int32_t id = Managers::ResourceManager::AddModel(model);
-    m_model = Managers::ResourceManager::FindModel(id);
+    m_model          = Managers::ResourceManager::FindModel(id);
 
     Systems::PhysicsSystem::AddCollider(this);
 }
 
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{ p_gameObject }
+BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{p_gameObject}
 {
     //init data
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
-    m_mass = p_other->m_mass;
+    m_mass   = p_other->m_mass;
     m_offset = p_other->m_offset;
-    m_box = p_other->m_box;
+    m_box    = p_other->m_box;
 
     btTransform trans;
-    auto& position = m_gameObject->GetTransform()->GetPosition();
-    auto& rotation = m_gameObject->GetTransform()->GetRotation();
-    auto& scale = m_gameObject->GetTransform()->GetScale();
+    auto&       position = m_gameObject->GetTransform()->GetPosition();
+    auto&       rotation = m_gameObject->GetTransform()->GetRotation();
+    auto&       scale    = m_gameObject->GetTransform()->GetScale();
 
 
     trans.setIdentity();
@@ -64,12 +68,12 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     ObjectElements::Model model = ConstructBox();
     //TODO add a "AddModel" that take a model as parametre
     const int32_t id = Managers::ResourceManager::AddModel(model);
-    m_model = Managers::ResourceManager::FindModel(id);
+    m_model          = Managers::ResourceManager::FindModel(id);
 
     Systems::PhysicsSystem::AddCollider(this);
 }
 
-Engine::Components::BoxCollider::~BoxCollider()
+BoxCollider::~BoxCollider()
 {
     Engine::Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
     /*delete m_box;
@@ -77,9 +81,9 @@ Engine::Components::BoxCollider::~BoxCollider()
     delete m_motionState;*/
 }
 
-GPM::Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
+Matrix4F BoxCollider::GetWorldMatrix() const
 {
-    btScalar m[16];
+    btScalar    m[16];
     btTransform trans;
 
     m_motionState->getWorldTransform(trans);
@@ -96,7 +100,7 @@ GPM::Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
     return mat.Transpose();
 }
 
-void Engine::Components::BoxCollider::SetPositionOffset(GPM::Vector3F& p_offset)
+void BoxCollider::SetPositionOffset(GPM::Vector3F& p_offset)
 {
     if (this == nullptr)
         return;
@@ -104,7 +108,7 @@ void Engine::Components::BoxCollider::SetPositionOffset(GPM::Vector3F& p_offset)
     m_offset = p_offset;
 }
 
-void Engine::Components::BoxCollider::SetMass(float p_mass)
+void BoxCollider::SetMass(float p_mass)
 {
     m_mass = p_mass;
 
@@ -124,7 +128,7 @@ void Engine::Components::BoxCollider::SetMass(float p_mass)
     Systems::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
 }
 
-void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimensions)
+void BoxCollider::SetDimensions(const GPM::Vector3F& p_dimensions)
 {
     if (this == nullptr)
         return;
@@ -147,17 +151,17 @@ void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimen
     ObjectElements::Model model = ConstructBox();
     Managers::ResourceManager::RemoveModel(m_model->GetID());
     const int32_t id = Managers::ResourceManager::AddModel(model);
-    m_model = Managers::ResourceManager::FindModel(id);
+    m_model          = Managers::ResourceManager::FindModel(id);
 }
 
-bool Engine::Components::BoxCollider::DeleteFromMemory()
+bool BoxCollider::DeleteFromMemory()
 {
     Systems::PhysicsSystem::RemoveCollider(GetID());
     Managers::ResourceManager::RemoveModel(m_model->GetID());
     return true;
 }
 
-void Engine::Components::BoxCollider::SetActive(bool p_active)
+void BoxCollider::SetActive(bool p_active)
 {
     m_isActive = p_active;
 
@@ -173,23 +177,23 @@ void Engine::Components::BoxCollider::SetActive(bool p_active)
     }
 }
 
-Engine::ObjectElements::Model Engine::Components::BoxCollider::ConstructBox()
+Engine::ObjectElements::Model BoxCollider::ConstructBox()
 {
-    btVector3 a;
-    btVector3 b;
+    btVector3   a;
+    btVector3   b;
     btTransform trans;
 
     m_motionState->getWorldTransform(trans);
     m_box->getAabb(trans, a, b);
 
     std::vector<Geometry::Vertex> vertices;
-    std::vector<unsigned short> indices;
+    std::vector<unsigned short>   indices;
 
     for (int i = 0; i < m_box->getNumVertices(); ++i)
     {
         btVector3 vertex;
         m_box->getVertex(i, vertex);
-        vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{vertex.getX(), vertex.getY(), vertex.getZ()}, GPM::Vector2F{}, GPM::Vector3F{} });
+        vertices.emplace_back(Geometry::Vertex{Vector3F{vertex.getX(), vertex.getY(), vertex.getZ()}, Vector2F{}, GPM::Vector3F{}});
     }
 
     //Back
@@ -255,4 +259,3 @@ Engine::ObjectElements::Model Engine::Components::BoxCollider::ConstructBox()
     model.AddMesh(mesh);
     return model;
 }
-

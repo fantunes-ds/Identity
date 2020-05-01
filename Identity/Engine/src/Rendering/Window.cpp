@@ -1,11 +1,12 @@
 #include <stdafx.h>
-#include <Rendering/Window.h>
-#include <Rendering/Renderer.h>
+
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
-#include <Input/Input.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
-#include "Containers/EventContainer.h"
+
+#include <Input/Input.h>
+#include <Rendering/Window.h>
+#include <Rendering/Renderer.h>
 
 using namespace Engine::Rendering;
 

@@ -1,10 +1,14 @@
 #include <stdafx.h>
+
 #include <windows.h>
+
+#include <Components/BoxCollider.h>
 #include <Managers/SceneManager.h>
 #include <Scene/Scene.h>
-#include "Components/BoxCollider.h"
 
-std::unique_ptr<Engine::Managers::SceneManager>& Engine::Managers::SceneManager::GetInstance()
+using namespace Engine::Managers;
+
+std::unique_ptr<SceneManager>& SceneManager::GetInstance()
 {
     if (m_instance == nullptr)
         m_instance = std::make_unique<SceneManager>();
@@ -12,7 +16,7 @@ std::unique_ptr<Engine::Managers::SceneManager>& Engine::Managers::SceneManager:
     return m_instance;
 }
 
-std::shared_ptr<Engine::Scene::Scene> Engine::Managers::SceneManager::GetScene(const std::string& p_name)
+std::shared_ptr<Engine::Scene::Scene> SceneManager::GetScene(const std::string& p_name)
 {
     for (auto& scene : GetInstance()->m_scenes)
     {
@@ -23,12 +27,12 @@ std::shared_ptr<Engine::Scene::Scene> Engine::Managers::SceneManager::GetScene(c
     return nullptr;
 }
 
-void Engine::Managers::SceneManager::AddScene(const std::shared_ptr<Scene::Scene> p_scene)
+void SceneManager::AddScene(const std::shared_ptr<Scene::Scene> p_scene)
 {
     GetInstance()->m_scenes.push_back(p_scene);
 }
 
-void Engine::Managers::SceneManager::SetActiveScene(const std::string& p_name)
+void SceneManager::SetActiveScene(const std::string& p_name)
 {
     for (auto scene : GetInstance()->m_scenes)
     {
@@ -44,7 +48,7 @@ void Engine::Managers::SceneManager::SetActiveScene(const std::string& p_name)
     MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
 }
 
-void Engine::Managers::SceneManager::SetActiveScene(const int32_t p_id)
+void SceneManager::SetActiveScene(const int32_t p_id)
 {
     for (auto scene : GetInstance()->m_scenes)
     {
@@ -60,7 +64,7 @@ void Engine::Managers::SceneManager::SetActiveScene(const int32_t p_id)
     MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
 }
 
-void Engine::Managers::SceneManager::SetPlayScene(const std::string& p_name)
+void SceneManager::SetPlayScene(const std::string& p_name)
 {
     for (auto scene : GetInstance()->m_scenes)
     {
@@ -71,12 +75,14 @@ void Engine::Managers::SceneManager::SetPlayScene(const std::string& p_name)
         }
     }
 
-    const std::string info("SceneManager::SetPlayScene(const std::string& p_name): Could not set active scene to " +
-                           p_name + " because a scene with this name could not be found\n");
+    const std::string info{
+        "SceneManager::SetPlayScene(const std::string& p_name): Could not set active scene to " +
+        p_name + " because a scene with this name could not be found\n"
+    };
     MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
 }
 
-void Engine::Managers::SceneManager::SetPlayScene(const int32_t p_id)
+void SceneManager::SetPlayScene(const int32_t p_id)
 {
     for (auto scene : GetInstance()->m_scenes)
     {
@@ -87,24 +93,23 @@ void Engine::Managers::SceneManager::SetPlayScene(const int32_t p_id)
         }
     }
 
-    const std::string info("SceneManager::SetPlayScene(const int32_t p_id): Could not set active scene to " + std::
-                           to_string(p_id) + " because a scene with this name could not be found\n");
+    const std::string info{ "SceneManager::SetPlayScene(const int32_t p_id): Could not set active scene to " + std::
+                           to_string(p_id) + " because a scene with this name could not be found\n" };
     MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
 }
 
-bool Engine::Managers::SceneManager::DeletePlayScene()
+bool SceneManager::DeletePlayScene()
 {
     return GetInstance()->DeletePlaySceneNS();
 }
 
 
-void Engine::Managers::SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene>& p_destination,
-                                                    std::shared_ptr<Scene::Scene>& p_source)
+void SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene>& p_destination, std::shared_ptr<Scene::Scene>& p_source)
 {
     for (auto gameObject : p_source->GetAllGameObjectsInScene())
     {
         //create new gameobject
-        auto name = gameObject->GetName() + "1";
+        auto name   = gameObject->GetName() + "1";
         auto tmpOBJ = std::make_shared<Objects::GameObject>(name);
         //we now have gameobject with same name
 
@@ -126,7 +131,7 @@ void Engine::Managers::SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene
     }
 }
 
-bool Engine::Managers::SceneManager::DeletePlaySceneNS()
+bool SceneManager::DeletePlaySceneNS()
 {
     int id = -1;
     for (int i = 0; i < m_scenes.size(); ++i)

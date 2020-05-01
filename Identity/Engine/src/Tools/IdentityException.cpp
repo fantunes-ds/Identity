@@ -1,4 +1,5 @@
 #include <stdafx.h>
+
 #include <Tools/IdentityException.h>
 
 using namespace Engine::Tools;

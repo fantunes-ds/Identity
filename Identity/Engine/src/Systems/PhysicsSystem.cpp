@@ -1,11 +1,15 @@
 #include <stdafx.h>
-#include <Systems/PhysicsSystem.h>
-#include <Components/BoxCollider.h>
+
 #include <BulletCollision/BroadphaseCollision/btDbvtBroadphase.h>
+
+#include <Components/BoxCollider.h>
 #include <Objects/GameObject.h>
+#include <Systems/PhysicsSystem.h>
 #include <Tools/Time.h>
 
-Engine::Systems::PhysicsSystem::PhysicsSystem()
+using namespace Engine::Systems;
+
+PhysicsSystem::PhysicsSystem()
 {
     m_collisionConfiguration = new btDefaultCollisionConfiguration();
 
@@ -23,12 +27,12 @@ Engine::Systems::PhysicsSystem::PhysicsSystem()
     m_dynamicsWorld->setGravity(btVector3(0.0f, -10.0f, 0.0f));
 }
 
-Engine::Systems::PhysicsSystem::~PhysicsSystem()
+PhysicsSystem::~PhysicsSystem()
 {
     delete m_instance;
 }
 
-Engine::Systems::PhysicsSystem* Engine::Systems::PhysicsSystem::GetInstance()
+PhysicsSystem* PhysicsSystem::GetInstance()
 {
     if (m_instance == nullptr)
     {
@@ -38,8 +42,7 @@ Engine::Systems::PhysicsSystem* Engine::Systems::PhysicsSystem::GetInstance()
     return m_instance;
 }
 
-std::shared_ptr<Engine::Components::BoxCollider> Engine::Systems::PhysicsSystem::AddCollider(
-    Components::BoxCollider* p_collider)
+std::shared_ptr<Engine::Components::BoxCollider> PhysicsSystem::AddCollider(Components::BoxCollider* p_collider)
 {
     auto coll = std::shared_ptr<Components::BoxCollider>(p_collider);
     GetInstance()->m_colliders.insert_or_assign(p_collider->GetID(), coll);
@@ -47,20 +50,19 @@ std::shared_ptr<Engine::Components::BoxCollider> Engine::Systems::PhysicsSystem:
     return coll;
 }
 
-void Engine::Systems::PhysicsSystem::RemoveCollider(int32_t p_id)
+void PhysicsSystem::RemoveCollider(int32_t p_id)
 {
     GetInstance()->m_colliders.erase(p_id);
 }
 
-void Engine::Systems::PhysicsSystem::Update(const float p_deltaTime)
+void PhysicsSystem::Update(const float p_deltaTime)
 {
     for (auto& collider : GetInstance()->m_colliders)
     {
-        
     }
 }
 
-void Engine::Systems::PhysicsSystem::FixedUpdate()
+void PhysicsSystem::FixedUpdate()
 {
     btTransform trans;
 
@@ -75,15 +77,17 @@ void Engine::Systems::PhysicsSystem::FixedUpdate()
         {
             //TODO: wrap all Bullet math variables
             collider.second->GetMotionState()->getWorldTransform(trans);
-            GPM::Vector3F offset = collider.second->GetOffset();
+            Vector3F offset = collider.second->GetOffset();
 
-            btVector3& collPos = trans.getOrigin();
+            btVector3&   collPos = trans.getOrigin();
             btQuaternion collRot = trans.getRotation();
             btQuaternion quatOffset(offset.x, offset.y, offset.z, 0);
             btQuaternion qpq = collRot * quatOffset * collRot.inverse();
 
-            collider.second->GetGameObject()->GetTransform()->SetPosition(GPM::Vector3F(qpq.getX(), qpq.getY(), qpq.getZ()) + GPM::Vector3F(collPos.getX(), collPos.getY(), collPos.getZ()));
-            collider.second->GetGameObject()->GetTransform()->SetRotation(GPM::Quaternion(collRot.getX(), collRot.getY(), collRot.getZ(), collRot.getW()));
+            collider.second->GetGameObject()->GetTransform()->SetPosition(Vector3F(qpq.getX(), qpq.getY(), qpq.getZ()) +
+                                                                          Vector3F(collPos.getX(), collPos.getY(), collPos.getZ()));
+            collider.second->GetGameObject()->GetTransform()->SetRotation(Quaternion(collRot.getX(), collRot.getY(),
+                                                                                          collRot.getZ(), collRot.getW()));
 
             collider.second->GetGameObject()->GetTransform()->UpdateWorldTransformMatrix();
         }

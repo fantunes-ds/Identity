@@ -1,21 +1,25 @@
 #include <stdafx.h>
+
 #include <Rendering/Lights/DirectionalLight.h>
 
-Engine::Rendering::Lights::DirectionalLight::DirectionalLight(const Vector4F& p_position, const Vector4F& p_ambient, const Vector4F& p_diffuse, const Vector4F& p_specular,
-    const Vector4F& p_direction, const Vector4F& p_color, const float& p_shininess) : m_lightData{ p_position,p_ambient,p_diffuse, p_specular,  p_color, p_shininess }
-{
-}
+using namespace Engine::Rendering;
 
-Engine::Rendering::Lights::DirectionalLight::DirectionalLight(const LightData& p_lightData)
+Lights::DirectionalLight::DirectionalLight(const Vector4F& p_position, const Vector4F&  p_ambient,
+                                           const Vector4F& p_diffuse, const Vector4F&   p_specular,
+                                           const Vector4F& p_direction, const Vector4F& p_color,
+                                           const float&    p_shininess) : m_lightData{p_position, p_ambient, p_diffuse,
+                                                                                      p_specular, p_color, p_shininess} {}
+
+Lights::DirectionalLight::DirectionalLight(const LightData& p_lightData)
 {
     m_lightData = p_lightData;
 }
 
-bool Engine::Rendering::Lights::DirectionalLight::operator==(Rendering::Lights::ILight* p_other)
+bool Lights::DirectionalLight::operator==(ILight* p_other)
 {
     if (DirectionalLight* other = dynamic_cast<DirectionalLight*>(p_other))
     {
-        auto thisData = GetLightData();
+        auto thisData  = GetLightData();
         auto otherData = other->GetLightData();
 
 
@@ -29,5 +33,3 @@ bool Engine::Rendering::Lights::DirectionalLight::operator==(Rendering::Lights::
 
     return false;
 }
-
-

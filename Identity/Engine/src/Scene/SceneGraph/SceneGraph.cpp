@@ -1,14 +1,17 @@
 #include <stdafx.h>
-#include <Scene/SceneGraph/SceneGraph.h>
-#include <Objects/GameObject.h>
-#include <Managers/ResourceManager.h>
 
-void Engine::Scene::SceneGraph::AddRootSceneNode(std::shared_ptr<SceneNode> p_sceneNode)
+#include <Managers/ResourceManager.h>
+#include <Objects/GameObject.h>
+#include <Scene/SceneGraph/SceneGraph.h>
+
+using namespace Engine::Scene;
+
+void SceneGraph::AddRootSceneNode(std::shared_ptr<SceneNode> p_sceneNode)
 {
     m_rootSceneNodes.insert_or_assign(p_sceneNode->GetID(), p_sceneNode);
 }
 
-void Engine::Scene::SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::GameObject> p_gameObject)
+void SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::GameObject> p_gameObject)
 {
     auto rootNode = std::make_shared<SceneNode>(p_gameObject);
     rootNode->SetName(p_gameObject->GetName());
@@ -16,9 +19,9 @@ void Engine::Scene::SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::Ga
 
     if (p_gameObject->FindComponentOfType<Components::ModelComponent>())
     {
-        int modelID = p_gameObject->FindComponentOfType<Components::ModelComponent>()->GetModel();
-        auto model = Managers::ResourceManager::FindModel(modelID);
-    	
+        int  modelID = p_gameObject->FindComponentOfType<Components::ModelComponent>()->GetModel();
+        auto model   = Managers::ResourceManager::FindModel(modelID);
+
         for (auto& mesh : model->GetMeshes())
         {
             ++submeshNumber;
@@ -27,13 +30,13 @@ void Engine::Scene::SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::Ga
             child->SetName(rootNode->GetGameObject()->GetName() + "(" + std::to_string(submeshNumber) + ")");
         }
     }
-	
+
     rootNode->SetTransform(p_gameObject->GetTransformID());
     AddRootSceneNode(rootNode);
     p_gameObject->SetSceneNode(rootNode);
 }
 
-void Engine::Scene::SceneGraph::RemoveGameObjectFromScene(std::shared_ptr<Objects::GameObject> p_gameObject)
+void SceneGraph::RemoveGameObjectFromScene(std::shared_ptr<Objects::GameObject> p_gameObject)
 {
     for (auto& node : m_rootSceneNodes)
     {
@@ -49,20 +52,20 @@ void Engine::Scene::SceneGraph::RemoveGameObjectFromScene(std::shared_ptr<Object
     }
 }
 
-void Engine::Scene::SceneGraph::RemoveRootSceneNode(int32_t p_id)
+void SceneGraph::RemoveRootSceneNode(int32_t p_id)
 {
     m_rootSceneNodes.erase(p_id);
 }
 
-void Engine::Scene::SceneGraph::UpdateScene(float p_deltaTime)
+void SceneGraph::UpdateScene(float p_deltaTime)
 {
     for (auto& node : m_rootSceneNodes)
         node.second->Update(p_deltaTime);
 }
 
-std::map<int32_t, std::shared_ptr<Engine::Scene::SceneNode>> Engine::Scene::SceneGraph::GetAllSceneNodes()
+std::map<int32_t, std::shared_ptr<SceneNode>> SceneGraph::GetAllSceneNodes()
 {
-    std::map<int32_t, std::shared_ptr<Engine::Scene::SceneNode>> map;
+    std::map<int32_t, std::shared_ptr<SceneNode>> map;
 
     //TODO: check childrens' children
     for (auto& node : m_rootSceneNodes)
@@ -72,4 +75,3 @@ std::map<int32_t, std::shared_ptr<Engine::Scene::SceneNode>> Engine::Scene::Scen
 
     return map;
 }
-

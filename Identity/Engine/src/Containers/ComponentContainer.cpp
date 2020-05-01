@@ -1,16 +1,18 @@
 #include <stdafx.h>
+
 #include <typeinfo>
 #include <windows.h>
-#include <Containers/ComponentContainer.h>
-#include <Tools/IDCounter.h>
-#include "Containers/EventContainer.h"
 
-Engine::Containers::ComponentContainer::~ComponentContainer()
+#include <Containers/ComponentContainer.h>
+
+using namespace Engine::Containers;
+
+ComponentContainer::~ComponentContainer()
 {
     delete m_instance;
 }
 
-int32_t Engine::Containers::ComponentContainer::AddComponent(Components::IComponent* p_component)
+int32_t ComponentContainer::AddComponent(Components::IComponent* p_component)
 {
     for (auto& component : GetInstance()->m_components)
     {
@@ -23,7 +25,8 @@ int32_t Engine::Containers::ComponentContainer::AddComponent(Components::ICompon
 
                 if (component.first == p_component->GetID())
                 {
-                    const std::string error("ComponentContainer::AddComponent<" + type + ">(Components::IComponent* p_component): Tried to add a Component that already exists");
+                    const std::string error("ComponentContainer::AddComponent<" + type +
+                                            ">(Components::IComponent* p_component): Tried to add a Component that already exists");
                     MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
                     return component.first;
                 }
@@ -31,12 +34,13 @@ int32_t Engine::Containers::ComponentContainer::AddComponent(Components::ICompon
         }
     }
 
-    GetInstance()->m_components.insert_or_assign(p_component->GetID(), std::shared_ptr<Engine::Components::IComponent>(p_component));
+    GetInstance()->m_components.insert_or_assign(p_component->GetID(),
+                                                 std::shared_ptr<Engine::Components::IComponent>(p_component));
     return p_component->GetID();
 }
 
 
-int32_t Engine::Containers::ComponentContainer::AddComponentEditor(Components::IComponent* p_component)
+int32_t ComponentContainer::AddComponentEditor(Components::IComponent* p_component)
 {
     for (auto& component : GetInstance()->m_componentsEditor)
     {
@@ -49,7 +53,8 @@ int32_t Engine::Containers::ComponentContainer::AddComponentEditor(Components::I
 
                 if (component.first == p_component->GetID())
                 {
-                    const std::string error("ComponentContainer::AddComponent<" + type + ">(Components::IComponent* p_component): Tried to add a Component that already exists");
+                    const std::string error("ComponentContainer::AddComponent<" + type +
+                                            ">(Components::IComponent* p_component): Tried to add a Component that already exists");
                     MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
                     return component.first;
                 }
@@ -58,11 +63,12 @@ int32_t Engine::Containers::ComponentContainer::AddComponentEditor(Components::I
     }
 
     p_component->SetActive(false);
-    GetInstance()->m_componentsEditor.insert_or_assign(p_component->GetID(), std::shared_ptr<Engine::Components::IComponent>(p_component));
+    GetInstance()->m_componentsEditor.insert_or_assign(p_component->GetID(),
+                                                       std::shared_ptr<Engine::Components::IComponent>(p_component));
     return p_component->GetID();
 }
 
-void Engine::Containers::ComponentContainer::RemoveComponent(int32_t p_id, bool p_deleteFromMemory)
+void ComponentContainer::RemoveComponent(int32_t p_id, bool p_deleteFromMemory)
 {
     if (p_deleteFromMemory)
     {
@@ -72,7 +78,7 @@ void Engine::Containers::ComponentContainer::RemoveComponent(int32_t p_id, bool 
     GetInstance()->m_components.erase(p_id);
 }
 
-Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::GetInstance()
+ComponentContainer* ComponentContainer::GetInstance()
 {
     if (m_instance == nullptr)
     {
@@ -82,7 +88,7 @@ Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::
     return m_instance;
 }
 
-std::shared_ptr<Engine::Components::IComponent> Engine::Containers::ComponentContainer::FindComponent(int32_t p_id)
+std::shared_ptr<Engine::Components::IComponent> ComponentContainer::FindComponent(int32_t p_id)
 {
     if (GetAllComponents().find(p_id) == GetAllComponents().end())
     {
@@ -94,15 +100,15 @@ std::shared_ptr<Engine::Components::IComponent> Engine::Containers::ComponentCon
     return GetAllComponents().at(p_id);
 }
 
-void Engine::Containers::ComponentContainer::CopyCompNS()
+void ComponentContainer::CopyCompNS()
 {
     // m_componentsEditor.insert(m_components.begin(), m_components.end());
     SwitchComp();
 }
 
-void Engine::Containers::ComponentContainer::SwitchCompNS()
+void ComponentContainer::SwitchCompNS()
 {
-    auto tmpComp = m_components;
-    m_components = m_componentsEditor;
+    auto tmpComp       = m_components;
+    m_components       = m_componentsEditor;
     m_componentsEditor = tmpComp;
 }
