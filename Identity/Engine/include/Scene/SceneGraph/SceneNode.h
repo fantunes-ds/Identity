@@ -33,6 +33,7 @@ namespace Engine::Scene
         bool IsRoot();
 
         [[nodiscard]] const std::vector<std::shared_ptr<SceneNode>>& GetChildren() const { return m_children; }
+        std::vector<std::shared_ptr<SceneNode>> GetAllChildren();
         [[nodiscard]] std::shared_ptr<ObjectElements::Mesh> GetMesh() const { return m_mesh; }
         [[nodiscard]] int32_t GetTransform() const { return m_transform; }
         [[nodiscard]] std::shared_ptr<Objects::GameObject> GetGameObject() const { return m_gameObject; }

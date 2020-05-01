@@ -25,11 +25,11 @@ int32_t Engine::Containers::GameObjectContainer::AddGameObject(std::shared_ptr<O
 
 bool Engine::Containers::GameObjectContainer::RemoveGameObject(int32_t p_id)
 {
-    size_t before = GetInstance()->m_gameObjects.size();
-    GetInstance()->m_gameObjects.erase(p_id);
-    size_t after = GetInstance()->m_gameObjects.size();
+    //size_t before = GetInstance()->m_gameObjects.size();
+    //GetInstance()->m_gameObjects.erase(p_id);
+    //size_t after = GetInstance()->m_gameObjects.size();
 
-    return (before != after);
+    return true;
 }
 
 Engine::Containers::GameObjectContainer* Engine::Containers::GameObjectContainer::GetInstance()

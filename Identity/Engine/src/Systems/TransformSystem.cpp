@@ -26,12 +26,15 @@ void Engine::Containers::TransformSystem::IUpdate(float p_deltaTime, bool p_isEd
 {
     for (std::shared_ptr<Engine::Components::Transform> transform : GetTransforms())
     {
-        if (transform->needUpdate)
+        if (transform->IsActive())
         {
-            if (transform->needAxesUpdate)
-                transform->CalculateAxes();
+            if (transform->needUpdate)
+            {
+                if (transform->needAxesUpdate)
+                    transform->CalculateAxes();
 
-            transform->UpdateWorldTransformMatrix();
+                transform->UpdateWorldTransformMatrix();
+            }
         }
     }
 }

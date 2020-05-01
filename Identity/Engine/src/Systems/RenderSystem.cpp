@@ -18,6 +18,11 @@
 
 #define DEBUG_MODE true
 
+Engine::Systems::RenderSystem::~RenderSystem()
+{
+    delete m_instance;
+}
+
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
 {
     HRESULT hr;
@@ -28,7 +33,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
     Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
 
-    auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
+    auto camera = Containers::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
 
     float* pos[3] = {&light.position.x, &light.position.y, &light.position.z};
 
@@ -48,62 +53,55 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
     }
     ImGui::End();
 
-    /* W.I.P. 
-    for (auto& gameObject : Containers::GameObjectContainer::GetAllGameObjects())
-    {
-        if (ImGui::Begin("ObjectInfo"))
-        {
-            ImGui::Text(gameObject.second->GetName().c_str());
-            ImGui::Text("Forward: %f | %f | %f", gameObject.second->GetTransform()->GetForward().x, gameObject.second->GetTransform()->GetForward().y, gameObject.second->GetTransform()->GetForward().z);
-            ImGui::Text("Up: %f | %f | %f", gameObject.second->GetTransform()->GetUp().x, gameObject.second->GetTransform()->GetUp().y, gameObject.second->GetTransform()->GetUp().z);
-            ImGui::Text("Right: %f | %f | %f", gameObject.second->GetTransform()->GetRight().x, gameObject.second->GetTransform()->GetRight().y, gameObject.second->GetTransform()->GetRight().z);
-            ImGui::Text("Position: %f | %f | %f", gameObject.second->GetTransform()->GetPosition().x, gameObject.second->GetTransform()->GetPosition().y, gameObject.second->GetTransform()->GetPosition().z);
-
-        }ImGui::End();
-    }*/
-
     for (auto& sceneNode : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
     {
-        DrawSceneNode(sceneNode.second);
+        if (sceneNode.second->GetGameObject()->FindComponentOfType<Components::ModelComponent>())
+        {
+            if (sceneNode.second->GetGameObject()->FindComponentOfType<Components::ModelComponent>()->IsActive())
+                DrawSceneNode(sceneNode.second);
+        }
     }
 
     if (DEBUG_MODE)
     {
-        for (auto collider : Containers::PhysicsSystem::GetColliders())
+        for (auto collider : Systems::PhysicsSystem::GetColliders())
         {
-            auto model = collider.second->GetModel();
-            auto mesh  = model->GetMeshes()[0];
-            mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
-            mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
+            if (collider.second->IsActive())
+            {
+                auto model = collider.second->GetModel();
+                auto mesh = model->GetMeshes()[0];
+                mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
+                mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
 
-            Matrix4F modelMatrix = collider.second->GetWorldMatrix();
-            Matrix4F normalModel = Matrix4F::Inverse(modelMatrix);
+                Matrix4F modelMatrix = collider.second->GetWorldMatrix();
+                Matrix4F normalModel = Matrix4F::Inverse(modelMatrix);
 
-            Matrix4F view        = camera->GetViewMatrix();
-            Matrix4F perspective = camera->GetPerspectiveMatrix();
+                Matrix4F view = camera->GetViewMatrix();
+                Matrix4F perspective = camera->GetPerspectiveMatrix();
 
-            Rendering::Buffers::VCB vcb{modelMatrix, view, normalModel, perspective};
-            mesh->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
-            const Vector3F cameraPos = camera->GetPosition();
+                Rendering::Buffers::VCB vcb{ modelMatrix, view, normalModel, perspective };
+                mesh->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
+                const Vector3F cameraPos = camera->GetPosition();
 
-            const Rendering::Buffers::PCB pcb{
-                Vector4F::zero, Vector4F::one, Vector4F::one,
-                Vector4F::zero, Vector4F::one,
-                1.0f, Vector3F{}, Vector3F::zero, static_cast<float>(mesh->GetMaterial()->GetTextureState())
-            };
-            mesh->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
-            Rendering::Renderer::GetInstance()
+                const Rendering::Buffers::PCB pcb{
+                    Vector4F::zero, Vector4F::one, Vector4F::one,
+                    Vector4F::zero, Vector4F::one,
+                    1.0f, Vector3F{}, Vector3F::zero, static_cast<float>(mesh->GetMaterial()->GetTextureState())
+                };
+                mesh->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
+                Rendering::Renderer::GetInstance()
                     ->GetContext()->
                     IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
 
-            Rendering::Renderer::GetInstance()->Bind(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetTarget(),Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetDepthStencilView());
+                Rendering::Renderer::GetInstance()->Bind(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetTarget(), Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetDepthStencilView());
 
-            GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
+                GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
 
-            Rendering::Renderer::GetInstance()->Bind();
+                Rendering::Renderer::GetInstance()->Bind();
 
-            Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+                Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+            }
         }
     }
 
@@ -122,7 +120,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
     //Draw to Screen Rect
     else
     {
-        auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
+        auto camera = Containers::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
 
         std::shared_ptr<ObjectElements::Mesh> screenRect = Rendering::Renderer::GetInstance()->GetRect();
 
@@ -150,7 +148,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
 void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
 {
-    auto camera = Containers::CameraSystem::GetCamera(m_activeCamera);
+    auto camera = Containers::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
     auto mesh = p_sceneNode->GetMesh();
     std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
     Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
@@ -202,10 +200,20 @@ void Engine::Systems::RenderSystem::IUpdate(float p_deltaTime, bool p_isEditor)
 
 void Engine::Systems::RenderSystem::ResetActiveCamera()
 {
-    m_activeCamera = -1;
+    GetInstance()->m_activeCamera = -1;
 }
 
 void Engine::Systems::RenderSystem::SetActiveCamera(int32_t p_id)
 {
-    m_activeCamera = p_id;
+    GetInstance()->m_activeCamera = p_id;
+}
+
+Engine::Systems::RenderSystem* Engine::Systems::RenderSystem::GetInstance()
+{
+    if (m_instance == nullptr)
+    {
+        m_instance = new RenderSystem();
+    }
+
+    return m_instance;
 }

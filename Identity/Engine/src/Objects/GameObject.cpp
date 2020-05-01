@@ -6,11 +6,14 @@
 #include <Scene/Scene.h>
 #include <Managers/SceneManager.h>
 #include <Managers/ResourceManager.h>
+#include <Containers/ComponentContainer.h>
 
 Engine::Objects::GameObject::GameObject()
 {
     m_transform = Containers::TransformSystem::AddTransform(std::make_shared<Components::Transform>());
     Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
+    auto trm = Containers::TransformSystem::GetTransform(m_transform);
+    Containers::ComponentContainer::AddComponent(trm.get());
 }
 
 Engine::Objects::GameObject::GameObject(const std::string& p_name)
@@ -18,6 +21,21 @@ Engine::Objects::GameObject::GameObject(const std::string& p_name)
     m_transform = Containers::TransformSystem::AddTransform(std::make_shared<Components::Transform>(p_name));
     Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
     SetName(p_name);
+    auto trm = Containers::TransformSystem::GetTransform(m_transform);
+    Containers::ComponentContainer::AddComponent(trm.get());
+}
+
+void Engine::Objects::GameObject::DeleteFromMemory()
+{
+    for (auto& component : m_components)
+    {
+        auto p = Containers::ComponentContainer::FindComponent(component);
+        Containers::ComponentContainer::RemoveComponent(component);
+    }
+
+    Containers::GameObjectContainer::RemoveGameObject(GetID());
+
+    Managers::SceneManager::GetActiveScene()->RemoveGameObject(GetID());
 }
 
 std::shared_ptr<Engine::Components::Transform> Engine::Objects::GameObject::GetTransform() const
@@ -27,6 +45,9 @@ std::shared_ptr<Engine::Components::Transform> Engine::Objects::GameObject::GetT
 
 std::shared_ptr<Engine::ObjectElements::Model> Engine::Objects::GameObject::GetModel() const
 {
+    if (this == nullptr)
+        return nullptr;
+
     for (auto& component : m_components)
     {
         if (Components::ModelComponent* modelComp = dynamic_cast<Components::ModelComponent*>(&*Containers::ComponentContainer::FindComponent(component)))
@@ -34,6 +55,16 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Objects::GameObject::GetM
     }
 
     return nullptr;
+}
+
+inline void Engine::Objects::GameObject::SetActive(bool p_active)
+{
+    for (auto& component : GetAllComponents())
+    {
+        Containers::ComponentContainer::FindComponent(component)->SetActive(p_active);
+    }
+
+    m_isActive = p_active;
 }
 
 bool Engine::Objects::GameObject::operator==(GameObject& p_other) const

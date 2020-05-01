@@ -12,7 +12,7 @@ namespace Engine {
     }
 }
 
-namespace Engine::Containers
+namespace Engine::Systems
 {
     class API_ENGINE PhysicsSystem
     {
@@ -22,6 +22,7 @@ namespace Engine::Containers
         static PhysicsSystem* GetInstance();
 
         static std::shared_ptr<Components::BoxCollider> AddCollider(Components::BoxCollider* p_collider);
+        static void RemoveCollider(int32_t p_id);
         static std::map<int32_t, std::shared_ptr<Components::BoxCollider>>& GetColliders() { return GetInstance()->m_colliders; }
         static btDiscreteDynamicsWorld* GetWorld() { return GetInstance()->m_dynamicsWorld; }
         static void Update(const float p_deltaTime);

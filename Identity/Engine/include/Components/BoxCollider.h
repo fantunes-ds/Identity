@@ -14,6 +14,7 @@ namespace Engine::Components
     class API_ENGINE BoxCollider: public IComponent
     {
     public:
+        BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other);
         BoxCollider(Objects::GameObject* p_gameObject);
         BoxCollider(const BoxCollider&) = default;
         ~BoxCollider();
@@ -33,15 +34,15 @@ namespace Engine::Components
         void SetDimensions(const GPM::Vector3F& p_dimensions);
 
         bool operator==(IComponent* p_other) override { return false; }
-        bool DeleteFromMemory() override { return false; }
-
+        bool DeleteFromMemory() override;
+        void SetActive(bool p_active) override;
 
     private:
         /**
          * @brief Builds a Model that visually represents this BoxCollider's transform. 
          */
         ObjectElements::Model ConstructBox();
-    	
+
         float m_mass;
         GPM::Vector3F m_offset;
         btBoxShape* m_box;
