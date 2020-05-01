@@ -313,14 +313,12 @@ void App::InitEditor()
     GPM::Vector3F linkOffset{ 0.0f, -1.0f, 0.0f };
     link->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(linkOffset);
     link->FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
-    link->FindComponentOfType<Components::BoxCollider>()->SetActive(true);
 
     link->AddComponent<Components::ModelComponent>("Link");
     for (auto& mesh : link->GetModel()->GetMeshes())
     {
         mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
     }
-    link->GetTransform()->SetActive(false);
     scene->AddGameObject(link);
     //----------
 
@@ -372,6 +370,7 @@ void App::TestingSimulation()
         auto active = Managers::SceneManager::GetActiveScene();
 
         //deactivate editor scene
+        active->SetActiveOnAll(false);
 
         Managers::SceneManager::SetActiveScene(Managers::SceneManager::GetPlayScene());
         Managers::SceneManager::SetPlayScene(active);
@@ -382,9 +381,9 @@ void App::TestingSimulation()
         auto active = Managers::SceneManager::GetActiveScene();
         Managers::SceneManager::SetActiveScene(Managers::SceneManager::GetPlayScene());
         Managers::SceneManager::SetPlayScene(active);
+        Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
 
-        //delete old play scene
-
+        //TODO delete old play scene
 
 
         RunBullet = false;
