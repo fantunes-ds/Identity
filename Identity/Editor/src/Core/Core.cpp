@@ -1,9 +1,9 @@
 #include <Core/Core.h>
 #include <Tools/IdentityException.h>
 
-
 #include <Containers/EventContainer.h>
 #include <UI/Dockspace.h>
+#include <UI/Hierarchy.h>
 
 Editor::Core::Core::Core()
 {
@@ -49,5 +49,6 @@ int Editor::Core::Core::Update()
 void Editor::Core::Core::EditorBase()
 {
     Engine::UI::Dockspace::CreateDockspace();
+    Engine::UI::Hierarchy::CreateHierarchy();
 }
 

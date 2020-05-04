@@ -64,6 +64,7 @@
     <ClCompile Include="src\Tools\Time.cpp" />
     <ClCompile Include="src\UI\Dockspace.cpp" />
     <ClCompile Include="src\Systems\PhysicsSystem.cpp" />
+    <ClCompile Include="src\UI\Hierarchy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Components\IComponent.h" />
@@ -141,6 +142,7 @@
     <ClInclude Include="include\Components\Light.h" />
     <ClInclude Include="include\UI\Dockspace.h" />
     <ClInclude Include="include\Systems\PhysicsSystem.h" />
+    <ClInclude Include="include\UI\Hierarchy.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />

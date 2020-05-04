@@ -23,7 +23,6 @@ namespace Engine::Core
         App& operator=(const App&) = delete;
 
         int Run();
-        std::shared_ptr<Engine::Scene::SceneNode> DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child, int& p_i);
         void Init();
     private:
         void StartFrame() const;
