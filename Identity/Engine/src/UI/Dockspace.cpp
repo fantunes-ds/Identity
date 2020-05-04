@@ -1,13 +1,16 @@
 #include <stdafx.h>
+
+#include <Tools/ImGUI/imgui.h>
+
 #include <UI/Dockspace.h>
 
-#include "Tools/ImGUI/imgui.h"
+using namespace Engine::UI;
 
-void Engine::UI::Dockspace::CreateDockspace()
+void Dockspace::CreateDockspace()
 {
-    static bool opt_fullscreen_persistant = true;
-    bool opt_fullscreen = opt_fullscreen_persistant;
-    static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+    static bool               opt_fullscreen_persistant = true;
+    bool                      opt_fullscreen            = opt_fullscreen_persistant;
+    static ImGuiDockNodeFlags dockspace_flags           = ImGuiDockNodeFlags_None;
 
     // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
     // because it would be confusing to have two docking targets within each others.
@@ -20,7 +23,8 @@ void Engine::UI::Dockspace::CreateDockspace()
         ImGui::SetNextWindowViewport(viewport->ID);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+                ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_MenuBar;
     }
 

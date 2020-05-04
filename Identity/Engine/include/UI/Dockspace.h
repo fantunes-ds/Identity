@@ -1,8 +1,10 @@
 #pragma once
 
+#include <Export.h>
+
 namespace Engine::UI
 {
-    class Dockspace
+    class API_ENGINE Dockspace
     {
     public:
         Dockspace() = delete;

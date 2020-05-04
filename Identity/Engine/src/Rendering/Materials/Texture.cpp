@@ -1,18 +1,19 @@
 #include <stdafx.h>
+
+#include <WICTextureLoader.h>
+
 #include <Rendering/Materials/Texture.h>
 #include <Rendering/Renderer.h>
-#include <Tools/DirectX/GraphicsMacros.h>
-#include <WICTextureLoader.h>
 
 using namespace Engine::Rendering::Materials;
 
 Texture::Texture()
 {
     D3D11_SAMPLER_DESC samplerDesc = {};
-    samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-    samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-    samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.Filter             = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    samplerDesc.AddressU           = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.AddressV           = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.AddressW           = D3D11_TEXTURE_ADDRESS_WRAP;
 
     Renderer::GetInstance()->GetDevice()->CreateSamplerState(&samplerDesc, &m_samplerState);
 }
@@ -23,7 +24,8 @@ std::shared_ptr<Texture> Texture::LoadTexture(const std::string& p_path, const s
 
     std::shared_ptr<Texture> tmpTexture = std::make_shared<Texture>();
 
-    DirectX::CreateWICTextureFromFile(Renderer::GetInstance()->GetDevice().Get(), wPath.c_str(), tmpTexture->m_texture.GetAddressOf(), tmpTexture->m_textureShaderResourceView.GetAddressOf());
+    DirectX::CreateWICTextureFromFile(Renderer::GetInstance()->GetDevice().Get(), wPath.c_str(),
+                                      tmpTexture->m_texture.GetAddressOf(), tmpTexture->m_textureShaderResourceView.GetAddressOf());
 
     if (tmpTexture->m_texture == nullptr || tmpTexture->m_textureShaderResourceView == nullptr)
     {

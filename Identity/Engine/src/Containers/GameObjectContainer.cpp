@@ -1,13 +1,15 @@
 #include <stdafx.h>
-#include <Containers/GameObjectContainer.h>
-#include <Tools/IDCounter.h>
 
-Engine::Containers::GameObjectContainer::~GameObjectContainer()
+#include <Containers/GameObjectContainer.h>
+
+using namespace Engine::Containers;
+
+GameObjectContainer::~GameObjectContainer()
 {
     delete m_instance;
 }
 
-int32_t Engine::Containers::GameObjectContainer::AddGameObject(std::shared_ptr<Objects::GameObject> p_gameObject)
+int32_t GameObjectContainer::AddGameObject(std::shared_ptr<Objects::GameObject> p_gameObject)
 {
     for (auto& gameObject : GetInstance()->m_gameObjects)
     {
@@ -23,7 +25,7 @@ int32_t Engine::Containers::GameObjectContainer::AddGameObject(std::shared_ptr<O
     return p_gameObject->GetID();
 }
 
-bool Engine::Containers::GameObjectContainer::RemoveGameObject(int32_t p_id)
+bool GameObjectContainer::RemoveGameObject(int32_t p_id)
 {
     //size_t before = GetInstance()->m_gameObjects.size();
     //GetInstance()->m_gameObjects.erase(p_id);
@@ -32,7 +34,7 @@ bool Engine::Containers::GameObjectContainer::RemoveGameObject(int32_t p_id)
     return true;
 }
 
-Engine::Containers::GameObjectContainer* Engine::Containers::GameObjectContainer::GetInstance()
+GameObjectContainer* Engine::Containers::GameObjectContainer::GetInstance()
 {
     if (m_instance == nullptr)
     {

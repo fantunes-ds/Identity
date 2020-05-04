@@ -1,6 +1,7 @@
 #pragma once
 #include <Export.h>
 #include <Scene/SceneGraph/SceneNode.h>
+#include <map>
 
 namespace Engine::Objects
 {

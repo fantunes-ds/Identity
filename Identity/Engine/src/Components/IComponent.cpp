@@ -1,17 +1,18 @@
 #include <stdafx.h>
+
 #include <Components/IComponent.h>
-#include <memory>
-#include <utility>
 #include <Objects/GameObject.h>
 
-Engine::Components::IComponent::IComponent(Objects::GameObject* p_gameObject): m_gameObject { p_gameObject } {}
+using namespace Engine::Components;
 
-void Engine::Components::IComponent::SetGameObject(Objects::GameObject* p_gameObject)
+IComponent::IComponent(Objects::GameObject* p_gameObject): m_gameObject{p_gameObject} {}
+
+void IComponent::SetGameObject(Objects::GameObject* p_gameObject)
 {
     m_gameObject = p_gameObject;
 }
 
-Engine::Objects::GameObject* Engine::Components::IComponent::GetGameObject() const
+Engine::Objects::GameObject* IComponent::GetGameObject() const
 {
     return m_gameObject;
 }

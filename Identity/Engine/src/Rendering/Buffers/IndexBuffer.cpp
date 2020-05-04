@@ -1,8 +1,12 @@
 #include <stdafx.h>
-#include <Rendering/Buffers/IndexBuffer.h>
-#include "Tools/DirectX/GraphicsMacros.h"
 
-void Engine::Rendering::Buffers::IndexBuffer::Generate(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, std::vector<unsigned short> p_indices)
+#include <Tools/DirectX/GraphicsMacros.h>
+
+#include <Rendering/Buffers/IndexBuffer.h>
+
+using namespace Engine::Rendering::Buffers;
+
+void IndexBuffer::Generate(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, std::vector<unsigned short> p_indices)
 {
     HRESULT hr;
 
@@ -17,12 +21,12 @@ void Engine::Rendering::Buffers::IndexBuffer::Generate(const Microsoft::WRL::Com
     GFX_THROW_INFO(p_device->CreateBuffer(&m_descriptor, &m_subData, &m_buffer));
 }
 
-void Engine::Rendering::Buffers::IndexBuffer::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const
+void IndexBuffer::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const
 {
     p_context->IASetIndexBuffer(m_buffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
 }
 
-void Engine::Rendering::Buffers::IndexBuffer::Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const
+void IndexBuffer::Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context) const
 {
     p_context->IASetIndexBuffer(nullptr, DXGI_FORMAT_R16_UINT, 0u);
 }

@@ -1,6 +1,8 @@
 #include <stdafx.h>
-#include <Input/Mouse.h>
+
 #include <WinSetup.h>
+
+#include <Input/Mouse.h>
 
 using namespace Engine::Input;
 
@@ -51,7 +53,7 @@ bool Mouse::RightIsPressed() const noexcept
 
 void Mouse::Flush() noexcept
 {
-    m_mouseMap = std::pair<MouseState, Vector2I>();
+    m_mouseMap       = std::pair<MouseState, Vector2I>();
     m_rawDeltaBuffer = std::queue<RawDelta>();
 }
 
@@ -70,19 +72,19 @@ void Mouse::OnMouseMove(const int p_x, const int p_y) noexcept
     m_x = p_x;
     m_y = p_y;
 
-    m_mouseMap.first = MOVE;
-    m_mouseMap.second = Vector2I(m_x,m_y);
+    m_mouseMap.first  = MOVE;
+    m_mouseMap.second = Vector2I(m_x, m_y);
 }
 
 void Mouse::OnMouseEnter() noexcept
 {
-    m_isInWindow = true;
+    m_isInWindow     = true;
     m_mouseMap.first = ENTER;
 }
 
 void Mouse::OnMouseLeave() noexcept
 {
-    m_isInWindow = false;
+    m_isInWindow     = false;
     m_mouseMap.first = LEAVE;
 }
 
@@ -128,7 +130,7 @@ void Mouse::OnWheelDown() noexcept
 void Mouse::OnWheelDelta(int p_delta) noexcept
 {
     m_wheelDelta += p_delta;
-    while(m_wheelDelta >= WHEEL_DELTA)
+    while (m_wheelDelta >= WHEEL_DELTA)
     {
         m_wheelDelta -= WHEEL_DELTA;
         OnWheelUp();
@@ -142,7 +144,7 @@ void Mouse::OnWheelDelta(int p_delta) noexcept
 
 void Mouse::OnRawDelta(int p_deltaX, int p_deltaY) noexcept
 {
-    m_rawDeltaBuffer.push({ p_deltaX, p_deltaY });
+    m_rawDeltaBuffer.push({p_deltaX, p_deltaY});
     TrimRawDeltaBuffer();
 }
 

@@ -1,13 +1,16 @@
 #include <stdafx.h>
+
 #include <Containers/LightContainer.h>
 #include <Rendering/Lights/DirectionalLight.h>
 
-Engine::Containers::LightContainer::~LightContainer()
+using namespace Engine::Containers;
+
+LightContainer::~LightContainer()
 {
     delete m_instance;
 }
 
-Engine::Containers::LightContainer* Engine::Containers::LightContainer::GetInstance()
+LightContainer* LightContainer::GetInstance()
 {
     if (m_instance == nullptr)
     {
@@ -17,7 +20,7 @@ Engine::Containers::LightContainer* Engine::Containers::LightContainer::GetInsta
     return m_instance;
 }
 
-int32_t Engine::Containers::LightContainer::AddLight(Rendering::Lights::ILight* p_light)
+int32_t LightContainer::AddLight(Rendering::Lights::ILight* p_light)
 {
     /*for (auto& light : GetInstance()->m_lights)
     {

@@ -1,16 +1,19 @@
 #include <stdafx.h>
-#include <Rendering/Materials/Material.h>
+
 #include <d3dcompiler.inl>
 
-Engine::Rendering::Materials::Material::Material()
+#include <Rendering/Materials/Material.h>
+
+using namespace Engine::Rendering::Materials;
+
+Material::Material()
 {
-    m_pixelShader = std::make_shared<PixelShader>();
-    m_vertexShader = std::make_shared < VertexShader>();
-    m_texture = std::make_shared<Texture>();
+    m_pixelShader  = std::make_shared<PixelShader>();
+    m_vertexShader = std::make_shared<VertexShader>();
+    m_texture      = std::make_shared<Texture>();
 }
 
-std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Rendering::Materials::Material::CreateMaterial(
-    const std::shared_ptr<PixelShader> p_pixelShader, const std::shared_ptr<VertexShader> p_vertexShader)
+std::shared_ptr<Material> Material::CreateMaterial(const std::shared_ptr<PixelShader> p_pixelShader, const std::shared_ptr<VertexShader> p_vertexShader)
 {
     if (p_pixelShader == nullptr || p_vertexShader == nullptr)
     {
@@ -24,7 +27,7 @@ std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Rendering::Mater
     return tmpMaterial;
 }
 
-void Engine::Rendering::Materials::Material::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
+void Material::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
 {
     if (m_pixelShader)
     {
@@ -41,7 +44,7 @@ void Engine::Rendering::Materials::Material::Bind(const Microsoft::WRL::ComPtr<I
         m_texture->BindTexture();
 }
 
-void Engine::Rendering::Materials::Material::Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
+void Material::Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
 {
     if (m_pixelShader)
     {
@@ -58,7 +61,7 @@ void Engine::Rendering::Materials::Material::Unbind(const Microsoft::WRL::ComPtr
         m_texture->UnbindTexture();
 }
 
-const Microsoft::WRL::ComPtr<ID3DBlob> Engine::Rendering::Materials::Material::GetBlob()
+const Microsoft::WRL::ComPtr<ID3DBlob> Material::GetBlob()
 {
     return m_vertexShader->GetBlob();
 }

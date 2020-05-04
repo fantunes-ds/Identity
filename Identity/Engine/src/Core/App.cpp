@@ -2,33 +2,27 @@
 
 #include <stdafx.h>
 
-#include <Core/App.h>
-
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
-#include <Tools/Time.h>
-
-#include <Systems/RenderSystem.h>
-
-#include <Input/Input.h>
-#include <Objects/GameObject.h>
-#include <Components/ModelComponent.h>
-#include <Components/Camera.h>
-#include <UI/Dockspace.h>
-
-#include <Components/Light.h>
 #include <LinearMath/btVector3.h>
+
+#include <Core/App.h>
+#include <Components/Camera.h>
+#include <Components/ModelComponent.h>
+#include <Components/Light.h>
+#include <Components/BoxCollider.h>
+#include <Input/Input.h>
+#include <Managers/SceneManager.h>
+#include <Managers/ResourceManager.h>
+#include <Objects/GameObject.h>
+#include <Tools/Time.h>
+#include <Rendering/Renderer.h>
+#include <Scene/Scene.h>
+#include <Systems/RenderSystem.h>
 #include <Systems/CameraSystem.h>
 #include <Systems/TransformSystem.h>
-
-#include <Components/BoxCollider.h>
 #include <Systems/PhysicsSystem.h>
-#include <Scene/Scene.h>
-#include <Managers/SceneManager.h>
-
-#include <Managers/ResourceManager.h>
-#include "Containers/GameObjectContainer.h"
 
 using namespace Engine::Core;
 
@@ -39,9 +33,16 @@ App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
     Input::Input::InitInput();
 }
 
-App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) : m_window(p_width, p_height, p_name), m_width(p_width), m_height(p_height), m_isEditor(p_isEditor)
+App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) : m_window(p_width, p_height, p_name),
+                                                                                 m_width(p_width), m_height(p_height),
+                                                                                 m_isEditor(p_isEditor)
 {
     Input::Input::InitInput();
+}
+
+void App::Init()
+{
+    Containers::EventContainer::AddEvent("OnGUI");
 }
 
 int App::Run()
@@ -56,7 +57,7 @@ int App::Run()
 
     //--CAMERA--
     Objects::GameObject camera;
-    camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
+    camera.GetTransform()->Translate(Vector3F{0.0f, -5.0f, -10.0f});
     camera.AddComponent<Components::Camera>(m_width, m_height);
     Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
     //----------
@@ -68,21 +69,39 @@ int App::Run()
     while (true)
     {
         Tools::Time::Start();
-        StartFrame();
-
-        if (m_isEditor)
-            Engine::UI::Dockspace::CreateDockspace();
-
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;
         }
+        StartFrame();
+
+        // Events
+        // (will be moved below DoFrame once we get rid of all ImGUI calls on Engine)
+        Containers::EventContainer::GetEvent("OnGUI").Fire();
+
+        static bool show_demo_window = true;
+
+        static char buffer[1024];
+
+        if (show_demo_window)
+        {
+            ImGui::ShowDemoWindow(&show_demo_window);
+        }
+        if (ImGui::Begin("Hierarchy"))
+        {
+            int i = 0;
+            for (auto& node : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
+                DisplayNextChild(node.second, i);
+        }
+        ImGui::End();
+
 
         float deltaTime = Tools::Time::GetDeltaTime();
 
+        //Systems
         Systems::PhysicsSystem::Update(deltaTime);
-        Containers::TransformSystem::Update(deltaTime);
-        Containers::CameraSystem::Update(deltaTime);
+        Systems::TransformSystem::Update(deltaTime);
+        Systems::CameraSystem::Update(deltaTime);
 
         fixedUpdateTimer += deltaTime;
         //todo this should never go below 0
@@ -95,11 +114,67 @@ int App::Run()
         }
 
         TestingSimulation();
-
         DoFrame(deltaTime);
         EndFrame();
         Tools::Time::Stop();
     }
+}
+
+std::shared_ptr<Engine::Scene::SceneNode> App::DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child, int& p_i)
+{
+    static ImGuiTreeNodeFlags base_flags         = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+    static int                selection_mask     = (1 << 2);
+    int                       node_clicked       = -1;
+    ImGuiTreeNodeFlags        node_flags         = base_flags;
+    static bool               test_drag_and_drop = true;
+    const bool                is_selected        = (selection_mask & (1 << p_i)) != 0;
+    if (is_selected)
+        node_flags |= ImGuiTreeNodeFlags_Selected;
+
+    if (!p_child->GetChildren().empty())
+    {
+        bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)p_i, node_flags, "%s", p_child->GetName().c_str());
+        {
+            if (ImGui::IsItemClicked())
+                node_clicked = p_i;
+            if (test_drag_and_drop && ImGui::BeginDragDropSource())
+            {
+                ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
+                ImGui::Text("%s", p_child->GetName().c_str());
+                ImGui::EndDragDropSource();
+            }
+            if (node_open)
+            {
+                for (auto& child : p_child->GetChildren())
+                    DisplayNextChild(child, p_i);
+                ImGui::TreePop();
+            }
+            p_i++;
+        }
+    }
+    else
+    {
+        node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
+        ImGui::TreeNodeEx((void*)(intptr_t)p_i, node_flags, "%s", p_child->GetName().c_str());
+        if (ImGui::IsItemClicked())
+            node_clicked = p_i;
+        if (test_drag_and_drop && ImGui::BeginDragDropSource())
+        {
+            ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
+            ImGui::Text("%s", p_child->GetName().c_str());
+            ImGui::EndDragDropSource();
+        }
+        p_i++;
+    }
+    if (node_clicked != -1)
+    {
+        if (ImGui::GetIO().KeyCtrl)
+            selection_mask ^= (1 << node_clicked);          // CTRL+click to toggle
+        else if (!(selection_mask & (1 << node_clicked)))
+            selection_mask = (1 << node_clicked);           // Click to single-select
+    }
+
+    return p_child;
 }
 
 void App::StartFrame() const
@@ -121,7 +196,8 @@ void App::DoFrame(float p_deltaTime) const
 
 void App::EndFrame() const
 {
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO& io = ImGui::GetIO();
+    (void)io;
 
     ImGui::Begin("Identity UI Tools");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -146,18 +222,18 @@ void App::InitEditor()
     Managers::SceneManager::AddScene(scene);
     Managers::SceneManager::SetActiveScene(scene);
 
-    auto link = std::make_shared<Objects::GameObject>("link");
+    auto link  = std::make_shared<Objects::GameObject>("link");
     auto lambo = std::make_shared<Objects::GameObject>("lambo");
     auto light = std::make_shared<Objects::GameObject>("light");
 
     //---LINK---
-    link->GetTransform()->Translate(Vector3F{ 4.0f, -5.0f, -4.0f });
-    link->GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
-    link->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.02f, -45.0f, 0.02f });
+    link->GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
+    link->GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    link->GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
 
     link->AddComponent<Components::BoxCollider>();
-    link->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 0.5f, 1.0f, 0.5f });
-    GPM::Vector3F linkOffset{ 0.0f, -1.0f, 0.0f };
+    link->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{0.5f, 1.0f, 0.5f});
+    Vector3F linkOffset{0.0f, -1.0f, 0.0f};
     link->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(linkOffset);
     link->FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
 
@@ -170,14 +246,14 @@ void App::InitEditor()
     //----------
 
     //---LAMBO---
-    lambo->GetTransform()->Translate(Vector3F{ 5.0f, 5.0f, -3.0f });
-    lambo->GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
-    lambo->GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
+    lambo->GetTransform()->Translate(Vector3F{5.0f, 5.0f, -3.0f});
+    lambo->GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
+    lambo->GetTransform()->RotateWithEulerAngles(Vector3F{0.0f, -40.0f, 30.0f});
 
     lambo->AddComponent<Components::BoxCollider>();
     lambo->FindComponentOfType<Components::BoxCollider>()->SetMass(80);
-    lambo->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 2.0f, 1.0f, 5.0f });
-    GPM::Vector3F lamboOffset{ 0.0f, -1.5f, 0.0f };
+    lambo->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{2.0f, 1.0f, 5.0f});
+    Vector3F lamboOffset{0.0f, -1.5f, 0.0f};
     lambo->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
 
     lambo->AddComponent<Components::ModelComponent>("Lambo");
@@ -189,17 +265,18 @@ void App::InitEditor()
     //-----------
 
     //---LIGHT---
-    light->GetTransform()->Translate(Vector3F{ 10.0f, 4.0f, -10.0f });
-    light->GetTransform()->Scale(Vector3F{ 0.01f, 0.01f, 0.01f });
+    light->GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
+    light->GetTransform()->Scale(Vector3F{0.01f, 0.01f, 0.01f});
 
     Rendering::Lights::DirectionalLight::LightData dirLight
     {
-    Vector4F(light->GetTransform()->GetPosition().x * -1, light->GetTransform()->GetPosition().y, light->GetTransform()->GetPosition().z * -1, 1.0f),
-    Vector4F(0.1f, 0.1f, 0.1f, 1.0f),
-    Vector4F(1.0f, 1.0f, 0.95f, 1.0f),
-    Vector4F(0.5f, 0.5f, 0.5f, 1.0f),
-    Vector4F(1.0f, 1.0f, 1.0f, 1.0f),
-    32.0f
+        Vector4F(light->GetTransform()->GetPosition().x * -1, light->GetTransform()->GetPosition().y,
+                 light->GetTransform()->GetPosition().z * -1, 1.0f),
+        Vector4F(0.1f, 0.1f, 0.1f, 1.0f),
+        Vector4F(1.0f, 1.0f, 0.95f, 1.0f),
+        Vector4F(0.5f, 0.5f, 0.5f, 1.0f),
+        Vector4F(1.0f, 1.0f, 1.0f, 1.0f),
+        32.0f
     };
 
     light->AddComponent<Components::Light>(dirLight);
@@ -212,7 +289,7 @@ void App::TestingSimulation()
     if (_INPUT->keyboard.IsKeyDown('P') && !RunBullet)
     {
         // if (!Managers::SceneManager::GetPlayScene())
-            // InitScene(true);
+        // InitScene(true);
 
         auto playScene = std::make_shared<Scene::Scene>();
         playScene->SetName("scene2");
