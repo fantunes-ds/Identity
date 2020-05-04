@@ -20,14 +20,12 @@
 
 #define DEBUG_MODE false
 
-using namespace Engine::Systems;
-
-RenderSystem::~RenderSystem()
+Engine::Systems::RenderSystem::~RenderSystem()
 {
     delete m_instance;
 }
 
-void RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
+void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
 {
     HRESULT hr;
     Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -152,7 +150,7 @@ void RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
     }
 }
 
-void RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
+void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
 {
     auto                                                 camera = CameraSystem::GetCamera(GetInstance()->m_activeCamera);
     auto                                                 mesh   = p_sceneNode->GetMesh();
@@ -204,23 +202,23 @@ void RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
     }
 }
 
-void RenderSystem::IUpdate(float p_deltaTime, bool p_isEditor)
+void Engine::Systems::RenderSystem::IUpdate(float p_deltaTime, bool p_isEditor)
 {
     Managers::SceneManager::GetActiveScene()->GetSceneGraph().UpdateScene(p_deltaTime);
     DrawScene(p_deltaTime, p_isEditor);
 }
 
-void RenderSystem::ResetActiveCamera()
+void Engine::Systems::RenderSystem::ResetActiveCamera()
 {
     GetInstance()->m_activeCamera = -1;
 }
 
-void RenderSystem::SetActiveCamera(int32_t p_id)
+void Engine::Systems::RenderSystem::SetActiveCamera(int32_t p_id)
 {
     GetInstance()->m_activeCamera = p_id;
 }
 
-RenderSystem* RenderSystem::GetInstance()
+Engine::Systems::RenderSystem* Engine::Systems::RenderSystem::GetInstance()
 {
     if (m_instance == nullptr)
     {

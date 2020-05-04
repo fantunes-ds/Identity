@@ -6,9 +6,7 @@
 #include <Managers/SceneManager.h>
 #include <Scene/Scene.h>
 
-using namespace Engine::Managers;
-
-std::unique_ptr<SceneManager>& SceneManager::GetInstance()
+std::unique_ptr<Engine::Managers::SceneManager>& Engine::Managers::SceneManager::GetInstance()
 {
     if (m_instance == nullptr)
         m_instance = std::make_unique<SceneManager>();
@@ -16,7 +14,7 @@ std::unique_ptr<SceneManager>& SceneManager::GetInstance()
     return m_instance;
 }
 
-std::shared_ptr<Engine::Scene::Scene> SceneManager::GetScene(const std::string& p_name)
+std::shared_ptr<Engine::Scene::Scene> Engine::Managers::SceneManager::GetScene(const std::string& p_name)
 {
     for (auto& scene : GetInstance()->m_scenes)
     {
@@ -27,12 +25,12 @@ std::shared_ptr<Engine::Scene::Scene> SceneManager::GetScene(const std::string& 
     return nullptr;
 }
 
-void SceneManager::AddScene(const std::shared_ptr<Scene::Scene> p_scene)
+void Engine::Managers::SceneManager::AddScene(const std::shared_ptr<Scene::Scene> p_scene)
 {
     GetInstance()->m_scenes.push_back(p_scene);
 }
 
-void SceneManager::SetActiveScene(const std::string& p_name)
+void Engine::Managers::SceneManager::SetActiveScene(const std::string& p_name)
 {
     for (auto scene : GetInstance()->m_scenes)
     {
@@ -48,7 +46,7 @@ void SceneManager::SetActiveScene(const std::string& p_name)
     MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
 }
 
-void SceneManager::SetActiveScene(const int32_t p_id)
+void Engine::Managers::SceneManager::SetActiveScene(const int32_t p_id)
 {
     for (auto scene : GetInstance()->m_scenes)
     {
@@ -64,7 +62,7 @@ void SceneManager::SetActiveScene(const int32_t p_id)
     MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
 }
 
-void SceneManager::SetPlayScene(const std::string& p_name)
+void Engine::Managers::SceneManager::SetPlayScene(const std::string& p_name)
 {
     for (auto scene : GetInstance()->m_scenes)
     {
@@ -82,7 +80,7 @@ void SceneManager::SetPlayScene(const std::string& p_name)
     MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
 }
 
-void SceneManager::SetPlayScene(const int32_t p_id)
+void Engine::Managers::SceneManager::SetPlayScene(const int32_t p_id)
 {
     for (auto scene : GetInstance()->m_scenes)
     {
@@ -98,13 +96,13 @@ void SceneManager::SetPlayScene(const int32_t p_id)
     MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
 }
 
-bool SceneManager::DeletePlayScene()
+bool Engine::Managers::SceneManager::DeletePlayScene()
 {
     return GetInstance()->DeletePlaySceneNS();
 }
 
 
-void SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene>& p_destination, std::shared_ptr<Scene::Scene>& p_source)
+void Engine::Managers::SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene>& p_destination, std::shared_ptr<Scene::Scene>& p_source)
 {
     for (auto gameObject : p_source->GetAllGameObjectsInScene())
     {
@@ -131,7 +129,7 @@ void SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene>& p_destination, 
     }
 }
 
-bool SceneManager::DeletePlaySceneNS()
+bool Engine::Managers::SceneManager::DeletePlaySceneNS()
 {
     int id = -1;
     for (int i = 0; i < m_scenes.size(); ++i)

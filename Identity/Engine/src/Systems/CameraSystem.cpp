@@ -6,14 +6,12 @@
 #include <Rendering/Renderer.h>
 #include <Systems/CameraSystem.h>
 
-using namespace Engine::Systems;
-
-CameraSystem::~CameraSystem()
+Engine::Systems::CameraSystem::~CameraSystem()
 {
     delete m_instance;
 }
 
-CameraSystem* CameraSystem::GetInstance()
+Engine::Systems::CameraSystem* Engine::Systems::CameraSystem::GetInstance()
 {
     if (m_instance == nullptr)
     {
@@ -23,7 +21,7 @@ CameraSystem* CameraSystem::GetInstance()
     return m_instance;
 }
 
-int32_t CameraSystem::AddCamera(std::shared_ptr<Components::Camera> p_camera)
+int32_t Engine::Systems::CameraSystem::AddCamera(std::shared_ptr<Components::Camera> p_camera)
 {
     int32_t id = p_camera->GetID();
 
@@ -32,7 +30,7 @@ int32_t CameraSystem::AddCamera(std::shared_ptr<Components::Camera> p_camera)
     return id;
 }
 
-bool CameraSystem::RemoveCamera(int32_t p_id)
+bool Engine::Systems::CameraSystem::RemoveCamera(int32_t p_id)
 {
     size_t sizeBefore = GetInstance()->m_cameras.size();
     GetInstance()->m_cameras.erase(p_id);
@@ -44,12 +42,12 @@ bool CameraSystem::RemoveCamera(int32_t p_id)
     return true;
 }
 
-void CameraSystem::Update(const float p_deltaTime)
+void Engine::Systems::CameraSystem::Update(const float p_deltaTime)
 {
     GetInstance()->IUpdate(p_deltaTime);
 }
 
-void CameraSystem::IUpdate(const float p_deltaTime, bool p_isEditor)
+void Engine::Systems::CameraSystem::IUpdate(const float p_deltaTime, bool p_isEditor)
 {
     for (std::shared_ptr<Engine::Components::Camera> camera : GetCameras())
     {
@@ -62,7 +60,7 @@ void CameraSystem::IUpdate(const float p_deltaTime, bool p_isEditor)
     }
 }
 
-std::shared_ptr<Engine::Components::Camera> CameraSystem::GetCamera(int32_t p_id)
+std::shared_ptr<Engine::Components::Camera> Engine::Systems::CameraSystem::GetCamera(int32_t p_id)
 {
     if (GetInstance()->m_cameras.find(p_id) != GetInstance()->m_cameras.end())
         return GetInstance()->m_cameras.at(p_id);
@@ -72,7 +70,7 @@ std::shared_ptr<Engine::Components::Camera> CameraSystem::GetCamera(int32_t p_id
     return nullptr;
 }
 
-std::vector<std::shared_ptr<Engine::Components::Camera>> CameraSystem::GetCameras()
+std::vector<std::shared_ptr<Engine::Components::Camera>> Engine::Systems::CameraSystem::GetCameras()
 {
     std::vector<std::shared_ptr<Engine::Components::Camera>> cameras;
 

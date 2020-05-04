@@ -4,9 +4,7 @@
 
 #include <Rendering/Buffers/VertexBuffer.h>
 
-using namespace Engine::Rendering::Buffers;
-
-void VertexBuffer::Generate(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device,
+void Engine::Rendering::Buffers::VertexBuffer::Generate(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device,
                             std::vector<Geometry::Vertex>&              p_vertices)
 {
     HRESULT hr;
@@ -25,17 +23,17 @@ void VertexBuffer::Generate(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device
     m_offset = 0u;
 }
 
-void VertexBuffer::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
+void Engine::Rendering::Buffers::VertexBuffer::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
 {
     p_context->IASetVertexBuffers(0u, 1u, m_buffer.GetAddressOf(), &m_stride, &m_offset);
 }
 
-void VertexBuffer::Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
+void Engine::Rendering::Buffers::VertexBuffer::Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context)
 {
     p_context->IASetVertexBuffers(0u, 0, nullptr, nullptr, nullptr);
 }
 
-bool VertexBuffer::operator==(const VertexBuffer& p_other) const
+bool Engine::Rendering::Buffers::VertexBuffer::operator==(const Engine::Rendering::Buffers::VertexBuffer& p_other) const
 {
     if (m_stride == p_other.m_stride && m_offset == p_other.m_offset)
         return true;

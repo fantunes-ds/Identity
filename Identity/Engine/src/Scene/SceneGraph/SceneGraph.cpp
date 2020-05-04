@@ -4,14 +4,12 @@
 #include <Objects/GameObject.h>
 #include <Scene/SceneGraph/SceneGraph.h>
 
-using namespace Engine::Scene;
-
-void SceneGraph::AddRootSceneNode(std::shared_ptr<SceneNode> p_sceneNode)
+void Engine::Scene::SceneGraph::AddRootSceneNode(std::shared_ptr<SceneNode> p_sceneNode)
 {
     m_rootSceneNodes.insert_or_assign(p_sceneNode->GetID(), p_sceneNode);
 }
 
-void SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::GameObject> p_gameObject)
+void Engine::Scene::SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::GameObject> p_gameObject)
 {
     auto rootNode = std::make_shared<SceneNode>(p_gameObject);
     rootNode->SetName(p_gameObject->GetName());
@@ -36,7 +34,7 @@ void SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::GameObject> p_gam
     p_gameObject->SetSceneNode(rootNode);
 }
 
-void SceneGraph::RemoveGameObjectFromScene(std::shared_ptr<Objects::GameObject> p_gameObject)
+void Engine::Scene::SceneGraph::RemoveGameObjectFromScene(std::shared_ptr<Objects::GameObject> p_gameObject)
 {
     for (auto& node : m_rootSceneNodes)
     {
@@ -52,18 +50,18 @@ void SceneGraph::RemoveGameObjectFromScene(std::shared_ptr<Objects::GameObject> 
     }
 }
 
-void SceneGraph::RemoveRootSceneNode(int32_t p_id)
+void Engine::Scene::SceneGraph::RemoveRootSceneNode(int32_t p_id)
 {
     m_rootSceneNodes.erase(p_id);
 }
 
-void SceneGraph::UpdateScene(float p_deltaTime)
+void Engine::Scene::SceneGraph::UpdateScene(float p_deltaTime)
 {
     for (auto& node : m_rootSceneNodes)
         node.second->Update(p_deltaTime);
 }
 
-std::map<int32_t, std::shared_ptr<SceneNode>> SceneGraph::GetAllSceneNodes()
+std::map<int32_t, std::shared_ptr<Engine::Scene::SceneNode>> Engine::Scene::SceneGraph::GetAllSceneNodes()
 {
     std::map<int32_t, std::shared_ptr<SceneNode>> map;
 

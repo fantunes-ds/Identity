@@ -3,32 +3,30 @@
 #include <Components/ModelComponent.h>
 #include <Objects/GameObject.h>
 
-using namespace Engine::Components;
-
-ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const int32_t p_id): IComponent{p_gameObject}
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const int32_t p_id): IComponent{p_gameObject}
 {
     m_model = p_id;
 }
 
 
-ModelComponent::ModelComponent(Objects::GameObject*            p_gameObject,
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject*            p_gameObject,
                                std::shared_ptr<ModelComponent> p_other) : IComponent{p_gameObject}
 {
     m_model = p_other->m_model;
 }
 
-ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name): IComponent{p_gameObject}
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name): IComponent{p_gameObject}
 {
     m_model = Managers::ResourceManager::GetModel(p_name);
 }
 
-ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file, 
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file,
                                const std::string& p_name): IComponent{p_gameObject}
 {
     m_model = Managers::ResourceManager::AddModel(p_file, p_name);
 }
 
-bool ModelComponent::operator==(IComponent* p_other)
+bool Engine::Components::ModelComponent::operator==(IComponent* p_other)
 {
     if (ModelComponent* other = dynamic_cast<ModelComponent*>(p_other))
     {
@@ -50,7 +48,7 @@ bool ModelComponent::operator==(IComponent* p_other)
     return false;
 }
 
-bool ModelComponent::DeleteFromMemory()
+bool Engine::Components::ModelComponent::DeleteFromMemory()
 {
     return Managers::ResourceManager::RemoveModel(m_model);
 }

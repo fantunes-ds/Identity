@@ -8,9 +8,7 @@
 #include <Systems/PhysicsSystem.h>
 #include <Managers/ResourceManager.h>
 
-using namespace Engine::Components;
-
-BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameObject}
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameObject}
 {
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
@@ -40,7 +38,7 @@ BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameO
 }
 
 
-BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{p_gameObject}
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{p_gameObject}
 {
     //init data
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
@@ -73,7 +71,7 @@ BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxC
     Systems::PhysicsSystem::AddCollider(this);
 }
 
-BoxCollider::~BoxCollider()
+Engine::Components::BoxCollider::~BoxCollider()
 {
     Engine::Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
     /*delete m_box;
@@ -81,7 +79,7 @@ BoxCollider::~BoxCollider()
     delete m_motionState;*/
 }
 
-Matrix4F BoxCollider::GetWorldMatrix() const
+Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
 {
     btScalar    m[16];
     btTransform trans;
@@ -100,7 +98,7 @@ Matrix4F BoxCollider::GetWorldMatrix() const
     return mat.Transpose();
 }
 
-void BoxCollider::SetPositionOffset(GPM::Vector3F& p_offset)
+void Engine::Components::BoxCollider::SetPositionOffset(GPM::Vector3F& p_offset)
 {
     if (this == nullptr)
         return;
@@ -108,7 +106,7 @@ void BoxCollider::SetPositionOffset(GPM::Vector3F& p_offset)
     m_offset = p_offset;
 }
 
-void BoxCollider::SetMass(float p_mass)
+void Engine::Components::BoxCollider::SetMass(float p_mass)
 {
     m_mass = p_mass;
 
@@ -128,7 +126,7 @@ void BoxCollider::SetMass(float p_mass)
     Systems::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
 }
 
-void BoxCollider::SetDimensions(const GPM::Vector3F& p_dimensions)
+void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimensions)
 {
     if (this == nullptr)
         return;
@@ -154,14 +152,14 @@ void BoxCollider::SetDimensions(const GPM::Vector3F& p_dimensions)
     m_model          = Managers::ResourceManager::FindModel(id);
 }
 
-bool BoxCollider::DeleteFromMemory()
+bool Engine::Components::BoxCollider::DeleteFromMemory()
 {
     Systems::PhysicsSystem::RemoveCollider(GetID());
     Managers::ResourceManager::RemoveModel(m_model->GetID());
     return true;
 }
 
-void BoxCollider::SetActive(bool p_active)
+void Engine::Components::BoxCollider::SetActive(bool p_active)
 {
     m_isActive = p_active;
 
@@ -177,7 +175,7 @@ void BoxCollider::SetActive(bool p_active)
     }
 }
 
-Engine::ObjectElements::Model BoxCollider::ConstructBox()
+Engine::ObjectElements::Model Engine::Components::BoxCollider::ConstructBox()
 {
     btVector3   a;
     btVector3   b;

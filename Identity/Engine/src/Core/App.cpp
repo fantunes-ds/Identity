@@ -24,28 +24,26 @@
 #include <Systems/TransformSystem.h>
 #include <Systems/PhysicsSystem.h>
 
-using namespace Engine::Core;
-
-App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
+Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
     btVector3 vec(0.0f, 0.0f, 0.0f);
 
     Input::Input::InitInput();
 }
 
-App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) : m_window(p_width, p_height, p_name),
+Engine::Core::App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) : m_window(p_width, p_height, p_name),
                                                                                  m_width(p_width), m_height(p_height),
                                                                                  m_isEditor(p_isEditor)
 {
     Input::Input::InitInput();
 }
 
-void App::Init()
+void Engine::Core::App::Init()
 {
     Containers::EventContainer::AddEvent("OnGUI");
 }
 
-int App::Run()
+int Engine::Core::App::Run()
 {
     Managers::ResourceManager::AddTexture("../Engine/Resources/link.png", "LinkText");
     Managers::ResourceManager::AddTexture("../Engine/Resources/lambo_text.jpeg", "LamboText");
@@ -120,7 +118,7 @@ int App::Run()
     }
 }
 
-std::shared_ptr<Engine::Scene::SceneNode> App::DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child, int& p_i)
+std::shared_ptr<Engine::Scene::SceneNode> Engine::Core::App::DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child, int& p_i)
 {
     static ImGuiTreeNodeFlags base_flags         = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
     static int                selection_mask     = (1 << 2);
@@ -177,14 +175,14 @@ std::shared_ptr<Engine::Scene::SceneNode> App::DisplayNextChild(std::shared_ptr<
     return p_child;
 }
 
-void App::StartFrame() const
+void Engine::Core::App::StartFrame() const
 {
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 }
 
-void App::DoFrame(float p_deltaTime) const
+void Engine::Core::App::DoFrame(float p_deltaTime) const
 {
     Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
 
@@ -194,7 +192,7 @@ void App::DoFrame(float p_deltaTime) const
     Systems::RenderSystem::GetInstance()->IUpdate(p_deltaTime, m_isEditor);
 }
 
-void App::EndFrame() const
+void Engine::Core::App::EndFrame() const
 {
     ImGuiIO& io = ImGui::GetIO();
     (void)io;
@@ -215,7 +213,7 @@ void App::EndFrame() const
     Rendering::Renderer::GetInstance()->EndFrame();
 }
 
-void App::InitEditor()
+void Engine::Core::App::InitEditor()
 {
     auto scene = std::make_shared<Scene::Scene>();
     scene->SetName("scene1");
@@ -284,7 +282,7 @@ void App::InitEditor()
     //-----------
 }
 
-void App::TestingSimulation()
+void Engine::Core::App::TestingSimulation()
 {
     if (_INPUT->keyboard.IsKeyDown('P') && !RunBullet)
     {

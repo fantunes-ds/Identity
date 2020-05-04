@@ -5,14 +5,12 @@
 
 #include <Containers/ComponentContainer.h>
 
-using namespace Engine::Containers;
-
-ComponentContainer::~ComponentContainer()
+Engine::Containers::ComponentContainer::~ComponentContainer()
 {
     delete m_instance;
 }
 
-int32_t ComponentContainer::AddComponent(Components::IComponent* p_component)
+int32_t Engine::Containers::ComponentContainer::AddComponent(Components::IComponent* p_component)
 {
     for (auto& component : GetInstance()->m_components)
     {
@@ -40,7 +38,7 @@ int32_t ComponentContainer::AddComponent(Components::IComponent* p_component)
 }
 
 
-int32_t ComponentContainer::AddComponentEditor(Components::IComponent* p_component)
+int32_t Engine::Containers::ComponentContainer::AddComponentEditor(Components::IComponent* p_component)
 {
     for (auto& component : GetInstance()->m_componentsEditor)
     {
@@ -68,7 +66,7 @@ int32_t ComponentContainer::AddComponentEditor(Components::IComponent* p_compone
     return p_component->GetID();
 }
 
-void ComponentContainer::RemoveComponent(int32_t p_id, bool p_deleteFromMemory)
+void Engine::Containers::ComponentContainer::RemoveComponent(int32_t p_id, bool p_deleteFromMemory)
 {
     if (p_deleteFromMemory)
     {
@@ -78,7 +76,7 @@ void ComponentContainer::RemoveComponent(int32_t p_id, bool p_deleteFromMemory)
     GetInstance()->m_components.erase(p_id);
 }
 
-ComponentContainer* ComponentContainer::GetInstance()
+Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::GetInstance()
 {
     if (m_instance == nullptr)
     {
@@ -88,7 +86,7 @@ ComponentContainer* ComponentContainer::GetInstance()
     return m_instance;
 }
 
-std::shared_ptr<Engine::Components::IComponent> ComponentContainer::FindComponent(int32_t p_id)
+std::shared_ptr<Engine::Components::IComponent> Engine::Containers::ComponentContainer::FindComponent(int32_t p_id)
 {
     if (GetAllComponents().find(p_id) == GetAllComponents().end())
     {
@@ -100,13 +98,13 @@ std::shared_ptr<Engine::Components::IComponent> ComponentContainer::FindComponen
     return GetAllComponents().at(p_id);
 }
 
-void ComponentContainer::CopyCompNS()
+void Engine::Containers::ComponentContainer::CopyCompNS()
 {
     // m_componentsEditor.insert(m_components.begin(), m_components.end());
     SwitchComp();
 }
 
-void ComponentContainer::SwitchCompNS()
+void Engine::Containers::ComponentContainer::SwitchCompNS()
 {
     auto tmpComp       = m_components;
     m_components       = m_componentsEditor;
