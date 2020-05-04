@@ -18,7 +18,7 @@
 #include <Systems/PhysicsSystem.h>
 
 
-#define DEBUG_MODE false
+#define DEBUG_MODE true
 
 Engine::Systems::RenderSystem::~RenderSystem()
 {

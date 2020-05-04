@@ -74,9 +74,9 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
 Engine::Components::BoxCollider::~BoxCollider()
 {
     Engine::Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
-    /*delete m_box;
+    delete m_box;
+    delete m_motionState;
     delete m_rigidbody;
-    delete m_motionState;*/
 }
 
 Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
