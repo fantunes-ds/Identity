@@ -1,6 +1,7 @@
 #define DEBUG_MODE true;
 
 #include <stdafx.h>
+#include <fstream>
 
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
@@ -279,7 +280,17 @@ void Engine::Core::App::InitEditor()
 
     light->AddComponent<Components::Light>(dirLight);
     scene->AddGameObject(light);
-    //-----------
+
+    //-----Serialize test
+    std::ofstream outfile("SerializeTest.txt");
+
+    scene->Serialize(outfile);
+
+    outfile.close();
+
+    std::ifstream inFile("SerializeTest.txt");
+    inFile.close();
+    //-----------;
 }
 
 void Engine::Core::App::TestingSimulation()

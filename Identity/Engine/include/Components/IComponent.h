@@ -17,6 +17,7 @@ namespace Engine::Components
         virtual bool operator==(IComponent* p_other) = 0;
         virtual bool DeleteFromMemory() = 0;
         virtual void SetActive(bool p_active) = 0;
+        virtual void Serialize(std::ostream& p_stream) = 0;
 
         void SetGameObject(Objects::GameObject* p_gameObject);
         [[nodiscard]] Objects::GameObject* GetGameObject() const;

@@ -64,6 +64,7 @@
     <ClCompile Include="src\Tools\Time.cpp" />
     <ClCompile Include="src\UI\Dockspace.cpp" />
     <ClCompile Include="src\Systems\PhysicsSystem.cpp" />
+    <ClCompile Include="src\Serialize\DeserializerParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Components\IComponent.h" />
@@ -142,6 +143,7 @@
     <ClInclude Include="include\UI\Dockspace.h" />
     <ClInclude Include="include\Systems\PhysicsSystem.h" />
     <ClInclude Include="include\Serialize\ISerializeable.h" />
+    <ClInclude Include="include\Serialize\DeserializerParser.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />

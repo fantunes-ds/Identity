@@ -40,6 +40,27 @@ bool Engine::Components::Camera::DeleteFromMemory()
     return Systems::CameraSystem::RemoveCamera(GetID());
 }
 
+void Engine::Components::Camera::Serialize(std::ostream& p_stream)
+{
+    p_stream << typeid(*this).name() << " " << std::to_string(m_id) << "\n{\n" <<
+        "   m_needUpdate " <<  needUpdate << "\n" <<
+        "   m_speed " << m_speed << "\n" <<
+        "   m_sensitivity " << m_sensitivity << "\n" <<
+        "   m_zoom " << m_zoom << "\n" <<
+        "   m_yaw " << m_yaw << "\n" <<
+        "   m_pitch " << m_pitch << "\n" <<
+        "   m_lastX " << m_lastX << "\n" <<
+        "   m_lastY " << m_lastY << "\n" <<
+        "   m_fovAngle " << m_fovAngle << "\n" <<
+        "   m_width " << m_width << "\n" <<
+        "   m_height " << m_height << "\n" <<
+        "   m_nearZ " << m_nearZ << "\n" <<
+        "   m_farZ " << m_farZ << "\n" <<
+        "   m_perspectiveMatrix " << m_perspectiveMatrix << "\n" <<
+        "   m_viewMatrix " << m_viewMatrix << "\n" <<
+        "}\n";
+}
+
 void Engine::Components::Camera::UpdateVectors()
 {
     const Quaternion pitch = Quaternion(Vector3F(1.0f, 0.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_pitch));

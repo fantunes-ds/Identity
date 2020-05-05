@@ -99,6 +99,7 @@ namespace Engine::Objects
 		}
 
 		void DeleteFromMemory();
+		void Serialize(std::ostream& p_stream);
 
 		[[nodiscard]] std::shared_ptr<Components::Transform> GetTransform() const;
 		[[nodiscard]] inline uint32_t GetTransformID() const { return m_transform; }

@@ -19,6 +19,7 @@ namespace Engine::Components
         BoxCollider(const BoxCollider&) = default;
         ~BoxCollider();
 
+        void Serialize(std::ostream& p_stream) override;
         /***
          * @brief returns Bullet Physics' Matrix that concerns this BoxCollider.
          */

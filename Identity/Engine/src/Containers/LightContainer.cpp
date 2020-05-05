@@ -37,3 +37,8 @@ int32_t Engine::Containers::LightContainer::AddLight(Rendering::Lights::ILight* 
     GetInstance()->m_lights.insert_or_assign(p_light->GetID(), std::shared_ptr<Engine::Rendering::Lights::ILight>(p_light));
     return p_light->GetID();
 }
+
+std::shared_ptr<Engine::Rendering::Lights::ILight> Engine::Containers::LightContainer::FindLight(int32_t p_id)
+{
+    return GetInstance()->m_lights.at(p_id);
+}

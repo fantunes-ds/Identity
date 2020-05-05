@@ -52,3 +52,11 @@ void Engine::Scene::Scene::SetActiveOnAll(bool p_active)
         go->SetActive(p_active);
     }
 }
+
+void Engine::Scene::Scene::Serialize(std::ostream& p_stream)
+{
+    for (auto& node: m_sceneGraph.GetAllSceneNodes())
+    {
+        node.second->GetGameObject()->Serialize(p_stream);
+    }
+}

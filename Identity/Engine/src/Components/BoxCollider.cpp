@@ -8,14 +8,14 @@
 #include <Systems/PhysicsSystem.h>
 #include <Managers/ResourceManager.h>
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameObject}
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{ p_gameObject }
 {
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
     btTransform trans;
-    auto&       position = m_gameObject->GetTransform()->GetPosition();
-    auto&       rotation = m_gameObject->GetTransform()->GetRotation();
-    auto&       scale    = m_gameObject->GetTransform()->GetScale();
+    auto& position = m_gameObject->GetTransform()->GetPosition();
+    auto& rotation = m_gameObject->GetTransform()->GetRotation();
+    auto& scale = m_gameObject->GetTransform()->GetScale();
 
     trans.setIdentity();
 
@@ -32,24 +32,24 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
 
     //TODO add a "AddModel" that take a model as parametre
     const int32_t id = Managers::ResourceManager::AddModel(model);
-    m_model          = Managers::ResourceManager::FindModel(id);
+    m_model = Managers::ResourceManager::FindModel(id);
 
     Systems::PhysicsSystem::AddCollider(this);
 }
 
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{p_gameObject}
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{ p_gameObject }
 {
     //init data
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
-    m_mass   = p_other->m_mass;
+    m_mass = p_other->m_mass;
     m_offset = p_other->m_offset;
-    m_box    = p_other->m_box;
+    m_box = p_other->m_box;
 
     btTransform trans;
-    auto&       position = m_gameObject->GetTransform()->GetPosition();
-    auto&       rotation = m_gameObject->GetTransform()->GetRotation();
-    auto&       scale    = m_gameObject->GetTransform()->GetScale();
+    auto& position = m_gameObject->GetTransform()->GetPosition();
+    auto& rotation = m_gameObject->GetTransform()->GetRotation();
+    auto& scale = m_gameObject->GetTransform()->GetScale();
 
 
     trans.setIdentity();
@@ -66,7 +66,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     ObjectElements::Model model = ConstructBox();
     //TODO add a "AddModel" that take a model as parametre
     const int32_t id = Managers::ResourceManager::AddModel(model);
-    m_model          = Managers::ResourceManager::FindModel(id);
+    m_model = Managers::ResourceManager::FindModel(id);
 
     Systems::PhysicsSystem::AddCollider(this);
 }
@@ -77,6 +77,16 @@ Engine::Components::BoxCollider::~BoxCollider()
     delete m_box;
     delete m_motionState;
     delete m_rigidbody;
+}
+
+void Engine::Components::BoxCollider::Serialize(std::ostream& p_stream)
+{
+    p_stream << typeid(*this).name() << " " << std::to_string(m_id) << "\n{\n" <<
+        "   m_mass " << m_mass << "\n" <<
+        "   m_offset " << m_offset.x << " " << m_offset.y << " " << m_offset.z << "\n" <<
+        "   m_box " << m_box->getHalfExtentsWithoutMargin().getX() << " " << m_box->getHalfExtentsWithoutMargin().getY() << " " << m_box->getHalfExtentsWithoutMargin().getZ() << "\n" <<
+        "   m_model " << m_model->GetID() << "\n" <<
+        "}\n";
 }
 
 Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
@@ -149,7 +159,7 @@ void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimen
     ObjectElements::Model model = ConstructBox();
     Managers::ResourceManager::RemoveModel(m_model->GetID());
     const int32_t id = Managers::ResourceManager::AddModel(model);
-    m_model          = Managers::ResourceManager::FindModel(id);
+    m_model = Managers::ResourceManager::FindModel(id);
 }
 
 bool Engine::Components::BoxCollider::DeleteFromMemory()
@@ -191,7 +201,7 @@ Engine::ObjectElements::Model Engine::Components::BoxCollider::ConstructBox()
     {
         btVector3 vertex;
         m_box->getVertex(i, vertex);
-        vertices.emplace_back(Geometry::Vertex{Vector3F{vertex.getX(), vertex.getY(), vertex.getZ()}, Vector2F{}, GPM::Vector3F{}});
+        vertices.emplace_back(Geometry::Vertex{ Vector3F{vertex.getX(), vertex.getY(), vertex.getZ()}, Vector2F{}, GPM::Vector3F{} });
     }
 
     //Back

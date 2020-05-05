@@ -41,6 +41,17 @@ void GameObject::DeleteFromMemory()
     Managers::SceneManager::GetActiveScene()->RemoveGameObject(GetID());
 }
 
+void GameObject::Serialize(std::ostream& p_stream)
+{
+    p_stream << "\nGAMEOBJECT " << m_name << " " << m_id << "\n";
+    for (auto component: GetAllComponents())
+    {
+        Containers::ComponentContainer::FindComponent(component)->Serialize(p_stream);
+    }
+
+    GetTransform()->Serialize(p_stream);
+}
+
 std::shared_ptr<Engine::Components::Transform> GameObject::GetTransform() const
 {
     return Systems::TransformSystem::GetTransform(m_transform);

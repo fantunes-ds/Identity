@@ -26,6 +26,14 @@ Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameOb
     m_model = Managers::ResourceManager::AddModel(p_file, p_name);
 }
 
+void Engine::Components::ModelComponent::Serialize(std::ostream& p_stream)
+{
+    p_stream << typeid(*this).name() << " " << std::to_string(m_id) << "\n{\n" <<
+        "   m_model " << m_model << "\n   {\n" <<
+        "       m_path " << Managers::ResourceManager::FindModel(m_model)->GetPath() << "\n" <<
+        "   }\n}\n";
+}
+
 bool Engine::Components::ModelComponent::operator==(IComponent* p_other)
 {
     if (ModelComponent* other = dynamic_cast<ModelComponent*>(p_other))

@@ -14,6 +14,8 @@ namespace Engine::Components
         ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file, const std::string& p_name);
         virtual ~ModelComponent() = default;
 
+        void Serialize(std::ostream& p_stream) override;
+
         bool operator==(IComponent* p_other) override;
 
         inline void SetModel(int32_t p_id) { m_model = p_id; }

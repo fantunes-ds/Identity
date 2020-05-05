@@ -39,34 +39,20 @@ void Lights::DirectionalLight::Serialize(std::ostream& p_stream)
     p_stream << typeid(*this).name() << " " << std::to_string(m_id) << "\n{\n" <<
         "   m_lightData\n   {\n" <<
         "       shininess " << m_lightData.shininess << "\n" <<
-        "       padding " << m_lightData.padding.x << " " << m_lightData.padding.y << " " << m_lightData.padding.z << "\n" <<
-        "       position " << m_lightData.position.x << " " << m_lightData.position.y << " " << m_lightData.position.z << " " << m_lightData.position.w << "\n" <<
-        "       ambient " << m_lightData.ambient.x << " " << m_lightData.ambient.y << " " << m_lightData.ambient.z << " " << m_lightData.ambient.w << "\n" <<
-        "       diffuse " << m_lightData.diffuse.x << " " << m_lightData.diffuse.y << " " << m_lightData.diffuse.z << " " << m_lightData.diffuse.w << "\n" <<
-        "       specular " << m_lightData.specular.x << " " << m_lightData.specular.y << " " << m_lightData.specular.z << " " << m_lightData.specular.w << "\n" <<
-        "       color " << m_lightData.color.x << " " << m_lightData.color.y << " " << m_lightData.color.z << " " << m_lightData.color.w << "\n" <<
+        "       padding " << m_lightData.padding << "\n" <<
+        "       position " << m_lightData.position << "\n" <<
+        "       ambient " << m_lightData.ambient << "\n" <<
+        "       diffuse " << m_lightData.diffuse << "\n" <<
+        "       specular " << m_lightData.specular << "\n" <<
+        "       color " << m_lightData.color << "\n" <<
         "   }\n" << "}\n";
 }
 
 void Lights::DirectionalLight::Deserialize(std::istream& p_stream)
 {
-    std::vector < std::string> lines;
     std::vector < std::string> words;
 
     for (std::string line; std::getline(p_stream, line); )
-    {
-        lines.push_back(line);
-        /*std::stringstream str(line);
-        float x, y, z = std::atoi(line.c_str());
-        //float x, y, z;
-        sscanf_s(line.c_str(), "x : %f y : %f z : &f, ", &x, &y, &z);
-        std::string s(std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + "\n");
-        OutputDebugString(s.c_str());*/
-    }
-
-    int lineNumber = 0;
-
-    for (auto line: lines)
     {
         std::stringstream stringStream(line);
 
@@ -75,10 +61,13 @@ void Lights::DirectionalLight::Deserialize(std::istream& p_stream)
             std::string word;
             stringStream >> word;
             words.push_back(word);
-            OutputDebugString((word + "\n").c_str());
         } while (stringStream);
 
-        if (words[0] == "shininess")
+        if (words[1] == "Engine::Rendering::Lights::DirectionalLight")
+        {
+            m_id = std::stoi(words[2]);
+        }
+        else if (words[0] == "shininess")
         {
             m_lightData.shininess = 0.0f;
             m_lightData.shininess = std::stof(words[1]);
@@ -126,7 +115,5 @@ void Lights::DirectionalLight::Deserialize(std::istream& p_stream)
         }
 
         words.clear();
-        ++lineNumber;
-        //OutputDebugString((line + "\n").c_str());
     }
 }

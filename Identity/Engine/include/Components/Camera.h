@@ -15,6 +15,7 @@ namespace Engine::Components
 
         bool operator==(IComponent* p_other) override;
         bool DeleteFromMemory() override;
+        void Serialize(std::ostream& p_stream) override;
         void SetActive(bool p_active) override { m_isActive = p_active; }
 
         /**
