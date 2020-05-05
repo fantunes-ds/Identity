@@ -1,5 +1,6 @@
 #pragma once
 #include <Export.h>
+#include <Serialize/ISerializeable.h>
 
 namespace Engine::Objects
 {
