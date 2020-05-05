@@ -6,7 +6,11 @@
 #include <Scene/Scene.h>
 #include <UI/Hierarchy.h>
 
-std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child, int& p_i)
+#include "Core/App.h"
+
+using namespace Engine::UI;
+
+std::shared_ptr<Engine::Scene::SceneNode> Hierarchy::DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child, int& p_i)
 {
     static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
     static int                selection_mask = (1 << 2);
@@ -63,7 +67,7 @@ std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChil
     return p_child;
 }
 
-void Engine::UI::Hierarchy::CreateHierarchy()
+void Hierarchy::CreateHierarchy(Core::App& p_appRef)
 {
     if (ImGui::Begin("Hierarchy"))
     {

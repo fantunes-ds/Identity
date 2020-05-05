@@ -2,11 +2,14 @@
 
 #include <Tools/ImGUI/imgui.h>
 
+#include <Core/App.h>
+#include <Rendering/Renderer.h>
 #include <UI/Dockspace.h>
+
 
 using namespace Engine::UI;
 
-void Dockspace::CreateDockspace()
+void Dockspace::CreateDockspace(Core::App& p_appRef)
 {
     static bool               opt_fullscreen_persistant = true;
     bool                      opt_fullscreen            = opt_fullscreen_persistant;
@@ -54,25 +57,82 @@ void Dockspace::CreateDockspace()
         ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
-        if (ImGui::BeginMenuBar())
+        CreateMenuBar(p_appRef);
+        
+    }
+    ImGui::End();
+}
+
+void Dockspace::CreateMenuBar(Core::App& p_appRef)
+{
+    if (ImGui::BeginMenuBar())
+    {
+        //todo all shortcuts
+        if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::BeginMenu("File"))
+            ImGui::MenuItem("New Scene", "Ctrl + N", nullptr);
+            ImGui::MenuItem("Open Scene", "Ctrl + O", nullptr);
+            ImGui::Separator();
+            ImGui::MenuItem("Save", "Ctrl + S", nullptr);
+            ImGui::MenuItem("Save As...", "Ctrl + Shift + S", nullptr);
+            ImGui::MenuItem("Build", "Ctrl + B", nullptr);
+            ImGui::Separator();
+            if (ImGui::MenuItem("Exit", nullptr, nullptr))
             {
-                ImGui::MenuItem("Open", "", nullptr);
-                ImGui::MenuItem("Save", "", nullptr);
-                ImGui::MenuItem("Exit", "", nullptr);
+                p_appRef.SetIsApplicationRunning(false);
+            }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Edit"))
+        {
+            if (ImGui::MenuItem("Play", "Ctrl + P", nullptr))
+            {
+                p_appRef.TestingSimulation();
+            }
+            if (ImGui::MenuItem("Stop", "Ctrl + O", nullptr))
+            {
+                p_appRef.TestingSimulation();
+            }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Assets"))
+        {
+            if (ImGui::BeginMenu("Create"))
+            {
+                ImGui::MenuItem("Folder", "", nullptr);
                 ImGui::Separator();
+                ImGui::MenuItem("Scene", "", nullptr);
+                ImGui::Separator();
+                ImGui::MenuItem("Material", "", nullptr);
                 ImGui::EndMenu();
             }
-            if (ImGui::BeginMenu("Edit"))
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("GameObject"))
+        {
+            ImGui::MenuItem("Create Empty", "Ctrl + Shift + N", nullptr);
+            if (ImGui::BeginMenu("3D Object"))
             {
-                ImGui::MenuItem("Just Another Menu here", "", nullptr);
-                ImGui::Separator();
+                ImGui::MenuItem("Cube", "", nullptr);
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Light"))
+            {
+                ImGui::MenuItem("Directional Light", "", nullptr);
                 ImGui::EndMenu();
             }
 
-            ImGui::EndMenuBar();
+            ImGui::MenuItem("Camera", "", nullptr);
+            ImGui::EndMenu();
         }
+
+        ImGui::SetCursorPosX(Rendering::Renderer::GetInstance()->GetWidth() / 2);
+        if (ImGui::Button("Play"))
+        {
+            p_appRef.TestingSimulation();
+        }
+
+        ImGui::EndMenuBar();
     }
-    ImGui::End();
 }

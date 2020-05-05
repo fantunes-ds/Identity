@@ -47,6 +47,7 @@ void App::Init()
 
 int App::Run()
 {
+    m_applicationIsRunning = true;
     Managers::ResourceManager::AddTexture("../Engine/Resources/link.png", "LinkText");
     Managers::ResourceManager::AddTexture("../Engine/Resources/lambo_text.jpeg", "LamboText");
     Managers::ResourceManager::CreateMaterial("LinkMat", "defaultPS", "defaultVS", "LinkText");
@@ -66,7 +67,7 @@ int App::Run()
 
     float fixedUpdateTimer = 0.0f;
     Systems::PhysicsSystem::FixedUpdate();
-    while (true)
+    while (m_applicationIsRunning)
     {
         Tools::Time::Start();
         if (const auto eCode = Rendering::Window::ProcessMessage())
@@ -105,7 +106,6 @@ int App::Run()
             fixedUpdateTimer = 0.0f;
         }
 
-        TestingSimulation();
         DoFrame(deltaTime);
         EndFrame();
         Tools::Time::Stop();
@@ -221,7 +221,7 @@ void App::InitEditor()
 
 void App::TestingSimulation()
 {
-    if (_INPUT->keyboard.IsKeyDown('P') && !RunBullet)
+    if (!RunBullet)
     {
         // if (!Managers::SceneManager::GetPlayScene())
         // InitScene(true);
@@ -242,7 +242,7 @@ void App::TestingSimulation()
         // Managers::SceneManager::SetPlayScene(activeScene);
         RunBullet = true;
     }
-    else if (_INPUT->keyboard.IsKeyDown('O') && RunBullet)
+    else if (RunBullet)
     {
         auto active = Managers::SceneManager::GetActiveScene();
         Managers::SceneManager::SetActiveScene(Managers::SceneManager::GetPlayScene());

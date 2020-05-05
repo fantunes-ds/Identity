@@ -10,6 +10,7 @@ namespace Engine::UI
         Dockspace() = delete;
         ~Dockspace() = delete;
 
-        API_ENGINE static void CreateDockspace();
+        API_ENGINE static void CreateDockspace(Core::App& p_appRef);
+        static void CreateMenuBar(Core::App& p_appRef);
     };
 }

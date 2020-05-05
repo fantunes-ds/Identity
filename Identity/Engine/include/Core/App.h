@@ -24,6 +24,8 @@ namespace Engine::Core
 
         int Run();
         void Init();
+        void TestingSimulation();
+        void SetIsApplicationRunning(bool p_state) { m_applicationIsRunning = p_state; }
     private:
         void StartFrame() const;
         void DoFrame(float p_deltaTime) const;
@@ -31,7 +33,6 @@ namespace Engine::Core
 
         //testing
         void InitEditor();
-        void TestingSimulation();
         bool RunBullet{ false };
         //-------
 

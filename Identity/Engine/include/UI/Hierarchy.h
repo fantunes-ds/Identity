@@ -4,6 +4,8 @@
 
 #include <Export.h>
 
+#include "Core/App.h"
+
 namespace Engine::UI
 {
     class Hierarchy
@@ -12,7 +14,7 @@ namespace Engine::UI
         Hierarchy() = delete;
         ~Hierarchy() = delete;
 
-        API_ENGINE static void CreateHierarchy();
+        API_ENGINE static void CreateHierarchy(Core::App& p_appRef);
         static std::shared_ptr<Scene::SceneNode> DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child, int& p_i);
     };
 }

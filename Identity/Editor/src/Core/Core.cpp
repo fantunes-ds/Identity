@@ -48,7 +48,8 @@ int Editor::Core::Core::Update()
 
 void Editor::Core::Core::EditorBase()
 {
-    Engine::UI::Dockspace::CreateDockspace();
-    Engine::UI::Hierarchy::CreateHierarchy();
+    //todo should we keep reference to app ?
+    Engine::UI::Dockspace::CreateDockspace(m_engine);
+    Engine::UI::Hierarchy::CreateHierarchy(m_engine);
 }
 
