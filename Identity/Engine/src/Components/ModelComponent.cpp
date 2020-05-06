@@ -34,6 +34,10 @@ void Engine::Components::ModelComponent::Serialize(std::ostream& p_stream)
         "   }\n}\n";
 }
 
+void Engine::Components::ModelComponent::Deserialize(std::vector<std::string>& p_block)
+{
+}
+
 bool Engine::Components::ModelComponent::operator==(IComponent* p_other)
 {
     if (ModelComponent* other = dynamic_cast<ModelComponent*>(p_other))

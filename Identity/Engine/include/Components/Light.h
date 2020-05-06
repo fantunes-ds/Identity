@@ -19,7 +19,7 @@ namespace Engine::Components
         bool DeleteFromMemory() override;
         void SetActive(bool p_active) override { m_isActive = p_active; }
         void Serialize(std::ostream& p_stream) override;
-        void Deserialize(std::istream& p_stream);
+        void Deserialize(std::vector<std::string>& p_block) override;
 
     private:
         int32_t m_light;

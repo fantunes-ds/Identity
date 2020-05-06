@@ -32,6 +32,11 @@ void Engine::Components::Light::Serialize(std::ostream& p_stream)
     Containers::LightContainer::FindLight(m_light)->Serialize(p_stream);
 }
 
-void Engine::Components::Light::Deserialize(std::istream& p_stream)
+void Engine::Components::Light::Deserialize(std::vector<std::string>& p_block)
 {
+    Rendering::Lights::DirectionalLight light;
+
+    light.Deserialize(p_block);
+
+    Containers::LightContainer::AddLight(&light);
 }

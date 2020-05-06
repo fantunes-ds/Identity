@@ -221,7 +221,7 @@ void Engine::Core::App::InitEditor()
     Managers::SceneManager::AddScene(scene);
     Managers::SceneManager::SetActiveScene(scene);
 
-    auto link  = std::make_shared<Objects::GameObject>("link");
+    /*auto link  = std::make_shared<Objects::GameObject>("link");
     auto lambo = std::make_shared<Objects::GameObject>("lambo");
     auto light = std::make_shared<Objects::GameObject>("light");
 
@@ -281,15 +281,16 @@ void Engine::Core::App::InitEditor()
     light->AddComponent<Components::Light>(dirLight);
     scene->AddGameObject(light);
 
-    //-----Serialize test
-    std::ofstream outfile("SerializeTest.txt");
+    //-----Save test
+    
 
-    scene->Serialize(outfile);
+    scene->Save();*/
 
-    outfile.close();
 
-    std::ifstream inFile("SerializeTest.txt");
-    inFile.close();
+
+    //----Deserialize test
+
+    scene->Load("SerializeTest.txt");
     //-----------;
 }
 

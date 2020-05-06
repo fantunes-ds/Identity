@@ -1,8 +1,10 @@
 #include <stdafx.h>
-
+#include <fstream>
 #include <Objects/GameObject.h>
 #include <Scene/Scene.h>
 #include <Scene/SceneGraph/SceneNode.h>
+
+#include "Systems/TransformSystem.h"
 
 Engine::Scene::Scene::Scene(const std::string& p_name)
 {
@@ -53,10 +55,49 @@ void Engine::Scene::Scene::SetActiveOnAll(bool p_active)
     }
 }
 
-void Engine::Scene::Scene::Serialize(std::ostream& p_stream)
+void Engine::Scene::Scene::Save()
 {
+    std::ofstream outfile("SerializeTest.txt");
+
     for (auto& node: m_sceneGraph.GetAllSceneNodes())
     {
-        node.second->GetGameObject()->Serialize(p_stream);
+        node.second->GetGameObject()->Serialize(outfile);
     }
+
+    outfile.close();
+}
+
+void Engine::Scene::Scene::Load(const std::string& p_sceneName)
+{
+    std::ifstream inFile(p_sceneName);
+
+    std::vector <std::string> block;
+    std::vector <std::string> lines;
+    auto instance = Systems::TransformSystem::GetInstance();
+    for (std::string line; std::getline(inFile, line); )
+    {
+        lines.push_back(line);
+    }
+
+    for (int i = 0; i < lines.size(); ++i)
+    {
+
+        if (lines[i] == "GAMEOBJECT")
+        {
+            auto go = std::make_shared<Objects::GameObject>();
+
+            while (lines[i] != ";")
+            {
+                block.push_back(lines[i]);
+                ++i;
+            }
+
+            //send stream of block
+            go->Deserialize(block);
+            m_sceneGraph.AddGameObjectToScene(go);
+            block.clear();
+        }
+    }
+
+    inFile.close();
 }

@@ -46,7 +46,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     m_offset = p_other->m_offset;
     m_box = p_other->m_box;
 
-    btTransform trans;
+    /*btTransform trans;
     auto& position = m_gameObject->GetTransform()->GetPosition();
     auto& rotation = m_gameObject->GetTransform()->GetRotation();
     auto& scale = m_gameObject->GetTransform()->GetScale();
@@ -61,7 +61,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     m_motionState = new btDefaultMotionState(trans);
 
     btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
-    m_rigidbody = new btRigidBody(rbInfo);
+    m_rigidbody = new btRigidBody(rbInfo);*/
 
     ObjectElements::Model model = ConstructBox();
     //TODO add a "AddModel" that take a model as parametre
@@ -87,6 +87,40 @@ void Engine::Components::BoxCollider::Serialize(std::ostream& p_stream)
         "   m_box " << m_box->getHalfExtentsWithoutMargin().getX() << " " << m_box->getHalfExtentsWithoutMargin().getY() << " " << m_box->getHalfExtentsWithoutMargin().getZ() << "\n" <<
         "   m_model " << m_model->GetID() << "\n" <<
         "}\n";
+}
+
+void Engine::Components::BoxCollider::Deserialize(std::vector<std::string>& p_block)
+{
+    std::vector<std::string> words;
+
+    for (int i = 0; i < p_block.size(); ++i)
+    {
+        std::stringstream stringStream(p_block[i]);
+
+        do
+        {
+            std::string word;
+            stringStream >> word;
+            words.push_back(word);
+        } while (stringStream);
+
+        if (words[0] == "m_mass")
+        {
+            m_mass = std::stof(words[1]);
+        }
+        else if (words[0] == "m_offset")
+        {
+            m_offset.x = std::stof(words[1]);
+            m_offset.y = std::stof(words[2]);
+            m_offset.z = std::stof(words[3]);
+        }
+        else if (words[0] == "m_box")
+        {
+            m_box = new btBoxShape(btVector3(std::stof(words[1]), std::stof(words[2]), std::stof(words[3])));
+        }
+
+        words.clear();
+    }
 }
 
 Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const

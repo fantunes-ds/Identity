@@ -49,16 +49,20 @@ bool Engine::Components::Transform::DeleteFromMemory()
 void Engine::Components::Transform::Serialize(std::ostream& p_stream)
 {
     p_stream << typeid(*this).name() << " " << std::to_string(m_id) << "\n{\n" <<
-        "       m_parent " << m_parent << "\n" <<
-        "       m_position " << m_position << "\n" <<
-        "       m_forward " << m_forward << "\n" <<
-        "       m_right " << m_right << "\n" <<
-        "       m_up " << m_up << "\n" <<
-        "       m_scale " << m_scale << "\n" <<
-        "       m_rotation " << m_rotation << "\n" <<
-        "       m_worldTransform " << m_worldTransform << "\n" <<
-        "       m_localTransform " << m_localTransform << "\n" <<
+        "   m_parent " << m_parent << "\n" <<
+        "   m_position " << m_position << "\n" <<
+        "   m_forward " << m_forward << "\n" <<
+        "   m_right " << m_right << "\n" <<
+        "   m_up " << m_up << "\n" <<
+        "   m_scale " << m_scale << "\n" <<
+        "   m_rotation " << m_rotation << "\n" <<
+        "   m_worldTransform " << m_worldTransform << "\n" <<
+        "   m_localTransform " << m_localTransform << "\n" <<
         "}\n";
+}
+
+void Engine::Components::Transform::Deserialize(std::vector<std::string>& p_block)
+{
 }
 
 void Engine::Components::Transform::SetActive(bool p_active)

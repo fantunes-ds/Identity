@@ -15,6 +15,7 @@ namespace Engine::Components
         virtual ~ModelComponent() = default;
 
         void Serialize(std::ostream& p_stream) override;
+        void Deserialize(std::vector<std::string>& p_block) override;
 
         bool operator==(IComponent* p_other) override;
 

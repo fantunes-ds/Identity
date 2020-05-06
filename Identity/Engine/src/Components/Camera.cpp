@@ -61,6 +61,10 @@ void Engine::Components::Camera::Serialize(std::ostream& p_stream)
         "}\n";
 }
 
+void Engine::Components::Camera::Deserialize(std::vector<std::string>& p_block)
+{
+}
+
 void Engine::Components::Camera::UpdateVectors()
 {
     const Quaternion pitch = Quaternion(Vector3F(1.0f, 0.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_pitch));

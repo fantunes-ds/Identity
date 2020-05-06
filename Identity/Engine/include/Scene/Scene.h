@@ -30,7 +30,8 @@ namespace Engine::Scene
         SceneGraph& GetSceneGraph() { return m_sceneGraph; }
         std::list<std::shared_ptr<Objects::GameObject>> GetAllGameObjectsInScene();
         void SetActiveOnAll(bool p_active);
-        void Serialize(std::ostream& p_stream);
+        void Save();
+        void Load(const std::string& p_sceneName);
 
     private:
         SceneGraph m_sceneGraph;

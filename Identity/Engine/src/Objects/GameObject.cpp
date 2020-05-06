@@ -9,14 +9,19 @@
 #include <Systems/TransformSystem.h>
 #include <Scene/Scene.h>
 
+#include <Components/BoxCollider.h>
+
+#include <Components/Light.h>
+
 using namespace Engine::Objects;
 
 GameObject::GameObject()
 {
     m_transform = Systems::TransformSystem::AddTransform(std::make_shared<Components::Transform>());
+    Systems::TransformSystem::FindTransform(m_transform)->SetGameObject(this);
     Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
     auto trm = Systems::TransformSystem::GetTransform(m_transform);
-    Containers::ComponentContainer::AddComponent(trm.get());
+    //Containers::ComponentContainer::AddComponent(trm.get());
 }
 
 GameObject::GameObject(const std::string& p_name)
@@ -43,13 +48,83 @@ void GameObject::DeleteFromMemory()
 
 void GameObject::Serialize(std::ostream& p_stream)
 {
-    p_stream << "\nGAMEOBJECT " << m_name << " " << m_id << "\n";
+    p_stream << "\nGAMEOBJECT\n" << m_name << " " << m_id << "\n" <<
+        "m_isActive " << m_isActive << "\n" <<
+        "m_transform " << m_transform << "\n" <<
+        "m_rootNode " << m_rootNode->GetID() << "\n";
+
+    GetTransform()->Serialize(p_stream);
+
     for (auto component: GetAllComponents())
     {
         Containers::ComponentContainer::FindComponent(component)->Serialize(p_stream);
     }
 
-    GetTransform()->Serialize(p_stream);
+    p_stream << ";\n";
+}
+
+void GameObject::Deserialize(std::vector<std::string>& p_strings)
+{
+    std::vector<std::string> words;
+    std::vector<std::string> componentBlock;
+
+    for (int i = 0; i < p_strings.size(); ++i)
+    {
+        std::stringstream stringStream(p_strings[i]);
+
+        do
+        {
+            std::string word;
+            stringStream >> word;
+            words.push_back(word);
+        } while (stringStream);
+
+        if (i == 1)
+        {
+            m_name = words[0];
+            m_id = std::stoi(words[1]);
+        }
+        else if (words[0] == "m_isActive")
+        {
+            m_isActive = std::stoi(words[1]);
+        }
+        else if (words[0] == "m_transform")
+        {
+            //m_transform = std::stoi(words[1]);
+        }
+        else if (words[0] == "m_rootNode")
+        {
+            //TODO
+        }
+        else if (words[0] == "class")
+        {
+            while (p_strings[i] != "}")
+            {
+                componentBlock.push_back(p_strings[i]);
+                ++i;
+            }
+
+            if (words[1] == "Engine::Components::Transform")
+            {
+            }
+            else if (words[1] == "Engine::Components::BoxCollider")
+            {
+                int id = AddComponent<Components::BoxCollider>();
+                Containers::ComponentContainer::FindComponent(id)->Deserialize(componentBlock);
+            }
+            else if (words[1] == "Engine::Rendering::Lights::DirectionalLight")
+            {
+                /* 
+                int32_t id = AddComponent<Components::Light>();
+                Containers::LightContainer::FindLight(id)->Deserialize(componentBlock);
+                */
+            }
+
+            componentBlock.clear();
+        }
+
+        words.clear();
+    }
 }
 
 std::shared_ptr<Engine::Components::Transform> GameObject::GetTransform() const

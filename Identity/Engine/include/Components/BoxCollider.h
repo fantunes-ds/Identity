@@ -20,6 +20,7 @@ namespace Engine::Components
         ~BoxCollider();
 
         void Serialize(std::ostream& p_stream) override;
+        void Deserialize(std::vector<std::string>& p_block) override;
         /***
          * @brief returns Bullet Physics' Matrix that concerns this BoxCollider.
          */
