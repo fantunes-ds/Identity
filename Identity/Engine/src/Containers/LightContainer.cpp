@@ -2,6 +2,7 @@
 
 #include <Containers/LightContainer.h>
 #include <Rendering/Lights/DirectionalLight.h>
+#include <Components/Light.h>
 
 Engine::Containers::LightContainer::~LightContainer()
 {
@@ -18,7 +19,7 @@ Engine::Containers::LightContainer* Engine::Containers::LightContainer::GetInsta
     return m_instance;
 }
 
-int32_t Engine::Containers::LightContainer::AddLight(Rendering::Lights::ILight* p_light)
+int32_t Engine::Containers::LightContainer::AddLight(Components::Light p_light)
 {
     /*for (auto& light : GetInstance()->m_lights)
     {

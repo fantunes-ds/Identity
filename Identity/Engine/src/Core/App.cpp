@@ -266,7 +266,7 @@ void Engine::Core::App::InitEditor()
     light->GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
     light->GetTransform()->Scale(Vector3F{0.01f, 0.01f, 0.01f});
 
-    Rendering::Lights::DirectionalLight::LightData dirLight
+    Rendering::Lights::ILight::LightData dirLight
     {
         Vector4F(light->GetTransform()->GetPosition().x * -1, light->GetTransform()->GetPosition().y,
                  light->GetTransform()->GetPosition().z * -1, 1.0f),

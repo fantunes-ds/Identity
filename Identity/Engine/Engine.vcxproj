@@ -239,7 +239,6 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Containers\EventContainer.h" />
     <ClInclude Include="include\Containers\GameObjectContainer.h" />
     <ClInclude Include="include\Containers\IContainer.h" />
-    <ClInclude Include="include\Containers\LightContainer.h" />
     <ClInclude Include="include\Containers\MaterialContainer.h" />
     <ClInclude Include="include\Components\Transform.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
@@ -307,7 +306,6 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Systems\PhysicsSystem.cpp" />
     <ClCompile Include="src\Managers\ResourceManager.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
-    <ClCompile Include="src\Containers\LightContainer.cpp" />
     <ClCompile Include="src\Containers\MaterialContainer.cpp" />
     <ClCompile Include="src\Managers\SceneManager.cpp" />
     <ClCompile Include="src\Objects\IObject.cpp" />

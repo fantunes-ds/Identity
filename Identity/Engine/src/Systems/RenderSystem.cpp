@@ -4,7 +4,6 @@
 #include <Tools/ImGUI/imgui.h>
 
 #include <Components/BoxCollider.h>
-#include <Containers/LightContainer.h>
 #include <Input/Input.h>
 #include <Managers/ResourceManager.h>
 #include <Managers/SceneManager.h>
@@ -16,6 +15,7 @@
 #include <Systems/TransformSystem.h>
 #include <Systems/CameraSystem.h>
 #include <Systems/PhysicsSystem.h>
+#include "Systems/LightSystem.h"
 
 
 #define DEBUG_MODE false
@@ -30,16 +30,21 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
     HRESULT hr;
     Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    std::shared_ptr<Rendering::Lights::ILight>           ILight = Containers::LightContainer::GetLights().begin()->second;
-    std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::
-        DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
+    // std::shared_ptr<Rendering::Lights::ILight>           ILight = Containers::LightContainer::GetLights().begin()->second;
+    // std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::
+    //     DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
+    
+    auto light1 = Systems::LightSystem::GetAllLights().begin()->second;
+    auto lightType = light1->GetLight();
+    Rendering::Lights::ILight::LightData& light = lightType->GetLightData();
 
-    Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
+
+    // Rendering::Lights::DirectionalLight::LightData& light = light1->GetLight->GetLightData();
 
     auto camera = Systems::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
 
     float* pos[3] = {&light.position.x, &light.position.y, &light.position.z};
-
+    
     //TODO: Light will be moved soon
     if (ImGui::Begin("Lighting Tool"))
     {
@@ -154,9 +159,8 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
 {
     auto                                                 camera = CameraSystem::GetCamera(GetInstance()->m_activeCamera);
     auto                                                 mesh   = p_sceneNode->GetMesh();
-    std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = 
-        std::dynamic_pointer_cast<Rendering::Lights::DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
-    Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
+    auto light1 = Systems::LightSystem::GetAllLights().begin()->second;
+    Rendering::Lights::ILight::LightData& light = light1->GetLight()->GetLightData();
 
     if (mesh != nullptr)
     {
