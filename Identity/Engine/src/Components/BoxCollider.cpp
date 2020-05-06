@@ -15,7 +15,6 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
     btTransform trans;
     auto&       position = m_gameObject->GetTransform()->GetPosition();
     auto&       rotation = m_gameObject->GetTransform()->GetRotation();
-    auto&       scale    = m_gameObject->GetTransform()->GetScale();
 
     trans.setIdentity();
 
@@ -49,8 +48,20 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     btTransform trans;
     auto&       position = m_gameObject->GetTransform()->GetPosition();
     auto&       rotation = m_gameObject->GetTransform()->GetRotation();
-    auto&       scale    = m_gameObject->GetTransform()->GetScale();
 
+    Vector3D offsetD = m_offset;
+    Quaternion q;
+    q.SetXAxisValue(offsetD.x);
+    q.SetYAxisValue(offsetD.y);
+    q.SetZAxisValue(offsetD.z);
+    q.w = 0;
+
+    q = rotation.Multiply(q).Multiply(Quaternion::Conjugate(rotation));
+
+    offsetD = { q.GetXAxisValue(), q.GetYAxisValue(), q.GetZAxisValue() };
+    Vector3D offset = offsetD;
+
+    position -= offset;
 
     trans.setIdentity();
     trans.setOrigin(btVector3(position.x, position.y, position.z));

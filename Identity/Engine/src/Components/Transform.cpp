@@ -33,7 +33,8 @@ void Engine::Components::Transform::CopyFrom(std::shared_ptr<Transform> p_other)
     m_scale    = p_other->m_scale;
     m_rotation = p_other->m_rotation;
 
-    needUpdate = true;
+    // needUpdate = true;
+    // needAxesUpdate = true;
 }
 
 bool Engine::Components::Transform::operator==(IComponent* p_other)
