@@ -1,8 +1,11 @@
 #include <stdafx.h>
-#include <Managers/ResourceManager.h>
+
 #include <3DLoader/ObjectLoader.h>
+#include <Managers/ResourceManager.h>
 #include <Rendering/Renderer.h>
 #include <Scene/SceneGraph/SceneGraph.h>
+
+using namespace Engine::Rendering::Materials;
 
 std::unique_ptr<Engine::Managers::ResourceManager>& Engine::Managers::ResourceManager::GetInstance()
 {
@@ -42,74 +45,63 @@ bool Engine::Managers::ResourceManager::RemoveModel(const int32_t p_id)
     return GetInstance()->RemoveModelNS(p_id);
 }
 
-std::shared_ptr<Engine::Rendering::Materials::Texture> Engine::Managers::ResourceManager::AddTexture(
-    const std::string& p_path, const std::string& p_name)
+std::shared_ptr<Texture> Engine::Managers::ResourceManager::AddTexture(const std::string& p_path, const std::string& p_name)
 {
     return GetInstance()->AddTextureNS(p_path, p_name);
 }
 
-std::shared_ptr<Engine::Rendering::Materials::Texture> Engine::Managers::ResourceManager::GetTexture(
-    const std::string& p_name)
+std::shared_ptr<Texture> Engine::Managers::ResourceManager::GetTexture(const std::string& p_name)
 {
     return GetInstance()->GetTextureNS(p_name);
 }
 
-std::vector<std::shared_ptr<Engine::Rendering::Materials::Texture>> Engine::Managers::ResourceManager::GetAllTextures()
+std::vector<std::shared_ptr<Texture>> Engine::Managers::ResourceManager::GetAllTextures()
 {
     return GetInstance()->GetAllTexturesNS();
 }
 
-std::shared_ptr<Engine::Rendering::Materials::PixelShader> Engine::Managers::ResourceManager::AddPixelShader(
-    const std::string& p_path, const std::string& p_name)
+std::shared_ptr<PixelShader> Engine::Managers::ResourceManager::AddPixelShader(const std::string& p_path, const std::string& p_name)
 {
     return GetInstance()->AddPixelShaderNS(p_path, p_name);
 }
 
-std::shared_ptr<Engine::Rendering::Materials::PixelShader> Engine::Managers::ResourceManager::GetPixelShader(
-    const std::string& p_name)
+std::shared_ptr<PixelShader> Engine::Managers::ResourceManager::GetPixelShader(const std::string& p_name)
 {
     return GetInstance()->GetPixelShaderNS(p_name);
 }
 
-std::vector<std::shared_ptr<Engine::Rendering::Materials::PixelShader>> Engine::Managers::ResourceManager::
-GetAllPixelShaders()
+std::vector<std::shared_ptr<PixelShader>> Engine::Managers::ResourceManager::GetAllPixelShaders()
 {
     return GetInstance()->GetAllPixelShadersNS();
 }
 
-std::shared_ptr<Engine::Rendering::Materials::VertexShader> Engine::Managers::ResourceManager::AddVertexShader(
-    const std::string& p_path, const std::string& p_name)
+std::shared_ptr<VertexShader> Engine::Managers::ResourceManager::AddVertexShader(const std::string& p_path, const std::string& p_name)
 {
     return GetInstance()->AddVertexShaderNS(p_path, p_name);
 }
 
-std::shared_ptr<Engine::Rendering::Materials::VertexShader> Engine::Managers::ResourceManager::GetVertexShader(
-    const std::string& p_name)
+std::shared_ptr<VertexShader> Engine::Managers::ResourceManager::GetVertexShader(const std::string& p_name)
 {
     return GetInstance()->GetVertexShaderNS(p_name);
 }
 
-std::vector<std::shared_ptr<Engine::Rendering::Materials::VertexShader>> Engine::Managers::ResourceManager::
-GetAllVertexShaders()
+std::vector<std::shared_ptr<VertexShader>> Engine::Managers::ResourceManager::GetAllVertexShaders()
 {
     return GetInstance()->GetAllVertexShadersNS();
 }
 
-std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Managers::ResourceManager::CreateMaterial(
-    const std::string& p_name, const std::string& p_pixelShaderName, const std::string& p_vertexShaderName,
-    const std::string& p_textureName)
+std::shared_ptr<Material> Engine::Managers::ResourceManager::CreateMaterial(const std::string& p_name, const std::string& p_pixelShaderName,
+                                                          const std::string& p_vertexShaderName, const std::string& p_textureName)
 {
     return GetInstance()->CreateMaterialNS(p_name, p_pixelShaderName, p_vertexShaderName, p_textureName);
 }
 
-std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Managers::ResourceManager::GetMaterial(
-    const std::string& p_name)
+std::shared_ptr<Material> Engine::Managers::ResourceManager::GetMaterial(const std::string& p_name)
 {
     return GetInstance()->GetMaterialNS(p_name);
 }
 
-std::vector<std::shared_ptr<Engine::Rendering::Materials::Material>> Engine::Managers::ResourceManager::
-GetAllMaterials()
+std::vector<std::shared_ptr<Material>> Engine::Managers::ResourceManager::GetAllMaterials()
 {
     return GetInstance()->GetAllMaterialsNS();
 }
@@ -145,9 +137,8 @@ const int32_t Engine::Managers::ResourceManager::AddModelNS(const std::string& p
 
     if (model == nullptr)
     {
-        const std::string
-            error("ResourceManager::AddModel(const std::string& p_path, const std::string& p_name): Could not load model at "
-                + p_path + " because there was no object to be found at that path");
+        const std::string error{ "ResourceManager::AddModel(const std::string& p_path, const std::string& p_name): Could not load model at "
+                                + p_path + " because there was no object to be found at that path" };
         MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
         return -1;
     }
@@ -198,7 +189,7 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager
 
 std::vector<std::shared_ptr<Engine::ObjectElements::Model>> Engine::Managers::ResourceManager::GetAllModelsNS()
 {
-    std::vector<std::shared_ptr<Engine::ObjectElements::Model>> tmpVec;
+    std::vector<std::shared_ptr<ObjectElements::Model>> tmpVec;
 
     for (auto model : m_models)
     {
@@ -220,8 +211,7 @@ bool Engine::Managers::ResourceManager::RemoveModelNS(const int32_t p_id)
     return true;
 }
 
-std::shared_ptr<Engine::Rendering::Materials::Texture> Engine::Managers::ResourceManager::AddTextureNS(
-    const std::string& p_path, const std::string& p_name)
+std::shared_ptr<Texture> Engine::Managers::ResourceManager::AddTextureNS(const std::string& p_path, const std::string& p_name)
 {
     for (auto texture : m_textures)
     {
@@ -240,13 +230,13 @@ std::shared_ptr<Engine::Rendering::Materials::Texture> Engine::Managers::Resourc
         }
     }
 
-    std::shared_ptr<Rendering::Materials::Texture> texture = Rendering::Materials::Texture::LoadTexture(p_path, p_name);
+    std::shared_ptr<Texture> texture = Texture::LoadTexture(p_path, p_name);
 
     if (texture == nullptr)
     {
         const std::string
-            error("ResourceManager::AddTexture(const std::string& p_path, const std::string& p_name): Could not load texture at "
-                + p_path + " because there was no object to be found at that path");
+                error("ResourceManager::AddTexture(const std::string& p_path, const std::string& p_name): Could not load texture at "
+                      + p_path + " because there was no object to be found at that path");
         MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
         return nullptr;
     }
@@ -259,8 +249,7 @@ std::shared_ptr<Engine::Rendering::Materials::Texture> Engine::Managers::Resourc
     return texture;
 }
 
-std::shared_ptr<Engine::Rendering::Materials::Texture> Engine::Managers::ResourceManager::GetTextureNS(
-    const std::string& p_name)
+std::shared_ptr<Texture> Engine::Managers::ResourceManager::GetTextureNS(const std::string& p_name)
 {
     for (auto texture : m_textures)
     {
@@ -273,14 +262,12 @@ std::shared_ptr<Engine::Rendering::Materials::Texture> Engine::Managers::Resourc
     return nullptr;
 }
 
-std::vector<std::shared_ptr<Engine::Rendering::Materials::Texture>> Engine::Managers::ResourceManager::
-GetAllTexturesNS()
+std::vector<std::shared_ptr<Texture>> Engine::Managers::ResourceManager::GetAllTexturesNS()
 {
     return m_textures;
 }
 
-std::shared_ptr<Engine::Rendering::Materials::PixelShader> Engine::Managers::ResourceManager::AddPixelShaderNS(
-    const std::string& p_path, const std::string& p_name)
+std::shared_ptr<PixelShader> Engine::Managers::ResourceManager::AddPixelShaderNS(const std::string& p_path, const std::string& p_name)
 {
     for (auto pShader : m_pixelShaders)
     {
@@ -299,16 +286,14 @@ std::shared_ptr<Engine::Rendering::Materials::PixelShader> Engine::Managers::Res
         }
     }
 
-    std::shared_ptr<Rendering::Materials::PixelShader> pShader = Rendering::Materials::PixelShader::
-        LoadShader(p_path, p_name);
+    std::shared_ptr<PixelShader> pShader = PixelShader::LoadShader(p_path, p_name);
 
     pShader->GenerateConstantBuffer();
 
     if (pShader == nullptr)
     {
-        const std::string
-            error("ResourceManager::AddPixelShader(const std::string& p_path, const std::string& p_name): Could not load pixel shader at "
-                + p_path + " because there was no object to be found at that path");
+        const std::string error{ "ResourceManager::AddPixelShader(const std::string& p_path, const std::string& p_name): Could not load pixel shader at "
+                                + p_path + " because there was no object to be found at that path" };
         MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
         return nullptr;
     }
@@ -322,8 +307,7 @@ std::shared_ptr<Engine::Rendering::Materials::PixelShader> Engine::Managers::Res
 }
 
 
-std::shared_ptr<Engine::Rendering::Materials::PixelShader> Engine::Managers::ResourceManager::GetPixelShaderNS(
-    const std::string& p_name)
+std::shared_ptr<PixelShader> Engine::Managers::ResourceManager::GetPixelShaderNS(const std::string& p_name)
 {
     for (auto pShader : m_pixelShaders)
     {
@@ -336,43 +320,39 @@ std::shared_ptr<Engine::Rendering::Materials::PixelShader> Engine::Managers::Res
     return nullptr;
 }
 
-std::vector<std::shared_ptr<Engine::Rendering::Materials::PixelShader>> Engine::Managers::ResourceManager::
-GetAllPixelShadersNS()
+std::vector<std::shared_ptr<PixelShader>> Engine::Managers::ResourceManager::GetAllPixelShadersNS()
 {
     return m_pixelShaders;
 }
 
-std::shared_ptr<Engine::Rendering::Materials::VertexShader> Engine::Managers::ResourceManager::AddVertexShaderNS(
-    const std::string& p_path, const std::string& p_name)
+std::shared_ptr<VertexShader> Engine::Managers::ResourceManager::AddVertexShaderNS(const std::string& p_path, const std::string& p_name)
 {
     for (auto vShader : m_vertexShaders)
     {
         if (vShader->GetPath() == p_path)
         {
-            const std::string
-                info("The vertex shader located at " + p_path + " is already loaded and will be returned");
+            const std::string info{ "The vertex shader located at " + p_path + " is already loaded and will be returned" };
             MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
             return vShader;
         }
 
         if (vShader->GetName() == p_name)
         {
-            const std::string info("The name '" + p_name + "' is already in use, please change the name");
+            const std::string info{ "The name '" + p_name + "' is already in use, please change the name" };
             MessageBox(nullptr, info.c_str(), "Error", MB_ICONERROR | MB_OK);
             return nullptr;
         }
     }
 
-    std::shared_ptr<Rendering::Materials::VertexShader> vShader = Rendering::Materials::VertexShader::
-        LoadShader(p_path, p_name);
+    std::shared_ptr<VertexShader> vShader = VertexShader::LoadShader(p_path, p_name);
 
     vShader->GenerateConstantBuffer();
 
     if (vShader == nullptr)
     {
         const std::string
-            error("ResourceManager::AddVertexShader(const std::string& p_path, const std::string& p_name): Could not load vertex shader at "
-                + p_path + " because there was no object to be found at that path");
+                error("ResourceManager::AddVertexShader(const std::string& p_path, const std::string& p_name): Could not load vertex shader at "
+                      + p_path + " because there was no object to be found at that path");
         MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
         return nullptr;
     }
@@ -386,8 +366,7 @@ std::shared_ptr<Engine::Rendering::Materials::VertexShader> Engine::Managers::Re
 }
 
 
-std::shared_ptr<Engine::Rendering::Materials::VertexShader> Engine::Managers::ResourceManager::GetVertexShaderNS(
-    const std::string& p_name)
+std::shared_ptr<VertexShader> Engine::Managers::ResourceManager::GetVertexShaderNS(const std::string& p_name)
 {
     for (auto vShader : m_vertexShaders)
     {
@@ -400,15 +379,13 @@ std::shared_ptr<Engine::Rendering::Materials::VertexShader> Engine::Managers::Re
     return nullptr;
 }
 
-std::vector<std::shared_ptr<Engine::Rendering::Materials::VertexShader>> Engine::Managers::ResourceManager::
-GetAllVertexShadersNS()
+std::vector<std::shared_ptr<VertexShader>> Engine::Managers::ResourceManager::GetAllVertexShadersNS()
 {
     return m_vertexShaders;
 }
 
-std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Managers::ResourceManager::CreateMaterialNS(
-    const std::string& p_name, const std::string& p_pixelShaderName, const std::string& p_vertexShaderName,
-    const std::string& p_textureName)
+std::shared_ptr<Material> Engine::Managers::ResourceManager::CreateMaterialNS(const std::string& p_name, const std::string& p_pixelShaderName,
+                                                            const std::string& p_vertexShaderName, const std::string& p_textureName)
 {
     //TODO when serialization is complete: export the new material in a file
     for (auto material : m_materials)
@@ -442,11 +419,11 @@ std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Managers::Resour
         return nullptr;
     }
 
-    std::shared_ptr<Rendering::Materials::Material> material = Rendering::Materials::Material::CreateMaterial(GetPixelShaderNS(p_pixelShaderName), GetVertexShaderNS(p_vertexShaderName));
+    std::shared_ptr<Material> material = Material::CreateMaterial(GetPixelShaderNS(p_pixelShaderName), GetVertexShaderNS(p_vertexShaderName));
 
     if (material == nullptr)
     {
-        const std::string error("There was an error in the creation of the material");
+        const std::string error{ "There was an error in the creation of the material"};
         MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
         return nullptr;
     }
@@ -461,8 +438,7 @@ std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Managers::Resour
     return material;
 }
 
-std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Managers::ResourceManager::GetMaterialNS(
-    const std::string& p_name)
+std::shared_ptr<Material> Engine::Managers::ResourceManager::GetMaterialNS(const std::string& p_name)
 {
     for (auto material : m_materials)
     {
@@ -470,13 +446,12 @@ std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Managers::Resour
             return material;
     }
 
-    const std::string error("The material: " + p_name + " does not exist");
+    const std::string error{ "The material: " + p_name + " does not exist" };
     MessageBox(nullptr, error.c_str(), "Error", MB_ICONERROR | MB_OK);
     return nullptr;
 }
 
-std::vector<std::shared_ptr<Engine::Rendering::Materials::Material>> Engine::Managers::ResourceManager::
-GetAllMaterialsNS()
+std::vector<std::shared_ptr<Material>> Engine::Managers::ResourceManager::GetAllMaterialsNS()
 {
     return m_materials;
 }

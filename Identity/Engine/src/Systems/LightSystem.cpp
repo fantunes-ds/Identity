@@ -1,7 +1,10 @@
 #include <stdafx.h>
+
 #include <Systems/LightSystem.h>
 
-Engine::Systems::LightSystem* Engine::Systems::LightSystem::GetInstance()
+using namespace Engine::Systems;
+
+LightSystem* LightSystem::GetInstance()
 {
 	return nullptr;
 }

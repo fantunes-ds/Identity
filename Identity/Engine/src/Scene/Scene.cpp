@@ -1,8 +1,8 @@
 #include <stdafx.h>
+
+#include <Objects/GameObject.h>
 #include <Scene/Scene.h>
 #include <Scene/SceneGraph/SceneNode.h>
-#include <Objects/GameObject.h>
-
 
 Engine::Scene::Scene::Scene(const std::string& p_name)
 {

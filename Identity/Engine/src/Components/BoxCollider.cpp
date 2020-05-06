@@ -1,19 +1,20 @@
 #include <stdafx.h>
-#include <Components/BoxCollider.h>
+
 #include <LinearMath/btVector3.h>
 #include <BulletCollision/CollisionShapes/btBoxShape.h>
+
+#include <Components/BoxCollider.h>
 #include <Objects/GameObject.h>
 #include <Systems/PhysicsSystem.h>
 #include <Managers/ResourceManager.h>
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{ p_gameObject }
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameObject}
 {
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
     btTransform trans;
-    auto& position = m_gameObject->GetTransform()->GetPosition();
-    auto& rotation = m_gameObject->GetTransform()->GetRotation();
-    auto& scale = m_gameObject->GetTransform()->GetScale();
+    auto&       position = m_gameObject->GetTransform()->GetPosition();
+    auto&       rotation = m_gameObject->GetTransform()->GetRotation();
 
     trans.setIdentity();
 
@@ -30,25 +31,37 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
 
     //TODO add a "AddModel" that take a model as parametre
     const int32_t id = Managers::ResourceManager::AddModel(model);
-    m_model = Managers::ResourceManager::FindModel(id);
+    m_model          = Managers::ResourceManager::FindModel(id);
 
     Systems::PhysicsSystem::AddCollider(this);
 }
 
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{ p_gameObject }
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{p_gameObject}
 {
     //init data
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
-    m_mass = p_other->m_mass;
+    m_mass   = p_other->m_mass;
     m_offset = p_other->m_offset;
-    m_box = p_other->m_box;
+    m_box    = p_other->m_box;
 
     btTransform trans;
-    auto& position = m_gameObject->GetTransform()->GetPosition();
-    auto& rotation = m_gameObject->GetTransform()->GetRotation();
-    auto& scale = m_gameObject->GetTransform()->GetScale();
+    auto&       position = m_gameObject->GetTransform()->GetPosition();
+    auto&       rotation = m_gameObject->GetTransform()->GetRotation();
 
+    Vector3D offsetD = m_offset;
+    Quaternion q;
+    q.SetXAxisValue(offsetD.x);
+    q.SetYAxisValue(offsetD.y);
+    q.SetZAxisValue(offsetD.z);
+    q.w = 0;
+
+    q = rotation.Multiply(q).Multiply(Quaternion::Conjugate(rotation));
+
+    offsetD = { q.GetXAxisValue(), q.GetYAxisValue(), q.GetZAxisValue() };
+    Vector3D offset = offsetD;
+
+    position -= offset;
 
     trans.setIdentity();
     trans.setOrigin(btVector3(position.x, position.y, position.z));
@@ -64,7 +77,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     ObjectElements::Model model = ConstructBox();
     //TODO add a "AddModel" that take a model as parametre
     const int32_t id = Managers::ResourceManager::AddModel(model);
-    m_model = Managers::ResourceManager::FindModel(id);
+    m_model          = Managers::ResourceManager::FindModel(id);
 
     Systems::PhysicsSystem::AddCollider(this);
 }
@@ -77,9 +90,9 @@ Engine::Components::BoxCollider::~BoxCollider()
     delete m_motionState;*/
 }
 
-GPM::Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
+Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
 {
-    btScalar m[16];
+    btScalar    m[16];
     btTransform trans;
 
     m_motionState->getWorldTransform(trans);
@@ -147,7 +160,7 @@ void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimen
     ObjectElements::Model model = ConstructBox();
     Managers::ResourceManager::RemoveModel(m_model->GetID());
     const int32_t id = Managers::ResourceManager::AddModel(model);
-    m_model = Managers::ResourceManager::FindModel(id);
+    m_model          = Managers::ResourceManager::FindModel(id);
 }
 
 bool Engine::Components::BoxCollider::DeleteFromMemory()
@@ -175,21 +188,21 @@ void Engine::Components::BoxCollider::SetActive(bool p_active)
 
 Engine::ObjectElements::Model Engine::Components::BoxCollider::ConstructBox()
 {
-    btVector3 a;
-    btVector3 b;
+    btVector3   a;
+    btVector3   b;
     btTransform trans;
 
     m_motionState->getWorldTransform(trans);
     m_box->getAabb(trans, a, b);
 
     std::vector<Geometry::Vertex> vertices;
-    std::vector<unsigned short> indices;
+    std::vector<unsigned short>   indices;
 
     for (int i = 0; i < m_box->getNumVertices(); ++i)
     {
         btVector3 vertex;
         m_box->getVertex(i, vertex);
-        vertices.emplace_back(Geometry::Vertex{ GPM::Vector3F{vertex.getX(), vertex.getY(), vertex.getZ()}, GPM::Vector2F{}, GPM::Vector3F{} });
+        vertices.emplace_back(Geometry::Vertex{Vector3F{vertex.getX(), vertex.getY(), vertex.getZ()}, Vector2F{}, GPM::Vector3F{}});
     }
 
     //Back
@@ -255,4 +268,3 @@ Engine::ObjectElements::Model Engine::Components::BoxCollider::ConstructBox()
     model.AddMesh(mesh);
     return model;
 }
-

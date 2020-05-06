@@ -1,7 +1,8 @@
 #include <stdafx.h>
+
+#include <Objects/GameObject.h>
 #include <Scene/SceneGraph/SceneNode.h>
 #include <Systems/TransformSystem.h>
-#include <Objects/GameObject.h>
 
 Engine::Scene::SceneNode::SceneNode(std::shared_ptr<Objects::GameObject> p_gameObject) :
 	m_gameObject{ p_gameObject }
@@ -16,7 +17,7 @@ void Engine::Scene::SceneNode::AddChild(std::shared_ptr<SceneNode> p_child)
         return;
 	
     p_child->SetGameObject(std::make_shared<Objects::GameObject>());
-    p_child->SetTransform(Containers::TransformSystem::AddTransform());
+    p_child->SetTransform(Systems::TransformSystem::AddTransform());
 	
     m_children.push_back(p_child);
     p_child->m_parent = this;
@@ -47,11 +48,11 @@ void Engine::Scene::SceneNode::RemoveChild(std::shared_ptr<SceneNode> p_child)
 
 void Engine::Scene::SceneNode::Update(float p_deltaTime)
 {
-    auto transform = Containers::TransformSystem::FindTransform(m_transform);
+    auto transform = Systems::TransformSystem::FindTransform(m_transform);
 
     if (m_parent)
     {
-        auto parentTransform = Containers::TransformSystem::FindTransform(m_parent->GetTransform());
+        auto parentTransform = Systems::TransformSystem::FindTransform(m_parent->GetTransform());
         transform->SetWorldTransformMatrix(parentTransform->GetWorldTransformMatrix() * transform->GetLocalTransformMatrix());
     }
     else

@@ -1,4 +1,5 @@
 #include <stdafx.h>
+
 #include <Containers/LightContainer.h>
 #include <Rendering/Lights/DirectionalLight.h>
 

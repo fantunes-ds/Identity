@@ -1,12 +1,14 @@
 #include <stdafx.h>
-#include <Rendering/Renderer.h>
+
 #include <d3dcompiler.h>
+
+#include <3DLoader/ObjectLoader.h>
+#include <Managers/ResourceManager.h>
+#include <Rendering/Renderer.h>
 #include <Tools/DirectX/dxerr.h>
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
-#include <3DLoader/ObjectLoader.h>
 #include <Tools/DirectX/GraphicsMacros.h>
-#include "Managers/ResourceManager.h"
 
 using namespace Engine::Rendering;
 

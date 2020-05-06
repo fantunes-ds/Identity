@@ -1,23 +1,25 @@
 #include <stdafx.h>
-#include <Windows.h>
+
 #include <Components/Transform.h>
 #include <Systems/TransformSystem.h>
 
-Engine::Components::Transform::Transform(Objects::GameObject* p_gameObject) : IComponent{ p_gameObject },
-    m_position{ Vector3F::zero }, m_forward{ Vector3F::forward }, m_right{ Vector3F::right },
-    m_up{ Vector3F::up }, m_scale{ Vector3F::one }, m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} } {}
+Engine::Components::Transform::Transform(Objects::GameObject* p_gameObject) : IComponent{p_gameObject}, m_position{Vector3F::zero},
+m_forward{Vector3F::forward}, m_right{Vector3F::right}, m_up{Vector3F::up}, m_scale{Vector3F::one},
+m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} } {}
 
-Engine::Components::Transform::Transform(Objects::GameObject* p_gameObject, const Transform& p_other) : IComponent{ p_gameObject },
-    m_parent{ p_other.m_parent }, m_position{ p_other.m_position }, m_forward{ p_other.m_forward }, m_right{ p_other.m_right },
-    m_up{ p_other.m_up }, m_scale{ p_other.m_scale }, m_rotation{ p_other.m_rotation } {}
+Engine::Components::Transform::Transform(Objects::GameObject* p_gameObject, const Transform& p_other) : IComponent{p_gameObject},
+m_parent{p_other.m_parent}, m_position{p_other.m_position}, m_forward{p_other.m_forward}, m_right{p_other.m_right},
+m_up{p_other.m_up}, m_scale{p_other.m_scale}, m_rotation{ p_other.m_rotation } {}
+
 
 Engine::Components::Transform::Transform() : IComponent{nullptr},
-    m_position{ Vector3F::zero }, m_forward{ Vector3F::forward }, m_right{ Vector3F::right },
-    m_up{ Vector3F::up }, m_scale{ Vector3F::one }, m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} } {}
+                         m_position{Vector3F::zero}, m_forward{Vector3F::forward}, m_right{Vector3F::right},
+                         m_up{Vector3F::up}, m_scale{Vector3F::one}, m_rotation{Quaternion{0.0, 0.0, 0.0, 1.0}} {}
 
-Engine::Components::Transform::Transform(const std::string& p_name) : IComponent{ nullptr },
-    m_position{ Vector3F::zero }, m_forward{ Vector3F::forward }, m_right{ Vector3F::right },
-    m_up{ Vector3F::up }, m_scale{ Vector3F::one }, m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} }
+Engine::Components::Transform::Transform(const std::string& p_name) : IComponent{nullptr}, m_position{Vector3F::zero},
+                                                  m_forward{Vector3F::forward}, m_right{Vector3F::right},
+                                                  m_up{Vector3F::up}, m_scale{Vector3F::one},
+                                                  m_rotation{Quaternion{0.0, 0.0, 0.0, 1.0}}
 {
     SetName(p_name);
 }
@@ -25,13 +27,14 @@ Engine::Components::Transform::Transform(const std::string& p_name) : IComponent
 void Engine::Components::Transform::CopyFrom(std::shared_ptr<Transform> p_other)
 {
     m_position = p_other->m_position;
-    m_forward = p_other->m_forward;
-    m_right = p_other->m_right;
-    m_up = p_other->m_up;
-    m_scale = p_other->m_scale;
+    m_forward  = p_other->m_forward;
+    m_right    = p_other->m_right;
+    m_up       = p_other->m_up;
+    m_scale    = p_other->m_scale;
     m_rotation = p_other->m_rotation;
 
-    needUpdate = true;
+    // needUpdate = true;
+    // needAxesUpdate = true;
 }
 
 bool Engine::Components::Transform::operator==(IComponent* p_other)
@@ -64,7 +67,7 @@ void Engine::Components::Transform::RotateWithEulerAngles(const Vector3F& p_eule
     quat.MakeFromEuler(Vector3F{p_euler.x, p_euler.y, p_euler.z});
     m_rotation *= quat;
     needAxesUpdate = true;
-    needUpdate = true;
+    needUpdate     = true;
 }
 
 void Engine::Components::Transform::Scale(const Vector3F& p_scale)
@@ -76,8 +79,8 @@ void Engine::Components::Transform::Scale(const Vector3F& p_scale)
 void Engine::Components::Transform::UpdateWorldTransformMatrix()
 {
     m_worldTransform = Matrix4F::CreateTransformation(m_position,
-                                                          m_rotation,
-                                                          m_scale);
+                                                      m_rotation,
+                                                      m_scale);
     needUpdate = false;
 }
 
@@ -88,7 +91,7 @@ Vector3F Engine::Components::Transform::GetEuler() const
 
 std::shared_ptr<Engine::Components::Transform> Engine::Components::Transform::GetParent() const
 {
-    return Containers::TransformSystem::FindTransform(m_parent);
+    return Systems::TransformSystem::FindTransform(m_parent);
 }
 
 void Engine::Components::Transform::CalculateAxes()
@@ -101,12 +104,12 @@ void Engine::Components::Transform::CalculateAxes()
     Vector3F vec3r = quatr.GetRotationAxis();
     Vector3F vec3u = quatu.GetRotationAxis();
 
-    m_forward = Vector3F{ -vec3f.x,-vec3f.y, vec3f.z };
-    m_right = Vector3F{ vec3r.x,vec3r.y, vec3r.z };
-    m_up = Vector3F{ vec3u.x,vec3u.y, -vec3u.z };
+    m_forward = Vector3F{-vec3f.x, -vec3f.y, vec3f.z};
+    m_right   = Vector3F{vec3r.x, vec3r.y, vec3r.z};
+    m_up      = Vector3F{vec3u.x, vec3u.y, -vec3u.z};
 
     m_right = Vector3F::Cross(m_up, m_forward);
-    m_up = Vector3F::Cross(m_right, m_forward);
+    m_up    = Vector3F::Cross(m_right, m_forward);
 
     needAxesUpdate = false;
 }

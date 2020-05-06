@@ -28,6 +28,8 @@ namespace Editor::Core
          */
         int Update();
 
+        void EditorBase();
+
         Engine::Core::App m_engine{1920, 1080, "Identity Engine", true};
     };
 }

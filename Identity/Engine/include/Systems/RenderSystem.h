@@ -1,12 +1,7 @@
 #pragma once
 #include <Export.h>
 #include <Systems/ISystem.h>
-#include <3DLoader/ObjectElements/Model.h>
-#include <Rendering/Renderer.h>
-#include <Rendering/Lights/DirectionalLight.h>
-#include "Events/Event.h"
-#include "Rendering/Materials/Texture.h"
-#include "Scene/SceneGraph/SceneGraph.h"
+#include <Scene/SceneGraph/SceneGraph.h>
 
 namespace Engine::Systems
 {

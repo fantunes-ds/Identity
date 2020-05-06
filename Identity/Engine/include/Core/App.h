@@ -4,11 +4,8 @@
 
 #include <Tools/ImGUI/ImGUIManager.h>
 
-namespace Engine {
-    namespace Systems {
-        class RenderSystem;
-    }
-}
+#include <Scene/SceneGraph/SceneNode.h>
+#include <Systems/RenderSystem.h>
 
 namespace Engine::Core
 {
@@ -26,7 +23,8 @@ namespace Engine::Core
         App& operator=(const App&) = delete;
 
         int Run();
-
+        std::shared_ptr<Engine::Scene::SceneNode> DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child, int& p_i);
+        void Init();
     private:
         void StartFrame() const;
         void DoFrame(float p_deltaTime) const;

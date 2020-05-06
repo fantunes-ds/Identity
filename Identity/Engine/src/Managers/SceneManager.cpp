@@ -1,8 +1,14 @@
 #include <stdafx.h>
+
 #include <windows.h>
+
+#include <Components/BoxCollider.h>
 #include <Managers/SceneManager.h>
 #include <Scene/Scene.h>
-#include "Components/BoxCollider.h"
+
+
+#include <Systems/TransformSystem.h>
+#include "Systems/PhysicsSystem.h"
 
 std::unique_ptr<Engine::Managers::SceneManager>& Engine::Managers::SceneManager::GetInstance()
 {
@@ -71,8 +77,10 @@ void Engine::Managers::SceneManager::SetPlayScene(const std::string& p_name)
         }
     }
 
-    const std::string info("SceneManager::SetPlayScene(const std::string& p_name): Could not set active scene to " +
-                           p_name + " because a scene with this name could not be found\n");
+    const std::string info{
+        "SceneManager::SetPlayScene(const std::string& p_name): Could not set active scene to " +
+        p_name + " because a scene with this name could not be found\n"
+    };
     MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
 }
 
@@ -87,8 +95,8 @@ void Engine::Managers::SceneManager::SetPlayScene(const int32_t p_id)
         }
     }
 
-    const std::string info("SceneManager::SetPlayScene(const int32_t p_id): Could not set active scene to " + std::
-                           to_string(p_id) + " because a scene with this name could not be found\n");
+    const std::string info{ "SceneManager::SetPlayScene(const int32_t p_id): Could not set active scene to " + std::
+                           to_string(p_id) + " because a scene with this name could not be found\n" };
     MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
 }
 
@@ -98,13 +106,12 @@ bool Engine::Managers::SceneManager::DeletePlayScene()
 }
 
 
-void Engine::Managers::SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene>& p_destination,
-                                                    std::shared_ptr<Scene::Scene>& p_source)
+void Engine::Managers::SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene>& p_destination, std::shared_ptr<Scene::Scene>& p_source)
 {
     for (auto gameObject : p_source->GetAllGameObjectsInScene())
     {
         //create new gameobject
-        auto name = gameObject->GetName() + "1";
+        auto name   = gameObject->GetName() + "1";
         auto tmpOBJ = std::make_shared<Objects::GameObject>(name);
         //we now have gameobject with same name
 
@@ -121,7 +128,6 @@ void Engine::Managers::SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene
         {
             tmpOBJ->AddComponent<Components::ModelComponent>(component);
         }
-
         p_destination->AddGameObject(tmpOBJ);
     }
 }

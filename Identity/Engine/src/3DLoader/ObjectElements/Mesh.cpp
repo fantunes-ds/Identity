@@ -1,23 +1,26 @@
 #include <stdafx.h>
 
-#include <3DLoader/ObjectElements/Mesh.h>
 #include <Tools/DirectX/GraphicsMacros.h>
+
+#include <3DLoader/ObjectElements/Mesh.h>
+#include <Managers/ResourceManager.h>
 #include <Systems/TransformSystem.h>
-#include "Managers/ResourceManager.h"
 
 Engine::ObjectElements::Mesh::Mesh(std::vector<Engine::Geometry::Vertex>& p_vertices, std::vector<unsigned short>& p_indices) :
-    m_vertices { p_vertices }, m_indices { p_indices }
+    m_vertices{p_vertices}, m_indices{p_indices}
 {
-    m_transform = Containers::TransformSystem::AddTransform();
+    m_transform = Systems::TransformSystem::AddTransform();
 }
 
 Engine::ObjectElements::Mesh::Mesh(const Mesh& p_other):
-    m_vertices{ p_other.m_vertices }, m_indices{ p_other.m_indices }, m_transform{ p_other.m_transform } {}
+    m_vertices{p_other.m_vertices}, m_indices{p_other.m_indices}, m_transform{p_other.m_transform}
+{
+}
 
 void Engine::ObjectElements::Mesh::GenerateBuffers(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device)
 {
     // if (m_material < 0)
-        // SetMaterial(Containers::MaterialContainer::FindMaterial("missing"));
+    // SetMaterial(Containers::MaterialContainer::FindMaterial("missing"));
     if (m_material == nullptr)
         SetMaterial(Managers::ResourceManager::GetMaterial("default"));
 

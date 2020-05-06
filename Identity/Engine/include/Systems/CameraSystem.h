@@ -5,7 +5,7 @@
 #include <Components/Camera.h>
 #include <Containers/EventContainer.h>
 
-namespace Engine::Containers
+namespace Engine::Systems
 {
     class API_ENGINE CameraSystem : Systems::ISystem
     {

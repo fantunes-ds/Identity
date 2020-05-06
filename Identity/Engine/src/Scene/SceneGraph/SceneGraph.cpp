@@ -1,7 +1,8 @@
 #include <stdafx.h>
-#include <Scene/SceneGraph/SceneGraph.h>
-#include <Objects/GameObject.h>
+
 #include <Managers/ResourceManager.h>
+#include <Objects/GameObject.h>
+#include <Scene/SceneGraph/SceneGraph.h>
 
 void Engine::Scene::SceneGraph::AddRootSceneNode(std::shared_ptr<SceneNode> p_sceneNode)
 {
@@ -16,9 +17,9 @@ void Engine::Scene::SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::Ga
 
     if (p_gameObject->FindComponentOfType<Components::ModelComponent>())
     {
-        int modelID = p_gameObject->FindComponentOfType<Components::ModelComponent>()->GetModel();
-        auto model = Managers::ResourceManager::FindModel(modelID);
-    	
+        int  modelID = p_gameObject->FindComponentOfType<Components::ModelComponent>()->GetModel();
+        auto model   = Managers::ResourceManager::FindModel(modelID);
+
         for (auto& mesh : model->GetMeshes())
         {
             ++submeshNumber;
@@ -27,7 +28,7 @@ void Engine::Scene::SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::Ga
             child->SetName(rootNode->GetGameObject()->GetName() + "(" + std::to_string(submeshNumber) + ")");
         }
     }
-	
+
     rootNode->SetTransform(p_gameObject->GetTransformID());
     AddRootSceneNode(rootNode);
     p_gameObject->SetSceneNode(rootNode);
@@ -62,7 +63,7 @@ void Engine::Scene::SceneGraph::UpdateScene(float p_deltaTime)
 
 std::map<int32_t, std::shared_ptr<Engine::Scene::SceneNode>> Engine::Scene::SceneGraph::GetAllSceneNodes()
 {
-    std::map<int32_t, std::shared_ptr<Engine::Scene::SceneNode>> map;
+    std::map<int32_t, std::shared_ptr<SceneNode>> map;
 
     //TODO: check childrens' children
     for (auto& node : m_rootSceneNodes)
@@ -72,4 +73,3 @@ std::map<int32_t, std::shared_ptr<Engine::Scene::SceneNode>> Engine::Scene::Scen
 
     return map;
 }
-

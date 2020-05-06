@@ -1,9 +1,12 @@
 #include <Core/Core.h>
 #include <Tools/IdentityException.h>
 
+
+#include <Containers/EventContainer.h>
+#include <UI/Dockspace.h>
+
 Editor::Core::Core::Core()
 {
-    
 }
 
 Editor::Core::Core::~Core()
@@ -22,6 +25,8 @@ int Editor::Core::Core::Update()
 {
     try
     {
+        m_engine.Init();
+        Engine::Containers::EventContainer::GetEvent("OnGUI").AddListener(this, &Core::EditorBase);
         return m_engine.Run();
     }
     catch (const Engine::Tools::IdentityException& e)
@@ -39,5 +44,10 @@ int Editor::Core::Core::Update()
 
 
     return 0;
+}
+
+void Editor::Core::Core::EditorBase()
+{
+    Engine::UI::Dockspace::CreateDockspace();
 }
 
