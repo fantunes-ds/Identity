@@ -23,6 +23,7 @@
 #include <Systems/CameraSystem.h>
 #include <Systems/TransformSystem.h>
 #include <Systems/PhysicsSystem.h>
+#include <Systems/LightSystem.h>
 
 Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
@@ -99,6 +100,7 @@ int Engine::Core::App::Run()
         //Systems
         Systems::PhysicsSystem::Update(deltaTime);
         Systems::TransformSystem::Update(deltaTime);
+        Systems::LightSystem::Update(deltaTime);
         Systems::CameraSystem::Update(deltaTime);
 
         fixedUpdateTimer += deltaTime;

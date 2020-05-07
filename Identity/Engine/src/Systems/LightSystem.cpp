@@ -43,6 +43,14 @@ void Engine::Systems::LightSystem::Update(const float p_deltaTime, bool p_isEdit
 void Engine::Systems::LightSystem::IUpdate(const float p_deltaTime, bool p_isEditor)
 {
     //TODO complete this
+
+    //make the light position change when GO position is changed
+
+    for (auto light : GetLights())
+    {
+        light->GetLight()->GetLightData().position = Vector4F(light->GetGameObject()->GetTransform()->GetPosition());
+        std::cout << "thist";
+    }
 }
 
 std::shared_ptr<Engine::Components::Light> Engine::Systems::LightSystem::GetLight(int32_t p_id)

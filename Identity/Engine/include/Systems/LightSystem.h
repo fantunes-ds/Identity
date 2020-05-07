@@ -25,7 +25,7 @@ namespace Engine::Systems
         int32_t AddLightNS(std::shared_ptr<Components::Light> p_light);
         static bool    RemoveLight(int32_t p_id);
 
-        static void Update(const float p_deltaTime, bool p_isEditor);
+        static void Update(const float p_deltaTime, bool p_isEditor = false);
         void        IUpdate(const float p_deltaTime, bool p_isEditor = false) override;
 
         static std::shared_ptr<Components::Light> GetLight(int32_t p_id);
