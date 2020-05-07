@@ -2,6 +2,12 @@
 #include <Export.h>
 #include <Rendering/Lights/ILight.h>
 
+namespace Engine {
+    namespace Components {
+        class Light;
+    }
+}
+
 namespace Engine::Containers
 {
     class API_ENGINE LightContainer
@@ -17,7 +23,7 @@ namespace Engine::Containers
         /**
          * @brief NON_FUNCTIONAL: Decomment code once ILight class is functional.
          */
-        static int32_t AddLight(Rendering::Lights::ILight* p_light);
+        static int32_t AddLight(Components::Light p_light);
         static std::map<int32_t, std::shared_ptr<Rendering::Lights::ILight>>& GetLights() { return GetInstance()->m_lights; }
 
     private:

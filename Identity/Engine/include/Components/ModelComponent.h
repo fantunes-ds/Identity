@@ -1,7 +1,7 @@
 #pragma once
 #include <Export.h>
 #include <Components/IComponent.h>
-#include "3DLoader/ObjectElements/Model.h"
+#include <Managers/ResourceManager.h>
 
 namespace Engine::Components
 {
@@ -19,10 +19,14 @@ namespace Engine::Components
         inline void SetModel(int32_t p_id) { m_model = p_id; }
         inline int32_t GetModel() const { return m_model; }
 
+        inline void SetMaterial(const std::string& p_name) { m_material = Managers::ResourceManager::GetMaterial(p_name); }
+        inline std::shared_ptr<Rendering::Materials::Material> GetMaterial() const { return m_material; }
+
         bool DeleteFromMemory() override;
         void SetActive(bool p_active) override { m_isActive = p_active; }
 
     private:
         int32_t m_model;
+        std::shared_ptr<Rendering::Materials::Material> m_material;
     };
 }

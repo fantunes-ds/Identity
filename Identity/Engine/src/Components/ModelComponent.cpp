@@ -6,6 +6,7 @@
 Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const int32_t p_id): IComponent{p_gameObject}
 {
     m_model = p_id;
+    m_material = Managers::ResourceManager::GetMaterial("default");
 }
 
 
@@ -13,17 +14,20 @@ Engine::Components::ModelComponent::ModelComponent(Objects::GameObject*         
                                std::shared_ptr<ModelComponent> p_other) : IComponent{p_gameObject}
 {
     m_model = p_other->m_model;
+    m_material = p_other->m_material;
 }
 
 Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name): IComponent{p_gameObject}
 {
     m_model = Managers::ResourceManager::GetModel(p_name);
+    m_material = Managers::ResourceManager::GetMaterial("default");
 }
 
 Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file,
                                const std::string& p_name): IComponent{p_gameObject}
 {
     m_model = Managers::ResourceManager::AddModel(p_file, p_name);
+    m_material = Managers::ResourceManager::GetMaterial("default");
 }
 
 bool Engine::Components::ModelComponent::operator==(IComponent* p_other)

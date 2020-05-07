@@ -23,6 +23,7 @@
 #include <Systems/CameraSystem.h>
 #include <Systems/TransformSystem.h>
 #include <Systems/PhysicsSystem.h>
+#include <Systems/LightSystem.h>
 
 Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
@@ -99,12 +100,13 @@ int Engine::Core::App::Run()
         //Systems
         Systems::PhysicsSystem::Update(deltaTime);
         Systems::TransformSystem::Update(deltaTime);
+        Systems::LightSystem::Update(deltaTime);
         Systems::CameraSystem::Update(deltaTime);
 
         fixedUpdateTimer += deltaTime;
         //todo this should never go below 0
         //update could be at 0.01f
-        if (fixedUpdateTimer >= 0.01f || fixedUpdateTimer < 0)
+        if (fixedUpdateTimer >= 0.01f)// || fixedUpdateTimer < 0)
         {
             if (RunBullet)
                 Systems::PhysicsSystem::FixedUpdate();
@@ -236,10 +238,7 @@ void Engine::Core::App::InitEditor()
     link->FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
 
     link->AddComponent<Components::ModelComponent>("Link");
-    for (auto& mesh : link->GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
-    }
+    link->FindComponentOfType<Components::ModelComponent>()->SetMaterial("LinkMat");
     scene->AddGameObject(link);
     //----------
 
@@ -255,10 +254,7 @@ void Engine::Core::App::InitEditor()
     lambo->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
 
     lambo->AddComponent<Components::ModelComponent>("Lambo");
-    for (auto& mesh : lambo->GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
-    }
+    lambo->FindComponentOfType<Components::ModelComponent>()->SetMaterial("LamboMat");
     scene->AddGameObject(lambo);
     //-----------
 
@@ -266,7 +262,7 @@ void Engine::Core::App::InitEditor()
     light->GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
     light->GetTransform()->Scale(Vector3F{0.01f, 0.01f, 0.01f});
 
-    Rendering::Lights::DirectionalLight::LightData dirLight
+    Rendering::Lights::ILight::LightData dirLight
     {
         Vector4F(light->GetTransform()->GetPosition().x * -1, light->GetTransform()->GetPosition().y,
                  light->GetTransform()->GetPosition().z * -1, 1.0f),

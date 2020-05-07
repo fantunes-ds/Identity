@@ -1,9 +1,8 @@
 #pragma once
 #include <Export.h>
 #include <Components/IComponent.h>
+#include <Objects/GameObject.h>
 #include <Rendering/Lights/ILight.h>
-#include <Containers/LightContainer.h>
-#include <Rendering/Lights/DirectionalLight.h>
 
 namespace Engine::Components
 {
@@ -11,15 +10,15 @@ namespace Engine::Components
     {
     public:
         Light(Objects::GameObject* p_gameObject);
-        Light(Objects::GameObject* p_gameObject, Rendering::Lights::DirectionalLight::LightData& p_lightData);
+        Light(Objects::GameObject* p_gameObject, Rendering::Lights::ILight::LightData& p_lightData);
 
-        [[nodiscard]] std::shared_ptr<Rendering::Lights::ILight> GetLight() const { return nullptr; }
+        [[nodiscard]] std::shared_ptr<Rendering::Lights::ILight> GetLight() const { return m_light; }
 
         bool operator==(IComponent* p_other) override;
         bool DeleteFromMemory() override;
         void SetActive(bool p_active) override { m_isActive = p_active; }
 
     private:
-        int32_t m_light;
+        std::shared_ptr<Rendering::Lights::ILight> m_light;
     };
 }
