@@ -4,7 +4,6 @@
 #include <Tools/ImGUI/imgui.h>
 
 #include <Components/BoxCollider.h>
-#include <Containers/LightContainer.h>
 #include <Input/Input.h>
 #include <Managers/ResourceManager.h>
 #include <Managers/SceneManager.h>
@@ -16,32 +15,36 @@
 #include <Systems/TransformSystem.h>
 #include <Systems/CameraSystem.h>
 #include <Systems/PhysicsSystem.h>
+#include "Systems/LightSystem.h"
 
 
 #define DEBUG_MODE true
 
-using namespace Engine::Systems;
-
-RenderSystem::~RenderSystem()
+Engine::Systems::RenderSystem::~RenderSystem()
 {
     delete m_instance;
 }
 
-void RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
+void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
 {
     HRESULT hr;
     Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    std::shared_ptr<Rendering::Lights::ILight>           ILight = Containers::LightContainer::GetLights().begin()->second;
-    std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::
-        DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
+    // std::shared_ptr<Rendering::Lights::ILight>           ILight = Containers::LightContainer::GetLights().begin()->second;
+    // std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::
+    //     DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
+    
+    auto light1 = Systems::LightSystem::GetAllLights().begin()->second;
+    auto lightType = light1->GetLight();
+    Rendering::Lights::ILight::LightData& light = lightType->GetLightData();
 
-    Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
+
+    // Rendering::Lights::DirectionalLight::LightData& light = light1->GetLight->GetLightData();
 
     auto camera = Systems::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
 
     float* pos[3] = {&light.position.x, &light.position.y, &light.position.z};
-
+    
     //TODO: Light will be moved soon
     if (ImGui::Begin("Lighting Tool"))
     {
@@ -152,13 +155,25 @@ void RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
     }
 }
 
-void RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
+void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
 {
     auto                                                 camera = CameraSystem::GetCamera(GetInstance()->m_activeCamera);
     auto                                                 mesh   = p_sceneNode->GetMesh();
-    std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = 
-        std::dynamic_pointer_cast<Rendering::Lights::DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
-    Rendering::Lights::DirectionalLight::LightData& light = light1->GetLightData();
+    auto light1 = Systems::LightSystem::GetAllLights().begin()->second;
+    Rendering::Lights::ILight::LightData& light = light1->GetLight()->GetLightData();
+
+    if (p_sceneNode->IsRoot())
+    {
+        auto mat = p_sceneNode->GetGameObject()->FindComponentOfType<Components::ModelComponent>()->GetMaterial();
+        if (mat != nullptr)
+        {
+            for (auto child : p_sceneNode->GetAllChildren())
+            {
+                child->GetMesh()->SetMaterial(mat);
+            }
+        }
+    }
+
 
     if (mesh != nullptr)
     {
@@ -204,23 +219,23 @@ void RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
     }
 }
 
-void RenderSystem::IUpdate(float p_deltaTime, bool p_isEditor)
+void Engine::Systems::RenderSystem::IUpdate(float p_deltaTime, bool p_isEditor)
 {
     Managers::SceneManager::GetActiveScene()->GetSceneGraph().UpdateScene(p_deltaTime);
     DrawScene(p_deltaTime, p_isEditor);
 }
 
-void RenderSystem::ResetActiveCamera()
+void Engine::Systems::RenderSystem::ResetActiveCamera()
 {
     GetInstance()->m_activeCamera = -1;
 }
 
-void RenderSystem::SetActiveCamera(int32_t p_id)
+void Engine::Systems::RenderSystem::SetActiveCamera(int32_t p_id)
 {
     GetInstance()->m_activeCamera = p_id;
 }
 
-RenderSystem* RenderSystem::GetInstance()
+Engine::Systems::RenderSystem* Engine::Systems::RenderSystem::GetInstance()
 {
     if (m_instance == nullptr)
     {

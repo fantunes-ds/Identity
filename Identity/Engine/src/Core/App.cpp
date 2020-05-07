@@ -23,29 +23,28 @@
 #include <Systems/CameraSystem.h>
 #include <Systems/TransformSystem.h>
 #include <Systems/PhysicsSystem.h>
+#include <Systems/LightSystem.h>
 
-using namespace Engine::Core;
-
-App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
+Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
     btVector3 vec(0.0f, 0.0f, 0.0f);
 
     Input::Input::InitInput();
 }
 
-App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) : m_window(p_width, p_height, p_name),
+Engine::Core::App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) : m_window(p_width, p_height, p_name),
                                                                                  m_width(p_width), m_height(p_height),
                                                                                  m_isEditor(p_isEditor)
 {
     Input::Input::InitInput();
 }
 
-void App::Init()
+void Engine::Core::App::Init()
 {
     Containers::EventContainer::AddEvent("OnGUI");
 }
 
-int App::Run()
+int Engine::Core::App::Run()
 {
     m_applicationIsRunning = true;
     Managers::ResourceManager::AddTexture("../Engine/Resources/link.png", "LinkText");
@@ -94,12 +93,13 @@ int App::Run()
         //Systems
         Systems::PhysicsSystem::Update(deltaTime);
         Systems::TransformSystem::Update(deltaTime);
+        Systems::LightSystem::Update(deltaTime);
         Systems::CameraSystem::Update(deltaTime);
 
         fixedUpdateTimer += deltaTime;
         //todo this should never go below 0
         //update could be at 0.01f
-        if (fixedUpdateTimer >= 0.01f || fixedUpdateTimer < 0)
+        if (fixedUpdateTimer >= 0.01f)// || fixedUpdateTimer < 0)
         {
             if (RunBullet)
                 Systems::PhysicsSystem::FixedUpdate();
@@ -112,14 +112,14 @@ int App::Run()
     }
 }
 
-void App::StartFrame() const
+void Engine::Core::App::StartFrame() const
 {
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 }
 
-void App::DoFrame(float p_deltaTime) const
+void Engine::Core::App::DoFrame(float p_deltaTime) const
 {
     Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
 
@@ -129,7 +129,7 @@ void App::DoFrame(float p_deltaTime) const
     Systems::RenderSystem::GetInstance()->IUpdate(p_deltaTime, m_isEditor);
 }
 
-void App::EndFrame() const
+void Engine::Core::App::EndFrame() const
 {
     ImGuiIO& io = ImGui::GetIO();
     (void)io;
@@ -150,7 +150,7 @@ void App::EndFrame() const
     Rendering::Renderer::GetInstance()->EndFrame();
 }
 
-void App::InitEditor()
+void Engine::Core::App::InitEditor()
 {
     auto scene = std::make_shared<Scene::Scene>();
     scene->SetName("scene1");
@@ -173,10 +173,7 @@ void App::InitEditor()
     link->FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
 
     link->AddComponent<Components::ModelComponent>("Link");
-    for (auto& mesh : link->GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
-    }
+    link->FindComponentOfType<Components::ModelComponent>()->SetMaterial("LinkMat");
     scene->AddGameObject(link);
     //----------
 
@@ -192,10 +189,7 @@ void App::InitEditor()
     lambo->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
 
     lambo->AddComponent<Components::ModelComponent>("Lambo");
-    for (auto& mesh : lambo->GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
-    }
+    lambo->FindComponentOfType<Components::ModelComponent>()->SetMaterial("LamboMat");
     scene->AddGameObject(lambo);
     //-----------
 
@@ -203,7 +197,7 @@ void App::InitEditor()
     light->GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
     light->GetTransform()->Scale(Vector3F{0.01f, 0.01f, 0.01f});
 
-    Rendering::Lights::DirectionalLight::LightData dirLight
+    Rendering::Lights::ILight::LightData dirLight
     {
         Vector4F(light->GetTransform()->GetPosition().x * -1, light->GetTransform()->GetPosition().y,
                  light->GetTransform()->GetPosition().z * -1, 1.0f),
@@ -219,7 +213,7 @@ void App::InitEditor()
     //-----------
 }
 
-void App::TestingSimulation()
+void Engine::Core::App::TestingSimulation()
 {
     if (!RunBullet)
     {

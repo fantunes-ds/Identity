@@ -22,12 +22,11 @@ namespace Engine::Containers
 
             //TODO: Possible memory leak here
             T* newComp = new T(p_gameObject, p_args...);
-            // T* newCompEditor = new T(p_gameObject, p_args...);
 
             if (dynamic_cast<Components::IComponent*>(newComp)->GetID() >= 0)
                 id = ComponentContainer::AddComponent(newComp);
-            // if (dynamic_cast<Components::IComponent*>(newComp)->GetID() >= 0)
-                // ComponentContainer::AddComponentEditor(newCompEditor);
+            else
+                delete newComp;
 
             return id;
         }

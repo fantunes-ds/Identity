@@ -99,17 +99,21 @@ void Hierarchy::CallInspector(int32_t p_id)
         //for (auto component : gameObject->GetAllComponents())
         auto transform = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject()->GetTransform();
 
-
-        if (ImGui::CollapsingHeader("Transform"))
+        Quaternion& rotationQuaternion = transform->GetRotation();
+        Vector3F rotationEuler = { static_cast<float>(rotationQuaternion.ToEuler().x), static_cast<float>(rotationQuaternion.ToEuler().y), static_cast<float>(rotationQuaternion.ToEuler().z) };
+        if (ImGui::CollapsingHeader("Transform"), ImGuiTreeNodeFlags_DefaultOpen)
         {
             float* pos[3] = { &transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z };
-            float rot[3] = { transform->GetRotation().ToEuler().x, transform->GetRotation().ToEuler().y, transform->GetRotation().ToEuler().z };
+            float* rot[3] = { &rotationEuler.x, &rotationEuler.y, &rotationEuler.z };
             float* scale[3] = { &transform->GetScale().x, &transform->GetScale().y, &transform->GetScale().z };
-            ImGui::DragFloat3("Position", *pos, 0.1f, -1000.0f,1000.0f, "%.3f");
-            ImGui::DragFloat3("Rotation", rot, 0.1f);
+            ImGui::DragFloat3("Position", *pos, 0.1f, -1000.0f, 1000.0f, "%.3f");
+            ImGui::DragFloat3("Rotation", *rot, 0.1f);
             ImGui::DragFloat3("Scale", *scale, 0.1f);
         }
-            transform->needUpdate = true;
+        rotationQuaternion.MakeFromEuler(rotationEuler);
+        //transform->SetRotation(rot);
+        transform->needUpdate = true;
+
         for (auto component : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject()->GetAllComponents())
         {
 
@@ -120,7 +124,7 @@ void Hierarchy::CallInspector(int32_t p_id)
             {
                 std::shared_ptr<Components::ModelComponent> t = std::dynamic_pointer_cast<Components::ModelComponent>(Icomponent);
                 
-                if (ImGui::CollapsingHeader("Model Component"))
+                if (ImGui::CollapsingHeader("Model Component"), ImGuiTreeNodeFlags_DefaultOpen)
                 {
                     ImGui::Text("%s", Managers::ResourceManager::FindModel(t->GetModel())->GetName().c_str());
                 }

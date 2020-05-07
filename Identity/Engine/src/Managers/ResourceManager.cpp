@@ -5,10 +5,9 @@
 #include <Rendering/Renderer.h>
 #include <Scene/SceneGraph/SceneGraph.h>
 
-using namespace Engine::Managers;
 using namespace Engine::Rendering::Materials;
 
-std::unique_ptr<ResourceManager>& ResourceManager::GetInstance()
+std::unique_ptr<Engine::Managers::ResourceManager>& Engine::Managers::ResourceManager::GetInstance()
 {
     if (m_instance == nullptr)
         m_instance = std::make_unique<ResourceManager>();
@@ -16,98 +15,98 @@ std::unique_ptr<ResourceManager>& ResourceManager::GetInstance()
     return m_instance;
 }
 
-const int32_t ResourceManager::AddModel(const std::string& p_path, const std::string& p_name)
+const int32_t Engine::Managers::ResourceManager::AddModel(const std::string& p_path, const std::string& p_name)
 {
     return GetInstance()->AddModelNS(p_path, p_name);
 }
 
-const int32_t ResourceManager::AddModel(const ObjectElements::Model& p_model)
+const int32_t Engine::Managers::ResourceManager::AddModel(const ObjectElements::Model& p_model)
 {
     return GetInstance()->AddModelNS(p_model);
 }
 
-const int32_t ResourceManager::GetModel(const std::string& p_name)
+const int32_t Engine::Managers::ResourceManager::GetModel(const std::string& p_name)
 {
     return GetInstance()->GetModelNS(p_name);
 }
 
-std::shared_ptr<Engine::ObjectElements::Model> ResourceManager::FindModel(const int32_t p_id)
+std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager::FindModel(const int32_t p_id)
 {
     return GetInstance()->FindModelNS(p_id);
 }
 
-std::vector<std::shared_ptr<Engine::ObjectElements::Model>> ResourceManager::GetAllModels()
+std::vector<std::shared_ptr<Engine::ObjectElements::Model>> Engine::Managers::ResourceManager::GetAllModels()
 {
     return GetInstance()->GetAllModelsNS();
 }
 
-bool ResourceManager::RemoveModel(const int32_t p_id)
+bool Engine::Managers::ResourceManager::RemoveModel(const int32_t p_id)
 {
     return GetInstance()->RemoveModelNS(p_id);
 }
 
-std::shared_ptr<Texture> ResourceManager::AddTexture(const std::string& p_path, const std::string& p_name)
+std::shared_ptr<Texture> Engine::Managers::ResourceManager::AddTexture(const std::string& p_path, const std::string& p_name)
 {
     return GetInstance()->AddTextureNS(p_path, p_name);
 }
 
-std::shared_ptr<Texture> ResourceManager::GetTexture(const std::string& p_name)
+std::shared_ptr<Texture> Engine::Managers::ResourceManager::GetTexture(const std::string& p_name)
 {
     return GetInstance()->GetTextureNS(p_name);
 }
 
-std::vector<std::shared_ptr<Texture>> ResourceManager::GetAllTextures()
+std::vector<std::shared_ptr<Texture>> Engine::Managers::ResourceManager::GetAllTextures()
 {
     return GetInstance()->GetAllTexturesNS();
 }
 
-std::shared_ptr<PixelShader> ResourceManager::AddPixelShader(const std::string& p_path, const std::string& p_name)
+std::shared_ptr<PixelShader> Engine::Managers::ResourceManager::AddPixelShader(const std::string& p_path, const std::string& p_name)
 {
     return GetInstance()->AddPixelShaderNS(p_path, p_name);
 }
 
-std::shared_ptr<PixelShader> ResourceManager::GetPixelShader(const std::string& p_name)
+std::shared_ptr<PixelShader> Engine::Managers::ResourceManager::GetPixelShader(const std::string& p_name)
 {
     return GetInstance()->GetPixelShaderNS(p_name);
 }
 
-std::vector<std::shared_ptr<PixelShader>> ResourceManager::GetAllPixelShaders()
+std::vector<std::shared_ptr<PixelShader>> Engine::Managers::ResourceManager::GetAllPixelShaders()
 {
     return GetInstance()->GetAllPixelShadersNS();
 }
 
-std::shared_ptr<VertexShader> ResourceManager::AddVertexShader(const std::string& p_path, const std::string& p_name)
+std::shared_ptr<VertexShader> Engine::Managers::ResourceManager::AddVertexShader(const std::string& p_path, const std::string& p_name)
 {
     return GetInstance()->AddVertexShaderNS(p_path, p_name);
 }
 
-std::shared_ptr<VertexShader> ResourceManager::GetVertexShader(const std::string& p_name)
+std::shared_ptr<VertexShader> Engine::Managers::ResourceManager::GetVertexShader(const std::string& p_name)
 {
     return GetInstance()->GetVertexShaderNS(p_name);
 }
 
-std::vector<std::shared_ptr<VertexShader>> ResourceManager::GetAllVertexShaders()
+std::vector<std::shared_ptr<VertexShader>> Engine::Managers::ResourceManager::GetAllVertexShaders()
 {
     return GetInstance()->GetAllVertexShadersNS();
 }
 
-std::shared_ptr<Material> ResourceManager::CreateMaterial(const std::string& p_name, const std::string& p_pixelShaderName,
+std::shared_ptr<Material> Engine::Managers::ResourceManager::CreateMaterial(const std::string& p_name, const std::string& p_pixelShaderName,
                                                           const std::string& p_vertexShaderName, const std::string& p_textureName)
 {
     return GetInstance()->CreateMaterialNS(p_name, p_pixelShaderName, p_vertexShaderName, p_textureName);
 }
 
-std::shared_ptr<Material> ResourceManager::GetMaterial(const std::string& p_name)
+std::shared_ptr<Material> Engine::Managers::ResourceManager::GetMaterial(const std::string& p_name)
 {
     return GetInstance()->GetMaterialNS(p_name);
 }
 
-std::vector<std::shared_ptr<Material>> ResourceManager::GetAllMaterials()
+std::vector<std::shared_ptr<Material>> Engine::Managers::ResourceManager::GetAllMaterials()
 {
     return GetInstance()->GetAllMaterialsNS();
 }
 
-ResourceManager::ResourceManager()
+Engine::Managers::ResourceManager::ResourceManager()
 {
     AddPixelShaderNS("../Engine/Resources/Shaders/PixelShader.cso", "defaultPS");
     AddVertexShaderNS("../Engine/Resources/Shaders/VertexShader.cso", "defaultVS");
@@ -115,7 +114,7 @@ ResourceManager::ResourceManager()
     CreateMaterialNS("RenderText", "defaultPS", "defaultVS");
 }
 
-const int32_t ResourceManager::AddModelNS(const std::string& p_path, const std::string& p_name)
+const int32_t Engine::Managers::ResourceManager::AddModelNS(const std::string& p_path, const std::string& p_name)
 {
     for (auto model : m_models)
     {
@@ -155,14 +154,14 @@ const int32_t ResourceManager::AddModelNS(const std::string& p_path, const std::
     return model->GetID();
 }
 
-const int32_t ResourceManager::AddModelNS(const ObjectElements::Model& p_model)
+const int32_t Engine::Managers::ResourceManager::AddModelNS(const ObjectElements::Model& p_model)
 {
     auto model = std::make_shared<ObjectElements::Model>(p_model);
     GetInstance()->m_models.insert_or_assign(p_model.GetID(), model);
     return model->GetID();
 }
 
-const int32_t ResourceManager::GetModelNS(const std::string& p_name)
+const int32_t Engine::Managers::ResourceManager::GetModelNS(const std::string& p_name)
 {
     for (auto model : m_models)
     {
@@ -175,7 +174,7 @@ const int32_t ResourceManager::GetModelNS(const std::string& p_name)
     return -1;
 }
 
-std::shared_ptr<Engine::ObjectElements::Model> ResourceManager::FindModelNS(const int32_t p_id)
+std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager::FindModelNS(const int32_t p_id)
 {
     for (auto model : m_models)
     {
@@ -188,7 +187,7 @@ std::shared_ptr<Engine::ObjectElements::Model> ResourceManager::FindModelNS(cons
     return nullptr;
 }
 
-std::vector<std::shared_ptr<Engine::ObjectElements::Model>> ResourceManager::GetAllModelsNS()
+std::vector<std::shared_ptr<Engine::ObjectElements::Model>> Engine::Managers::ResourceManager::GetAllModelsNS()
 {
     std::vector<std::shared_ptr<ObjectElements::Model>> tmpVec;
 
@@ -200,7 +199,7 @@ std::vector<std::shared_ptr<Engine::ObjectElements::Model>> ResourceManager::Get
     return tmpVec;
 }
 
-bool ResourceManager::RemoveModelNS(const int32_t p_id)
+bool Engine::Managers::ResourceManager::RemoveModelNS(const int32_t p_id)
 {
     const size_t sizeBefore = GetInstance()->m_models.size();
     GetInstance()->m_models.erase(p_id);
@@ -212,7 +211,7 @@ bool ResourceManager::RemoveModelNS(const int32_t p_id)
     return true;
 }
 
-std::shared_ptr<Texture> ResourceManager::AddTextureNS(const std::string& p_path, const std::string& p_name)
+std::shared_ptr<Texture> Engine::Managers::ResourceManager::AddTextureNS(const std::string& p_path, const std::string& p_name)
 {
     for (auto texture : m_textures)
     {
@@ -250,7 +249,7 @@ std::shared_ptr<Texture> ResourceManager::AddTextureNS(const std::string& p_path
     return texture;
 }
 
-std::shared_ptr<Texture> ResourceManager::GetTextureNS(const std::string& p_name)
+std::shared_ptr<Texture> Engine::Managers::ResourceManager::GetTextureNS(const std::string& p_name)
 {
     for (auto texture : m_textures)
     {
@@ -263,12 +262,12 @@ std::shared_ptr<Texture> ResourceManager::GetTextureNS(const std::string& p_name
     return nullptr;
 }
 
-std::vector<std::shared_ptr<Texture>> ResourceManager::GetAllTexturesNS()
+std::vector<std::shared_ptr<Texture>> Engine::Managers::ResourceManager::GetAllTexturesNS()
 {
     return m_textures;
 }
 
-std::shared_ptr<PixelShader> ResourceManager::AddPixelShaderNS(const std::string& p_path, const std::string& p_name)
+std::shared_ptr<PixelShader> Engine::Managers::ResourceManager::AddPixelShaderNS(const std::string& p_path, const std::string& p_name)
 {
     for (auto pShader : m_pixelShaders)
     {
@@ -308,7 +307,7 @@ std::shared_ptr<PixelShader> ResourceManager::AddPixelShaderNS(const std::string
 }
 
 
-std::shared_ptr<PixelShader> ResourceManager::GetPixelShaderNS(const std::string& p_name)
+std::shared_ptr<PixelShader> Engine::Managers::ResourceManager::GetPixelShaderNS(const std::string& p_name)
 {
     for (auto pShader : m_pixelShaders)
     {
@@ -321,12 +320,12 @@ std::shared_ptr<PixelShader> ResourceManager::GetPixelShaderNS(const std::string
     return nullptr;
 }
 
-std::vector<std::shared_ptr<PixelShader>> ResourceManager::GetAllPixelShadersNS()
+std::vector<std::shared_ptr<PixelShader>> Engine::Managers::ResourceManager::GetAllPixelShadersNS()
 {
     return m_pixelShaders;
 }
 
-std::shared_ptr<VertexShader> ResourceManager::AddVertexShaderNS(const std::string& p_path, const std::string& p_name)
+std::shared_ptr<VertexShader> Engine::Managers::ResourceManager::AddVertexShaderNS(const std::string& p_path, const std::string& p_name)
 {
     for (auto vShader : m_vertexShaders)
     {
@@ -367,7 +366,7 @@ std::shared_ptr<VertexShader> ResourceManager::AddVertexShaderNS(const std::stri
 }
 
 
-std::shared_ptr<VertexShader> ResourceManager::GetVertexShaderNS(const std::string& p_name)
+std::shared_ptr<VertexShader> Engine::Managers::ResourceManager::GetVertexShaderNS(const std::string& p_name)
 {
     for (auto vShader : m_vertexShaders)
     {
@@ -380,12 +379,12 @@ std::shared_ptr<VertexShader> ResourceManager::GetVertexShaderNS(const std::stri
     return nullptr;
 }
 
-std::vector<std::shared_ptr<VertexShader>> ResourceManager::GetAllVertexShadersNS()
+std::vector<std::shared_ptr<VertexShader>> Engine::Managers::ResourceManager::GetAllVertexShadersNS()
 {
     return m_vertexShaders;
 }
 
-std::shared_ptr<Material> ResourceManager::CreateMaterialNS(const std::string& p_name, const std::string& p_pixelShaderName,
+std::shared_ptr<Material> Engine::Managers::ResourceManager::CreateMaterialNS(const std::string& p_name, const std::string& p_pixelShaderName,
                                                             const std::string& p_vertexShaderName, const std::string& p_textureName)
 {
     //TODO when serialization is complete: export the new material in a file
@@ -439,7 +438,7 @@ std::shared_ptr<Material> ResourceManager::CreateMaterialNS(const std::string& p
     return material;
 }
 
-std::shared_ptr<Material> ResourceManager::GetMaterialNS(const std::string& p_name)
+std::shared_ptr<Material> Engine::Managers::ResourceManager::GetMaterialNS(const std::string& p_name)
 {
     for (auto material : m_materials)
     {
@@ -452,7 +451,7 @@ std::shared_ptr<Material> ResourceManager::GetMaterialNS(const std::string& p_na
     return nullptr;
 }
 
-std::vector<std::shared_ptr<Material>> ResourceManager::GetAllMaterialsNS()
+std::vector<std::shared_ptr<Material>> Engine::Managers::ResourceManager::GetAllMaterialsNS()
 {
     return m_materials;
 }

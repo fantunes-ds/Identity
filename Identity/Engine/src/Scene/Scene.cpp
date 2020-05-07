@@ -4,15 +4,13 @@
 #include <Scene/Scene.h>
 #include <Scene/SceneGraph/SceneNode.h>
 
-using namespace Engine::Scene;
-
-Scene::Scene(const std::string& p_name)
+Engine::Scene::Scene::Scene(const std::string& p_name)
 {
     SetName(p_name);
 }
 
 
-Scene::~Scene()
+Engine::Scene::Scene::~Scene()
 {
     for (auto go : GetAllGameObjectsInScene())
     {
@@ -20,22 +18,22 @@ Scene::~Scene()
     }
 }
 
-void Scene::AddGameObject(std::shared_ptr<Objects::GameObject> p_gameObject)
+void Engine::Scene::Scene::AddGameObject(std::shared_ptr<Objects::GameObject> p_gameObject)
 {
     m_sceneGraph.AddGameObjectToScene(p_gameObject);
 }
 
-void Scene::RemoveGameObject(std::shared_ptr<Objects::GameObject> p_gameObject)
+void Engine::Scene::Scene::RemoveGameObject(std::shared_ptr<Objects::GameObject> p_gameObject)
 {
     m_sceneGraph.RemoveGameObjectFromScene(p_gameObject);
 }
 
-void Scene::RemoveGameObject(int32_t p_id)
+void Engine::Scene::Scene::RemoveGameObject(int32_t p_id)
 {
     //for (auto& node: m_sceneGraph.)
 }
 
-std::list<std::shared_ptr<Engine::Objects::GameObject>> Scene::GetAllGameObjectsInScene()
+std::list<std::shared_ptr<Engine::Objects::GameObject>> Engine::Scene::Scene::GetAllGameObjectsInScene()
 {
     std::list<std::shared_ptr<Objects::GameObject>> GOs;
 
@@ -47,7 +45,7 @@ std::list<std::shared_ptr<Engine::Objects::GameObject>> Scene::GetAllGameObjects
     return GOs;
 }
 
-void Scene::SetActiveOnAll(bool p_active)
+void Engine::Scene::Scene::SetActiveOnAll(bool p_active)
 {
     for (auto& go : GetAllGameObjectsInScene())
     {

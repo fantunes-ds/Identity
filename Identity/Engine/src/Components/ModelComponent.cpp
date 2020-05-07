@@ -8,6 +8,7 @@ using namespace Engine::Components;
 ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const int32_t p_id): IComponent{p_gameObject, MODEL}
 {
     m_model = p_id;
+    m_material = Managers::ResourceManager::GetMaterial("default");
 }
 
 
@@ -15,20 +16,23 @@ ModelComponent::ModelComponent(Objects::GameObject*            p_gameObject,
                                std::shared_ptr<ModelComponent> p_other) : IComponent{p_gameObject, MODEL}
 {
     m_model = p_other->m_model;
+    m_material = p_other->m_material;
 }
 
 ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name): IComponent{p_gameObject, MODEL}
 {
     m_model = Managers::ResourceManager::GetModel(p_name);
+    m_material = Managers::ResourceManager::GetMaterial("default");
 }
 
 ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file, 
                                const std::string& p_name): IComponent{p_gameObject, MODEL}
 {
     m_model = Managers::ResourceManager::AddModel(p_file, p_name);
+    m_material = Managers::ResourceManager::GetMaterial("default");
 }
 
-bool ModelComponent::operator==(IComponent* p_other)
+bool Engine::Components::ModelComponent::operator==(IComponent* p_other)
 {
     if (ModelComponent* other = dynamic_cast<ModelComponent*>(p_other))
     {
@@ -50,7 +54,7 @@ bool ModelComponent::operator==(IComponent* p_other)
     return false;
 }
 
-bool ModelComponent::DeleteFromMemory()
+bool Engine::Components::ModelComponent::DeleteFromMemory()
 {
     return Managers::ResourceManager::RemoveModel(m_model);
 }

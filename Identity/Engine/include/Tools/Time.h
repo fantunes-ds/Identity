@@ -35,7 +35,7 @@ namespace Engine::Tools
         static inline std::unique_ptr<Time> m_instance{ nullptr };
     	
         int m_numberOfSamples;
-        float m_deltaTime;
+        float m_deltaTime = 0.0f;
         float m_FPS;
         float m_fpsLimiter = 125.0f;
         float m_fixedUpdateCounter = 0.0f;

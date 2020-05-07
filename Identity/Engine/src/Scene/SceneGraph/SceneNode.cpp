@@ -13,9 +13,9 @@ SceneNode::SceneNode(std::shared_ptr<Objects::GameObject> p_gameObject) : m_game
 {
 }
 
-SceneNode::SceneNode(std::shared_ptr<ObjectElements::Mesh> p_mesh) : m_mesh{ p_mesh } {}
+Engine::Scene::SceneNode::SceneNode(std::shared_ptr<ObjectElements::Mesh> p_mesh) : m_mesh{ p_mesh } {}
 
-void SceneNode::AddChild(std::shared_ptr<SceneNode> p_child)
+void Engine::Scene::SceneNode::AddChild(std::shared_ptr<SceneNode> p_child)
 {
     if (!p_child)
         return;
@@ -27,7 +27,7 @@ void SceneNode::AddChild(std::shared_ptr<SceneNode> p_child)
     p_child->m_parent = this;
 }
 
-void SceneNode::RemoveChild(int32_t p_id)
+void Engine::Scene::SceneNode::RemoveChild(int32_t p_id)
 {
     for (auto it = m_children.begin(); it != m_children.end(); ++it)
     {
@@ -36,7 +36,7 @@ void SceneNode::RemoveChild(int32_t p_id)
     }
 }
 
-void SceneNode::RemoveChild(std::shared_ptr<SceneNode> p_child)
+void Engine::Scene::SceneNode::RemoveChild(std::shared_ptr<SceneNode> p_child)
 {
     if (!p_child)
         return;
@@ -50,7 +50,7 @@ void SceneNode::RemoveChild(std::shared_ptr<SceneNode> p_child)
     }
 }
 
-void SceneNode::Update(float p_deltaTime)
+void Engine::Scene::SceneNode::Update(float p_deltaTime)
 {
     auto transform = Systems::TransformSystem::FindTransform(m_transform);
 

@@ -7,9 +7,7 @@
 #include <Systems/CameraSystem.h>
 #include <Tools/Time.h>
 
-using namespace Engine::Components;
-
-void Camera::UpdateCamera(const float p_deltaTime, const float& p_width, const float& p_height)
+void Engine::Components::Camera::UpdateCamera(const float p_deltaTime, const float& p_width, const float& p_height)
 {
     UpdateCameraPosition(p_deltaTime);
     UpdateCameraRotation();
@@ -22,14 +20,14 @@ void Camera::UpdateCamera(const float p_deltaTime, const float& p_width, const f
     needUpdate = false;
 }
 
-Camera::Camera(Objects::GameObject* p_gameObject, const int p_width, const int p_height) :
+Engine::Components::Camera::Camera(Objects::GameObject* p_gameObject, const int p_width, const int p_height) :
     IComponent{p_gameObject, CAMERA}, m_width(static_cast<float>(p_width)), m_height(static_cast<float>(p_height))
 {
     Systems::CameraSystem::AddCamera(std::make_shared<Camera>(*this));
     UpdatePerspectiveMatrix();
 }
 
-bool Camera::operator==(IComponent* p_other)
+bool Engine::Components::Camera::operator==(IComponent* p_other)
 {
     if (this == dynamic_cast<Camera*>(p_other))
         return true;
@@ -37,12 +35,12 @@ bool Camera::operator==(IComponent* p_other)
     return false;
 }
 
-bool Camera::DeleteFromMemory()
+bool Engine::Components::Camera::DeleteFromMemory()
 {
     return Systems::CameraSystem::RemoveCamera(GetID());
 }
 
-void Camera::UpdateVectors()
+void Engine::Components::Camera::UpdateVectors()
 {
     const Quaternion pitch = Quaternion(Vector3F(1.0f, 0.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_pitch));
     const Quaternion yaw   = Quaternion(Vector3F(0.0f, 1.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_yaw));
@@ -51,7 +49,7 @@ void Camera::UpdateVectors()
     m_gameObject->GetTransform()->SetRotation((pitch * yaw * roll).Normalize());
 }
 
-void Camera::UpdateCameraPosition(const float p_deltaTime)
+void Engine::Components::Camera::UpdateCameraPosition(const float p_deltaTime)
 {
     auto transform = m_gameObject->GetTransform();
 
@@ -105,7 +103,7 @@ void Camera::UpdateCameraPosition(const float p_deltaTime)
     }
 }
 
-void Camera::UpdateCameraRotation()
+void Engine::Components::Camera::UpdateCameraRotation()
 {
     const float sensitivity{0.3f};
     float       xPos{static_cast<float>(_INPUT->mouse.GetRawPosition()->x)};
@@ -135,7 +133,7 @@ void Camera::UpdateCameraRotation()
     ImGui::End();
 }
 
-void Camera::UpdateViewMatrix()
+void Engine::Components::Camera::UpdateViewMatrix()
 {
     auto           transform   = m_gameObject->GetTransform();
     const Matrix4F rotation    = transform->GetRotation().Conjugate().ToMatrix4().Transpose();
@@ -146,14 +144,14 @@ void Camera::UpdateViewMatrix()
     m_viewMatrix = rotation * translation;
 }
 
-void Camera::UpdateResolution(const float p_width, const float p_height)
+void Engine::Components::Camera::UpdateResolution(const float p_width, const float p_height)
 {
     m_width  = p_width;
     m_height = p_height;
     UpdatePerspectiveMatrix();
 }
 
-void Camera::UpdatePerspectiveMatrix() noexcept
+void Engine::Components::Camera::UpdatePerspectiveMatrix() noexcept
 {
     const float twoNearZ = m_nearZ + m_nearZ;
     const float fRange   = m_farZ / (m_nearZ - m_farZ);
