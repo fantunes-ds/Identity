@@ -17,7 +17,7 @@ namespace Engine::Containers
         /**
          * @brief NON_FUNCTIONAL: Decomment code once ILight class is functional.
          */
-        static int32_t AddLight(Rendering::Lights::ILight* p_light);
+        static int32_t AddLight(std::shared_ptr<Rendering::Lights::ILight> p_light);
         static std::map<int32_t, std::shared_ptr<Rendering::Lights::ILight>>& GetLights() { return GetInstance()->m_lights; }
         static std::shared_ptr<Rendering::Lights::ILight> FindLight(int32_t p_id);
 

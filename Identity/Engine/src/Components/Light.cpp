@@ -5,14 +5,15 @@
 
 Engine::Components::Light::Light(Objects::GameObject* p_gameObject): IComponent{p_gameObject}
 {
-    Rendering::Lights::DirectionalLight* light = new Rendering::Lights::DirectionalLight();
+    auto light = std::make_shared<Rendering::Lights::DirectionalLight>();
     m_light = light->GetID();
     Containers::LightContainer::AddLight(light);
 }
 
 Engine::Components::Light::Light(Objects::GameObject* p_gameObject, Rendering::Lights::DirectionalLight::LightData& p_lightData): IComponent{p_gameObject}
 {
-    Rendering::Lights::DirectionalLight* light = new Rendering::Lights::DirectionalLight(p_lightData);
+    //TODO: change to ILight once class is complete
+    auto light = std::make_shared<Rendering::Lights::DirectionalLight>(p_lightData);
     m_light = light->GetID();
     Containers::LightContainer::AddLight(light);
 }
@@ -32,11 +33,13 @@ void Engine::Components::Light::Serialize(std::ostream& p_stream)
     Containers::LightContainer::FindLight(m_light)->Serialize(p_stream);
 }
 
-void Engine::Components::Light::Deserialize(std::vector<std::string>& p_block)
+void Engine::Components::Light::Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block)
 {
-    Rendering::Lights::DirectionalLight light;
+    m_gameObject = p_gameObject;
 
-    light.Deserialize(p_block);
+    auto light = std::make_shared<Rendering::Lights::DirectionalLight>();
 
-    Containers::LightContainer::AddLight(&light);
+    light->Deserialize(p_block);
+
+    Containers::LightContainer::AddLight(light);
 }

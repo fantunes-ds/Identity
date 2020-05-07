@@ -61,7 +61,7 @@ void Engine::Components::Camera::Serialize(std::ostream& p_stream)
         "}\n";
 }
 
-void Engine::Components::Camera::Deserialize(std::vector<std::string>& p_block)
+void Engine::Components::Camera::Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block)
 {
 }
 

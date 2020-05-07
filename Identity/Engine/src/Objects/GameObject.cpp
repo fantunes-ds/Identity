@@ -17,10 +17,11 @@ using namespace Engine::Objects;
 
 GameObject::GameObject()
 {
-    m_transform = Systems::TransformSystem::AddTransform(std::make_shared<Components::Transform>());
+    m_transform = AddComponent<Components::Transform>();
+    //m_transform = Systems::TransformSystem::AddTransform(std::make_shared<Components::Transform>());
     Systems::TransformSystem::FindTransform(m_transform)->SetGameObject(this);
     Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
-    auto trm = Systems::TransformSystem::GetTransform(m_transform);
+    //auto trm = Systems::TransformSystem::GetTransform(m_transform);
     //Containers::ComponentContainer::AddComponent(trm.get());
 }
 
@@ -106,18 +107,23 @@ void GameObject::Deserialize(std::vector<std::string>& p_strings)
 
             if (words[1] == "Engine::Components::Transform")
             {
+                Containers::ComponentContainer::FindComponent(m_transform)->Deserialize(this, componentBlock);
             }
             else if (words[1] == "Engine::Components::BoxCollider")
             {
                 int id = AddComponent<Components::BoxCollider>();
-                Containers::ComponentContainer::FindComponent(id)->Deserialize(componentBlock);
+                Containers::ComponentContainer::FindComponent(id)->Deserialize(this, componentBlock);
             }
             else if (words[1] == "Engine::Rendering::Lights::DirectionalLight")
             {
-                /* 
-                int32_t id = AddComponent<Components::Light>();
-                Containers::LightContainer::FindLight(id)->Deserialize(componentBlock);
-                */
+                int compID = AddComponent<Components::Light>();
+                int32_t lightID = std::dynamic_pointer_cast<Components::Light>(Containers::ComponentContainer::FindComponent(compID))->GetLightID();
+                Containers::LightContainer::FindLight(lightID)->Deserialize(componentBlock);
+            }
+            else if (words[1] == "Engine::Components::ModelComponent")
+            {
+                int compID = AddComponent<Components::ModelComponent>();
+                Containers::ComponentContainer::FindComponent(compID)->Deserialize(this, componentBlock);
             }
 
             componentBlock.clear();

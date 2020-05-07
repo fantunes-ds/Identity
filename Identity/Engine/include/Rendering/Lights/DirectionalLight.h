@@ -34,7 +34,7 @@ namespace Engine::Rendering::Lights
 
         void Serialize(std::ostream& p_stream) override;
 
-        void Deserialize(std::vector<std::string> p_block) override;
+        void Deserialize(std::vector<std::string>& p_block) override;
 
     private:
         LightData m_lightData{};

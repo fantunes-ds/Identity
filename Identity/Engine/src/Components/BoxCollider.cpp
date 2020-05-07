@@ -30,7 +30,6 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
 
     ObjectElements::Model model = ConstructBox();
 
-    //TODO add a "AddModel" that take a model as parametre
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
 
@@ -46,7 +45,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     m_offset = p_other->m_offset;
     m_box = p_other->m_box;
 
-    /*btTransform trans;
+    btTransform trans;
     auto& position = m_gameObject->GetTransform()->GetPosition();
     auto& rotation = m_gameObject->GetTransform()->GetRotation();
     auto& scale = m_gameObject->GetTransform()->GetScale();
@@ -61,7 +60,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     m_motionState = new btDefaultMotionState(trans);
 
     btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
-    m_rigidbody = new btRigidBody(rbInfo);*/
+    m_rigidbody = new btRigidBody(rbInfo);
 
     ObjectElements::Model model = ConstructBox();
     //TODO add a "AddModel" that take a model as parametre
@@ -84,13 +83,15 @@ void Engine::Components::BoxCollider::Serialize(std::ostream& p_stream)
     p_stream << typeid(*this).name() << " " << std::to_string(m_id) << "\n{\n" <<
         "   m_mass " << m_mass << "\n" <<
         "   m_offset " << m_offset.x << " " << m_offset.y << " " << m_offset.z << "\n" <<
-        "   m_box " << m_box->getHalfExtentsWithoutMargin().getX() << " " << m_box->getHalfExtentsWithoutMargin().getY() << " " << m_box->getHalfExtentsWithoutMargin().getZ() << "\n" <<
+        "   m_box " << m_box->getHalfExtentsWithMargin().getX() << " " << m_box->getHalfExtentsWithMargin().getY() << " " << m_box->getHalfExtentsWithMargin().getZ() << "\n" <<
         "   m_model " << m_model->GetID() << "\n" <<
         "}\n";
 }
 
-void Engine::Components::BoxCollider::Deserialize(std::vector<std::string>& p_block)
+void Engine::Components::BoxCollider::Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block)
 {
+    m_gameObject = p_gameObject;
+
     std::vector<std::string> words;
 
     for (int i = 0; i < p_block.size(); ++i)
@@ -121,6 +122,34 @@ void Engine::Components::BoxCollider::Deserialize(std::vector<std::string>& p_bl
 
         words.clear();
     }
+
+    //TODO: Memory leak here
+    /*delete m_box;
+    delete m_rigidbody;
+    delete m_motionState;*/
+
+    btVector3 localInertia(0.0f, 0.0f, 0.0f);
+    btTransform trans;
+    auto& position = m_gameObject->GetTransform()->GetPosition();
+    auto& rotation = m_gameObject->GetTransform()->GetRotation();
+    auto& scale = m_gameObject->GetTransform()->GetScale();
+
+    trans.setIdentity();
+
+    trans.setOrigin(btVector3(position.x, position.y, position.z));
+    trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
+
+    m_box->calculateLocalInertia(m_mass, localInertia);
+
+    m_motionState = new btDefaultMotionState(trans);
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
+    m_rigidbody = new btRigidBody(rbInfo);
+
+    ObjectElements::Model model = ConstructBox();
+
+    //TODO add a "AddModel" that take a model as parametre
+    const int32_t id = Managers::ResourceManager::AddModel(model);
+    m_model = Managers::ResourceManager::FindModel(id);
 }
 
 Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const

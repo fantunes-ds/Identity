@@ -48,7 +48,7 @@ void Lights::DirectionalLight::Serialize(std::ostream& p_stream)
         "   }\n" << "}\n";
 }
 
-void Lights::DirectionalLight::Deserialize(std::vector<std::string> p_block)
+void Lights::DirectionalLight::Deserialize(std::vector<std::string>& p_block)
 {
     std::vector <std::string> words;
 

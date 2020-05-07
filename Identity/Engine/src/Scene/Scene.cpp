@@ -74,6 +74,7 @@ void Engine::Scene::Scene::Load(const std::string& p_sceneName)
     std::vector <std::string> block;
     std::vector <std::string> lines;
     auto instance = Systems::TransformSystem::GetInstance();
+
     for (std::string line; std::getline(inFile, line); )
     {
         lines.push_back(line);
@@ -81,7 +82,6 @@ void Engine::Scene::Scene::Load(const std::string& p_sceneName)
 
     for (int i = 0; i < lines.size(); ++i)
     {
-
         if (lines[i] == "GAMEOBJECT")
         {
             auto go = std::make_shared<Objects::GameObject>();

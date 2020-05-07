@@ -9,6 +9,6 @@ namespace Engine::Rendering::Lights
     public:
         virtual bool operator==(Rendering::Lights::ILight* p_other) = 0;
         virtual void Serialize(std::ostream& p_stream) = 0;
-        virtual void Deserialize(std::vector<std::string> p_block) = 0;
+        virtual void Deserialize(std::vector<std::string>& p_block) = 0;
     };
 }
