@@ -18,7 +18,7 @@
 #include "Systems/LightSystem.h"
 
 
-#define DEBUG_MODE false
+#define DEBUG_MODE true
 
 Engine::Systems::RenderSystem::~RenderSystem()
 {
@@ -161,6 +161,19 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
     auto                                                 mesh   = p_sceneNode->GetMesh();
     auto light1 = Systems::LightSystem::GetAllLights().begin()->second;
     Rendering::Lights::ILight::LightData& light = light1->GetLight()->GetLightData();
+
+    if (p_sceneNode->IsRoot())
+    {
+        auto mat = p_sceneNode->GetGameObject()->FindComponentOfType<Components::ModelComponent>()->GetMaterial();
+        if (mat != nullptr)
+        {
+            for (auto child : p_sceneNode->GetAllChildren())
+            {
+                child->GetMesh()->SetMaterial(mat);
+            }
+        }
+    }
+
 
     if (mesh != nullptr)
     {

@@ -106,7 +106,7 @@ int Engine::Core::App::Run()
         fixedUpdateTimer += deltaTime;
         //todo this should never go below 0
         //update could be at 0.01f
-        if (fixedUpdateTimer >= 0.01f || fixedUpdateTimer < 0)
+        if (fixedUpdateTimer >= 0.01f)// || fixedUpdateTimer < 0)
         {
             if (RunBullet)
                 Systems::PhysicsSystem::FixedUpdate();
@@ -238,10 +238,7 @@ void Engine::Core::App::InitEditor()
     link->FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
 
     link->AddComponent<Components::ModelComponent>("Link");
-    for (auto& mesh : link->GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
-    }
+    link->FindComponentOfType<Components::ModelComponent>()->SetMaterial("LinkMat");
     scene->AddGameObject(link);
     //----------
 
@@ -257,10 +254,7 @@ void Engine::Core::App::InitEditor()
     lambo->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
 
     lambo->AddComponent<Components::ModelComponent>("Lambo");
-    for (auto& mesh : lambo->GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
-    }
+    lambo->FindComponentOfType<Components::ModelComponent>()->SetMaterial("LamboMat");
     scene->AddGameObject(lambo);
     //-----------
 

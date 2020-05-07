@@ -19,8 +19,6 @@ namespace Engine::Managers
         ResourceManager(const ResourceManager&) = delete;
         ResourceManager(const ResourceManager&&) = delete;
 
-        //TODO create a basic material when starting the app
-        
         /**
          * @brief Used to get the instance of the resource manager
          * @return Return a reference to the unique_ptr of the instance
@@ -144,6 +142,7 @@ namespace Engine::Managers
          * @return Return a shared_ptr of the material or nullptr if it was not found
          */
         static std::shared_ptr<Rendering::Materials::Material> GetMaterial(const std::string& p_name);
+
         /**
          * @brief Used to get all material from the resource manager
          * @return Return a vector of shared_ptr of all the material
@@ -271,6 +270,7 @@ namespace Engine::Managers
          * @return Return a shared_ptr of the material or nullptr if it was not found
          */
         std::shared_ptr<Rendering::Materials::Material> GetMaterialNS(const std::string& p_name);
+
         /**
          * @brief Used to get all material from the resource manager
          * @return Return a vector of shared_ptr of all the material
