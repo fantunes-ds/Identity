@@ -5,25 +5,25 @@
 
 using namespace Engine::Components;
 
-ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const int32_t p_id): IComponent{p_gameObject}
+ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const int32_t p_id): IComponent{p_gameObject, MODEL}
 {
     m_model = p_id;
 }
 
 
 ModelComponent::ModelComponent(Objects::GameObject*            p_gameObject,
-                               std::shared_ptr<ModelComponent> p_other) : IComponent{p_gameObject}
+                               std::shared_ptr<ModelComponent> p_other) : IComponent{p_gameObject, MODEL}
 {
     m_model = p_other->m_model;
 }
 
-ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name): IComponent{p_gameObject}
+ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name): IComponent{p_gameObject, MODEL}
 {
     m_model = Managers::ResourceManager::GetModel(p_name);
 }
 
 ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file, 
-                               const std::string& p_name): IComponent{p_gameObject}
+                               const std::string& p_name): IComponent{p_gameObject, MODEL}
 {
     m_model = Managers::ResourceManager::AddModel(p_file, p_name);
 }

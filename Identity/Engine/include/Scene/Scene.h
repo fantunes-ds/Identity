@@ -27,9 +27,12 @@ namespace Engine::Scene
         void RemoveGameObject(std::shared_ptr<Objects::GameObject> p_gameObject);
         void RemoveGameObject(int32_t p_id);
 
-        SceneGraph& GetSceneGraph() { return m_sceneGraph; }
-        std::list<std::shared_ptr<Objects::GameObject>> GetAllGameObjectsInScene();
-        void SetActiveOnAll(bool p_active);
+        SceneGraph& GetSceneGraph() { return m_sceneGraph; }
+
+        std::list<std::shared_ptr<Objects::GameObject>> GetAllGameObjectsInScene();
+
+        void SetActiveOnAll(bool p_active);
+
     private:
         SceneGraph m_sceneGraph;
     };

@@ -5,7 +5,7 @@
 
 using namespace Engine::Components;
 
-IComponent::IComponent(Objects::GameObject* p_gameObject): m_gameObject{p_gameObject} {}
+IComponent::IComponent(Objects::GameObject* p_gameObject, const Type& p_type) : m_gameObject{p_gameObject}, m_type(p_type) {}
 
 void IComponent::SetGameObject(Objects::GameObject* p_gameObject)
 {

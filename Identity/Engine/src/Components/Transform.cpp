@@ -5,20 +5,20 @@
 
 using namespace Engine::Components;
 
-Transform::Transform(Objects::GameObject* p_gameObject) : IComponent{p_gameObject}, m_position{Vector3F::zero},
+Transform::Transform(Objects::GameObject* p_gameObject) : IComponent{p_gameObject, TRANSFORM}, m_position{Vector3F::zero},
 m_forward{Vector3F::forward}, m_right{Vector3F::right}, m_up{Vector3F::up}, m_scale{Vector3F::one},
 m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} } {}
 
-Transform::Transform(Objects::GameObject* p_gameObject, const Transform& p_other) : IComponent{p_gameObject},
+Transform::Transform(Objects::GameObject* p_gameObject, const Transform& p_other) : IComponent{p_gameObject, TRANSFORM},
 m_parent{p_other.m_parent}, m_position{p_other.m_position}, m_forward{p_other.m_forward}, m_right{p_other.m_right},
 m_up{p_other.m_up}, m_scale{p_other.m_scale}, m_rotation{ p_other.m_rotation } {}
 
 
-Transform::Transform() : IComponent{nullptr},
+Transform::Transform() : IComponent{nullptr, TRANSFORM},
                          m_position{Vector3F::zero}, m_forward{Vector3F::forward}, m_right{Vector3F::right},
                          m_up{Vector3F::up}, m_scale{Vector3F::one}, m_rotation{Quaternion{0.0, 0.0, 0.0, 1.0}} {}
 
-Transform::Transform(const std::string& p_name) : IComponent{nullptr}, m_position{Vector3F::zero},
+Transform::Transform(const std::string& p_name) : IComponent{nullptr, TRANSFORM}, m_position{Vector3F::zero},
                                                   m_forward{Vector3F::forward}, m_right{Vector3F::right},
                                                   m_up{Vector3F::up}, m_scale{Vector3F::one},
                                                   m_rotation{Quaternion{0.0, 0.0, 0.0, 1.0}}

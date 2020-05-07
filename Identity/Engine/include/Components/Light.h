@@ -10,6 +10,7 @@ namespace Engine::Components
     class API_ENGINE Light: public IComponent
     {
     public:
+        Light() = delete;
         Light(Objects::GameObject* p_gameObject);
         Light(Objects::GameObject* p_gameObject, Rendering::Lights::DirectionalLight::LightData& p_lightData);
 

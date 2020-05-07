@@ -10,7 +10,7 @@
 
 using namespace Engine::Components;
 
-BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameObject}
+BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameObject, BOX_COLLIDER}
 {
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
@@ -40,7 +40,7 @@ BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameO
 }
 
 
-BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{p_gameObject}
+BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{p_gameObject, BOX_COLLIDER}
 {
     //init data
     btVector3 localInertia(0.0f, 0.0f, 0.0f);

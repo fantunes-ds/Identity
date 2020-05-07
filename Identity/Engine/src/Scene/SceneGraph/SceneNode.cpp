@@ -4,10 +4,12 @@
 #include <Scene/SceneGraph/SceneNode.h>
 #include <Systems/TransformSystem.h>
 
+#include <Managers/SceneManager.h>
+#include <Scene/Scene.h>
+
 using namespace Engine::Scene;
 
-SceneNode::SceneNode(std::shared_ptr<Objects::GameObject> p_gameObject) :
-	m_gameObject{ p_gameObject }
+SceneNode::SceneNode(std::shared_ptr<Objects::GameObject> p_gameObject) : m_gameObject{ p_gameObject }
 {
 }
 
@@ -75,7 +77,7 @@ bool Engine::Scene::SceneNode::IsRoot()
     return true;
 }
 
-std::vector<std::shared_ptr<Engine::Scene::SceneNode>> Engine::Scene::SceneNode::GetAllChildren()
+std::vector<std::shared_ptr<SceneNode>> SceneNode::GetAllChildren()
 {
     std::vector<std::shared_ptr<SceneNode>> children;
 
