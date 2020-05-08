@@ -276,8 +276,9 @@ namespace Engine::Managers
          * @return Return a vector of shared_ptr of all the material
          */
         std::vector<std::shared_ptr<Rendering::Materials::Material>> GetAllMaterialsNS();
-#pragma endregion
 
+#pragma endregion
+        //TODO: serialize / deserialize
         inline static std::unique_ptr<ResourceManager> m_instance{ nullptr };
 
         std::map<int32_t, std::shared_ptr<ObjectElements::Model>> m_models;

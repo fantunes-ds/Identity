@@ -182,8 +182,8 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager
             return model.second;
     }
 
-    const std::string error("The model with id: " + std::to_string(p_id) + " does not exist");
-    MessageBox(nullptr, error.c_str(), "Error", MB_ICONERROR | MB_OK);
+    //const std::string error("The model with id: " + std::to_string(p_id) + " does not exist");
+    //MessageBox(nullptr, error.c_str(), "Error", MB_ICONERROR | MB_OK);
     return nullptr;
 }
 

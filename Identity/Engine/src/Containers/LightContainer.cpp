@@ -4,6 +4,8 @@
 #include <Rendering/Lights/DirectionalLight.h>
 #include <Components/Light.h>
 
+#include <Rendering/Lights/ILight.h>
+
 Engine::Containers::LightContainer::~LightContainer()
 {
     delete m_instance;
@@ -19,7 +21,7 @@ Engine::Containers::LightContainer* Engine::Containers::LightContainer::GetInsta
     return m_instance;
 }
 
-int32_t Engine::Containers::LightContainer::AddLight(Components::Light p_light)
+int32_t Engine::Containers::LightContainer::AddLight(std::shared_ptr<Rendering::Lights::ILight> p_light)
 {
     /*for (auto& light : GetInstance()->m_lights)
     {
@@ -35,6 +37,11 @@ int32_t Engine::Containers::LightContainer::AddLight(Components::Light p_light)
         }
     }*/
 
-    GetInstance()->m_lights.insert_or_assign(p_light->GetID(), std::shared_ptr<Engine::Rendering::Lights::ILight>(p_light));
+    GetInstance()->m_lights.insert_or_assign(p_light->GetID(), p_light);
     return p_light->GetID();
+}
+
+std::shared_ptr<Engine::Rendering::Lights::ILight> Engine::Containers::LightContainer::FindLight(int32_t p_id)
+{
+    return GetInstance()->m_lights.at(p_id);
 }

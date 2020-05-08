@@ -6,10 +6,7 @@
 #include <Rendering/Renderer.h>
 #include <UI/Dockspace.h>
 
-
-using namespace Engine::UI;
-
-void Dockspace::CreateDockspace(Core::App& p_appRef)
+void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
 {
     static bool               opt_fullscreen_persistant = true;
     bool                      opt_fullscreen            = opt_fullscreen_persistant;
@@ -63,7 +60,7 @@ void Dockspace::CreateDockspace(Core::App& p_appRef)
     ImGui::End();
 }
 
-void Dockspace::CreateMenuBar(Core::App& p_appRef)
+void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
 {
     if (ImGui::BeginMenuBar())
     {

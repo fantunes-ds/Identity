@@ -1,6 +1,7 @@
 #define DEBUG_MODE true;
 
 #include <stdafx.h>
+#include <fstream>
 
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
@@ -157,7 +158,7 @@ void Engine::Core::App::InitEditor()
     Managers::SceneManager::AddScene(scene);
     Managers::SceneManager::SetActiveScene(scene);
 
-    auto link  = std::make_shared<Objects::GameObject>("link");
+    /*auto link  = std::make_shared<Objects::GameObject>("link");
     auto lambo = std::make_shared<Objects::GameObject>("lambo");
     auto light = std::make_shared<Objects::GameObject>("light");
 
@@ -210,7 +211,18 @@ void Engine::Core::App::InitEditor()
 
     light->AddComponent<Components::Light>(dirLight);
     scene->AddGameObject(light);
-    //-----------
+
+    //-----Save test
+    
+
+    scene->Save();*/
+
+
+
+    //----Deserialize test
+
+    scene->Load("scene1.txt");
+    //-----------;
 }
 
 void Engine::Core::App::TestingSimulation()

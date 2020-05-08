@@ -1,5 +1,6 @@
 #pragma once
 #include <Rendering/Lights/ILight.h>
+#include <Windows.h>
 
 namespace Engine::Rendering::Lights
 {
@@ -14,5 +15,7 @@ namespace Engine::Rendering::Lights
         DirectionalLight(DirectionalLight&&) = delete;
 
         bool operator==(Rendering::Lights::ILight* p_other) override;
+        void Deserialize(std::vector<std::string>& p_block) override;
+        void Serialize(std::ostream& p_stream) override;
     };
 }
