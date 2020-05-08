@@ -2,7 +2,7 @@
 
 #include <windows.h>
 
-#include <Managers/SceneManager.h>
+// #include <Managers/SceneManager.h>
 #include <Rendering/Renderer.h>
 #include <Systems/CameraSystem.h>
 

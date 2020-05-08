@@ -24,6 +24,7 @@
 #include <Systems/CameraSystem.h>
 #include <Systems/TransformSystem.h>
 #include <Systems/PhysicsSystem.h>
+#include <Systems/LightSystem.h>
 
 Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
@@ -46,13 +47,14 @@ void Engine::Core::App::Init()
 
 int Engine::Core::App::Run()
 {
-    /*Managers::ResourceManager::AddTexture("../Engine/Resources/link.png", "LinkText");
+    m_applicationIsRunning = true;
+    Managers::ResourceManager::AddTexture("../Engine/Resources/link.png", "LinkText");
     Managers::ResourceManager::AddTexture("../Engine/Resources/lambo_text.jpeg", "LamboText");
     Managers::ResourceManager::CreateMaterial("LinkMat", "defaultPS", "defaultVS", "LinkText");
     Managers::ResourceManager::CreateMaterial("LamboMat", "defaultPS", "defaultVS", "LamboText");
 
     Managers::ResourceManager::AddModel("../Engine/Resources/YoungLink.obj", "Link");
-    Managers::ResourceManager::AddModel("../Engine/Resources/Lambo.obj", "Lambo");*/
+    Managers::ResourceManager::AddModel("../Engine/Resources/Lambo.obj", "Lambo");
 
     //--CAMERA--
     Objects::GameObject camera;
@@ -65,7 +67,7 @@ int Engine::Core::App::Run()
 
     float fixedUpdateTimer = 0.0f;
     Systems::PhysicsSystem::FixedUpdate();
-    while (true)
+    while (m_applicationIsRunning)
     {
         Tools::Time::Start();
         if (const auto eCode = Rendering::Window::ProcessMessage())
@@ -86,94 +88,29 @@ int Engine::Core::App::Run()
         {
             ImGui::ShowDemoWindow(&show_demo_window);
         }
-        if (ImGui::Begin("Hierarchy"))
-        {
-            int i = 0;
-            for (auto& node : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
-                DisplayNextChild(node.second, i);
-        }
-        ImGui::End();
-
 
         float deltaTime = Tools::Time::GetDeltaTime();
 
         //Systems
         Systems::PhysicsSystem::Update(deltaTime);
         Systems::TransformSystem::Update(deltaTime);
+        Systems::LightSystem::Update(deltaTime);
         Systems::CameraSystem::Update(deltaTime);
 
         fixedUpdateTimer += deltaTime;
         //todo this should never go below 0
         //update could be at 0.01f
-        if (fixedUpdateTimer >= 0.01f || fixedUpdateTimer < 0)
+        if (fixedUpdateTimer >= 0.01f)// || fixedUpdateTimer < 0)
         {
             if (RunBullet)
                 Systems::PhysicsSystem::FixedUpdate();
             fixedUpdateTimer = 0.0f;
         }
 
-        TestingSimulation();
         DoFrame(deltaTime);
         EndFrame();
         Tools::Time::Stop();
     }
-}
-
-std::shared_ptr<Engine::Scene::SceneNode> Engine::Core::App::DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child, int& p_i)
-{
-    static ImGuiTreeNodeFlags base_flags         = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-    static int                selection_mask     = (1 << 2);
-    int                       node_clicked       = -1;
-    ImGuiTreeNodeFlags        node_flags         = base_flags;
-    static bool               test_drag_and_drop = true;
-    const bool                is_selected        = (selection_mask & (1 << p_i)) != 0;
-    if (is_selected)
-        node_flags |= ImGuiTreeNodeFlags_Selected;
-
-    if (!p_child->GetChildren().empty())
-    {
-        bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)p_i, node_flags, "%s", p_child->GetName().c_str());
-        {
-            if (ImGui::IsItemClicked())
-                node_clicked = p_i;
-            if (test_drag_and_drop && ImGui::BeginDragDropSource())
-            {
-                ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
-                ImGui::Text("%s", p_child->GetName().c_str());
-                ImGui::EndDragDropSource();
-            }
-            if (node_open)
-            {
-                for (auto& child : p_child->GetChildren())
-                    DisplayNextChild(child, p_i);
-                ImGui::TreePop();
-            }
-            p_i++;
-        }
-    }
-    else
-    {
-        node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
-        ImGui::TreeNodeEx((void*)(intptr_t)p_i, node_flags, "%s", p_child->GetName().c_str());
-        if (ImGui::IsItemClicked())
-            node_clicked = p_i;
-        if (test_drag_and_drop && ImGui::BeginDragDropSource())
-        {
-            ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
-            ImGui::Text("%s", p_child->GetName().c_str());
-            ImGui::EndDragDropSource();
-        }
-        p_i++;
-    }
-    if (node_clicked != -1)
-    {
-        if (ImGui::GetIO().KeyCtrl)
-            selection_mask ^= (1 << node_clicked);          // CTRL+click to toggle
-        else if (!(selection_mask & (1 << node_clicked)))
-            selection_mask = (1 << node_clicked);           // Click to single-select
-    }
-
-    return p_child;
 }
 
 void Engine::Core::App::StartFrame() const
@@ -237,10 +174,7 @@ void Engine::Core::App::InitEditor()
     link->FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
 
     link->AddComponent<Components::ModelComponent>("Link");
-    for (auto& mesh : link->GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LinkMat"));
-    }
+    link->FindComponentOfType<Components::ModelComponent>()->SetMaterial("LinkMat");
     scene->AddGameObject(link);
     //----------
 
@@ -256,10 +190,7 @@ void Engine::Core::App::InitEditor()
     lambo->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
 
     lambo->AddComponent<Components::ModelComponent>("Lambo");
-    for (auto& mesh : lambo->GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Managers::ResourceManager::GetMaterial("LamboMat"));
-    }
+    lambo->FindComponentOfType<Components::ModelComponent>()->SetMaterial("LamboMat");
     scene->AddGameObject(lambo);
     //-----------
 
@@ -267,7 +198,7 @@ void Engine::Core::App::InitEditor()
     light->GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
     light->GetTransform()->Scale(Vector3F{0.01f, 0.01f, 0.01f});
 
-    Rendering::Lights::DirectionalLight::LightData dirLight
+    Rendering::Lights::ILight::LightData dirLight
     {
         Vector4F(light->GetTransform()->GetPosition().x * -1, light->GetTransform()->GetPosition().y,
                  light->GetTransform()->GetPosition().z * -1, 1.0f),
@@ -290,13 +221,13 @@ void Engine::Core::App::InitEditor()
 
     //----Deserialize test
 
-    scene->Load("SerializeTest.txt");
+    scene->Load("scene1.txt");
     //-----------;
 }
 
 void Engine::Core::App::TestingSimulation()
 {
-    if (_INPUT->keyboard.IsKeyDown('P') && !RunBullet)
+    if (!RunBullet)
     {
         // if (!Managers::SceneManager::GetPlayScene())
         // InitScene(true);
@@ -317,7 +248,7 @@ void Engine::Core::App::TestingSimulation()
         // Managers::SceneManager::SetPlayScene(activeScene);
         RunBullet = true;
     }
-    else if (_INPUT->keyboard.IsKeyDown('O') && RunBullet)
+    else if (RunBullet)
     {
         auto active = Managers::SceneManager::GetActiveScene();
         Managers::SceneManager::SetActiveScene(Managers::SceneManager::GetPlayScene());

@@ -3,31 +3,35 @@
 #include <Components/ModelComponent.h>
 #include <Objects/GameObject.h>
 
-Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const int32_t p_id): IComponent{p_gameObject}
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const int32_t p_id): IComponent{p_gameObject, MODEL}
 {
     m_model = p_id;
+    m_material = Managers::ResourceManager::GetMaterial("default");
 }
 
 
-Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject): IComponent{p_gameObject}, m_model{0}
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject): IComponent{p_gameObject, MODEL}, m_model{0}
 {
 }
 
 Engine::Components::ModelComponent::ModelComponent(Objects::GameObject*            p_gameObject,
-                                                   std::shared_ptr<ModelComponent> p_other) : IComponent{p_gameObject}
+                                                   std::shared_ptr<ModelComponent> p_other) : IComponent{p_gameObject, MODEL}
 {
     m_model = p_other->m_model;
+    m_material = p_other->m_material;
 }
 
-Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name): IComponent{p_gameObject}
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name): IComponent{p_gameObject, MODEL}
 {
     m_model = Managers::ResourceManager::GetModel(p_name);
+    m_material = Managers::ResourceManager::GetMaterial("default");
 }
 
 Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file,
-                               const std::string& p_name): IComponent{p_gameObject}
+                               const std::string& p_name): IComponent{p_gameObject, MODEL}
 {
     m_model = Managers::ResourceManager::AddModel(p_file, p_name);
+    m_material = Managers::ResourceManager::GetMaterial("default");
 }
 
 void Engine::Components::ModelComponent::Serialize(std::ostream& p_stream)

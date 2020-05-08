@@ -21,7 +21,7 @@ void Engine::Components::Camera::UpdateCamera(const float p_deltaTime, const flo
 }
 
 Engine::Components::Camera::Camera(Objects::GameObject* p_gameObject, const int p_width, const int p_height) :
-    IComponent{p_gameObject}, m_width(static_cast<float>(p_width)), m_height(static_cast<float>(p_height))
+    IComponent{p_gameObject, CAMERA}, m_width(static_cast<float>(p_width)), m_height(static_cast<float>(p_height))
 {
     Systems::CameraSystem::AddCamera(std::make_shared<Camera>(*this));
     UpdatePerspectiveMatrix();

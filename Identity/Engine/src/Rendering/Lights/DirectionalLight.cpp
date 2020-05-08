@@ -4,15 +4,22 @@
 
 using namespace Engine::Rendering;
 
+
+Lights::DirectionalLight::DirectionalLight() : ILight{LightData{}}
+{
+}
+
 Lights::DirectionalLight::DirectionalLight(const Vector4F& p_position, const Vector4F&  p_ambient,
                                            const Vector4F& p_diffuse, const Vector4F&   p_specular,
                                            const Vector4F& p_direction, const Vector4F& p_color,
-                                           const float&    p_shininess) : m_lightData{p_position, p_ambient, p_diffuse,
-                                                                                      p_specular, p_color, p_shininess} {}
-
-Lights::DirectionalLight::DirectionalLight(const LightData& p_lightData)
+                                           const float& p_shininess) : ILight{ LightData{p_position, p_ambient, p_diffuse, p_specular, p_color, p_shininess} }
 {
-    m_lightData = p_lightData;
+    // m_lightData = { p_position, p_ambient, p_diffuse, p_specular, p_color, p_shininess };
+}
+
+Lights::DirectionalLight::DirectionalLight(const LightData& p_lightData) : ILight{p_lightData}
+{
+    // m_lightData = p_lightData;
 }
 
 bool Lights::DirectionalLight::operator==(ILight* p_other)
@@ -38,13 +45,13 @@ void Lights::DirectionalLight::Serialize(std::ostream& p_stream)
 {
     p_stream << typeid(*this).name() << " " << std::to_string(m_id) << "\n{\n" <<
         "   m_lightData\n   {\n" <<
-        "       shininess " << m_lightData.shininess << "\n" <<
-        "       padding " << m_lightData.padding << "\n" <<
-        "       position " << m_lightData.position << "\n" <<
-        "       ambient " << m_lightData.ambient << "\n" <<
-        "       diffuse " << m_lightData.diffuse << "\n" <<
-        "       specular " << m_lightData.specular << "\n" <<
-        "       color " << m_lightData.color << "\n" <<
+        "       shininess " << GetLightData().shininess << "\n" <<
+        "       padding " << GetLightData().padding << "\n" <<
+        "       position " << GetLightData().position << "\n" <<
+        "       ambient " << GetLightData().ambient << "\n" <<
+        "       diffuse " << GetLightData().diffuse << "\n" <<
+        "       specular " << GetLightData().specular << "\n" <<
+        "       color " << GetLightData().color << "\n" <<
         "   }\n" << "}\n";
 }
 
@@ -69,49 +76,49 @@ void Lights::DirectionalLight::Deserialize(std::vector<std::string>& p_block)
         }
         else if (words[0] == "shininess")
         {
-            m_lightData.shininess = 0.0f;
-            m_lightData.shininess = std::stof(words[1]);
+            GetLightData().shininess = 0.0f;
+            GetLightData().shininess = std::stof(words[1]);
         }
         else if (words[0] == "padding")
         {
-            m_lightData.padding.x = std::stof(words[1]);
-            m_lightData.padding.y = std::stof(words[2]);
-            m_lightData.padding.z = std::stof(words[3]);
+            GetLightData().padding.x = std::stof(words[1]);
+            GetLightData().padding.y = std::stof(words[2]);
+            GetLightData().padding.z = std::stof(words[3]);
         }
         else if (words[0] == "position")
         {
-            m_lightData.position.x = std::stof(words[1]);
-            m_lightData.position.y = std::stof(words[2]);
-            m_lightData.position.z = std::stof(words[3]);
-            m_lightData.position.w = std::stof(words[4]);
+            GetLightData().position.x = std::stof(words[1]);
+            GetLightData().position.y = std::stof(words[2]);
+            GetLightData().position.z = std::stof(words[3]);
+            GetLightData().position.w = std::stof(words[4]);
         }
         else if (words[0] == "ambient")
         {
-            m_lightData.ambient.x = std::stof(words[1]);
-            m_lightData.ambient.y = std::stof(words[2]);
-            m_lightData.ambient.z = std::stof(words[3]);
-            m_lightData.ambient.w = std::stof(words[4]);
+            GetLightData().ambient.x = std::stof(words[1]);
+            GetLightData().ambient.y = std::stof(words[2]);
+            GetLightData().ambient.z = std::stof(words[3]);
+            GetLightData().ambient.w = std::stof(words[4]);
         }
         else if (words[0] == "diffuse")
         {
-            m_lightData.diffuse.x = std::stof(words[1]);
-            m_lightData.diffuse.y = std::stof(words[2]);
-            m_lightData.diffuse.z = std::stof(words[3]);
-            m_lightData.diffuse.w = std::stof(words[4]);
+            GetLightData().diffuse.x = std::stof(words[1]);
+            GetLightData().diffuse.y = std::stof(words[2]);
+            GetLightData().diffuse.z = std::stof(words[3]);
+            GetLightData().diffuse.w = std::stof(words[4]);
         }
         else if (words[0] == "specular")
         {
-            m_lightData.specular.x = std::stof(words[1]);
-            m_lightData.specular.y = std::stof(words[2]);
-            m_lightData.specular.z = std::stof(words[3]);
-            m_lightData.specular.w = std::stof(words[4]);
+            GetLightData().specular.x = std::stof(words[1]);
+            GetLightData().specular.y = std::stof(words[2]);
+            GetLightData().specular.z = std::stof(words[3]);
+            GetLightData().specular.w = std::stof(words[4]);
         }
         else if (words[0] == "color")
         {
-            m_lightData.color.x = std::stof(words[1]);
-            m_lightData.color.y = std::stof(words[2]);
-            m_lightData.color.z = std::stof(words[3]);
-            m_lightData.color.w = std::stof(words[4]);
+            GetLightData().color.x = std::stof(words[1]);
+            GetLightData().color.y = std::stof(words[2]);
+            GetLightData().color.z = std::stof(words[3]);
+            GetLightData().color.w = std::stof(words[4]);
         }
 
         words.clear();

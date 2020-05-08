@@ -2,6 +2,12 @@
 #include <Export.h>
 #include <Rendering/Lights/ILight.h>
 
+namespace Engine {
+    namespace Components {
+        class Light;
+    }
+}
+
 namespace Engine::Containers
 {
     class API_ENGINE LightContainer

@@ -233,7 +233,6 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Rendering\Lights\DirectionalLight.h" />
     <ClInclude Include="include\Rendering\Materials\PixelShader.h" />
     <ClInclude Include="include\Rendering\Materials\VertexShader.h" />
-    <ClInclude Include="include\Serialize\DeserializerParser.h" />
     <ClInclude Include="include\Serialize\ISerializeable.h" />
     <ClInclude Include="include\Systems\CameraSystem.h" />
     <ClInclude Include="include\Systems\PhysicsSystem.h" />
@@ -241,7 +240,6 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Containers\EventContainer.h" />
     <ClInclude Include="include\Containers\GameObjectContainer.h" />
     <ClInclude Include="include\Containers\IContainer.h" />
-    <ClInclude Include="include\Containers\LightContainer.h" />
     <ClInclude Include="include\Containers\MaterialContainer.h" />
     <ClInclude Include="include\Components\Transform.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
@@ -281,7 +279,6 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Rendering\Renderer.h" />
     <ClInclude Include="include\Rendering\Window.h" />
     <ClInclude Include="include\stdafx.h" />
-    <ClInclude Include="include\TestDependencies.h" />
     <ClInclude Include="include\Tools\ASSIMP\ASSIMPConversion.h" />
     <ClInclude Include="include\Tools\DirectX\dxerr.h" />
     <ClInclude Include="include\Tools\DirectX\GraphicsMacros.h" />
@@ -299,6 +296,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Tools\ImGUI\imstb_truetype.h" />
     <ClInclude Include="include\Tools\Time.h" />
     <ClInclude Include="include\UI\Dockspace.h" />
+    <ClInclude Include="include\UI\Hierarchy.h" />
     <ClInclude Include="include\UI\UIManager.h" />
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
@@ -306,11 +304,9 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Components\BoxCollider.cpp" />
     <ClCompile Include="src\Components\IComponent.cpp" />
     <ClCompile Include="src\Components\Light.cpp" />
-    <ClCompile Include="src\Serialize\DeserializerParser.cpp" />
     <ClCompile Include="src\Systems\PhysicsSystem.cpp" />
     <ClCompile Include="src\Managers\ResourceManager.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
-    <ClCompile Include="src\Containers\LightContainer.cpp" />
     <ClCompile Include="src\Containers\MaterialContainer.cpp" />
     <ClCompile Include="src\Managers\SceneManager.cpp" />
     <ClCompile Include="src\Objects\IObject.cpp" />
@@ -331,6 +327,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Systems\LightSystem.cpp" />
     <ClCompile Include="src\Tools\Time.cpp" />
     <ClCompile Include="src\UI\Dockspace.cpp" />
+    <ClCompile Include="src\UI\Hierarchy.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
     <ClInclude Include="src\Core\App.h" />
     <ClCompile Include="src\Rendering\Buffers\InputLayout.cpp" />
@@ -353,7 +350,6 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Components\Camera.cpp" />
     <ClCompile Include="src\Rendering\Renderer.cpp" />
     <ClCompile Include="src\Rendering\Window.cpp" />
-    <ClCompile Include="src\TestDependencies.cpp" />
     <ClCompile Include="src\Tools\ASSIMP\AssimpConversion.cpp" />
     <ClCompile Include="src\Tools\DirectX\dxerr.cpp" />
     <ClCompile Include="src\Tools\IdentityException.cpp" />

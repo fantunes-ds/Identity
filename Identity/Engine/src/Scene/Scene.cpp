@@ -57,7 +57,7 @@ void Engine::Scene::Scene::SetActiveOnAll(bool p_active)
 
 void Engine::Scene::Scene::Save()
 {
-    std::ofstream outfile("SerializeTest.txt");
+    std::ofstream outfile(m_name + ".txt");
 
     for (auto& node: m_sceneGraph.GetAllSceneNodes())
     {

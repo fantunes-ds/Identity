@@ -1,20 +1,19 @@
 #pragma once
 #include <Export.h>
 #include <Components/IComponent.h>
+#include <Objects/GameObject.h>
 #include <Rendering/Lights/ILight.h>
-#include <Containers/LightContainer.h>
-#include <Rendering/Lights/DirectionalLight.h>
 
 namespace Engine::Components
 {
     class API_ENGINE Light: public IComponent
     {
     public:
+        Light() = delete;
         Light(Objects::GameObject* p_gameObject);
-        Light(Objects::GameObject* p_gameObject, Rendering::Lights::DirectionalLight::LightData& p_lightData);
+        Light(Objects::GameObject* p_gameObject, Rendering::Lights::ILight::LightData& p_lightData);
 
-        [[nodiscard]] std::shared_ptr<Rendering::Lights::ILight> GetLight();
-        [[nodiscard]] int32_t GetLightID() const { return m_light; }
+        [[nodiscard]] std::shared_ptr<Rendering::Lights::ILight> GetLight() const { return m_light; }
 
         bool operator==(IComponent* p_other) override;
         bool DeleteFromMemory() override;
@@ -23,6 +22,6 @@ namespace Engine::Components
         void Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block) override;
 
     private:
-        int32_t m_light;
+        std::shared_ptr<Rendering::Lights::ILight> m_light;
     };
 }

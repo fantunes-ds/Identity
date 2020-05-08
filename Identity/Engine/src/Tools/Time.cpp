@@ -71,6 +71,9 @@ float Time::GetDeltaTime()
     if (1.0f / deltaTime > GetInstance()->m_fpsLimiter)
         deltaTime = 1.0f / GetInstance()->m_fpsLimiter;
 
+    if (deltaTime < 0)
+        return 0;
+
     return deltaTime;
 }
 

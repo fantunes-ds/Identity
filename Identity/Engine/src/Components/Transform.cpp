@@ -3,26 +3,26 @@
 #include <Components/Transform.h>
 #include <Systems/TransformSystem.h>
 
-Engine::Components::Transform::Transform(Objects::GameObject* p_gameObject) : IComponent{p_gameObject}, m_position{Vector3F::zero},
+Engine::Components::Transform::Transform(Objects::GameObject* p_gameObject) : IComponent{p_gameObject, TRANSFORM}, m_position{Vector3F::zero},
 m_forward{Vector3F::forward}, m_right{Vector3F::right}, m_up{Vector3F::up}, m_scale{Vector3F::one},
 m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} }
 {
     Systems::TransformSystem::AddTransform(std::shared_ptr<Transform>(this));
 }
 
-Engine::Components::Transform::Transform(Objects::GameObject* p_gameObject, const Transform& p_other) : IComponent{p_gameObject},
+Engine::Components::Transform::Transform(Objects::GameObject* p_gameObject, const Transform& p_other) : IComponent{p_gameObject, TRANSFORM},
 m_parent{p_other.m_parent}, m_position{p_other.m_position}, m_forward{p_other.m_forward}, m_right{p_other.m_right},
 m_up{p_other.m_up}, m_scale{p_other.m_scale}, m_rotation{ p_other.m_rotation } {}
 
 
-Engine::Components::Transform::Transform() : IComponent{nullptr},
-                         m_position{Vector3F::zero}, m_forward{Vector3F::forward}, m_right{Vector3F::right},
-                         m_up{Vector3F::up}, m_scale{Vector3F::one}, m_rotation{Quaternion{0.0, 0.0, 0.0, 1.0}} {}
+Engine::Components::Transform::Transform() : IComponent{nullptr, TRANSFORM},
+                                             m_position{Vector3F::zero}, m_forward{Vector3F::forward}, m_right{Vector3F::right},
+                                             m_up{Vector3F::up}, m_scale{Vector3F::one}, m_rotation{Quaternion{0.0, 0.0, 0.0, 1.0}} {}
 
-Engine::Components::Transform::Transform(const std::string& p_name) : IComponent{nullptr}, m_position{Vector3F::zero},
-                                                  m_forward{Vector3F::forward}, m_right{Vector3F::right},
-                                                  m_up{Vector3F::up}, m_scale{Vector3F::one},
-                                                  m_rotation{Quaternion{0.0, 0.0, 0.0, 1.0}}
+Engine::Components::Transform::Transform(const std::string& p_name) : IComponent{nullptr, TRANSFORM}, m_position{Vector3F::zero},
+                                                                      m_forward{Vector3F::forward}, m_right{Vector3F::right},
+                                                                      m_up{Vector3F::up}, m_scale{Vector3F::one},
+                                                                      m_rotation{Quaternion{0.0, 0.0, 0.0, 1.0}}
 {
     SetName(p_name);
 }
@@ -36,7 +36,8 @@ void Engine::Components::Transform::CopyFrom(std::shared_ptr<Transform> p_other)
     m_scale    = p_other->m_scale;
     m_rotation = p_other->m_rotation;
 
-    needUpdate = true;
+    // needUpdate = true;
+    // needAxesUpdate = true;
 }
 
 bool Engine::Components::Transform::operator==(IComponent* p_other)

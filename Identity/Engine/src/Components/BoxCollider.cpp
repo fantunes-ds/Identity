@@ -8,14 +8,13 @@
 #include <Systems/PhysicsSystem.h>
 #include <Managers/ResourceManager.h>
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{ p_gameObject }
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameObject, BOX_COLLIDER}
 {
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
     btTransform trans;
-    auto& position = m_gameObject->GetTransform()->GetPosition();
-    auto& rotation = m_gameObject->GetTransform()->GetRotation();
-    auto& scale = m_gameObject->GetTransform()->GetScale();
+    auto&       position = m_gameObject->GetTransform()->GetPosition();
+    auto&       rotation = m_gameObject->GetTransform()->GetRotation();
 
     trans.setIdentity();
 
@@ -37,7 +36,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
 }
 
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{ p_gameObject }
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{p_gameObject, BOX_COLLIDER}
 {
     //init data
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
@@ -46,10 +45,22 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     m_box = p_other->m_box;
 
     btTransform trans;
-    auto& position = m_gameObject->GetTransform()->GetPosition();
-    auto& rotation = m_gameObject->GetTransform()->GetRotation();
-    auto& scale = m_gameObject->GetTransform()->GetScale();
+    auto&       position = m_gameObject->GetTransform()->GetPosition();
+    auto&       rotation = m_gameObject->GetTransform()->GetRotation();
 
+    Vector3D offsetD = m_offset;
+    Quaternion q;
+    q.SetXAxisValue(offsetD.x);
+    q.SetYAxisValue(offsetD.y);
+    q.SetZAxisValue(offsetD.z);
+    q.w = 0;
+
+    q = rotation.Multiply(q).Multiply(Quaternion::Conjugate(rotation));
+
+    offsetD = { q.GetXAxisValue(), q.GetYAxisValue(), q.GetZAxisValue() };
+    Vector3D offset = offsetD;
+
+    position -= offset;
 
     trans.setIdentity();
     trans.setOrigin(btVector3(position.x, position.y, position.z));

@@ -13,6 +13,8 @@
 
 #include <Components/Light.h>
 
+#include <Systems/LightSystem.h>
+
 using namespace Engine::Objects;
 
 GameObject::GameObject()
@@ -117,8 +119,8 @@ void GameObject::Deserialize(std::vector<std::string>& p_strings)
             else if (words[1] == "Engine::Rendering::Lights::DirectionalLight")
             {
                 int compID = AddComponent<Components::Light>();
-                int32_t lightID = std::dynamic_pointer_cast<Components::Light>(Containers::ComponentContainer::FindComponent(compID))->GetLightID();
-                Containers::LightContainer::FindLight(lightID)->Deserialize(componentBlock);
+                //int32_t lightID = std::dynamic_pointer_cast<Components::Light>(Containers::ComponentContainer::FindComponent(compID))->GetLightID();
+                Systems::LightSystem::GetLight(compID)->Deserialize(this, componentBlock);
             }
             else if (words[1] == "Engine::Components::ModelComponent")
             {

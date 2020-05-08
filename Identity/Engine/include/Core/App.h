@@ -23,8 +23,9 @@ namespace Engine::Core
         App& operator=(const App&) = delete;
 
         int Run();
-        std::shared_ptr<Engine::Scene::SceneNode> DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child, int& p_i);
         void Init();
+        void TestingSimulation();
+        void SetIsApplicationRunning(bool p_state) { m_applicationIsRunning = p_state; }
     private:
         void StartFrame() const;
         void DoFrame(float p_deltaTime) const;
@@ -32,7 +33,6 @@ namespace Engine::Core
 
         //testing
         void InitEditor();
-        void TestingSimulation();
         bool RunBullet{ false };
         //-------
 

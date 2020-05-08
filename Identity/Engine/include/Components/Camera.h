@@ -9,7 +9,7 @@ namespace Engine::Components
     class API_ENGINE Camera : public IComponent
     {
     public:
-        Camera() = default;
+        Camera() = delete;
         Camera(Objects::GameObject* p_gameObject, const int p_width, const int p_height);
         ~Camera() = default;
 

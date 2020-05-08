@@ -6,6 +6,10 @@
 #include <Managers/SceneManager.h>
 #include <Scene/Scene.h>
 
+
+#include <Systems/TransformSystem.h>
+#include "Systems/PhysicsSystem.h"
+
 std::unique_ptr<Engine::Managers::SceneManager>& Engine::Managers::SceneManager::GetInstance()
 {
     if (m_instance == nullptr)
@@ -124,7 +128,6 @@ void Engine::Managers::SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene
         {
             tmpOBJ->AddComponent<Components::ModelComponent>(component);
         }
-
         p_destination->AddGameObject(tmpOBJ);
     }
 }

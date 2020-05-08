@@ -4,8 +4,10 @@
 #include <Scene/SceneGraph/SceneNode.h>
 #include <Systems/TransformSystem.h>
 
-Engine::Scene::SceneNode::SceneNode(std::shared_ptr<Objects::GameObject> p_gameObject) :
-	m_gameObject{ p_gameObject }
+#include <Managers/SceneManager.h>
+#include <Scene/Scene.h>
+
+Engine::Scene::SceneNode::SceneNode(std::shared_ptr<Objects::GameObject> p_gameObject) : m_gameObject{ p_gameObject }
 {
 }
 

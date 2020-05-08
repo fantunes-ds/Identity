@@ -2,6 +2,7 @@
 
 #include <Containers/LightContainer.h>
 #include <Rendering/Lights/DirectionalLight.h>
+#include <Components/Light.h>
 
 #include <Rendering/Lights/ILight.h>
 

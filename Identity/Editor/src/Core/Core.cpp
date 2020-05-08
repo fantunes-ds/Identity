@@ -1,9 +1,9 @@
 #include <Core/Core.h>
 #include <Tools/IdentityException.h>
 
-
 #include <Containers/EventContainer.h>
 #include <UI/Dockspace.h>
+#include <UI/Hierarchy.h>
 
 Editor::Core::Core::Core()
 {
@@ -48,6 +48,8 @@ int Editor::Core::Core::Update()
 
 void Editor::Core::Core::EditorBase()
 {
-    Engine::UI::Dockspace::CreateDockspace();
+    //todo should we keep reference to app ?
+    Engine::UI::Dockspace::CreateDockspace(m_engine);
+    Engine::UI::Hierarchy::CreateHierarchy(m_engine);
 }
 
