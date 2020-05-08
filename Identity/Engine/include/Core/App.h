@@ -24,7 +24,7 @@ namespace Engine::Core
 
         int Run();
         void Init();
-        void TestingSimulation();
+        void TestingSimulation(bool p_stop = false);
         void SetIsApplicationRunning(bool p_state) { m_applicationIsRunning = p_state; }
     private:
         void StartFrame() const;

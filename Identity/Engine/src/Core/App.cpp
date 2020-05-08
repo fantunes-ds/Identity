@@ -213,9 +213,9 @@ void Engine::Core::App::InitEditor()
     //-----------
 }
 
-void Engine::Core::App::TestingSimulation()
+void Engine::Core::App::TestingSimulation(bool p_stop)
 {
-    if (!RunBullet)
+    if (!RunBullet && !p_stop)
     {
         // if (!Managers::SceneManager::GetPlayScene())
         // InitScene(true);

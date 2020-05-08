@@ -91,7 +91,7 @@ void Dockspace::CreateMenuBar(Core::App& p_appRef)
             }
             if (ImGui::MenuItem("Stop", "Ctrl + O", nullptr))
             {
-                p_appRef.TestingSimulation();
+                p_appRef.TestingSimulation(true);
             }
             ImGui::EndMenu();
         }
