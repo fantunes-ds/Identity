@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include <fstream>
 #include <3DLoader/ObjectLoader.h>
 #include <Managers/ResourceManager.h>
 #include <Rendering/Renderer.h>
@@ -182,8 +183,8 @@ std::shared_ptr<Engine::ObjectElements::Model> Engine::Managers::ResourceManager
             return model.second;
     }
 
-    const std::string error("The model with id: " + std::to_string(p_id) + " does not exist");
-    MessageBox(nullptr, error.c_str(), "Error", MB_ICONERROR | MB_OK);
+    //const std::string error("The model with id: " + std::to_string(p_id) + " does not exist");
+    //MessageBox(nullptr, error.c_str(), "Error", MB_ICONERROR | MB_OK);
     return nullptr;
 }
 
@@ -454,4 +455,98 @@ std::shared_ptr<Material> Engine::Managers::ResourceManager::GetMaterialNS(const
 std::vector<std::shared_ptr<Material>> Engine::Managers::ResourceManager::GetAllMaterialsNS()
 {
     return m_materials;
+}
+
+void Engine::Managers::ResourceManager::SerializeNS()
+{
+    std::ofstream outfile("resource.txt");
+
+    //Model
+    for (auto& model : GetAllModelsNS())
+    {
+        model->Serialize(outfile);
+    }
+
+    //Texture
+    for (auto& texture : GetAllTexturesNS())
+    {
+        texture->Serialize(outfile);
+    }
+
+    //Pixel Shader
+    for (auto& ps : GetAllPixelShadersNS())
+    {
+        if (ps->GetName() != "defaultPS")
+            ps->Serialize(outfile);
+    }
+
+    //Vertex Shader
+    for (auto& vs : GetAllVertexShadersNS())
+    {
+        if (vs->GetName() != "defaultVS")
+            vs->Serialize(outfile);
+    }
+
+    //Material
+    for (auto& material : GetAllMaterialsNS())
+    {
+        if (material->GetName() != "default" && material->GetName() != "RenderText")
+            material->Serialize(outfile);
+    }
+
+    outfile.close();
+}
+
+void Engine::Managers::ResourceManager::DeserializeNS()
+{
+    std::ifstream inFile("resource.txt");
+    std::vector <std::string> lines;
+
+    for (std::string line; std::getline(inFile, line); )
+    {
+        lines.push_back(line);
+    }
+
+
+    std::vector <std::string> words;
+
+    for (auto& line : lines)
+    {
+        std::stringstream stringStream(line);
+
+        do
+        {
+            std::string word;
+            stringStream >> word;
+            words.push_back(word);
+        } while (stringStream);
+
+        if (words[0] == "MODEL")
+        {
+            AddModelNS(words[1], words[2]);
+        }
+        else if (words[0] == "TEXTURE")
+        {
+            AddTextureNS(words[1], words[2]);
+        }
+        else if (words[0] == "PS")
+        {
+            AddPixelShaderNS(words[1], words[2]);
+        }
+        else if (words[0] == "VS")
+        {
+            AddVertexShaderNS(words[1], words[2]);
+        }
+        else if (words[0] == "MATERIAL")
+        {
+            if (words[4] == "NO_TEXTURE" || words[4] == "NoName")
+                CreateMaterialNS(words[1], words[2], words[3]);
+            else
+                CreateMaterialNS(words[1], words[2], words[3], words[4]);
+        }
+
+        words.clear();
+    }
+
+    inFile.close();
 }

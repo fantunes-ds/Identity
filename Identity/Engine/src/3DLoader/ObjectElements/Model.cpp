@@ -36,3 +36,8 @@ bool Model::operator!=(const Model& p_other)
     }
     return false;
 }
+
+void Model::Serialize(std::ostream& p_stream)
+{
+    p_stream << "MODEL " << GetPath() << " " << GetName() << '\n';
+}

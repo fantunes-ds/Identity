@@ -388,8 +388,7 @@ namespace GPM
     template <typename T>
     constexpr std::ostream& operator<<(std::ostream& p_stream, const Vector3<T>& p_vector)
     {
-        p_stream << "x : " << p_vector.x << " y : " << p_vector.y <<
-            " z : " << p_vector.z;
+        p_stream << p_vector.x << " " << p_vector.y << " " << p_vector.z;
         return  { p_stream };
     }
 #pragma endregion

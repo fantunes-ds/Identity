@@ -48,3 +48,8 @@ void PixelShader::UnBindConstantBuffer() const
 {
     m_pcb.Unbind();
 }
+
+void PixelShader::Serialize(std::ostream& p_stream)
+{
+    p_stream << "PS " << GetPath() << " " << GetName() << '\n';
+}

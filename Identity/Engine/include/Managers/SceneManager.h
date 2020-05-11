@@ -20,6 +20,8 @@ namespace Engine::Managers
 
         static std::shared_ptr<Scene::Scene> GetScene(const std::string& p_name);
         static void                          AddScene(const std::shared_ptr<Scene::Scene> p_scene);
+        static std::shared_ptr<Scene::Scene> LoadScene(const std::string& p_name);
+        static void SaveActiveScene();
 
         static std::unique_ptr<SceneManager>&              GetInstance();
         static std::shared_ptr<Scene::Scene>               GetActiveScene() { return GetInstance()->m_activeScene; }
@@ -29,7 +31,6 @@ namespace Engine::Managers
         static void SetActiveScene(const std::string& p_name);
         static void SetActiveScene(const int32_t p_id);
         static void SetActiveScene(std::shared_ptr<Scene::Scene> p_scene) { GetInstance()->m_activeScene = p_scene; }
-
         static void SetPlayScene(const std::string& p_name);
         static void SetPlayScene(const int32_t p_id);
         static void SetPlayScene(std::shared_ptr<Scene::Scene> p_scene) { GetInstance()->m_playScene = p_scene; }

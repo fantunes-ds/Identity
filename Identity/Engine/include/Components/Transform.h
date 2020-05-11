@@ -21,6 +21,8 @@ namespace Engine::Components
         void CopyFrom(std::shared_ptr<Transform> p_other);
         bool operator==(IComponent* p_other) override;
         bool DeleteFromMemory() override;
+        void Serialize(std::ostream& p_stream) override;
+        void Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block) override;
         void SetActive(bool p_active) override;
         //---------
 

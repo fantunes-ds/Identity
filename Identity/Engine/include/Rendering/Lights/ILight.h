@@ -20,6 +20,10 @@ namespace Engine::Rendering::Lights
         ILight(LightData p_lightData) : m_lightData{ p_lightData }{}
 
         LightData& GetLightData() { return m_lightData; }
+
+        virtual void Serialize(std::ostream& p_stream) = 0;
+        virtual void Deserialize(std::vector<std::string>& p_block) = 0;
+
     private:
         virtual bool operator==(Rendering::Lights::ILight* p_other) = 0;
 

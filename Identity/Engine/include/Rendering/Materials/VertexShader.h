@@ -9,7 +9,7 @@
 
 namespace Engine::Rendering::Materials
 {
-    class VertexShader : public Objects::IObject
+    class VertexShader : public Objects::IObject, public Serialize::ISerializeable
     {
     public:
         VertexShader() = default;
@@ -49,6 +49,9 @@ namespace Engine::Rendering::Materials
         [[nodiscard]] inline const Buffers::VertexConstantBuffer& GetVCB() const { return m_vcb; }
         [[nodiscard]] inline const Microsoft::WRL::ComPtr<ID3DBlob> GetBlob() const { return m_blob; }
 
+
+        void Serialize(std::ostream& p_stream) override;
+        void Unserialize(std::istream& p_stream) override {}
     private:
         std::string m_path{};
 

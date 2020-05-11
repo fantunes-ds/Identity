@@ -9,11 +9,9 @@
 #include <Core/App.h>
 #include <Rendering/Renderer.h>
 
-using namespace Engine::UI;
+int Engine::UI::Hierarchy::m_currentlySelected = -1;
 
-int Hierarchy::m_currentlySelected = -1;
-
-std::shared_ptr<Engine::Scene::SceneNode> Hierarchy::DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child)
+std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child)
 {
     static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
     static int                selection_mask = (1 << 2);
@@ -72,7 +70,7 @@ std::shared_ptr<Engine::Scene::SceneNode> Hierarchy::DisplayNextChild(std::share
     return p_child;
 }
 
-void Hierarchy::CreateHierarchy(Core::App& p_appRef)
+void Engine::UI::Hierarchy::CreateHierarchy(Core::App& p_appRef)
 {
     if (ImGui::Begin("Hierarchy"))
     {
@@ -84,7 +82,7 @@ void Hierarchy::CreateHierarchy(Core::App& p_appRef)
     CallInspector(m_currentlySelected);
 }
 
-void Hierarchy::CallInspector(int32_t p_id)
+void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 {
     ImGui::Begin("Inspector");
 

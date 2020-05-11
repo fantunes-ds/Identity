@@ -3,25 +3,26 @@
 #include <Components/Transform.h>
 #include <Systems/TransformSystem.h>
 
-using namespace Engine::Components;
-
-Transform::Transform(Objects::GameObject* p_gameObject) : IComponent{p_gameObject, TRANSFORM}, m_position{Vector3F::zero},
+Engine::Components::Transform::Transform(Objects::GameObject* p_gameObject) : IComponent{p_gameObject, TRANSFORM}, m_position{Vector3F::zero},
 m_forward{Vector3F::forward}, m_right{Vector3F::right}, m_up{Vector3F::up}, m_scale{Vector3F::one},
-m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} } {}
+m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} }
+{
+    Systems::TransformSystem::AddTransform(std::shared_ptr<Transform>(this));
+}
 
-Transform::Transform(Objects::GameObject* p_gameObject, const Transform& p_other) : IComponent{p_gameObject, TRANSFORM},
+Engine::Components::Transform::Transform(Objects::GameObject* p_gameObject, const Transform& p_other) : IComponent{p_gameObject, TRANSFORM},
 m_parent{p_other.m_parent}, m_position{p_other.m_position}, m_forward{p_other.m_forward}, m_right{p_other.m_right},
 m_up{p_other.m_up}, m_scale{p_other.m_scale}, m_rotation{ p_other.m_rotation } {}
 
 
-Transform::Transform() : IComponent{nullptr, TRANSFORM},
-                         m_position{Vector3F::zero}, m_forward{Vector3F::forward}, m_right{Vector3F::right},
-                         m_up{Vector3F::up}, m_scale{Vector3F::one}, m_rotation{Quaternion{0.0, 0.0, 0.0, 1.0}} {}
+Engine::Components::Transform::Transform() : IComponent{nullptr, TRANSFORM},
+                                             m_position{Vector3F::zero}, m_forward{Vector3F::forward}, m_right{Vector3F::right},
+                                             m_up{Vector3F::up}, m_scale{Vector3F::one}, m_rotation{Quaternion{0.0, 0.0, 0.0, 1.0}} {}
 
-Transform::Transform(const std::string& p_name) : IComponent{nullptr, TRANSFORM}, m_position{Vector3F::zero},
-                                                  m_forward{Vector3F::forward}, m_right{Vector3F::right},
-                                                  m_up{Vector3F::up}, m_scale{Vector3F::one},
-                                                  m_rotation{Quaternion{0.0, 0.0, 0.0, 1.0}}
+Engine::Components::Transform::Transform(const std::string& p_name) : IComponent{nullptr, TRANSFORM}, m_position{Vector3F::zero},
+                                                                      m_forward{Vector3F::forward}, m_right{Vector3F::right},
+                                                                      m_up{Vector3F::up}, m_scale{Vector3F::one},
+                                                                      m_rotation{Quaternion{0.0, 0.0, 0.0, 1.0}}
 {
     SetName(p_name);
 }
@@ -47,6 +48,104 @@ bool Engine::Components::Transform::operator==(IComponent* p_other)
 bool Engine::Components::Transform::DeleteFromMemory()
 {
     return true;
+}
+
+void Engine::Components::Transform::Serialize(std::ostream& p_stream)
+{
+    p_stream << typeid(*this).name() << "\n{\n" <<
+        "   m_parent " << m_parent << "\n" <<
+        "   m_position " << m_position << "\n" <<
+        "   m_forward " << m_forward << "\n" <<
+        "   m_right " << m_right << "\n" <<
+        "   m_up " << m_up << "\n" <<
+        "   m_scale " << m_scale << "\n" <<
+        "   m_rotation " << m_rotation << "\n" <<
+        "   m_worldTransform " << m_worldTransform << "\n" <<
+        "   m_localTransform " << m_localTransform << "\n" <<
+        "}\n";
+}
+
+void Engine::Components::Transform::Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block)
+{
+    m_gameObject = p_gameObject;
+    std::vector<std::string> words;
+
+    for (int i = 0; i < p_block.size(); ++i)
+    {
+        std::stringstream stringStream(p_block[i]);
+
+        do
+        {
+            std::string word;
+            stringStream >> word;
+            words.push_back(word);
+        } while (stringStream);
+
+        if (words[0] == "m_parent")
+        {
+            m_parent = std::stoi(words[1]);
+        }
+        else if (words[0] == "m_position")
+        {
+            m_position.x = std::stof(words[1]);
+            m_position.y = std::stof(words[2]);
+            m_position.z = std::stof(words[3]);
+        }
+        else if (words[0] == "m_forward")
+        {
+            m_forward.x = std::stof(words[1]);
+            m_forward.y = std::stof(words[2]);
+            m_forward.z = std::stof(words[3]);
+        }
+        else if (words[0] == "m_right")
+        {
+            m_right.x = std::stof(words[1]);
+            m_right.y= std::stof(words[2]);
+            m_right.z = std::stof(words[3]);
+        }
+        else if (words[0] == "m_up")
+        {
+            m_up.x = std::stof(words[1]);
+            m_up.y = std::stof(words[1]);
+            m_up.z = std::stof(words[1]);
+        }
+        else if (words[0] == "m_scale")
+        {
+            m_scale.x = std::stof(words[1]);
+            m_scale.y = std::stof(words[2]);
+            m_scale.z = std::stof(words[3]);
+        }
+        else if (words[0] == "m_rotation")
+        {
+            m_rotation.SetXAxisValue(std::stof(words[1]));
+            m_rotation.SetYAxisValue(std::stof(words[2]));
+            m_rotation.SetZAxisValue(std::stof(words[3]));
+            m_rotation.SetRealValue(std::stof(words[4]));
+        }
+        else if (words[0] == "m_worldTransform")
+        {
+            m_worldTransform = Matrix4F
+            (
+                std::stof(words[1]), std::stof(words[2]), std::stof(words[3]), std::stof(words[4]),
+                std::stof(words[5]), std::stof(words[6]), std::stof(words[7]), std::stof(words[8]),
+                std::stof(words[9]), std::stof(words[10]), std::stof(words[11]), std::stof(words[12]),
+                std::stof(words[13]), std::stof(words[14]), std::stof(words[15]), std::stof(words[16])
+            );
+        }
+        else if (words[0] == "m_localTransform")
+        {
+            m_localTransform = Matrix4F
+            (
+                std::stof(words[1]), std::stof(words[2]), std::stof(words[3]), std::stof(words[4]),
+                std::stof(words[5]), std::stof(words[6]), std::stof(words[7]), std::stof(words[8]),
+                std::stof(words[9]), std::stof(words[10]), std::stof(words[11]), std::stof(words[12]),
+                std::stof(words[13]), std::stof(words[14]), std::stof(words[15]), std::stof(words[16])
+            );
+        }
+
+        words.clear();
+    }
+
 }
 
 void Engine::Components::Transform::SetActive(bool p_active)

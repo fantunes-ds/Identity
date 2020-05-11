@@ -33,10 +33,19 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
     // std::shared_ptr<Rendering::Lights::ILight>           ILight = Containers::LightContainer::GetLights().begin()->second;
     // std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::
     //     DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
-    
-    auto light1 = Systems::LightSystem::GetAllLights().begin()->second;
-    auto lightType = light1->GetLight();
-    Rendering::Lights::ILight::LightData& light = lightType->GetLightData();
+
+    std::shared_ptr<Rendering::Lights::ILight> lightType;
+    std::shared_ptr<Components::Light> light1;
+    Rendering::Lights::ILight::LightData light;
+
+    if (!Systems::LightSystem::GetAllLights().empty())
+    {
+        light1 = Systems::LightSystem::GetAllLights().begin()->second;
+        lightType = light1->GetLight();
+        light = lightType->GetLightData();
+    }
+    //auto light1 = Systems::LightSystem::GetAllLights().begin()->second;
+    //auto lightType = light1->GetLight();
 
 
     // Rendering::Lights::DirectionalLight::LightData& light = light1->GetLight->GetLightData();

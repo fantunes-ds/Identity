@@ -8,11 +8,15 @@ namespace Engine::Components
     class API_ENGINE ModelComponent: public IComponent
     {
     public:
+        ModelComponent(Objects::GameObject* p_gameObject);
         ModelComponent(Objects::GameObject* p_gameObject, std::shared_ptr<ModelComponent> p_other);
         ModelComponent(Objects::GameObject* p_gameObject, const int32_t p_id);
         ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name);
         ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file, const std::string& p_name);
         virtual ~ModelComponent() = default;
+
+        void Serialize(std::ostream& p_stream) override;
+        void Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block) override;
 
         bool operator==(IComponent* p_other) override;
 

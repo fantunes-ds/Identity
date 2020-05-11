@@ -9,7 +9,7 @@
 
 namespace Engine::Rendering::Materials
 {
-    class PixelShader : public Objects::IObject
+    class PixelShader : public Objects::IObject, public Serialize::ISerializeable
     {
     public:
         PixelShader() = default;
@@ -49,6 +49,9 @@ namespace Engine::Rendering::Materials
         [[nodiscard]] inline const Buffers::PixelConstantBuffer GetPCB() const { return m_pcb; }
         [[nodiscard]] inline const Microsoft::WRL::ComPtr<ID3DBlob> GetBlob() const { return m_blob; }
 
+
+        void Serialize(std::ostream& p_stream) override;
+        void Unserialize(std::istream& p_stream) override {}
     private:
         std::string m_path{};
 

@@ -16,9 +16,12 @@ namespace Engine::Components
     public:
         BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other);
         BoxCollider(Objects::GameObject* p_gameObject);
+        BoxCollider(Objects::GameObject* p_gameObject, std::vector<std::string> p_block);
         BoxCollider(const BoxCollider&) = default;
         ~BoxCollider();
 
+        void Serialize(std::ostream& p_stream) override;
+        void Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block) override;
         /***
          * @brief returns Bullet Physics' Matrix that concerns this BoxCollider.
          */

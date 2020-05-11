@@ -8,9 +8,7 @@
 #include <Systems/PhysicsSystem.h>
 #include <Managers/ResourceManager.h>
 
-using namespace Engine::Components;
-
-BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameObject, BOX_COLLIDER}
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameObject, BOX_COLLIDER}
 {
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
@@ -31,21 +29,85 @@ BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameO
 
     ObjectElements::Model model = ConstructBox();
 
-    //TODO add a "AddModel" that take a model as parametre
     const int32_t id = Managers::ResourceManager::AddModel(model);
-    m_model          = Managers::ResourceManager::FindModel(id);
+    m_model = Managers::ResourceManager::FindModel(id);
 
     Systems::PhysicsSystem::AddCollider(this);
 }
 
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::vector<std::string> p_block) : IComponent{ p_gameObject, BOX_COLLIDER }
+{
+    m_gameObject = p_gameObject;
 
-BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{p_gameObject, BOX_COLLIDER}
+    std::vector<std::string> words;
+
+    for (int i = 0; i < p_block.size(); ++i)
+    {
+        std::stringstream stringStream(p_block[i]);
+
+        do
+        {
+            std::string word;
+            stringStream >> word;
+            words.push_back(word);
+        } while (stringStream);
+
+        if (words[0] == "m_mass")
+        {
+            m_mass = std::stof(words[1]);
+        }
+        else if (words[0] == "m_offset")
+        {
+            m_offset.x = std::stof(words[1]);
+            m_offset.y = std::stof(words[2]);
+            m_offset.z = std::stof(words[3]);
+        }
+        else if (words[0] == "m_box")
+        {
+            m_box = new btBoxShape(btVector3(std::stof(words[1]), std::stof(words[2]), std::stof(words[3])));
+        }
+
+        words.clear();
+    }
+
+    //TODO: Memory leak here
+    /*delete m_box;
+    delete m_rigidbody;
+    delete m_motionState;*/
+
+    btVector3 localInertia(0.0f, 0.0f, 0.0f);
+    btTransform trans;
+    auto& position = m_gameObject->GetTransform()->GetPosition();
+    auto& rotation = m_gameObject->GetTransform()->GetRotation();
+    auto& scale = m_gameObject->GetTransform()->GetScale();
+
+    trans.setIdentity();
+
+    trans.setOrigin(btVector3(position.x, position.y, position.z));
+    trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
+
+    m_box->calculateLocalInertia(m_mass, localInertia);
+
+    m_motionState = new btDefaultMotionState(trans);
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
+    m_rigidbody = new btRigidBody(rbInfo);
+
+    ObjectElements::Model model = ConstructBox();
+
+    //TODO add a "AddModel" that take a model as parametre
+    const int32_t id = Managers::ResourceManager::AddModel(model);
+    m_model = Managers::ResourceManager::FindModel(id);
+
+    Systems::PhysicsSystem::AddCollider(this);
+}
+
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{p_gameObject, BOX_COLLIDER}
 {
     //init data
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
-    m_mass   = p_other->m_mass;
+    m_mass = p_other->m_mass;
     m_offset = p_other->m_offset;
-    m_box    = p_other->m_box;
+    m_box = p_other->m_box;
 
     btTransform trans;
     auto&       position = m_gameObject->GetTransform()->GetPosition();
@@ -79,7 +141,7 @@ BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxC
     ObjectElements::Model model = ConstructBox();
     //TODO add a "AddModel" that take a model as parametre
     const int32_t id = Managers::ResourceManager::AddModel(model);
-    m_model          = Managers::ResourceManager::FindModel(id);
+    m_model = Managers::ResourceManager::FindModel(id);
 
     Systems::PhysicsSystem::AddCollider(this);
 }
@@ -87,9 +149,83 @@ BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxC
 Engine::Components::BoxCollider::~BoxCollider()
 {
     Engine::Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
+    delete m_box;
+    delete m_motionState;
+    delete m_rigidbody;
+}
+
+void Engine::Components::BoxCollider::Serialize(std::ostream& p_stream)
+{
+    p_stream << typeid(*this).name() << "\n{\n" <<
+        "   m_mass " << m_mass << "\n" <<
+        "   m_offset " << m_offset.x << " " << m_offset.y << " " << m_offset.z << "\n" <<
+        "   m_box " << m_box->getHalfExtentsWithMargin().getX() << " " << m_box->getHalfExtentsWithMargin().getY() << " " << m_box->getHalfExtentsWithMargin().getZ() << "\n" <<
+        "   m_model " << m_model->GetID() << "\n" <<
+        "}\n";
+}
+
+void Engine::Components::BoxCollider::Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block)
+{
+    m_gameObject = p_gameObject;
+
+    std::vector<std::string> words;
+
+    for (int i = 0; i < p_block.size(); ++i)
+    {
+        std::stringstream stringStream(p_block[i]);
+
+        do
+        {
+            std::string word;
+            stringStream >> word;
+            words.push_back(word);
+        } while (stringStream);
+
+        if (words[0] == "m_mass")
+        {
+            m_mass = std::stof(words[1]);
+        }
+        else if (words[0] == "m_offset")
+        {
+            m_offset.x = std::stof(words[1]);
+            m_offset.y = std::stof(words[2]);
+            m_offset.z = std::stof(words[3]);
+        }
+        else if (words[0] == "m_box")
+        {
+            m_box = new btBoxShape(btVector3(std::stof(words[1]), std::stof(words[2]), std::stof(words[3])));
+        }
+
+        words.clear();
+    }
+
+    //TODO: Memory leak here
     /*delete m_box;
     delete m_rigidbody;
     delete m_motionState;*/
+
+    btVector3 localInertia(0.0f, 0.0f, 0.0f);
+    btTransform trans;
+    auto& position = m_gameObject->GetTransform()->GetPosition();
+    auto& rotation = m_gameObject->GetTransform()->GetRotation();
+    auto& scale = m_gameObject->GetTransform()->GetScale();
+
+    trans.setIdentity();
+
+    trans.setOrigin(btVector3(position.x, position.y, position.z));
+    trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
+
+    m_box->calculateLocalInertia(m_mass, localInertia);
+
+    m_motionState = new btDefaultMotionState(trans);
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
+    m_rigidbody = new btRigidBody(rbInfo);
+
+    ObjectElements::Model model = ConstructBox();
+
+    //TODO add a "AddModel" that take a model as parametre
+    const int32_t id = Managers::ResourceManager::AddModel(model);
+    m_model = Managers::ResourceManager::FindModel(id);
 }
 
 Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
@@ -162,7 +298,7 @@ void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimen
     ObjectElements::Model model = ConstructBox();
     Managers::ResourceManager::RemoveModel(m_model->GetID());
     const int32_t id = Managers::ResourceManager::AddModel(model);
-    m_model          = Managers::ResourceManager::FindModel(id);
+    m_model = Managers::ResourceManager::FindModel(id);
 }
 
 bool Engine::Components::BoxCollider::DeleteFromMemory()
@@ -204,7 +340,7 @@ Engine::ObjectElements::Model Engine::Components::BoxCollider::ConstructBox()
     {
         btVector3 vertex;
         m_box->getVertex(i, vertex);
-        vertices.emplace_back(Geometry::Vertex{Vector3F{vertex.getX(), vertex.getY(), vertex.getZ()}, Vector2F{}, GPM::Vector3F{}});
+        vertices.emplace_back(Geometry::Vertex{ Vector3F{vertex.getX(), vertex.getY(), vertex.getZ()}, Vector2F{}, GPM::Vector3F{} });
     }
 
     //Back

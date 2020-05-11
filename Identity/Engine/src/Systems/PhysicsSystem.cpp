@@ -69,6 +69,7 @@ void Engine::Systems::PhysicsSystem::FixedUpdate()
     auto colliders = GetInstance()->m_colliders;
     std::cout << "this is for test";
 
+    
     for (auto& collider : GetInstance()->m_colliders)
     {
         if (collider.second->IsActive())
@@ -79,7 +80,7 @@ void Engine::Systems::PhysicsSystem::FixedUpdate()
 
             btVector3&   collPos = trans.getOrigin();
             btQuaternion collRot = trans.getRotation();
-            btQuaternion quatOffset(offset.x, offset.y, offset.z, 0);
+            btQuaternion quatOffset(offset.x, offset.y, offset.z, 0.0f);
             btQuaternion qpq = collRot * quatOffset * collRot.inverse();
 
             collider.second->GetGameObject()->GetTransform()->SetPosition(Vector3F(qpq.getX(), qpq.getY(), qpq.getZ()) +

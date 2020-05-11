@@ -75,5 +75,6 @@ std::shared_ptr<Engine::Components::Transform> Engine::Systems::TransformSystem:
 
 std::shared_ptr<Engine::Components::Transform> Engine::Systems::TransformSystem::GetTransform(uint32_t p_id)
 {
+    auto instance = GetInstance();
     return GetInstance()->m_transforms.at(p_id);
 }

@@ -50,3 +50,8 @@ void VertexShader::UnBindConstantBuffer() const
 {
     m_vcb.Unbind();
 }
+
+void VertexShader::Serialize(std::ostream& p_stream)
+{
+    p_stream << "VS " << GetPath() << " " << GetName() << '\n';
+}

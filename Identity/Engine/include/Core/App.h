@@ -32,7 +32,6 @@ namespace Engine::Core
         void EndFrame() const;
 
         //testing
-        void InitEditor();
         bool RunBullet{ false };
         //-------
 
