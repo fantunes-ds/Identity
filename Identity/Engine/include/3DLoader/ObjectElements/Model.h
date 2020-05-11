@@ -9,7 +9,7 @@ namespace Engine::Scene
 
 namespace Engine::ObjectElements
 {
-    class API_ENGINE Model : public Objects::IObject
+    class API_ENGINE Model : public Objects::IObject, public Serialize::ISerializeable
     {
     public:
         Model() = default;
@@ -26,6 +26,9 @@ namespace Engine::ObjectElements
         inline void SetPath(const std::string& p_path) { m_path = p_path; }
         [[nodiscard]] inline const std::string& GetPath() const { return m_path; }
         //inline void SetRootNode(std::shared_ptr<Scene::SceneNode> p_rootNode) { m_rootNode = p_rootNode; }
+
+        void Serialize(std::ostream& p_stream) override;
+        void Unserialize(std::istream& p_stream) override {}
 
         bool operator==(const Model& p_other);
         bool operator!=(const Model& p_other);

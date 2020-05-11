@@ -19,6 +19,8 @@ namespace Engine::Managers
         ResourceManager(const ResourceManager&) = delete;
         ResourceManager(const ResourceManager&&) = delete;
 
+        //TODO Add checks when giving name so that its not empty
+
         /**
          * @brief Used to get the instance of the resource manager
          * @return Return a reference to the unique_ptr of the instance
@@ -150,6 +152,9 @@ namespace Engine::Managers
         static std::vector<std::shared_ptr<Rendering::Materials::Material>> GetAllMaterials();
 #pragma endregion
 
+        static void Serialize() { GetInstance()->SerializeNS(); }
+        static void Deserialize() { GetInstance()->DeserializeNS(); }
+
         ResourceManager();
     private:
 
@@ -278,6 +283,10 @@ namespace Engine::Managers
         std::vector<std::shared_ptr<Rendering::Materials::Material>> GetAllMaterialsNS();
 
 #pragma endregion
+
+        void SerializeNS();
+        void DeserializeNS();
+
         //TODO: serialize / deserialize
         inline static std::unique_ptr<ResourceManager> m_instance{ nullptr };
 
@@ -285,6 +294,7 @@ namespace Engine::Managers
         std::vector<std::shared_ptr<Rendering::Materials::Texture>> m_textures;
         std::vector<std::shared_ptr<Rendering::Materials::PixelShader>> m_pixelShaders;
         std::vector<std::shared_ptr<Rendering::Materials::VertexShader>> m_vertexShaders;
+
         std::vector<std::shared_ptr<Rendering::Materials::Material>> m_materials;
     };
 }

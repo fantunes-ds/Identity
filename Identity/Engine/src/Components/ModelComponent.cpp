@@ -37,9 +37,8 @@ Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameOb
 void Engine::Components::ModelComponent::Serialize(std::ostream& p_stream)
 {
     p_stream << typeid(*this).name() << " " << std::to_string(m_id) << "\n{\n" <<
-        "   m_model " << Managers::ResourceManager::FindModel(m_model)->GetName() << "\n   {\n" <<
-        "       m_path " << Managers::ResourceManager::FindModel(m_model)->GetPath() << "\n" <<
-        "   }\n}\n";
+        "   m_model " << Managers::ResourceManager::FindModel(m_model)->GetName() << "\n" <<
+        "}\n";
 }
 
 void Engine::Components::ModelComponent::Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block)
@@ -47,7 +46,6 @@ void Engine::Components::ModelComponent::Deserialize(Objects::GameObject* p_game
     m_gameObject = p_gameObject;
 
     std::vector <std::string> words;
-    std::string modelName;
 
     for (auto& line : p_block)
     {
@@ -62,11 +60,7 @@ void Engine::Components::ModelComponent::Deserialize(Objects::GameObject* p_game
 
         if (words[0] == "m_model")
         {
-            modelName = words[1];
-        }
-        if (words[0] == "m_path")
-        {
-            m_model = Managers::ResourceManager::AddModel(words[1], modelName);
+            m_model = Managers::ResourceManager::GetModel(words[1]);
         }
 
         words.clear();

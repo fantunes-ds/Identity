@@ -46,3 +46,8 @@ void Texture::UnbindTexture()
     Renderer::GetInstance()->GetContext()->PSSetShaderResources(0, 0, nullptr);
     Renderer::GetInstance()->GetContext()->PSSetSamplers(0, 0, nullptr);
 }
+
+void Texture::Serialize(std::ostream& p_stream)
+{
+    p_stream << "TEXTURE " << GetPath() << " " << GetName() << '\n';
+}

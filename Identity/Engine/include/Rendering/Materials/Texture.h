@@ -10,7 +10,7 @@
 
 namespace Engine::Rendering::Materials
 {
-    class Texture : public Objects::IObject
+    class Texture : public Objects::IObject, public Serialize::ISerializeable
     {
     public:
         Texture();
@@ -41,6 +41,9 @@ namespace Engine::Rendering::Materials
         [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTextureShaderResourceView() const { return m_textureShaderResourceView; }
         void SetTextureShaderResourceView(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> p_textureShaderResourceView) { m_textureShaderResourceView = p_textureShaderResourceView; }
         [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11SamplerState> GetSampleState() const { return m_samplerState; }
+
+        void Serialize(std::ostream& p_stream) override;
+        void Unserialize(std::istream& p_stream) override {}
 
     private:
         std::string m_path{};
