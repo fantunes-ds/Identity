@@ -499,26 +499,28 @@ void Engine::Managers::ResourceManager::SerializeNS()
     //Model
     for (auto& model : GetAllModelsNS())
     {
-        model->Serialize(outfile);
+        if (!model->GetPath().empty())
+            model->Serialize(outfile);
     }
 
     //Texture
     for (auto& texture : GetAllTexturesNS())
     {
-        texture->Serialize(outfile);
+        if (!texture->GetPath().empty())
+            texture->Serialize(outfile);
     }
 
     //Pixel Shader
     for (auto& ps : GetAllPixelShadersNS())
     {
-        if (ps->GetName() != "defaultPS")
+        if (ps->GetName() != "defaultPS" && !ps->GetPath().empty())
             ps->Serialize(outfile);
     }
 
     //Vertex Shader
     for (auto& vs : GetAllVertexShadersNS())
     {
-        if (vs->GetName() != "defaultVS")
+        if (vs->GetName() != "defaultVS" && !vs->GetPath().empty())
             vs->Serialize(outfile);
     }
 
