@@ -27,12 +27,9 @@ Engine::Systems::RenderSystem::~RenderSystem()
 
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
 {
+    Rendering::Renderer::GetInstance()->Bind();
     HRESULT hr;
     Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    // std::shared_ptr<Rendering::Lights::ILight>           ILight = Containers::LightContainer::GetLights().begin()->second;
-    // std::shared_ptr<Rendering::Lights::DirectionalLight> light1 = std::dynamic_pointer_cast<Rendering::Lights::
-    //     DirectionalLight>(Containers::LightContainer::GetLights().begin()->second);
 
     std::shared_ptr<Rendering::Lights::ILight> lightType;
     std::shared_ptr<Components::Light> light1;
@@ -44,31 +41,8 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         lightType = light1->GetLight();
         light = lightType->GetLightData();
     }
-    //auto light1 = Systems::LightSystem::GetAllLights().begin()->second;
-    //auto lightType = light1->GetLight();
-
-
-    // Rendering::Lights::DirectionalLight::LightData& light = light1->GetLight->GetLightData();
 
     auto camera = Systems::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
-
-    float* pos[3] = {&light.position.x, &light.position.y, &light.position.z};
-    
-    //TODO: Light will be moved soon
-    if (ImGui::Begin("Lighting Tool"))
-    {
-        ImGui::DragFloat3("LightPos", *pos, 0.1f, -90.0f, 90.0f, "%.1f");
-        ImGui::SliderFloat("LightColR", &light.color.x, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("LightColG", &light.color.y, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("LightColB", &light.color.z, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("SpecColR", &light.specular.x, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("SpecColG", &light.specular.y, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("SpecColB", &light.specular.z, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("Ambient LightX", &light.ambient.x, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("Ambient LightY", &light.ambient.y, 0.0f, 1.0f, "%.1f");
-        ImGui::SliderFloat("Ambient LightZ", &light.ambient.z, 0.0f, 1.0f, "%.1f");
-    }
-    ImGui::End();
 
     for (auto& sceneNode : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
     {
@@ -166,10 +140,19 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
 void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
 {
-    auto                                                 camera = CameraSystem::GetCamera(GetInstance()->m_activeCamera);
-    auto                                                 mesh   = p_sceneNode->GetMesh();
-    auto light1 = Systems::LightSystem::GetAllLights().begin()->second;
-    Rendering::Lights::ILight::LightData& light = light1->GetLight()->GetLightData();
+    auto camera = CameraSystem::GetCamera(GetInstance()->m_activeCamera);
+    auto mesh   = p_sceneNode->GetMesh();
+
+    std::shared_ptr<Rendering::Lights::ILight> lightType;
+    std::shared_ptr<Components::Light> light1;
+    Rendering::Lights::ILight::LightData light;
+
+    if (!Systems::LightSystem::GetAllLights().empty())
+    {
+        light1 = Systems::LightSystem::GetAllLights().begin()->second;
+        lightType = light1->GetLight();
+        light = lightType->GetLightData();
+    }
 
     if (p_sceneNode->IsRoot())
     {

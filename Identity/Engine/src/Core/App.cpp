@@ -57,7 +57,7 @@ int Engine::Core::App::Run()
     Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
     //----------
 
-    Managers::SceneManager::LoadScene("scene1.txt");
+    Managers::SceneManager::LoadScene("scene2.txt");
 
     float fixedUpdateTimer = 0.0f;
     Systems::PhysicsSystem::FixedUpdate();
@@ -147,6 +147,8 @@ void Engine::Core::App::EndFrame() const
     Rendering::Renderer::GetInstance()->EndFrame();
 }
 
+
+//TODO this should be in scene manager
 void Engine::Core::App::TestingSimulation()
 {
     if (!RunBullet)

@@ -78,24 +78,6 @@ void Engine::Components::Camera::UpdateCameraPosition(const float p_deltaTime)
 {
     auto transform = m_gameObject->GetTransform();
 
-    float* pos [3] = {&transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z};
-    if (ImGui::Begin("Camera Tool"))
-    {
-        ImGui::DragFloat3("CameraPosition", *pos, 0.1f, -10.0f, 10.0f, "%0.1f");
-        ImGui::SliderFloat("Camera FOV", &m_fovAngle, 10.f, 180.f, "%1.f");
-    }
-    ImGui::End();
-
-    if (ImGui::Begin("Camera DirectionInfo"))
-    {
-        ImGui::Text("Forward: %f | %f | %f", transform->GetForward().x, transform->GetForward().y,
-                    transform->GetForward().z);
-        ImGui::Text("Up: %f | %f | %f", transform->GetUp().x, transform->GetUp().y, transform->GetUp().z);
-        ImGui::Text("Right: %f | %f | %f", transform->GetRight().x, transform->GetRight().y, transform->GetRight().z);
-    }
-    ImGui::End();
-
-
     //todo all below code is SCRIPTING BEHAVIOUR. A camera DOES NOT have to receive input to be a camera.
     float speed = m_speed;
 
@@ -149,13 +131,6 @@ void Engine::Components::Camera::UpdateCameraRotation()
         m_yaw -= 360.0f;
     if (m_yaw < -180.0f)
         m_yaw += 360.0f;
-
-    if (ImGui::Begin("Camera Tool"))
-    {
-        ImGui::DragFloat("CameraYaw", &m_yaw, 1.f, -180.0f, 180.0f, "%.1f");
-        ImGui::DragFloat("CameraPitch", &m_pitch, 1.f, -180.0f, 180.0f, "%.1f");
-    }
-    ImGui::End();
 }
 
 void Engine::Components::Camera::UpdateViewMatrix()
