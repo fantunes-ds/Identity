@@ -156,7 +156,7 @@ Engine::Components::BoxCollider::~BoxCollider()
 
 void Engine::Components::BoxCollider::Serialize(std::ostream& p_stream)
 {
-    p_stream << typeid(*this).name() << " " << std::to_string(m_id) << "\n{\n" <<
+    p_stream << typeid(*this).name() << "\n{\n" <<
         "   m_mass " << m_mass << "\n" <<
         "   m_offset " << m_offset.x << " " << m_offset.y << " " << m_offset.z << "\n" <<
         "   m_box " << m_box->getHalfExtentsWithMargin().getX() << " " << m_box->getHalfExtentsWithMargin().getY() << " " << m_box->getHalfExtentsWithMargin().getZ() << "\n" <<

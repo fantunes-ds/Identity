@@ -36,7 +36,7 @@ Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameOb
 
 void Engine::Components::ModelComponent::Serialize(std::ostream& p_stream)
 {
-    p_stream << typeid(*this).name() << " " << std::to_string(m_id) << "\n{\n" <<
+    p_stream << typeid(*this).name() << "\n{\n" <<
         "   m_model " << Managers::ResourceManager::FindModel(m_model)->GetName() << "\n" <<
         "   m_material " << m_material->GetName() << "\n" <<
         "}\n";

@@ -43,7 +43,7 @@ bool Lights::DirectionalLight::operator==(ILight* p_other)
 
 void Lights::DirectionalLight::Serialize(std::ostream& p_stream)
 {
-    p_stream << typeid(*this).name() << " " << std::to_string(m_id) << "\n{\n" <<
+    p_stream << typeid(*this).name() << "\n{\n" <<
         "   m_lightData\n   {\n" <<
         "       shininess " << GetLightData().shininess << "\n" <<
         "       padding " << GetLightData().padding << "\n" <<

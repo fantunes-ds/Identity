@@ -42,7 +42,7 @@ bool Engine::Components::Camera::DeleteFromMemory()
 
 void Engine::Components::Camera::Serialize(std::ostream& p_stream)
 {
-    p_stream << typeid(*this).name() << " " << std::to_string(m_id) << "\n{\n" <<
+    p_stream << typeid(*this).name() << "\n{\n" <<
         "   m_needUpdate " <<  needUpdate << "\n" <<
         "   m_speed " << m_speed << "\n" <<
         "   m_sensitivity " << m_sensitivity << "\n" <<
