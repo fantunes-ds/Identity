@@ -27,20 +27,9 @@ Engine::Systems::RenderSystem::~RenderSystem()
 
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
 {
-    Rendering::Renderer::GetInstance()->Bind();
     HRESULT hr;
+    Rendering::Renderer::GetInstance()->Bind();
     Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    std::shared_ptr<Rendering::Lights::ILight> lightType;
-    std::shared_ptr<Components::Light> light1;
-    Rendering::Lights::ILight::LightData light;
-
-    if (!Systems::LightSystem::GetAllLights().empty())
-    {
-        light1 = Systems::LightSystem::GetAllLights().begin()->second;
-        lightType = light1->GetLight();
-        light = lightType->GetLightData();
-    }
 
     auto camera = Systems::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
 
@@ -53,7 +42,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         }
     }
 
-    if (DEBUG_MODE)
+    if constexpr (DEBUG_MODE)
     {
         for (auto collider : Systems::PhysicsSystem::GetColliders())
         {
@@ -165,7 +154,6 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
             }
         }
     }
-
 
     if (mesh != nullptr)
     {

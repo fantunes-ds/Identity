@@ -143,6 +143,9 @@ void Engine::Components::Transform::Deserialize(Objects::GameObject* p_gameObjec
             );
         }
 
+        needAxesUpdate = true;
+        needUpdate = true;
+
         words.clear();
     }
 
