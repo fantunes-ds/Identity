@@ -117,6 +117,13 @@ Engine::Managers::ResourceManager::ResourceManager()
 
 const int32_t Engine::Managers::ResourceManager::AddModelNS(const std::string& p_path, const std::string& p_name)
 {
+    if (p_name.empty())
+    {
+        const std::string info("No name was entered for the creation of the model. Please create it with a name");
+        MessageBox(nullptr, info.c_str(), "Error", MB_ICONERROR | MB_OK);
+        return -1;
+    }
+
     for (auto model : m_models)
     {
         if (model.second->GetPath() == p_path)
@@ -214,6 +221,13 @@ bool Engine::Managers::ResourceManager::RemoveModelNS(const int32_t p_id)
 
 std::shared_ptr<Texture> Engine::Managers::ResourceManager::AddTextureNS(const std::string& p_path, const std::string& p_name)
 {
+    if (p_name.empty())
+    {
+        const std::string info("No name was entered for the creation of the texture. Please create it with a name");
+        MessageBox(nullptr, info.c_str(), "Error", MB_ICONERROR | MB_OK);
+        return nullptr;
+    }
+
     for (auto texture : m_textures)
     {
         if (texture->GetPath() == p_path)
@@ -270,6 +284,13 @@ std::vector<std::shared_ptr<Texture>> Engine::Managers::ResourceManager::GetAllT
 
 std::shared_ptr<PixelShader> Engine::Managers::ResourceManager::AddPixelShaderNS(const std::string& p_path, const std::string& p_name)
 {
+    if (p_name.empty())
+    {
+        const std::string info("No name was entered for the creation of the pixel shader. Please create it with a name");
+        MessageBox(nullptr, info.c_str(), "Error", MB_ICONERROR | MB_OK);
+        return nullptr;
+    }
+
     for (auto pShader : m_pixelShaders)
     {
         if (pShader->GetPath() == p_path)
@@ -328,6 +349,13 @@ std::vector<std::shared_ptr<PixelShader>> Engine::Managers::ResourceManager::Get
 
 std::shared_ptr<VertexShader> Engine::Managers::ResourceManager::AddVertexShaderNS(const std::string& p_path, const std::string& p_name)
 {
+    if (p_name.empty())
+    {
+        const std::string info("No name was entered for the creation of the vertex shader. Please create it with a name");
+        MessageBox(nullptr, info.c_str(), "Error", MB_ICONERROR | MB_OK);
+        return nullptr;
+    }
+
     for (auto vShader : m_vertexShaders)
     {
         if (vShader->GetPath() == p_path)
@@ -388,6 +416,13 @@ std::vector<std::shared_ptr<VertexShader>> Engine::Managers::ResourceManager::Ge
 std::shared_ptr<Material> Engine::Managers::ResourceManager::CreateMaterialNS(const std::string& p_name, const std::string& p_pixelShaderName,
                                                             const std::string& p_vertexShaderName, const std::string& p_textureName)
 {
+    if (p_name.empty())
+    {
+        const std::string info("No name was entered for the creation of the material. Please create it with a name");
+        MessageBox(nullptr, info.c_str(), "Error", MB_ICONERROR | MB_OK);
+        return nullptr;
+    }
+
     //TODO when serialization is complete: export the new material in a file
     for (auto material : m_materials)
     {

@@ -13,7 +13,7 @@ namespace Engine::Managers
     class API_ENGINE SceneManager
     {
     public:
-        SceneManager()                     = default;
+        SceneManager();
         ~SceneManager()                    = default;
         SceneManager(const SceneManager&)  = delete;
         SceneManager(const SceneManager&&) = delete;

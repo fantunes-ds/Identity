@@ -10,6 +10,17 @@
 #include <Systems/TransformSystem.h>
 #include "Systems/PhysicsSystem.h"
 
+
+Engine::Managers::SceneManager::SceneManager()
+{
+    auto dfscene = std::make_shared<Scene::Scene>();
+    dfscene->SetName("default");
+    m_scenes.push_back(dfscene);
+    m_activeScene = dfscene;
+    // AddScene(dfscene);
+    // SetActiveScene(dfscene);
+}
+
 std::unique_ptr<Engine::Managers::SceneManager>& Engine::Managers::SceneManager::GetInstance()
 {
     if (m_instance == nullptr)
