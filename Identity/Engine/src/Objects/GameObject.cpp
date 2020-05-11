@@ -20,11 +20,8 @@ using namespace Engine::Objects;
 GameObject::GameObject()
 {
     m_transform = AddComponent<Components::Transform>();
-    //m_transform = Systems::TransformSystem::AddTransform(std::make_shared<Components::Transform>());
     Systems::TransformSystem::FindTransform(m_transform)->SetGameObject(this);
     Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
-    //auto trm = Systems::TransformSystem::GetTransform(m_transform);
-    //Containers::ComponentContainer::AddComponent(trm.get());
 }
 
 GameObject::GameObject(const std::string& p_name)
@@ -163,7 +160,6 @@ bool GameObject::operator==(GameObject& p_other) const
 void GameObject::SetParentObject(std::shared_ptr<GameObject> p_parent)
 {
     p_parent->GetSceneNode()->AddChild(m_rootNode);
-    //Managers::SceneManager::GetActiveScene()->GetSceneGraph().UpdateScene(0.0f);
 }
 
 bool GameObject::RemoveComponent(int32_t p_id)
