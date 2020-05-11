@@ -49,16 +49,6 @@ int Engine::Core::App::Run()
 {
     m_applicationIsRunning = true;
     Managers::ResourceManager::Deserialize();
-    // Managers::ResourceManager::AddTexture("../Engine/Resources/link.png", "LinkText");
-    // Managers::ResourceManager::AddTexture("../Engine/Resources/lambo_text.jpeg", "LamboText");
-    // Managers::ResourceManager::CreateMaterial("LinkMat", "defaultPS", "defaultVS", "LinkText");
-    // Managers::ResourceManager::CreateMaterial("LamboMat", "defaultPS", "defaultVS", "LamboText");
-
-    // Managers::ResourceManager::AddModel("../Engine/Resources/YoungLink.obj", "Link");
-    // Managers::ResourceManager::AddModel("../Engine/Resources/Lambo.obj", "Lambo");
-
-    // Managers::ResourceManager::Serialize();
-
 
     //--CAMERA--
     Objects::GameObject camera;
@@ -67,7 +57,7 @@ int Engine::Core::App::Run()
     Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
     //----------
 
-    InitEditor();
+    Managers::SceneManager::LoadScene("scene1.txt");
 
     float fixedUpdateTimer = 0.0f;
     Systems::PhysicsSystem::FixedUpdate();
@@ -115,6 +105,8 @@ int Engine::Core::App::Run()
         EndFrame();
         Tools::Time::Stop();
     }
+
+    Managers::ResourceManager::Serialize();
 }
 
 void Engine::Core::App::StartFrame() const
@@ -153,80 +145,6 @@ void Engine::Core::App::EndFrame() const
     }
 
     Rendering::Renderer::GetInstance()->EndFrame();
-}
-
-void Engine::Core::App::InitEditor()
-{
-    auto scene = std::make_shared<Scene::Scene>();
-    scene->SetName("scene1");
-    Managers::SceneManager::AddScene(scene);
-    Managers::SceneManager::SetActiveScene(scene);
-
-    /*auto link  = std::make_shared<Objects::GameObject>("link");
-    auto lambo = std::make_shared<Objects::GameObject>("lambo");
-    auto light = std::make_shared<Objects::GameObject>("light");
-
-    //---LINK---
-    link->GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
-    link->GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    link->GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
-
-    link->AddComponent<Components::BoxCollider>();
-    link->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{0.5f, 1.0f, 0.5f});
-    Vector3F linkOffset{0.0f, -1.0f, 0.0f};
-    link->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(linkOffset);
-    link->FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
-
-    link->AddComponent<Components::ModelComponent>("Link");
-    link->FindComponentOfType<Components::ModelComponent>()->SetMaterial("LinkMat");
-    scene->AddGameObject(link);
-    //----------
-
-    //---LAMBO---
-    lambo->GetTransform()->Translate(Vector3F{5.0f, 5.0f, -3.0f});
-    lambo->GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    lambo->GetTransform()->RotateWithEulerAngles(Vector3F{0.0f, -40.0f, 30.0f});
-
-    lambo->AddComponent<Components::BoxCollider>();
-    lambo->FindComponentOfType<Components::BoxCollider>()->SetMass(80);
-    lambo->FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{2.0f, 1.0f, 5.0f});
-    Vector3F lamboOffset{0.0f, -1.5f, 0.0f};
-    lambo->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
-
-    lambo->AddComponent<Components::ModelComponent>("Lambo");
-    lambo->FindComponentOfType<Components::ModelComponent>()->SetMaterial("LamboMat");
-    scene->AddGameObject(lambo);
-    //-----------
-
-    //---LIGHT---
-    light->GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
-    light->GetTransform()->Scale(Vector3F{0.01f, 0.01f, 0.01f});
-
-    Rendering::Lights::ILight::LightData dirLight
-    {
-        Vector4F(light->GetTransform()->GetPosition().x * -1, light->GetTransform()->GetPosition().y,
-                 light->GetTransform()->GetPosition().z * -1, 1.0f),
-        Vector4F(0.1f, 0.1f, 0.1f, 1.0f),
-        Vector4F(1.0f, 1.0f, 0.95f, 1.0f),
-        Vector4F(0.5f, 0.5f, 0.5f, 1.0f),
-        Vector4F(1.0f, 1.0f, 1.0f, 1.0f),
-        32.0f
-    };
-
-    light->AddComponent<Components::Light>(dirLight);
-    scene->AddGameObject(light);
-
-    //-----Save test
-    
-
-    scene->Save();*/
-
-
-
-    //----Deserialize test
-
-    scene->Load("scene1.txt");
-    //-----------;
 }
 
 void Engine::Core::App::TestingSimulation()
