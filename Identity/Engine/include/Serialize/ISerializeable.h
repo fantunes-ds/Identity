@@ -7,11 +7,8 @@ namespace Engine::Serialize
     class API_ENGINE ISerializeable
     {
     public:
-        static void Serialize(std::ostream& p_stream)
-        {
+        virtual void Serialize(std::ostream& p_stream) = 0;
 
-        }
-
-        static ISerializeable* Unserialize(std::istream& p_stream);
+        virtual void Unserialize(std::istream& p_stream) = 0;
     };
 }

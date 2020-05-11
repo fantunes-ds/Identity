@@ -48,13 +48,17 @@ void Engine::Core::App::Init()
 int Engine::Core::App::Run()
 {
     m_applicationIsRunning = true;
-    Managers::ResourceManager::AddTexture("../Engine/Resources/link.png", "LinkText");
-    Managers::ResourceManager::AddTexture("../Engine/Resources/lambo_text.jpeg", "LamboText");
-    Managers::ResourceManager::CreateMaterial("LinkMat", "defaultPS", "defaultVS", "LinkText");
-    Managers::ResourceManager::CreateMaterial("LamboMat", "defaultPS", "defaultVS", "LamboText");
+    Managers::ResourceManager::Deserialize();
+    // Managers::ResourceManager::AddTexture("../Engine/Resources/link.png", "LinkText");
+    // Managers::ResourceManager::AddTexture("../Engine/Resources/lambo_text.jpeg", "LamboText");
+    // Managers::ResourceManager::CreateMaterial("LinkMat", "defaultPS", "defaultVS", "LinkText");
+    // Managers::ResourceManager::CreateMaterial("LamboMat", "defaultPS", "defaultVS", "LamboText");
 
-    Managers::ResourceManager::AddModel("../Engine/Resources/YoungLink.obj", "Link");
-    Managers::ResourceManager::AddModel("../Engine/Resources/Lambo.obj", "Lambo");
+    // Managers::ResourceManager::AddModel("../Engine/Resources/YoungLink.obj", "Link");
+    // Managers::ResourceManager::AddModel("../Engine/Resources/Lambo.obj", "Lambo");
+
+    // Managers::ResourceManager::Serialize();
+
 
     //--CAMERA--
     Objects::GameObject camera;
@@ -158,12 +162,12 @@ void Engine::Core::App::InitEditor()
     Managers::SceneManager::AddScene(scene);
     Managers::SceneManager::SetActiveScene(scene);
 
-    auto link  = std::make_shared<Objects::GameObject>("link");
+    /*auto link  = std::make_shared<Objects::GameObject>("link");
     auto lambo = std::make_shared<Objects::GameObject>("lambo");
     auto light = std::make_shared<Objects::GameObject>("light");
 
     //---LINK---
-    /*link->GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
+    link->GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
     link->GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
     link->GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
 

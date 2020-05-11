@@ -7,7 +7,7 @@
 
 namespace Engine::Rendering::Materials
 {
-    class Material : public Objects::IObject
+    class Material : public Objects::IObject, public Serialize::ISerializeable
     {
     public:
         Material();
@@ -43,6 +43,10 @@ namespace Engine::Rendering::Materials
         [[nodiscard]] inline const std::shared_ptr<VertexShader> GetVertexShader() const { return m_vertexShader; }
         [[nodiscard]] inline const std::shared_ptr<Texture> GetTexture() const { return m_texture; }
         [[nodiscard]] inline const bool GetTextureState() const { return m_textureState; }
+
+
+        void Serialize(std::ostream& p_stream) override;
+        void Unserialize(std::istream& p_stream) override {}
 
     private:
         bool m_textureState{ false };

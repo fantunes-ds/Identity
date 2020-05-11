@@ -1,0 +1,6 @@
+MODEL ../Engine/Resources/YoungLink.obj Link
+MODEL ../Engine/Resources/Lambo.obj Lambo
+TEXTURE ../Engine/Resources/link.png LinkText
+TEXTURE ../Engine/Resources/lambo_text.jpeg LamboText
+MATERIAL LinkMat defaultPS defaultVS LinkText
+MATERIAL LamboMat defaultPS defaultVS LamboText

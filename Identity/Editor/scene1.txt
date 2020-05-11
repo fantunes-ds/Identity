@@ -5,7 +5,7 @@ m_isActive 1
 class Engine::Components::Transform 45
 {
    m_parent -1
-   m_position 1 -5 -4
+   m_position 4 -5 -4
    m_forward 0 0 1
    m_right 1 0 0
    m_up 0 1 0
@@ -24,9 +24,7 @@ class Engine::Components::BoxCollider 50
 class Engine::Components::ModelComponent 57
 {
    m_model Link
-   {
-       m_path ../Engine/Resources/YoungLink.obj
-   }
+   m_material LinkMat
 }
 ;
 
@@ -36,7 +34,7 @@ m_isActive 1
 class Engine::Components::Transform 47
 {
    m_parent -1
-   m_position 2 5 -3
+   m_position 5 5 -3
    m_forward 0 0 1
    m_right 1 0 0
    m_up 0 1 0
@@ -55,9 +53,7 @@ class Engine::Components::BoxCollider 63
 class Engine::Components::ModelComponent 70
 {
    m_model Lambo
-   {
-       m_path ../Engine/Resources/Lambo.obj
-   }
+   m_material LamboMat
 }
 ;
 
