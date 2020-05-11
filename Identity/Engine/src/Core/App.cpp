@@ -48,13 +48,17 @@ void Engine::Core::App::Init()
 int Engine::Core::App::Run()
 {
     m_applicationIsRunning = true;
-    Managers::ResourceManager::AddTexture("../Engine/Resources/link.png", "LinkText");
-    Managers::ResourceManager::AddTexture("../Engine/Resources/lambo_text.jpeg", "LamboText");
-    Managers::ResourceManager::CreateMaterial("LinkMat", "defaultPS", "defaultVS", "LinkText");
-    Managers::ResourceManager::CreateMaterial("LamboMat", "defaultPS", "defaultVS", "LamboText");
+    Managers::ResourceManager::Deserialize();
+    // Managers::ResourceManager::AddTexture("../Engine/Resources/link.png", "LinkText");
+    // Managers::ResourceManager::AddTexture("../Engine/Resources/lambo_text.jpeg", "LamboText");
+    // Managers::ResourceManager::CreateMaterial("LinkMat", "defaultPS", "defaultVS", "LinkText");
+    // Managers::ResourceManager::CreateMaterial("LamboMat", "defaultPS", "defaultVS", "LamboText");
 
-    Managers::ResourceManager::AddModel("../Engine/Resources/YoungLink.obj", "Link");
-    Managers::ResourceManager::AddModel("../Engine/Resources/Lambo.obj", "Lambo");
+    // Managers::ResourceManager::AddModel("../Engine/Resources/YoungLink.obj", "Link");
+    // Managers::ResourceManager::AddModel("../Engine/Resources/Lambo.obj", "Lambo");
+
+    // Managers::ResourceManager::Serialize();
+
 
     //--CAMERA--
     Objects::GameObject camera;
