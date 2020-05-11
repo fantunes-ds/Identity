@@ -162,12 +162,12 @@ void Engine::Core::App::InitEditor()
     Managers::SceneManager::AddScene(scene);
     Managers::SceneManager::SetActiveScene(scene);
 
-    auto link  = std::make_shared<Objects::GameObject>("link");
+    /*auto link  = std::make_shared<Objects::GameObject>("link");
     auto lambo = std::make_shared<Objects::GameObject>("lambo");
     auto light = std::make_shared<Objects::GameObject>("light");
 
     //---LINK---
-    /*link->GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
+    link->GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
     link->GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
     link->GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
 
