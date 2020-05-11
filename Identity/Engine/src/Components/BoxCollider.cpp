@@ -35,6 +35,71 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
     Systems::PhysicsSystem::AddCollider(this);
 }
 
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::vector<std::string> p_block) : IComponent{ p_gameObject, BOX_COLLIDER }
+{
+    m_gameObject = p_gameObject;
+
+    std::vector<std::string> words;
+
+    for (int i = 0; i < p_block.size(); ++i)
+    {
+        std::stringstream stringStream(p_block[i]);
+
+        do
+        {
+            std::string word;
+            stringStream >> word;
+            words.push_back(word);
+        } while (stringStream);
+
+        if (words[0] == "m_mass")
+        {
+            m_mass = std::stof(words[1]);
+        }
+        else if (words[0] == "m_offset")
+        {
+            m_offset.x = std::stof(words[1]);
+            m_offset.y = std::stof(words[2]);
+            m_offset.z = std::stof(words[3]);
+        }
+        else if (words[0] == "m_box")
+        {
+            m_box = new btBoxShape(btVector3(std::stof(words[1]), std::stof(words[2]), std::stof(words[3])));
+        }
+
+        words.clear();
+    }
+
+    //TODO: Memory leak here
+    /*delete m_box;
+    delete m_rigidbody;
+    delete m_motionState;*/
+
+    btVector3 localInertia(0.0f, 0.0f, 0.0f);
+    btTransform trans;
+    auto& position = m_gameObject->GetTransform()->GetPosition();
+    auto& rotation = m_gameObject->GetTransform()->GetRotation();
+    auto& scale = m_gameObject->GetTransform()->GetScale();
+
+    trans.setIdentity();
+
+    trans.setOrigin(btVector3(position.x, position.y, position.z));
+    trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
+
+    m_box->calculateLocalInertia(m_mass, localInertia);
+
+    m_motionState = new btDefaultMotionState(trans);
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
+    m_rigidbody = new btRigidBody(rbInfo);
+
+    ObjectElements::Model model = ConstructBox();
+
+    //TODO add a "AddModel" that take a model as parametre
+    const int32_t id = Managers::ResourceManager::AddModel(model);
+    m_model = Managers::ResourceManager::FindModel(id);
+
+    Systems::PhysicsSystem::AddCollider(this);
+}
 
 Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{p_gameObject, BOX_COLLIDER}
 {

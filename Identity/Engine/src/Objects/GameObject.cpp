@@ -20,11 +20,8 @@ using namespace Engine::Objects;
 GameObject::GameObject()
 {
     m_transform = AddComponent<Components::Transform>();
-    //m_transform = Systems::TransformSystem::AddTransform(std::make_shared<Components::Transform>());
     Systems::TransformSystem::FindTransform(m_transform)->SetGameObject(this);
     Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
-    //auto trm = Systems::TransformSystem::GetTransform(m_transform);
-    //Containers::ComponentContainer::AddComponent(trm.get());
 }
 
 GameObject::GameObject(const std::string& p_name)
@@ -52,9 +49,7 @@ void GameObject::DeleteFromMemory()
 void GameObject::Serialize(std::ostream& p_stream)
 {
     p_stream << "\nGAMEOBJECT\n" << m_name << " " << m_id << "\n" <<
-        "m_isActive " << m_isActive << "\n" <<
-        "m_transform " << m_transform << "\n" <<
-        "m_rootNode " << m_rootNode->GetID() << "\n";
+        "m_isActive " << m_isActive << "\n";
 
     GetTransform()->Serialize(p_stream);
 
@@ -91,14 +86,6 @@ void GameObject::Deserialize(std::vector<std::string>& p_strings)
         {
             m_isActive = std::stoi(words[1]);
         }
-        else if (words[0] == "m_transform")
-        {
-            //m_transform = std::stoi(words[1]);
-        }
-        else if (words[0] == "m_rootNode")
-        {
-            //TODO
-        }
         else if (words[0] == "class")
         {
             while (p_strings[i] != "}")
@@ -113,13 +100,11 @@ void GameObject::Deserialize(std::vector<std::string>& p_strings)
             }
             else if (words[1] == "Engine::Components::BoxCollider")
             {
-                int id = AddComponent<Components::BoxCollider>();
-                Containers::ComponentContainer::FindComponent(id)->Deserialize(this, componentBlock);
+                int id = AddComponent<Components::BoxCollider>(componentBlock);
             }
             else if (words[1] == "Engine::Rendering::Lights::DirectionalLight")
             {
                 int compID = AddComponent<Components::Light>();
-                //int32_t lightID = std::dynamic_pointer_cast<Components::Light>(Containers::ComponentContainer::FindComponent(compID))->GetLightID();
                 Systems::LightSystem::GetLight(compID)->Deserialize(this, componentBlock);
             }
             else if (words[1] == "Engine::Components::ModelComponent")
@@ -175,7 +160,6 @@ bool GameObject::operator==(GameObject& p_other) const
 void GameObject::SetParentObject(std::shared_ptr<GameObject> p_parent)
 {
     p_parent->GetSceneNode()->AddChild(m_rootNode);
-    //Managers::SceneManager::GetActiveScene()->GetSceneGraph().UpdateScene(0.0f);
 }
 
 bool GameObject::RemoveComponent(int32_t p_id)

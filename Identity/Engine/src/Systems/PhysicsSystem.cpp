@@ -69,6 +69,7 @@ void Engine::Systems::PhysicsSystem::FixedUpdate()
     auto colliders = GetInstance()->m_colliders;
     std::cout << "this is for test";
 
+    
     for (auto& collider : GetInstance()->m_colliders)
     {
         if (collider.second->IsActive())

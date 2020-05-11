@@ -16,6 +16,7 @@ namespace Engine::Components
     public:
         BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other);
         BoxCollider(Objects::GameObject* p_gameObject);
+        BoxCollider(Objects::GameObject* p_gameObject, std::vector<std::string> p_block);
         BoxCollider(const BoxCollider&) = default;
         ~BoxCollider();
 
