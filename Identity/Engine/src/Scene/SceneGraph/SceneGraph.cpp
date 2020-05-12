@@ -4,6 +4,8 @@
 #include <Objects/GameObject.h>
 #include <Scene/SceneGraph/SceneGraph.h>
 
+#include <Containers/GameObjectContainer.h>
+
 void Engine::Scene::SceneGraph::AddRootSceneNode(std::shared_ptr<SceneNode> p_sceneNode)
 {
     m_rootSceneNodes.insert_or_assign(p_sceneNode->GetID(), p_sceneNode);
@@ -18,7 +20,7 @@ void Engine::Scene::SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::Ga
     if (p_gameObject->FindComponentOfType<Components::ModelComponent>())
     {
         int  modelID = p_gameObject->FindComponentOfType<Components::ModelComponent>()->GetModel();
-        auto model   = Managers::ResourceManager::FindModel(modelID);
+        auto model = Managers::ResourceManager::FindModel(modelID);
 
         for (auto& mesh : model->GetMeshes())
         {
@@ -36,18 +38,17 @@ void Engine::Scene::SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::Ga
 
 void Engine::Scene::SceneGraph::RemoveGameObjectFromScene(std::shared_ptr<Objects::GameObject> p_gameObject)
 {
-    for (auto& node : m_rootSceneNodes)
-    {
-        if (node.second->GetGameObject() == p_gameObject)
-        {
-            if (!node.second->GetChildren().empty())
-            {
-                RemoveGameObjectFromScene(node.second->GetGameObject());
-            }
+    if (p_gameObject == nullptr)
+        return;
 
-            m_rootSceneNodes.erase(node.first);
-        }
+    if (p_gameObject->GetSceneNode())
+    {
+        if (p_gameObject->GetSceneNode()->IsRoot())
+            m_rootSceneNodes.erase(p_gameObject->GetID());
     }
+
+    RemoveRootSceneNode(p_gameObject->GetSceneNode()->GetID());
+    Containers::GameObjectContainer::RemoveGameObject(p_gameObject);
 }
 
 void Engine::Scene::SceneGraph::RemoveRootSceneNode(int32_t p_id)

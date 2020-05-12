@@ -44,8 +44,9 @@ void Engine::Scene::SceneNode::RemoveChild(std::shared_ptr<SceneNode> p_child)
         if (it->get()->GetID() == p_child->GetID())
         {
             m_children.erase(it);
+            return;
         }
-    }
+    }      
 }
 
 void Engine::Scene::SceneNode::Update(float p_deltaTime)
@@ -83,7 +84,7 @@ std::vector<std::shared_ptr<Engine::Scene::SceneNode>> Engine::Scene::SceneNode:
     {
         children.emplace_back(node);
 
-        if (node->GetChildren().size() > 0)
+        if (!node->GetChildren().empty())
         {
             std::vector<std::shared_ptr<SceneNode>> nodeChildren = node->GetAllChildren();
             children.insert(children.end(), nodeChildren.begin(), nodeChildren.end());

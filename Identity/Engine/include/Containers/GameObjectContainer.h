@@ -14,7 +14,8 @@ namespace Engine::Containers
         GameObjectContainer(const GameObjectContainer&&) = delete;
 
         static int32_t AddGameObject(std::shared_ptr<Objects::GameObject> p_gameObject);
-        static bool RemoveGameObject(int32_t p_id);
+        static void RemoveGameObject(std::shared_ptr<Objects::GameObject> p_gameObject);
+        static void RemoveGameObject(int32_t p_id);
 
         static GameObjectContainer* GetInstance();
         static std::map<int, std::shared_ptr<Objects::GameObject>>& GetAllGameObjects() { return GetInstance()->m_gameObjects; }

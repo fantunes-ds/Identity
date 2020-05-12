@@ -35,6 +35,17 @@ void Engine::Scene::Scene::RemoveGameObject(int32_t p_id)
     //for (auto& node: m_sceneGraph.)
 }
 
+std::shared_ptr<Engine::Objects::GameObject> Engine::Scene::Scene::GetGameObject(const std::string& p_name)
+{
+    for (auto& go: m_sceneGraph.GetAllSceneNodes())
+    {
+        if (p_name == go.second->GetName())
+            return go.second->GetGameObject();
+    }
+
+    return nullptr;
+}
+
 std::list<std::shared_ptr<Engine::Objects::GameObject>> Engine::Scene::Scene::GetAllGameObjectsInScene()
 {
     std::list<std::shared_ptr<Objects::GameObject>> GOs;
@@ -73,7 +84,6 @@ void Engine::Scene::Scene::Load(const std::string& p_sceneName)
 
     std::vector <std::string> block;
     std::vector <std::string> lines;
-    auto instance = Systems::TransformSystem::GetInstance();
 
     for (std::string line; std::getline(inFile, line); )
     {

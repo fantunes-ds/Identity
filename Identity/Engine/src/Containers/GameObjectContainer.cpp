@@ -2,6 +2,8 @@
 
 #include <Containers/GameObjectContainer.h>
 
+#include "Systems/TransformSystem.h"
+
 Engine::Containers::GameObjectContainer::~GameObjectContainer()
 {
     delete m_instance;
@@ -23,13 +25,31 @@ int32_t Engine::Containers::GameObjectContainer::AddGameObject(std::shared_ptr<O
     return p_gameObject->GetID();
 }
 
-bool Engine::Containers::GameObjectContainer::RemoveGameObject(int32_t p_id)
+void Engine::Containers::GameObjectContainer::RemoveGameObject(std::shared_ptr<Objects::GameObject> p_gameObject)
 {
-    //size_t before = GetInstance()->m_gameObjects.size();
-    //GetInstance()->m_gameObjects.erase(p_id);
-    //size_t after = GetInstance()->m_gameObjects.size();
+    if (!p_gameObject)
+        return;
 
-    return true;
+    //Systems::TransformSystem::RemoveTransform(p_gameObject->GetTransform());
+
+    for (auto& component : p_gameObject->GetAllComponents())
+    {
+        //ComponentContainer::FindComponent(component)->DeleteFromMemory();
+
+        ComponentContainer::RemoveComponent(component);
+
+    }
+
+    //GetInstance()->m_gameObjects.erase(p_gameObject->GetID());
+}
+
+void Engine::Containers::GameObjectContainer::RemoveGameObject(int32_t p_id)
+{
+    if (p_id < 0)
+        return;
+
+
+    GetInstance()->m_gameObjects.erase(p_id);
 }
 
 Engine::Containers::GameObjectContainer* Engine::Containers::GameObjectContainer::GetInstance()
