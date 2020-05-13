@@ -11,6 +11,9 @@ Engine::Containers::GameObjectContainer::~GameObjectContainer()
 
 int32_t Engine::Containers::GameObjectContainer::AddGameObject(std::shared_ptr<Objects::GameObject> p_gameObject)
 {
+    if (p_gameObject == nullptr)
+        return -1;
+
     for (auto& gameObject : GetInstance()->m_gameObjects)
     {
         if (*p_gameObject == *gameObject.second)
@@ -30,14 +33,9 @@ void Engine::Containers::GameObjectContainer::RemoveGameObject(std::shared_ptr<O
     if (!p_gameObject)
         return;
 
-    //Systems::TransformSystem::RemoveTransform(p_gameObject->GetTransform());
-
     for (auto& component : p_gameObject->GetAllComponents())
     {
-        //ComponentContainer::FindComponent(component)->DeleteFromMemory();
-
         ComponentContainer::RemoveComponent(component);
-
     }
 
     //GetInstance()->m_gameObjects.erase(p_gameObject->GetID());
@@ -47,7 +45,6 @@ void Engine::Containers::GameObjectContainer::RemoveGameObject(int32_t p_id)
 {
     if (p_id < 0)
         return;
-
 
     GetInstance()->m_gameObjects.erase(p_id);
 }

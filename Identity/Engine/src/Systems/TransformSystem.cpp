@@ -62,7 +62,6 @@ int32_t Engine::Systems::TransformSystem::AddTransform()
 
 int32_t Engine::Systems::TransformSystem::AddTransform(std::shared_ptr<Components::Transform> p_transform)
 {
-    //TODO: Fix this stupidity
     GetInstance()->m_transforms.insert_or_assign(p_transform->GetID(), p_transform);
 
     return p_transform->GetID();

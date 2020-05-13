@@ -37,7 +37,6 @@ void GameObject::DeleteFromMemory()
 {
     for (auto& component : m_components)
     {
-        auto p = Containers::ComponentContainer::FindComponent(component);
         Containers::ComponentContainer::RemoveComponent(component);
     }
 
