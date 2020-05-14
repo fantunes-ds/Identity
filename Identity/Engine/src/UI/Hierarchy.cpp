@@ -8,6 +8,7 @@
 
 #include <Core/App.h>
 #include <Rendering/Renderer.h>
+#include <Components/BoxCollider.h>
 
 int Engine::UI::Hierarchy::m_currentlySelected = -1;
 
