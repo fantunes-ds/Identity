@@ -130,12 +130,11 @@ void Engine::Components::Camera::UpdateCameraPosition(const float p_deltaTime)
 
 void Engine::Components::Camera::UpdateCameraRotation()
 {
-    const float sensitivity{0.3f};
-    float       xPos{static_cast<float>(_INPUT->mouse.GetRawPosition()->x)};
-    float       yPos{static_cast<float>(_INPUT->mouse.GetRawPosition()->y)};
+    float       xPos{_INPUT->mouse.GetRawPosition()->x};
+    float       yPos{_INPUT->mouse.GetRawPosition()->y};
 
-    xPos *= sensitivity;
-    yPos *= sensitivity;
+    xPos *= m_sensitivity * Tools::Time::GetDeltaTime();
+    yPos *= m_sensitivity * Tools::Time::GetDeltaTime();
 
     m_yaw += xPos;
     m_pitch += yPos;
@@ -147,15 +146,8 @@ void Engine::Components::Camera::UpdateCameraRotation()
 
     if (m_yaw > 180.0f)
         m_yaw -= 360.0f;
-    if (m_yaw < -180.0f)
+    else if (m_yaw < -180.0f)
         m_yaw += 360.0f;
-
-    if (ImGui::Begin("Camera Tool"))
-    {
-        ImGui::DragFloat("CameraYaw", &m_yaw, 1.f, -180.0f, 180.0f, "%.1f");
-        ImGui::DragFloat("CameraPitch", &m_pitch, 1.f, -180.0f, 180.0f, "%.1f");
-    }
-    ImGui::End();
 }
 
 void Engine::Components::Camera::UpdateViewMatrix()

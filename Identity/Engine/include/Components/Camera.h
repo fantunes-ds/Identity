@@ -69,7 +69,7 @@ namespace Engine::Components
 #pragma region GeneralVariables
         bool needUpdate{false};
         float m_speed{5.f};
-        float m_sensitivity{0.05f};
+        float m_sensitivity{50.0f};
 
         float m_zoom{45.0f};
         float m_yaw{0.0f};
