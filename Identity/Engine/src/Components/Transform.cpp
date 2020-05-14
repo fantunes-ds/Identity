@@ -197,9 +197,9 @@ std::shared_ptr<Engine::Components::Transform> Engine::Components::Transform::Ge
 
 void Engine::Components::Transform::CalculateAxes()
 {
-    Quaternion quatf = (m_rotation * Vector3F::forward * m_rotation.Conjugate());
-    Quaternion quatr = (m_rotation * Vector3F::right * m_rotation.Conjugate());
-    Quaternion quatu = (m_rotation * Vector3F::up * m_rotation.Conjugate());
+    Quaternion quatf = (m_rotation * Vector3F::forward * Quaternion::Conjugate(m_rotation));
+    Quaternion quatr = (m_rotation * Vector3F::right * Quaternion::Conjugate(m_rotation));
+    Quaternion quatu = (m_rotation * Vector3F::up * Quaternion::Conjugate(m_rotation));
 
     Vector3F vec3f = quatf.GetRotationAxis();
     Vector3F vec3r = quatr.GetRotationAxis();

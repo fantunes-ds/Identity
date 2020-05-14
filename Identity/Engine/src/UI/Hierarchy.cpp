@@ -91,11 +91,10 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
     {
         ImGui::End();
         return;
-    }   
-    //for (auto& gameObject : Managers::SceneManager::GetActiveScene()->GetAllGameObjectsInScene())
-    //{
-        
-        //for (auto component : gameObject->GetAllComponents())
+    }
+
+        //todo Class Inspector to deal with these
+
         auto transform = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject()->GetTransform();
 
         Quaternion& rotationQuaternion = transform->GetRotation();
@@ -105,13 +104,16 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
             float* pos[3] = { &transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z };
             float* rot[3] = { &rotationEuler.x, &rotationEuler.y, &rotationEuler.z };
             float* scale[3] = { &transform->GetScale().x, &transform->GetScale().y, &transform->GetScale().z };
-            ImGui::DragFloat3("Position", *pos, 0.1f, -1000.0f, 1000.0f, "%.3f");
+            ImGui::DragFloat3("Position", *pos, 0.1f);
             ImGui::DragFloat3("Rotation", *rot, 0.1f);
             ImGui::DragFloat3("Scale", *scale, 0.1f);
         }
+
+        if (rotationEuler.y > 90.0f || rotationEuler.y < -90.0f)
+            rotationEuler = Vector3{ rotationEuler.x - 180.0f, ((rotationEuler.y) * -1), rotationEuler.z + 180.0f};
         rotationQuaternion.MakeFromEuler(rotationEuler);
-        //transform->SetRotation(rot);
         transform->needUpdate = true;
+        transform->needAxesUpdate = true;
 
         for (auto component : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject()->GetAllComponents())
         {
