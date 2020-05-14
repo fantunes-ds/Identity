@@ -1,7 +1,6 @@
 #define DEBUG_MODE true;
 
 #include <stdafx.h>
-#include <fstream>
 
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
@@ -10,7 +9,6 @@
 
 #include <Core/App.h>
 #include <Components/Camera.h>
-#include <Components/ModelComponent.h>
 #include <Components/Light.h>
 #include <Components/BoxCollider.h>
 #include <Input/Input.h>
@@ -25,6 +23,8 @@
 #include <Systems/TransformSystem.h>
 #include <Systems/PhysicsSystem.h>
 #include <Systems/LightSystem.h>
+
+#include "UI/Hierarchy.h"
 
 Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
@@ -147,8 +147,11 @@ void Engine::Core::App::EndFrame() const
     Rendering::Renderer::GetInstance()->EndFrame();
 }
 
-void Engine::Core::App::TestingSimulation()
+void Engine::Core::App::TestingSimulation(bool p_stop)
 {
+    //Possible Spaghetti code
+    UI::Hierarchy::m_currentlySelected = -1;
+
     if (!RunBullet && !p_stop)
     {
         // if (!Managers::SceneManager::GetPlayScene())

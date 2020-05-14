@@ -10,13 +10,14 @@
 #include <Rendering/Renderer.h>
 #include <Components/BoxCollider.h>
 
+#include "Components/Camera.h"
+
 int Engine::UI::Hierarchy::m_currentlySelected = -1;
 
 std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child)
 {
     static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
     static int                selection_mask = (1 << 2);
-    int                       node_clicked = -1;
     ImGuiTreeNodeFlags        node_flags = base_flags;
     static bool               test_drag_and_drop = true;
     const bool                is_selected = (selection_mask & (1 << p_child->GetID())) != 0;
@@ -30,7 +31,7 @@ std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChil
         bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)p_child->GetID(), node_flags, "%s", p_child->GetName().c_str());
         {
             if (ImGui::IsItemClicked())
-                node_clicked = p_child->GetID();
+                m_currentlySelected = p_child->GetID();
             if (test_drag_and_drop && ImGui::BeginDragDropSource())
             {
                 ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
@@ -50,7 +51,7 @@ std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChil
         node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
         ImGui::TreeNodeEx((void*)(intptr_t)p_child->GetID(), node_flags, "%s", p_child->GetName().c_str());
         if (ImGui::IsItemClicked())
-            node_clicked = p_child->GetID();
+            m_currentlySelected = p_child->GetID();
         if (test_drag_and_drop && ImGui::BeginDragDropSource())
         {
             ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
@@ -58,13 +59,12 @@ std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChil
             ImGui::EndDragDropSource();
         }
     }
-    if (node_clicked != -1)
+    if (m_currentlySelected != -1)
     {
-        m_currentlySelected = node_clicked;
         if (ImGui::GetIO().KeyCtrl)
-            selection_mask ^= (1 << node_clicked);          // CTRL+click to toggle
-        else if (!(selection_mask & (1 << node_clicked)))
-            selection_mask = (1 << node_clicked);           // Click to single-select
+            selection_mask ^= (1 << m_currentlySelected);          // CTRL+click to toggle
+        else if (!(selection_mask & (1 << m_currentlySelected)))
+            selection_mask = (1 << m_currentlySelected);           // Click to single-select
 
     }
 
