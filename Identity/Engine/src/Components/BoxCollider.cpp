@@ -13,8 +13,8 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
     btTransform trans;
-    auto&       position = m_gameObject->GetTransform()->GetPosition();
-    auto&       rotation = m_gameObject->GetTransform()->GetRotation();
+    auto       position = m_gameObject->GetTransform()->GetPosition();
+    auto       rotation = m_gameObject->GetTransform()->GetRotation();
 
     trans.setIdentity();
 
@@ -37,7 +37,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
 
 Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::vector<std::string> p_block) : IComponent{ p_gameObject, BOX_COLLIDER }
 {
-    m_gameObject = p_gameObject;
+    // m_gameObject = p_gameObject;
 
     std::vector<std::string> words;
 
@@ -77,15 +77,18 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
 
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     btTransform trans;
-    auto& position = m_gameObject->GetTransform()->GetPosition();
-    auto& rotation = m_gameObject->GetTransform()->GetRotation();
-    auto& scale = m_gameObject->GetTransform()->GetScale();
+    auto position = m_gameObject->GetTransform()->GetPosition();
+    auto rotation = m_gameObject->GetTransform()->GetRotation();
+
+    Vector3D offsetD = m_offset;
+    Quaternion q = rotation * offsetD * Quaternion::Conjugate(rotation);
+    offsetD = { q.GetXAxisValue(), q.GetYAxisValue(), q.GetZAxisValue() };
+    Vector3D offset = offsetD;
+    position += offset;
 
     trans.setIdentity();
-
     trans.setOrigin(btVector3(position.x, position.y, position.z));
     trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
-
     m_box->calculateLocalInertia(m_mass, localInertia);
 
     m_motionState = new btDefaultMotionState(trans);
@@ -108,25 +111,21 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     m_mass = p_other->m_mass;
     m_offset = p_other->m_offset;
     m_box = p_other->m_box;
+    // m_motionState = p_other->m_motionState;
 
     btTransform trans;
-    auto&       position = m_gameObject->GetTransform()->GetPosition();
-    auto&       rotation = m_gameObject->GetTransform()->GetRotation();
-
+    // p_other->m_motionState->getWorldTransform(trans);
+    auto       position = m_gameObject->GetTransform()->GetPosition();
+    auto       rotation = m_gameObject->GetTransform()->GetRotation();
+    
     Vector3D offsetD = m_offset;
-    Quaternion q;
-    q.SetXAxisValue(offsetD.x);
-    q.SetYAxisValue(offsetD.y);
-    q.SetZAxisValue(offsetD.z);
-    q.w = 0;
-
-    q = rotation.Multiply(q).Multiply(Quaternion::Conjugate(rotation));
-
+    Quaternion q = rotation * offsetD * Quaternion::Conjugate(rotation);
+    
     offsetD = { q.GetXAxisValue(), q.GetYAxisValue(), q.GetZAxisValue() };
     Vector3D offset = offsetD;
-
-    position -= offset;
-
+    
+    // position += offset;
+    
     trans.setIdentity();
     trans.setOrigin(btVector3(position.x, position.y, position.z));
     trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
@@ -206,15 +205,18 @@ void Engine::Components::BoxCollider::Deserialize(Objects::GameObject* p_gameObj
 
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     btTransform trans;
-    auto& position = m_gameObject->GetTransform()->GetPosition();
-    auto& rotation = m_gameObject->GetTransform()->GetRotation();
-    auto& scale = m_gameObject->GetTransform()->GetScale();
+    auto position = m_gameObject->GetTransform()->GetPosition();
+    auto rotation = m_gameObject->GetTransform()->GetRotation();
+
+    Vector3D offsetD = m_offset;
+    Quaternion q = rotation * offsetD * Quaternion::Conjugate(rotation);
+    offsetD = { q.GetXAxisValue(), q.GetYAxisValue(), q.GetZAxisValue() };
+    Vector3D offset = offsetD;
+    position += offset;
 
     trans.setIdentity();
-
     trans.setOrigin(btVector3(position.x, position.y, position.z));
     trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
-
     m_box->calculateLocalInertia(m_mass, localInertia);
 
     m_motionState = new btDefaultMotionState(trans);
@@ -247,12 +249,34 @@ Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
     return mat.Transpose();
 }
 
-void Engine::Components::BoxCollider::SetPositionOffset(GPM::Vector3F& p_offset)
+void Engine::Components::BoxCollider::SetPositionOffset(GPM::Vector3F p_offset)
 {
     if (this == nullptr)
         return;
 
+    //TODO change the center of object here
     m_offset = p_offset;
+
+    btVector3 localInertia(0.0f, 0.0f, 0.0f);
+    btTransform trans;
+    auto position = m_gameObject->GetTransform()->GetPosition();
+    auto rotation = m_gameObject->GetTransform()->GetRotation();
+
+    Vector3D offsetD = m_offset;
+    Quaternion q = rotation * offsetD * Quaternion::Conjugate(rotation);
+    offsetD = { q.GetXAxisValue(), q.GetYAxisValue(), q.GetZAxisValue() };
+    Vector3D offset = offsetD;
+    position += offset;
+
+    trans.setIdentity();
+    trans.setOrigin(btVector3(position.x, position.y, position.z));
+    trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
+
+    m_box->calculateLocalInertia(m_mass, localInertia);
+    m_motionState = new btDefaultMotionState(trans);
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
+    m_rigidbody = new btRigidBody(rbInfo);
+
 }
 
 void Engine::Components::BoxCollider::SetMass(float p_mass)

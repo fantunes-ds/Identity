@@ -57,10 +57,18 @@ int Engine::Core::App::Run()
     Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
     //----------
 
-    Managers::SceneManager::LoadScene("scene2.txt");
+    // camera.AddComponent<Components::BoxCollider>();
+    // camera.FindComponentOfType<Components::BoxCollider>()->SetMass(1);
+
+    Managers::SceneManager::LoadScene("scene1.txt");
+
+    auto PlayCamera = std::make_shared<Objects::GameObject>("Camera");
+    PlayCamera->AddComponent<Components::Camera>(m_width, m_height);
+    Managers::SceneManager::GetActiveScene()->SetActiveCamera(PlayCamera->FindComponentOfType<Components::Camera>());
+    Managers::SceneManager::GetActiveScene()->AddGameObject(PlayCamera);
 
     float fixedUpdateTimer = 0.0f;
-    Systems::PhysicsSystem::FixedUpdate();
+    // Systems::PhysicsSystem::FixedUpdate();
     while (m_applicationIsRunning)
     {
         Tools::Time::Start();
@@ -86,7 +94,9 @@ int Engine::Core::App::Run()
         float deltaTime = Tools::Time::GetDeltaTime();
 
         //Systems
-        Systems::PhysicsSystem::Update(deltaTime);
+        if (!RunBullet)
+            Systems::PhysicsSystem::Update(deltaTime);
+
         Systems::TransformSystem::Update(deltaTime);
         Systems::LightSystem::Update(deltaTime);
         Systems::CameraSystem::Update(deltaTime);
@@ -157,7 +167,7 @@ void Engine::Core::App::TestingSimulation()
         // InitScene(true);
 
         auto playScene = std::make_shared<Scene::Scene>();
-        playScene->SetName("scene2");
+        playScene->SetName("play");
         auto activeScene = Managers::SceneManager::GetActiveScene();
         Managers::SceneManager::DuplicateScene(playScene, activeScene);
         Managers::SceneManager::AddScene(playScene);
@@ -165,6 +175,7 @@ void Engine::Core::App::TestingSimulation()
         Managers::SceneManager::SetPlayScene(activeScene);
         Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
         Managers::SceneManager::GetPlayScene()->SetActiveOnAll(false);
+        // Systems::RenderSystem::SetActiveCamera(Managers::SceneManager::GetPlayScene()->GetActiveCamera()->GetID());
 
         //deactivate editor scene
 

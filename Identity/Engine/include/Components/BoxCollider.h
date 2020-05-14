@@ -32,14 +32,13 @@ namespace Engine::Components
         btDefaultMotionState* GetMotionState() { return m_motionState; }
         GPM::Vector3F& GetOffset() { return m_offset; }
 
-        void SetPositionOffset(GPM::Vector3F& p_offset); 
+        void SetPositionOffset(GPM::Vector3F p_offset); 
         void SetMass(float p_mass);
         void SetDimensions(const GPM::Vector3F& p_dimensions);
 
         bool operator==(IComponent* p_other) override { return false; }
         bool DeleteFromMemory() override;
         void SetActive(bool p_active) override;
-
     private:
         /**
          * @brief Builds a Model that visually represents this BoxCollider's transform. 

@@ -3,6 +3,7 @@
 #include <list>
 #include <Scene/SceneGraph/SceneGraph.h>
 #include <Objects/GameObject.h>
+#include <Components/Camera.h>
 
 // namespace Engine::Objects
 // {
@@ -23,6 +24,9 @@ namespace Engine::Scene
         Scene(const std::string& p_name);
         ~Scene();
 
+        void SetActiveCamera(std::shared_ptr<Components::Camera> p_camera) { m_activeCamera = p_camera; }
+        std::shared_ptr<Components::Camera> GetActiveCamera() { return m_activeCamera; }
+
         void AddGameObject(std::shared_ptr<Objects::GameObject> p_gameObject);
         void RemoveGameObject(std::shared_ptr<Objects::GameObject> p_gameObject);
         void RemoveGameObject(int32_t p_id);
@@ -36,6 +40,7 @@ namespace Engine::Scene
         void Load(const std::string& p_sceneName);
 
     private:
+        std::shared_ptr<Components::Camera> m_activeCamera;
         SceneGraph m_sceneGraph;
     };
 }

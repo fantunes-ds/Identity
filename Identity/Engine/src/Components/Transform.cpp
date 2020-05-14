@@ -35,9 +35,8 @@ void Engine::Components::Transform::CopyFrom(std::shared_ptr<Transform> p_other)
     m_up       = p_other->m_up;
     m_scale    = p_other->m_scale;
     m_rotation = p_other->m_rotation;
-
-    // needUpdate = true;
-    // needAxesUpdate = true;
+    m_localTransform = p_other->m_localTransform;
+    m_worldTransform = p_other->m_worldTransform;
 }
 
 bool Engine::Components::Transform::operator==(IComponent* p_other)
@@ -200,9 +199,9 @@ std::shared_ptr<Engine::Components::Transform> Engine::Components::Transform::Ge
 
 void Engine::Components::Transform::CalculateAxes()
 {
-    Quaternion quatf = (m_rotation * Vector3F::forward * m_rotation.Conjugate());
-    Quaternion quatr = (m_rotation * Vector3F::right * m_rotation.Conjugate());
-    Quaternion quatu = (m_rotation * Vector3F::up * m_rotation.Conjugate());
+    Quaternion quatf = (m_rotation * Vector3F::forward * Quaternion::Conjugate(m_rotation));
+    Quaternion quatr = (m_rotation * Vector3F::right * Quaternion::Conjugate(m_rotation));
+    Quaternion quatu = (m_rotation * Vector3F::up * Quaternion::Conjugate(m_rotation));
 
     Vector3F vec3f = quatf.GetRotationAxis();
     Vector3F vec3r = quatr.GetRotationAxis();
