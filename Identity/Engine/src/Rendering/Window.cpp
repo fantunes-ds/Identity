@@ -320,7 +320,7 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
                     break;
 
                 auto& rip = reinterpret_cast<const RAWINPUT&>(*m_rawBuffer.data());
-                if ( rip.header.dwType == RIM_TYPEMOUSE && (rip.data.mouse.lLastX != 0 || rip.data.mouse.lLastY != 0))
+                if ( rip.header.dwType == RIM_TYPEMOUSE && (rip.data.mouse.lLastX != 0.0f || rip.data.mouse.lLastY != 0.0f))
                 {
                     _INPUT->mouse.OnRawDelta(rip.data.mouse.lLastX, rip.data.mouse.lLastY);
                 }

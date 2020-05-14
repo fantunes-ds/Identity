@@ -27,7 +27,7 @@ namespace Engine::Input
          */
         struct RawDelta
         {
-            int x{ 0 }, y{ 0 };
+            float x{ 0 }, y{ 0 };
         };
 
         /**
@@ -156,7 +156,7 @@ namespace Engine::Input
         /**
          * @brief Event to be triggered to retrieve the raw input of the mouse movement.
          */
-        void OnRawDelta(int p_deltaX, int p_deltaY) noexcept;
+        void OnRawDelta(float p_deltaX, float p_deltaY) noexcept;
         /**
          * @brief trims the raw input buffer.
          */

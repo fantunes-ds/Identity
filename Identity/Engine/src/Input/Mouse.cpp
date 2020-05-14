@@ -142,7 +142,7 @@ void Mouse::OnWheelDelta(int p_delta) noexcept
     }
 }
 
-void Mouse::OnRawDelta(int p_deltaX, int p_deltaY) noexcept
+void Mouse::OnRawDelta(float p_deltaX, float p_deltaY) noexcept
 {
     m_rawDeltaBuffer.push({p_deltaX, p_deltaY});
     TrimRawDeltaBuffer();

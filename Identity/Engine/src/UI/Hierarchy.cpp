@@ -8,6 +8,9 @@
 
 #include <Core/App.h>
 #include <Rendering/Renderer.h>
+#include <Components/BoxCollider.h>
+
+#include "Components/Camera.h"
 
 int Engine::UI::Hierarchy::m_currentlySelected = -1;
 
@@ -15,7 +18,6 @@ std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChil
 {
     static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
     static int                selection_mask = (1 << 2);
-    int                       node_clicked = -1;
     ImGuiTreeNodeFlags        node_flags = base_flags;
     static bool               test_drag_and_drop = true;
     const bool                is_selected = (selection_mask & (1 << p_child->GetID())) != 0;
@@ -29,7 +31,7 @@ std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChil
         bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)p_child->GetID(), node_flags, "%s", p_child->GetName().c_str());
         {
             if (ImGui::IsItemClicked())
-                node_clicked = p_child->GetID();
+                m_currentlySelected = p_child->GetID();
             if (test_drag_and_drop && ImGui::BeginDragDropSource())
             {
                 ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
@@ -49,7 +51,7 @@ std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChil
         node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
         ImGui::TreeNodeEx((void*)(intptr_t)p_child->GetID(), node_flags, "%s", p_child->GetName().c_str());
         if (ImGui::IsItemClicked())
-            node_clicked = p_child->GetID();
+            m_currentlySelected = p_child->GetID();
         if (test_drag_and_drop && ImGui::BeginDragDropSource())
         {
             ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
@@ -57,13 +59,12 @@ std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChil
             ImGui::EndDragDropSource();
         }
     }
-    if (node_clicked != -1)
+    if (m_currentlySelected != -1)
     {
-        m_currentlySelected = node_clicked;
         if (ImGui::GetIO().KeyCtrl)
-            selection_mask ^= (1 << node_clicked);          // CTRL+click to toggle
-        else if (!(selection_mask & (1 << node_clicked)))
-            selection_mask = (1 << node_clicked);           // Click to single-select
+            selection_mask ^= (1 << m_currentlySelected);          // CTRL+click to toggle
+        else if (!(selection_mask & (1 << m_currentlySelected)))
+            selection_mask = (1 << m_currentlySelected);           // Click to single-select
 
     }
 
@@ -90,11 +91,10 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
     {
         ImGui::End();
         return;
-    }   
-    //for (auto& gameObject : Managers::SceneManager::GetActiveScene()->GetAllGameObjectsInScene())
-    //{
-        
-        //for (auto component : gameObject->GetAllComponents())
+    }
+
+        //todo Class Inspector to deal with these
+
         auto transform = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject()->GetTransform();
 
         Quaternion& rotationQuaternion = transform->GetRotation();
@@ -104,13 +104,16 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
             float* pos[3] = { &transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z };
             float* rot[3] = { &rotationEuler.x, &rotationEuler.y, &rotationEuler.z };
             float* scale[3] = { &transform->GetScale().x, &transform->GetScale().y, &transform->GetScale().z };
-            ImGui::DragFloat3("Position", *pos, 0.1f, -1000.0f, 1000.0f, "%.3f");
+            ImGui::DragFloat3("Position", *pos, 0.1f);
             ImGui::DragFloat3("Rotation", *rot, 0.1f);
             ImGui::DragFloat3("Scale", *scale, 0.1f);
         }
+
+        if (rotationEuler.y > 90.0f || rotationEuler.y < -90.0f)
+            rotationEuler = Vector3{ rotationEuler.x - 180.0f, ((rotationEuler.y) * -1), rotationEuler.z + 180.0f};
         rotationQuaternion.MakeFromEuler(rotationEuler);
-        //transform->SetRotation(rot);
         transform->needUpdate = true;
+        transform->needAxesUpdate = true;
 
         for (auto component : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject()->GetAllComponents())
         {
@@ -120,26 +123,56 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
             {
             case Components::MODEL:
             {
-                std::shared_ptr<Components::ModelComponent> t = std::dynamic_pointer_cast<Components::ModelComponent>(Icomponent);
+                std::shared_ptr<Components::ModelComponent> modelComponent = std::dynamic_pointer_cast<Components::ModelComponent>(Icomponent);
                 
                 if (ImGui::CollapsingHeader("Model Component"), ImGuiTreeNodeFlags_DefaultOpen)
                 {
-                    ImGui::Text("%s", Managers::ResourceManager::FindModel(t->GetModel())->GetName().c_str());
+                    ImGui::Text("%s", Managers::ResourceManager::FindModel(modelComponent->GetModel())->GetName().c_str());
                 }
-            }
             break;
+            }
             case Components::BOX_COLLIDER:
+            {
+                std::shared_ptr<Components::BoxCollider> boxCollider = std::dynamic_pointer_cast<Components::BoxCollider>(Icomponent);
+                if (ImGui::CollapsingHeader("Box Collider"), ImGuiTreeNodeFlags_DefaultOpen)
+                {
+                    //todo add dimensions, it's weirdly done on BoxCollider for the moment being.
+                    float* dimensions[3] = { &boxCollider->GetDimensions().x, &boxCollider->GetDimensions().y, &boxCollider->GetDimensions().z };
+                    float* offset[3] = { &boxCollider->GetOffset().x, &boxCollider->GetOffset().y, &boxCollider->GetOffset().z };
+                    float* mass = { &boxCollider->GetMass() };
 
+                    ImGui::DragFloat3("Dimensions", *dimensions, 0.1f);
+                    ImGui::DragFloat("Mass", mass, 0.1f);
+                    ImGui::DragFloat3("Offset", *offset, 0.1f);
+
+                    boxCollider->SetPositionOffset(boxCollider->GetOffset());
+                    boxCollider->SetMass(boxCollider->GetMass());
+                    //boxCollider->SetDimensions(boxCollider->GetDimensions());
+                }
                 break;
+            }
             case Components::CAMERA:
+            {
+                std::shared_ptr<Components::Camera> boxCollider = std::dynamic_pointer_cast<Components::Camera>(Icomponent);
+                if (ImGui::CollapsingHeader("Camera"), ImGuiTreeNodeFlags_DefaultOpen)
+                {
 
+                    //ImGui::DragFloat3("Dimensions", *dimensions, 0.1f);
+                }
                 break;
+            }
             case Components::LIGHT:
+            {
 
                 break;
+            }
             case Components::UNSET:
+            {
+
+
                 OutputDebugString("Component Type not Set for Inspector Call. Please set the Component Type on your Component to something valid.");
                 break;
+            }
             }
         }
     //}
