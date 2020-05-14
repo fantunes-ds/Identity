@@ -193,7 +193,8 @@ void Engine::Components::BoxCollider::Deserialize(Objects::GameObject* p_gameObj
         }
         else if (words[0] == "m_box")
         {
-            m_box = new btBoxShape(btVector3(std::stof(words[1]), std::stof(words[2]), std::stof(words[3])));
+            m_dimensions = { std::stof(words[1]), std::stof(words[2]), std::stof(words[3]) };
+            m_box = new btBoxShape(btVector3(m_dimensions.x, m_dimensions.y, m_dimensions.z));
         }
 
         words.clear();
@@ -279,6 +280,8 @@ void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimen
 {
     if (this == nullptr)
         return;
+
+    m_dimensions = p_dimensions;
 
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
 

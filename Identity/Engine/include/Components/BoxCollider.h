@@ -31,6 +31,8 @@ namespace Engine::Components
         btRigidBody* GetBtRigidbody() { return m_rigidbody; }
         btDefaultMotionState* GetMotionState() { return m_motionState; }
         GPM::Vector3F& GetOffset() { return m_offset; }
+        float& GetMass() { return m_mass; }
+        Vector3F& GetDimensions() { return m_dimensions; }
 
         void SetPositionOffset(GPM::Vector3F& p_offset); 
         void SetMass(float p_mass);
@@ -47,7 +49,8 @@ namespace Engine::Components
         ObjectElements::Model ConstructBox();
 
         float m_mass;
-        GPM::Vector3F m_offset;
+        Vector3F m_dimensions;
+        Vector3F m_offset;
         btBoxShape* m_box;
         btDefaultMotionState* m_motionState;
         btRigidBody* m_rigidbody;

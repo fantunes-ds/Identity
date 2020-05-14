@@ -120,26 +120,56 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
             {
             case Components::MODEL:
             {
-                std::shared_ptr<Components::ModelComponent> t = std::dynamic_pointer_cast<Components::ModelComponent>(Icomponent);
+                std::shared_ptr<Components::ModelComponent> modelComponent = std::dynamic_pointer_cast<Components::ModelComponent>(Icomponent);
                 
                 if (ImGui::CollapsingHeader("Model Component"), ImGuiTreeNodeFlags_DefaultOpen)
                 {
-                    ImGui::Text("%s", Managers::ResourceManager::FindModel(t->GetModel())->GetName().c_str());
+                    ImGui::Text("%s", Managers::ResourceManager::FindModel(modelComponent->GetModel())->GetName().c_str());
                 }
-            }
             break;
+            }
             case Components::BOX_COLLIDER:
+            {
+                std::shared_ptr<Components::BoxCollider> boxCollider = std::dynamic_pointer_cast<Components::BoxCollider>(Icomponent);
+                if (ImGui::CollapsingHeader("Box Collider"), ImGuiTreeNodeFlags_DefaultOpen)
+                {
+                    //todo add dimensions, it's weirdly done on BoxCollider for the moment being.
+                    float* dimensions[3] = { &boxCollider->GetDimensions().x, &boxCollider->GetDimensions().y, &boxCollider->GetDimensions().z };
+                    float* offset[3] = { &boxCollider->GetOffset().x, &boxCollider->GetOffset().y, &boxCollider->GetOffset().z };
+                    float* mass = { &boxCollider->GetMass() };
 
+                    ImGui::DragFloat3("Dimensions", *dimensions, 0.1f);
+                    ImGui::DragFloat("Mass", mass, 0.1f);
+                    ImGui::DragFloat3("Offset", *offset, 0.1f);
+
+                    boxCollider->SetPositionOffset(boxCollider->GetOffset());
+                    boxCollider->SetMass(boxCollider->GetMass());
+                    //boxCollider->SetDimensions(boxCollider->GetDimensions());
+                }
                 break;
+            }
             case Components::CAMERA:
+            {
+                std::shared_ptr<Components::Camera> boxCollider = std::dynamic_pointer_cast<Components::Camera>(Icomponent);
+                if (ImGui::CollapsingHeader("Camera"), ImGuiTreeNodeFlags_DefaultOpen)
+                {
 
+                    //ImGui::DragFloat3("Dimensions", *dimensions, 0.1f);
+                }
                 break;
+            }
             case Components::LIGHT:
+            {
 
                 break;
+            }
             case Components::UNSET:
+            {
+
+
                 OutputDebugString("Component Type not Set for Inspector Call. Please set the Component Type on your Component to something valid.");
                 break;
+            }
             }
         }
     //}
