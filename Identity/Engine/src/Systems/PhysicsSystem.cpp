@@ -63,24 +63,23 @@ void Engine::Systems::PhysicsSystem::Update(const float p_deltaTime)
         if (!collider.second->IsActive())
             continue;
 
-        auto offset = collider.second->GetOffset();
-        // collider.second->SetPositionOffset(Vector3F{ 0 ,0, 0 });
-        //
-        // btTransform trans;
-        // trans.setIdentity();
-        // auto& position = collider.second->GetGameObject()->GetTransform()->GetPosition();
-        // auto& rotation = collider.second->GetGameObject()->GetTransform()->GetRotation();
-        //
-        // trans.setIdentity();
-        // trans.setOrigin(btVector3(position.x, position.y, position.z));
-        // trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
-        //
-        // collider.second->GetBtRigidbody()->setWorldTransform(trans);
-        // collider.second->GetMotionState()->setWorldTransform(trans);
+        btTransform trans;
+        trans.setIdentity();
+        auto position = collider.second->GetGameObject()->GetTransform()->GetPosition();
+        auto rotation = collider.second->GetGameObject()->GetTransform()->GetRotation();
 
-        collider.second->SetPositionOffset(offset);
-        // auto rb = collider.second->GetBtRigidbody();
-        // rb->
+        Vector3D offsetD = collider.second->GetOffset();
+        Quaternion q = rotation * offsetD * Quaternion::Conjugate(rotation);
+        offsetD = { q.GetXAxisValue(), q.GetYAxisValue(), q.GetZAxisValue() };
+        Vector3D offset = offsetD;
+        position += offset;
+
+        trans.setIdentity();
+        trans.setOrigin(btVector3(position.x, position.y, position.z));
+        trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
+        
+        collider.second->GetBtRigidbody()->setWorldTransform(trans);
+        collider.second->GetMotionState()->setWorldTransform(trans);
     }
 }
 
@@ -107,8 +106,9 @@ void Engine::Systems::PhysicsSystem::FixedUpdate()
             btQuaternion quatOffset(offset.x, offset.y, offset.z, 0.0f);
             btQuaternion qpq = collRot * quatOffset * collRot.inverse();
 
-            collider.second->GetGameObject()->GetTransform()->SetPosition(//Vector3F(qpq.getX(), qpq.getY(), qpq.getZ()) +
-                                                                          Vector3F(collPos.getX(), collPos.getY(), collPos.getZ()));
+            collider.second->GetGameObject()->GetTransform()->SetPosition(Vector3F(collPos.getX(), collPos.getY(), collPos.getZ()) -
+                                                                          Vector3F(qpq.getX(), qpq.getY(), qpq.getZ()));
+
             collider.second->GetGameObject()->GetTransform()->SetRotation(Quaternion(collRot.getX(), collRot.getY(),
                                                                                           collRot.getZ(), collRot.getW()));
 

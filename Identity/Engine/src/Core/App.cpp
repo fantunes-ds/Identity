@@ -94,8 +94,7 @@ int Engine::Core::App::Run()
         float deltaTime = Tools::Time::GetDeltaTime();
 
         //Systems
-        if (!RunBullet)
-            Systems::PhysicsSystem::Update(deltaTime);
+        Systems::PhysicsSystem::Update(deltaTime);
 
         Systems::TransformSystem::Update(deltaTime);
         Systems::LightSystem::Update(deltaTime);
@@ -175,6 +174,7 @@ void Engine::Core::App::TestingSimulation()
         Managers::SceneManager::SetPlayScene(activeScene);
         Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
         Managers::SceneManager::GetPlayScene()->SetActiveOnAll(false);
+
         // Systems::RenderSystem::SetActiveCamera(Managers::SceneManager::GetPlayScene()->GetActiveCamera()->GetID());
 
         //deactivate editor scene
