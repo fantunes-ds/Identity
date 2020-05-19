@@ -66,7 +66,8 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
                 const Rendering::Buffers::PCB pcb{
                     Vector4F::zero, Vector4F::one, Vector4F::one,
                     Vector4F::zero, Vector4F::one,
-                    1.0f, Vector3F{}, Vector3F::zero, static_cast<float>(mesh->GetMaterial()->GetTextureState())
+                    1.0f, Vector3F{}, Vector3F::zero,
+                    static_cast<float>(mesh->GetMaterial()->GetTextureState()), mesh->GetMaterial()->GetColor()
                 };
                 mesh->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
                 Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
@@ -114,7 +115,8 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         const Rendering::Buffers::PCB pcb{
             Vector4F::zero, Vector4F::one, Vector4F::one,
             Vector4F::zero, Vector4F::one,
-            1.0f, Vector3F{}, Vector3F::zero, static_cast<float>(screenRect->GetMaterial()->GetTextureState())
+            1.0f, Vector3F{}, Vector3F::zero,
+            static_cast<float>(screenRect->GetMaterial()->GetTextureState()), screenRect->GetMaterial()->GetColor()
         };
         screenRect->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
 
@@ -180,7 +182,8 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         const Rendering::Buffers::PCB pcb{
             reversedXLightPos, light.ambient, light.diffuse,
             light.specular, light.color, light.shininess, Vector3F{},
-            Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, txst
+            Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, txst,
+            mesh->GetMaterial()->GetColor()
         };
 
         mesh->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);

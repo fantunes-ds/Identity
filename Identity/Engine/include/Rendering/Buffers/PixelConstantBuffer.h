@@ -12,6 +12,8 @@ namespace Engine::Rendering::Buffers
         Rendering::Lights::DirectionalLight::LightData lightSource;
         Vector3F                            cameraPos;
         float                               textureState;
+        Vector3F                            materialColor;
+        float                               buffer;
     };
 
     class PixelConstantBuffer
