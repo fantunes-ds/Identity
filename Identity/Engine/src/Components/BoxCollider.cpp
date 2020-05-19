@@ -12,6 +12,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
 {
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
+    m_dimensions = { 1.0f, 1.0f, 1.0f };
     btTransform trans;
     auto       position = m_gameObject->GetTransform()->GetPosition();
     auto       rotation = m_gameObject->GetTransform()->GetRotation();
@@ -75,6 +76,14 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     delete m_rigidbody;
     delete m_motionState;*/
 
+    // m_box->getHalfExtentsWithMargin().getX()
+    // m_box->getHalfExtentsWithMargin().getY()
+    // m_box->getHalfExtentsWithMargin().getZ()
+    
+    m_dimensions = { m_box->getHalfExtentsWithMargin().getX(),
+                     m_box->getHalfExtentsWithMargin().getY(),
+                     m_box->getHalfExtentsWithMargin().getZ() };
+
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     btTransform trans;
     auto position = m_gameObject->GetTransform()->GetPosition();
@@ -111,6 +120,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     m_mass = p_other->m_mass;
     m_offset = p_other->m_offset;
     m_box = p_other->m_box;
+    m_dimensions = p_other->m_dimensions;
     // m_motionState = p_other->m_motionState;
 
     btTransform trans;
