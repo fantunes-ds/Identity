@@ -1,0 +1,124 @@
+
+GAMEOBJECT
+link 44
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 4 -5 -4
+   m_forward 0 0 1
+   m_right 1 0 0
+   m_up 0 0 0
+   m_scale 0.02 0.02 0.02
+   m_rotation 0.000228038 -0.382683 0.000228038 0.923879
+   m_worldTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 4 -5 -4
+   m_forward 0 0 1
+   m_right 1 0 0
+   m_up 0 0 0
+   m_scale 0.02 0.02 0.02
+   m_rotation 0.000228038 -0.382683 0.000228038 0.923879
+   m_worldTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::BoxCollider
+{
+   m_mass 0
+   m_offset 0 1 0
+   m_box 0.5 1 0.5
+   m_model 48
+}
+class Engine::Components::ModelComponent
+{
+   m_model Link
+   m_material LinkMat
+}
+;
+
+GAMEOBJECT
+lambo 46
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5 5 -3
+   m_forward 0 0 1
+   m_right 1 0 0
+   m_up 0 0 0
+   m_scale 0.02 0.02 0.02
+   m_rotation 0.0885213 -0.330366 0.24321 0.907673
+   m_worldTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5 5 -3
+   m_forward 0 0 1
+   m_right 1 0 0
+   m_up 0 0 0
+   m_scale 0.02 0.02 0.02
+   m_rotation 0.0885213 -0.330366 0.24321 0.907673
+   m_worldTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::BoxCollider
+{
+   m_mass 80
+   m_offset 0 1.5 0
+   m_box 2 1 5
+   m_model 60
+}
+class Engine::Components::ModelComponent
+{
+   m_model Lambo
+   m_material LamboMat
+}
+;
+
+GAMEOBJECT
+light 48
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 10 4 -10
+   m_forward 0 0 1
+   m_right 1 0 0
+   m_up 0 0 0
+   m_scale 0.01 0.01 0.01
+   m_rotation 0 0 0 1
+   m_worldTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 10 4 -10
+   m_forward 0 0 1
+   m_right 1 0 0
+   m_up 0 0 0
+   m_scale 0.01 0.01 0.01
+   m_rotation 0 0 0 1
+   m_worldTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Rendering::Lights::DirectionalLight
+{
+   m_lightData
+   {
+       shininess 0
+       padding 0 0 0
+       position 0 0 0 1
+       ambient 0 0 0 1
+       diffuse 0 0 0 1
+       specular 0 0 0 1
+       color 0 0 0 1
+   }
+}
+;

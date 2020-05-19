@@ -68,7 +68,7 @@ void Engine::Scene::Scene::SetActiveOnAll(bool p_active)
 
 void Engine::Scene::Scene::Save()
 {
-    std::ofstream outfile(m_name + ".txt");
+    std::ofstream outfile("SaveFiles/Scenes/" + m_name + ".IDScene");
 
     for (auto& node: m_sceneGraph.GetAllSceneNodes())
     {
@@ -80,7 +80,9 @@ void Engine::Scene::Scene::Save()
 
 void Engine::Scene::Scene::Load(const std::string& p_sceneName)
 {
-    std::ifstream inFile(p_sceneName);
+    std::string file("SaveFiles/Scenes/" + p_sceneName + ".IDScene");
+
+    std::ifstream inFile(file);
 
     std::vector <std::string> block;
     std::vector <std::string> lines;

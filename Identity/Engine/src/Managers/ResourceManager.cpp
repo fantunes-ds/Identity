@@ -494,7 +494,7 @@ std::vector<std::shared_ptr<Material>> Engine::Managers::ResourceManager::GetAll
 
 void Engine::Managers::ResourceManager::SerializeNS()
 {
-    std::ofstream outfile("resource.txt");
+    std::ofstream outfile("SaveFiles/resource.IDResources");
 
     //Model
     for (auto& model : GetAllModelsNS())
@@ -536,7 +536,7 @@ void Engine::Managers::ResourceManager::SerializeNS()
 
 void Engine::Managers::ResourceManager::DeserializeNS()
 {
-    std::ifstream inFile("resource.txt");
+    std::ifstream inFile("SaveFiles/resource.IDResources");
     std::vector <std::string> lines;
 
     for (std::string line; std::getline(inFile, line); )

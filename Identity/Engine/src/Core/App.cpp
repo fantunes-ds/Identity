@@ -60,7 +60,8 @@ int Engine::Core::App::Run()
     // camera.AddComponent<Components::BoxCollider>();
     // camera.FindComponentOfType<Components::BoxCollider>()->SetMass(1);
 
-    Managers::SceneManager::LoadScene("scene1.txt");
+    Managers::SceneManager::LoadScene("scene1");
+    Managers::SceneManager::SaveActiveScene();
 
     auto PlayCamera = std::make_shared<Objects::GameObject>("Camera");
     PlayCamera->AddComponent<Components::Camera>(m_width, m_height);
