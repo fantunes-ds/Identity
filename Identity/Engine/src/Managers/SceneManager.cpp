@@ -17,8 +17,6 @@ Engine::Managers::SceneManager::SceneManager()
     dfscene->SetName("default");
     m_scenes.push_back(dfscene);
     m_activeScene = dfscene;
-    // AddScene(dfscene);
-    // SetActiveScene(dfscene);
 }
 
 std::unique_ptr<Engine::Managers::SceneManager>& Engine::Managers::SceneManager::GetInstance()

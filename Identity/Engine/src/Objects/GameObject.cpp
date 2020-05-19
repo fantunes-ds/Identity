@@ -1,19 +1,20 @@
 #include <stdafx.h>
 
+#include <Objects/GameObject.h>
+
 #include <Containers/ComponentContainer.h>
 #include <Containers/GameObjectContainer.h>
-#include <Components/ModelComponent.h>
 #include <Managers/ResourceManager.h>
 #include <Managers/SceneManager.h>
-#include <Objects/GameObject.h>
 #include <Systems/TransformSystem.h>
+#include <Systems/LightSystem.h>
+
 #include <Scene/Scene.h>
 
+#include <Components/ModelComponent.h>
 #include <Components/BoxCollider.h>
-
+#include <Components/Sound.h>
 #include <Components/Light.h>
-
-#include <Systems/LightSystem.h>
 
 using namespace Engine::Objects;
 
@@ -109,6 +110,11 @@ void GameObject::Deserialize(std::vector<std::string>& p_strings)
             else if (words[1] == "Engine::Components::ModelComponent")
             {
                 int compID = AddComponent<Components::ModelComponent>();
+                Containers::ComponentContainer::FindComponent(compID)->Deserialize(this, componentBlock);
+            }
+            else if (words[1] == "Engine::Components::Sound")
+            {
+                int compID = AddComponent<Components::Sound>();
                 Containers::ComponentContainer::FindComponent(compID)->Deserialize(this, componentBlock);
             }
 
