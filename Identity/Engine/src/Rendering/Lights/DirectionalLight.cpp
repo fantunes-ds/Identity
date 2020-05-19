@@ -72,7 +72,7 @@ void Lights::DirectionalLight::Deserialize(std::vector<std::string>& p_block)
 
         if (words[1] == "Engine::Rendering::Lights::DirectionalLight")
         {
-            m_id = std::stoi(words[2]);
+            //m_id = std::stoi(words[2]);
         }
         else if (words[0] == "shininess")
         {
