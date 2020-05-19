@@ -1,7 +1,5 @@
 #include <stdafx.h>
 
-#include <Tools/ImGUI/imgui.h>
-
 #include <Components/Camera.h>
 #include <Input/Input.h>
 #include <Systems/CameraSystem.h>
