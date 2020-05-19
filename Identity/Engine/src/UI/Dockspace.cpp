@@ -6,6 +6,8 @@
 #include <Rendering/Renderer.h>
 #include <UI/Dockspace.h>
 
+#include "UI/Hierarchy.h"
+
 void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
 {
     static bool               opt_fullscreen_persistant = true;

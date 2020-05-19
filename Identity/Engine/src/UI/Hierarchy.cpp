@@ -153,11 +153,14 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
             }
             case Components::CAMERA:
             {
-                std::shared_ptr<Components::Camera> boxCollider = std::dynamic_pointer_cast<Components::Camera>(Icomponent);
+                std::shared_ptr<Components::Camera> camera = std::dynamic_pointer_cast<Components::Camera>(Icomponent);
                 if (ImGui::CollapsingHeader("Camera"), ImGuiTreeNodeFlags_DefaultOpen)
                 {
+                    float fov = camera->GetFOV();
 
-                    //ImGui::DragFloat3("Dimensions", *dimensions, 0.1f);
+                    ImGui::SliderFloat("Camera FOV", &fov, 10.f, 180.f, "%1.f");
+                    
+                    camera->SetFOV(fov);
                 }
                 break;
             }

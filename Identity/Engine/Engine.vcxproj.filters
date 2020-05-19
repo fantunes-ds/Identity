@@ -139,6 +139,7 @@
     <ClInclude Include="include\UI\Dockspace.h" />
     <ClInclude Include="include\Systems\PhysicsSystem.h" />
     <ClInclude Include="include\UI\Hierarchy.h" />
+    <ClInclude Include="include\Serialize\ISerializeable.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />

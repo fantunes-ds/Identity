@@ -32,9 +32,12 @@ namespace Engine::Components
         [[nodiscard]] const Vector3F&   GetPosition() const noexcept { return m_gameObject->GetTransform()->GetPosition(); }
         [[nodiscard]] const Quaternion& GetRotation() const noexcept { return m_gameObject->GetTransform()->GetRotation(); }
 
-        [[nodiscard]] const float& GetMovementSpeed() const noexcept { return m_speed; }
-        [[nodiscard]] const float& GetMouseSensitivity() const noexcept { return m_sensitivity; }
-        [[nodiscard]] const float& GetZoom() const noexcept { return m_zoom; }
+        [[nodiscard]] float GetMovementSpeed() const noexcept { return m_speed; }
+        [[nodiscard]] float GetMouseSensitivity() const noexcept { return m_sensitivity; }
+        [[nodiscard]] float GetZoom() const noexcept { return m_zoom; }
+        [[nodiscard]] float GetFOV() const noexcept { return m_fovAngle; }
+
+        void                SetFOV(const float p_fov) noexcept { m_fovAngle = p_fov; }
 
     private:
         /**
