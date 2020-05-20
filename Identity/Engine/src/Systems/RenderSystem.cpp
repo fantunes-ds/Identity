@@ -63,12 +63,20 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
                 mesh->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
                 const Vector3F cameraPos = camera->GetPosition();
 
+                // const Rendering::Buffers::PCB pcb{
+                //     Vector4F::zero, Vector4F::one, Vector4F::one,
+                //     Vector4F::zero, Vector4F::one,
+                //     1.0f, Vector3F{}, Vector3F::zero,
+                //     static_cast<float>(mesh->GetMaterial()->GetTextureState()), mesh->GetMaterial()->GetColor()
+                // };
+
+                //create empty lights
+                Rendering::Lights::DirectionalLight::LightData light1, light2;
                 const Rendering::Buffers::PCB pcb{
-                    Vector4F::zero, Vector4F::one, Vector4F::one,
-                    Vector4F::zero, Vector4F::one,
-                    1.0f, Vector3F{}, Vector3F::zero,
-                    static_cast<float>(mesh->GetMaterial()->GetTextureState()), mesh->GetMaterial()->GetColor()
+                        light1, light2, Vector3F::zero,
+                        static_cast<float>(mesh->GetMaterial()->GetTextureState()), mesh->GetMaterial()->GetColor()
                 };
+
                 mesh->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
                 Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
@@ -112,12 +120,20 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         screenRect->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
         screenRect->GetMaterial()->SetTextureState(true);
 
+        // const Rendering::Buffers::PCB pcb{
+        //     Vector4F::zero, Vector4F::one, Vector4F::one,
+        //     Vector4F::zero, Vector4F::one,
+        //     1.0f, Vector3F{}, Vector3F::zero,
+        //     static_cast<float>(screenRect->GetMaterial()->GetTextureState()), screenRect->GetMaterial()->GetColor()
+        // };
+
+        //create empty lights
+        Rendering::Lights::DirectionalLight::LightData light1, light2;
         const Rendering::Buffers::PCB pcb{
-            Vector4F::zero, Vector4F::one, Vector4F::one,
-            Vector4F::zero, Vector4F::one,
-            1.0f, Vector3F{}, Vector3F::zero,
-            static_cast<float>(screenRect->GetMaterial()->GetTextureState()), screenRect->GetMaterial()->GetColor()
+                light1, light2, Vector3F::zero,
+                static_cast<float>(screenRect->GetMaterial()->GetTextureState()), screenRect->GetMaterial()->GetColor()
         };
+
         screenRect->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
 
         screenRect->GetMaterial()->GetTexture()->SetTextureShaderResourceView(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetShaderResourceView());
@@ -136,13 +152,16 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
 
     std::shared_ptr<Rendering::Lights::ILight> lightType;
     std::shared_ptr<Components::Light> light1;
-    Rendering::Lights::ILight::LightData light;
+    Rendering::Lights::ILight::LightData lights[2];
 
     if (!Systems::LightSystem::GetAllLights().empty())
     {
-        light1 = Systems::LightSystem::GetAllLights().begin()->second;
-        lightType = light1->GetLight();
-        light = lightType->GetLightData();
+        for (int i = 0; i < LightSystem::GetLights().size(); ++i)
+        {
+            light1 = Systems::LightSystem::GetLights()[i];
+            lightType = light1->GetLight();
+            lights[i] = lightType->GetLightData();
+        }
     }
 
     if (p_sceneNode->IsRoot())
@@ -171,18 +190,16 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         Rendering::Buffers::VCB vcb{model, view, normalModel, perspective};
         mesh->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
 
-        const Vector3F cameraPos = camera->GetPosition();
-
-        float txt = static_cast<float>(mesh->GetMaterial()->GetTextureState());
-
-        const Vector4F reversedXLightPos = Vector4F(light.position.x,
-                                                    light.position.y,
-                                                    -light.position.z, 1.0f);
-        float                         txst = static_cast<float>(mesh->GetMaterial()->GetTextureState());
+        float txst = static_cast<float>(mesh->GetMaterial()->GetTextureState());
+        // const Rendering::Buffers::PCB pcb{
+        //     reversedXLightPos, light.ambient, light.diffuse,
+        //     light.specular, light.color, light.shininess, Vector3F{},
+        //     camera->GetPosition(), txst,
+        //     mesh->GetMaterial()->GetColor()
+        // };
         const Rendering::Buffers::PCB pcb{
-            reversedXLightPos, light.ambient, light.diffuse,
-            light.specular, light.color, light.shininess, Vector3F{},
-            Vector3{cameraPos.x, cameraPos.y, cameraPos.z}, txst,
+            lights[0], lights[1],
+            camera->GetPosition(), txst,
             mesh->GetMaterial()->GetColor()
         };
 

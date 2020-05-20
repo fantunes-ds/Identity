@@ -9,7 +9,7 @@ namespace Engine::Rendering::Buffers
 {
     struct PCB
     {
-        Rendering::Lights::DirectionalLight::LightData lightSource;
+        Rendering::Lights::DirectionalLight::LightData lightSource[2];
         Vector3F                            cameraPos;
         float                               textureState;
         Vector3F                            materialColor;

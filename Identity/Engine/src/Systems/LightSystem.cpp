@@ -45,7 +45,11 @@ void Engine::Systems::LightSystem::IUpdate(const float p_deltaTime, bool p_isEdi
     //TODO complete this
     for (auto light : GetLights())
     {
-        light->GetLight()->GetLightData().position = Vector4F(light->GetGameObject()->GetTransform()->GetPosition());
+        light->GetLight()->GetLightData().position = {
+            light->GetGameObject()->GetTransform()->GetPosition().x,
+            light->GetGameObject()->GetTransform()->GetPosition().y,
+         light->GetGameObject()->GetTransform()->GetPosition().z, 1.0f };
+
         std::cout << "thist";
     }
 }

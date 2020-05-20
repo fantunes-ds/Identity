@@ -79,7 +79,7 @@ void GameObject::Deserialize(std::vector<std::string>& p_strings)
         if (i == 1)
         {
             m_name = words[0];
-            m_id = std::stoi(words[1]);
+            // m_id = std::stoi(words[1]);
         }
         else if (words[0] == "m_isActive")
         {

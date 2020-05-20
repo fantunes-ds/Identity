@@ -73,7 +73,7 @@ void Material::Serialize(std::ostream& p_stream)
         << GetPixelShader()->GetName() << " "
         << GetVertexShader()->GetName() << " "
         << GetTexture()->GetName() << " "
-        << std::to_string(GetColor().x) << " " << std::to_string(GetColor().y) << " " << std::to_string(GetColor().z) << '\n';
+        << GetColor().x << " " << GetColor().y << " " << GetColor().z << '\n';
     else
         p_stream << "MATERIAL " << GetName() << " "
         << GetPixelShader()->GetName() << " "
