@@ -52,6 +52,7 @@ int Engine::Core::App::Run()
     Managers::ResourceManager::Deserialize();
 
     //--CAMERA--
+<<<<<<< Updated upstream
     Objects::GameObject camera;
     camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
     camera.AddComponent<Components::Camera>(m_width, m_height);
@@ -62,9 +63,9 @@ int Engine::Core::App::Run()
     soundTest->FindComponentOfType<Components::Sound>()->SetVolume(0.25f);
     //----------
 
-    // camera.AddComponent<Components::BoxCollider>();
-    // camera.FindComponentOfType<Components::BoxCollider>()->SetMass(1);
+    // Managers::SceneManager::LoadScene("LightTesting");
 
+<<<<<<< Updated upstream
     Managers::SceneManager::LoadScene("scene1");
 
     auto PlayCamera = std::make_shared<Objects::GameObject>("Camera");
@@ -72,6 +73,51 @@ int Engine::Core::App::Run()
     Managers::SceneManager::GetActiveScene()->SetActiveCamera(PlayCamera->FindComponentOfType<Components::Camera>());
     Managers::SceneManager::GetActiveScene()->AddGameObject(PlayCamera);
     Managers::SceneManager::GetActiveScene()->AddGameObject(soundTest);
+
+
+    auto cube = std::make_shared<Objects::GameObject>("Cube");
+    cube->GetTransform()->SetPosition({ -0.5f, -0.5f, -8.f });
+    cube->AddComponent<Components::ModelComponent>("Cube");
+    lightScene->AddGameObject(cube);
+
+    auto cube2 = std::make_shared<Objects::GameObject>("Cube2");
+    cube2->GetTransform()->SetPosition({ -0.5f, -0.5f, 8.f });
+    cube2->AddComponent<Components::ModelComponent>("Cube");
+    lightScene->AddGameObject(cube2);
+
+    auto light = std::make_shared<Objects::GameObject>("Light");
+    light->GetTransform()->SetPosition({ 1.f, 0.f, 0.f });
+    light->GetTransform()->SetScale({ 0.2f, 0.2f, 0.2f });
+    Rendering::Lights::DirectionalLight::LightData lightData = {
+        {light->GetTransform()->GetPosition().x, light->GetTransform()->GetPosition().y, light->GetTransform()->GetPosition().z, 1.0f},
+    {0.1f, 0.1f, 0.1f, 1.f},
+    {0.1f, 0.1f,0.1f, 1.f},
+    {0.5f, 0.5f, 0.5f,1.f},
+    {1.f, 1.f, 1.f,1.f},
+        256.f, {0,0,0}
+    };
+    light->AddComponent<Components::Light>(lightData);
+    light->AddComponent<Components::ModelComponent>("Cube");
+    lightScene->AddGameObject(light);
+
+    auto light2 = std::make_shared<Objects::GameObject>("Light2");
+    light2->GetTransform()->SetPosition({ -1.f, 0.f, 0.f });
+    light2->GetTransform()->SetScale({ 0.2f, 0.2f, 0.2f });
+    light2->AddComponent<Components::Light>(lightData);
+    light2->AddComponent<Components::ModelComponent>("Cube");
+    lightScene->AddGameObject(light2);
+
+
+    Managers::SceneManager::AddScene(lightScene);
+    Managers::SceneManager::SetActiveScene(lightScene);
+
+    // Managers::SceneManager::SaveActiveScene();
+
+    // auto PlayCamera = std::make_shared<Objects::GameObject>("Camera");
+    // PlayCamera->AddComponent<Components::Camera>(m_width, m_height);
+    // Managers::SceneManager::GetActiveScene()->SetActiveCamera(PlayCamera->FindComponentOfType<Components::Camera>());
+    // Managers::SceneManager::GetActiveScene()->AddGameObject(PlayCamera);
+>>>>>>> Stashed changes
 
     float fixedUpdateTimer = 0.0f;
 
