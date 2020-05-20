@@ -17,8 +17,6 @@ Engine::Managers::SceneManager::SceneManager()
     dfscene->SetName("default");
     m_scenes.push_back(dfscene);
     m_activeScene = dfscene;
-    // AddScene(dfscene);
-    // SetActiveScene(dfscene);
 }
 
 std::unique_ptr<Engine::Managers::SceneManager>& Engine::Managers::SceneManager::GetInstance()
@@ -48,6 +46,7 @@ void Engine::Managers::SceneManager::AddScene(const std::shared_ptr<Scene::Scene
 std::shared_ptr<Engine::Scene::Scene> Engine::Managers::SceneManager::LoadScene(const std::string& p_name)
 {
     auto scene = std::make_shared<Scene::Scene>();
+    scene->SetName(p_name);
     AddScene(scene);
     SetActiveScene(scene);
     scene->Load(p_name);

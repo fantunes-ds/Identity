@@ -69,7 +69,15 @@ const Microsoft::WRL::ComPtr<ID3DBlob> Material::GetBlob()
 void Material::Serialize(std::ostream& p_stream)
 {
     if (m_textureState)
-        p_stream << "MATERIAL " << GetName() << " " << GetPixelShader()->GetName() << " " << GetVertexShader()->GetName() << " " << GetTexture()->GetName() << '\n';
+        p_stream << "MATERIAL " << GetName() << " "
+        << GetPixelShader()->GetName() << " "
+        << GetVertexShader()->GetName() << " "
+        << GetTexture()->GetName() << " "
+        << GetColor().x << " " << GetColor().y << " " << GetColor().z << '\n';
     else
-        p_stream << "MATERIAL " << GetName() << " " << GetPixelShader()->GetName() << " " << GetVertexShader()->GetName() << " " << "NO_TEXTURE" << '\n';
+        p_stream << "MATERIAL " << GetName() << " "
+        << GetPixelShader()->GetName() << " "
+        << GetVertexShader()->GetName() << " "
+        << "NO_TEXTURE" << " "
+        << GetColor().x << " " << GetColor().y << " " << GetColor().z << '\n';
 }

@@ -1,19 +1,20 @@
 #include <stdafx.h>
 
+#include <Objects/GameObject.h>
+
 #include <Containers/ComponentContainer.h>
 #include <Containers/GameObjectContainer.h>
-#include <Components/ModelComponent.h>
 #include <Managers/ResourceManager.h>
 #include <Managers/SceneManager.h>
-#include <Objects/GameObject.h>
 #include <Systems/TransformSystem.h>
+#include <Systems/LightSystem.h>
+
 #include <Scene/Scene.h>
 
+#include <Components/ModelComponent.h>
 #include <Components/BoxCollider.h>
-
+#include <Components/Sound.h>
 #include <Components/Light.h>
-
-#include <Systems/LightSystem.h>
 
 using namespace Engine::Objects;
 
@@ -47,10 +48,8 @@ void GameObject::DeleteFromMemory()
 
 void GameObject::Serialize(std::ostream& p_stream)
 {
-    p_stream << "\nGAMEOBJECT\n" << m_name << " " << m_id << "\n" <<
+    p_stream << "\nGAMEOBJECT\n" << m_name << "\n" <<
         "m_isActive " << m_isActive << "\n";
-
-    GetTransform()->Serialize(p_stream);
 
     for (auto component: GetAllComponents())
     {
@@ -79,7 +78,6 @@ void GameObject::Deserialize(std::vector<std::string>& p_strings)
         if (i == 1)
         {
             m_name = words[0];
-            m_id = std::stoi(words[1]);
         }
         else if (words[0] == "m_isActive")
         {
@@ -109,6 +107,11 @@ void GameObject::Deserialize(std::vector<std::string>& p_strings)
             else if (words[1] == "Engine::Components::ModelComponent")
             {
                 int compID = AddComponent<Components::ModelComponent>();
+                Containers::ComponentContainer::FindComponent(compID)->Deserialize(this, componentBlock);
+            }
+            else if (words[1] == "Engine::Components::Sound")
+            {
+                int compID = AddComponent<Components::Sound>();
                 Containers::ComponentContainer::FindComponent(compID)->Deserialize(this, componentBlock);
             }
 

@@ -37,7 +37,9 @@ namespace Engine::Rendering::Materials
         inline void SetVertexShader(const std::shared_ptr<VertexShader> p_vertexShader) { m_vertexShader = p_vertexShader; }
         inline void SetTexture(const std::shared_ptr<Texture> p_texture) { m_texture = p_texture; m_textureState = true; }
         inline void SetTextureState(const bool p_state) { m_textureState = p_state; }
+        inline void SetColor(const Vector3F p_color) { m_color = p_color; }
 
+        [[nodiscard]] inline const Vector3F GetColor() const { return m_color; }
         [[nodiscard]] const Microsoft::WRL::ComPtr<ID3DBlob> GetBlob();
         [[nodiscard]] inline const std::shared_ptr<PixelShader> GetPixelShader() const { return m_pixelShader; }
         [[nodiscard]] inline const std::shared_ptr<VertexShader> GetVertexShader() const { return m_vertexShader; }
@@ -51,6 +53,7 @@ namespace Engine::Rendering::Materials
     private:
         bool m_textureState{ false };
 
+        Vector3F m_color{ 1.0f, 1.0f, 1.0f};
         std::shared_ptr<Texture> m_texture{nullptr};
         std::shared_ptr<PixelShader> m_pixelShader{};
         std::shared_ptr<VertexShader> m_vertexShader{};

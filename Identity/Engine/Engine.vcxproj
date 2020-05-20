@@ -228,6 +228,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Components\IComponent.h" />
     <ClInclude Include="include\Components\Light.h" />
     <ClInclude Include="include\Components\ModelComponent.h" />
+    <ClInclude Include="include\Components\Sound.h" />
     <ClInclude Include="include\Managers\ResourceManager.h" />
     <ClInclude Include="include\Managers\SceneManager.h" />
     <ClInclude Include="include\Rendering\Lights\DirectionalLight.h" />
@@ -249,6 +250,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Physics\Rigidbody.h" />
     <ClInclude Include="include\Rendering\Buffers\InputLayout.h" />
     <ClInclude Include="include\Systems\LightSystem.h" />
+    <ClInclude Include="include\Systems\SoundSystem.h" />
     <ClInclude Include="include\Systems\TransformSystem.h" />
     <ClInclude Include="include\Objects\IObject.h" />
     <ClInclude Include="include\Rendering\Buffers\PixelConstantBuffer.h" />
@@ -295,6 +297,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Tools\ImGUI\imstb_textedit.h" />
     <ClInclude Include="include\Tools\ImGUI\imstb_truetype.h" />
     <ClInclude Include="include\Tools\Time.h" />
+    <ClInclude Include="include\UI\Console.h" />
     <ClInclude Include="include\UI\Dockspace.h" />
     <ClInclude Include="include\UI\Hierarchy.h" />
     <ClInclude Include="include\UI\UIManager.h" />
@@ -304,6 +307,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Components\BoxCollider.cpp" />
     <ClCompile Include="src\Components\IComponent.cpp" />
     <ClCompile Include="src\Components\Light.cpp" />
+    <ClCompile Include="src\Components\Sound.cpp" />
     <ClCompile Include="src\Systems\PhysicsSystem.cpp" />
     <ClCompile Include="src\Managers\ResourceManager.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
@@ -325,7 +329,9 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
     <ClCompile Include="src\Rendering\RenderTexture.cpp" />
     <ClCompile Include="src\Systems\LightSystem.cpp" />
+    <ClCompile Include="src\Systems\SoundSystem.cpp" />
     <ClCompile Include="src\Tools\Time.cpp" />
+    <ClCompile Include="src\UI\Console.cpp" />
     <ClCompile Include="src\UI\Dockspace.cpp" />
     <ClCompile Include="src\UI\Hierarchy.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
@@ -366,15 +372,13 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Engine\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Resources\Shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\VertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Engine\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Resources\Shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

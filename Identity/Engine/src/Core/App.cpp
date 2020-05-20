@@ -23,7 +23,8 @@
 #include <Systems/TransformSystem.h>
 #include <Systems/PhysicsSystem.h>
 #include <Systems/LightSystem.h>
-
+#include "Components/Sound.h"
+#include "Systems/SoundSystem.h"
 #include "UI/Hierarchy.h"
 
 Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
@@ -34,8 +35,8 @@ Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_
 }
 
 Engine::Core::App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) : m_window(p_width, p_height, p_name),
-                                                                                 m_width(p_width), m_height(p_height),
-                                                                                 m_isEditor(p_isEditor)
+m_width(p_width), m_height(p_height),
+m_isEditor(p_isEditor)
 {
     Input::Input::InitInput();
 }
@@ -52,23 +53,50 @@ int Engine::Core::App::Run()
 
     //--CAMERA--
     Objects::GameObject camera;
-    camera.GetTransform()->Translate(Vector3F{0.0f, -5.0f, -10.0f});
+    camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
     camera.AddComponent<Components::Camera>(m_width, m_height);
     Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
     //----------
 
-    // camera.AddComponent<Components::BoxCollider>();
-    // camera.FindComponentOfType<Components::BoxCollider>()->SetMass(1);
+    auto lightScene = std::make_shared<Scene::Scene>("LightScene");
 
-    Managers::SceneManager::LoadScene("scene1.txt");
+    auto cube = std::make_shared<Objects::GameObject>("Cube");
+    cube->GetTransform()->SetPosition({ -0.5f, -0.5f, -8.f });
+    cube->AddComponent<Components::ModelComponent>("Cube");
+    lightScene->AddGameObject(cube);
 
-    auto PlayCamera = std::make_shared<Objects::GameObject>("Camera");
-    PlayCamera->AddComponent<Components::Camera>(m_width, m_height);
-    Managers::SceneManager::GetActiveScene()->SetActiveCamera(PlayCamera->FindComponentOfType<Components::Camera>());
-    Managers::SceneManager::GetActiveScene()->AddGameObject(PlayCamera);
+    auto cube2 = std::make_shared<Objects::GameObject>("Cube2");
+    cube2->GetTransform()->SetPosition({ -0.5f, -0.5f, 8.f });
+    cube2->AddComponent<Components::ModelComponent>("Cube");
+    lightScene->AddGameObject(cube2);
+
+    auto light = std::make_shared<Objects::GameObject>("Light");
+    light->GetTransform()->SetPosition({ 1.f, 0.f, 0.f });
+    light->GetTransform()->SetScale({ 0.2f, 0.2f, 0.2f });
+    Rendering::Lights::DirectionalLight::LightData lightData = {
+        {light->GetTransform()->GetPosition().x, light->GetTransform()->GetPosition().y, light->GetTransform()->GetPosition().z, 1.0f},
+    {0.1f, 0.1f, 0.1f, 1.f},
+    {0.1f, 0.1f,0.1f, 1.f},
+    {0.5f, 0.5f, 0.5f,1.f},
+    {1.f, 1.f, 1.f,1.f},
+        256.f, {0,0,0}
+    };
+    light->AddComponent<Components::Light>(lightData);
+    light->AddComponent<Components::ModelComponent>("Cube");
+    lightScene->AddGameObject(light);
+
+    auto light2 = std::make_shared<Objects::GameObject>("Light2");
+    light2->GetTransform()->SetPosition({ -1.f, 0.f, 0.f });
+    light2->GetTransform()->SetScale({ 0.2f, 0.2f, 0.2f });
+    light2->AddComponent<Components::Light>(lightData);
+    light2->AddComponent<Components::ModelComponent>("Cube");
+    lightScene->AddGameObject(light2);
+
+    Managers::SceneManager::AddScene(lightScene);
+    Managers::SceneManager::SetActiveScene(lightScene);
 
     float fixedUpdateTimer = 0.0f;
-    // Systems::PhysicsSystem::FixedUpdate();
+
     while (m_applicationIsRunning)
     {
         Tools::Time::Start();
@@ -77,6 +105,7 @@ int Engine::Core::App::Run()
             return *eCode;
         }
         StartFrame();
+        
 
         // Events
         // (will be moved below DoFrame once we get rid of all ImGUI calls on Engine)
@@ -95,10 +124,11 @@ int Engine::Core::App::Run()
 
         //Systems
         Systems::PhysicsSystem::Update(deltaTime);
-
         Systems::TransformSystem::Update(deltaTime);
         Systems::LightSystem::Update(deltaTime);
         Systems::CameraSystem::Update(deltaTime);
+        Systems::SoundSystem::Update(deltaTime);
+
 
         fixedUpdateTimer += deltaTime;
         //todo this should never go below 0

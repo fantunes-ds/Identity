@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/App.h>
+#include <UI/Console.h>
 
 namespace Editor::Core
 {
@@ -30,6 +31,10 @@ namespace Editor::Core
 
         void EditorBase();
 
+        static Engine::UI::Console& GetConsole() { return m_console; }
+
+    private:
         Engine::Core::App m_engine{1920, 1080, "Identity Engine", true};
+        static inline Engine::UI::Console m_console{};
     };
 }

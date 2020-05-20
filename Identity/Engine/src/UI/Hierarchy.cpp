@@ -162,7 +162,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 
                     boxCollider->SetPositionOffset(boxCollider->GetOffset());
                     boxCollider->SetMass(boxCollider->GetMass());
-                    //boxCollider->SetDimensions(boxCollider->GetDimensions());
+                    boxCollider->SetDimensions(boxCollider->GetDimensions());
                 }
                 break;
             }
