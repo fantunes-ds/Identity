@@ -22,13 +22,11 @@ Engine::Systems::SoundSystem* Engine::Systems::SoundSystem::GetInstance()
 
 void Engine::Systems::SoundSystem::IUpdate(const float p_deltaTime, bool p_isEditor)
 {
-    auto activeCamPos = Systems::RenderSystem::GetActiveCamera()->GetPosition();
+    auto& activeCamPos = Systems::RenderSystem::GetActiveCamera()->GetPosition();
     auto targetDir = Systems::RenderSystem::GetActiveCamera()->GetGameObject()->GetTransform()->GetForward() - activeCamPos;
 
     m_soundEngine->setListenerPosition(irrklang::vec3df(activeCamPos.x, activeCamPos.y, activeCamPos.z), 
         irrklang::vec3df(targetDir.x, targetDir.y, targetDir.z));
-
-
 
     for (auto& sound: m_sounds)
     {

@@ -122,7 +122,6 @@ void Engine::Components::Sound::Stop()
     if (m_sound)
     {
         m_sound->stop();
-        m_sound->drop();
     }
 }
 
