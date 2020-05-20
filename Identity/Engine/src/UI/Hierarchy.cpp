@@ -139,10 +139,18 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 {
                     std::shared_ptr<Rendering::Materials::Material> mat = modelComponent->GetMaterial();
 
-                    //float* diffuse[3] = { &.diffuse.x, &lightData.diffuse.y, &lightData.diffuse.z };
-                    //ImGui::ColorPicker3("Light Color", *color);
-                    ImGui::Text("Texture");
-                    ImGui::Image(*mat->GetTexture()->GetTextureShaderResourceView().GetAddressOf(), ImVec2(100, 100));
+                    if (mat->GetName()._Equal("default"))
+                    {
+                        ImGui::TextWrapped("Using default material. Please add a new material to edit it.");
+                        break;
+                    }
+                    float* objectColor[3] = { &mat->GetColor().x, &mat->GetColor().y, &mat->GetColor().z };
+                    ImGui::ColorPicker3("Light Color", *objectColor);
+                    if (mat->GetTextureState() > 0)
+                    {
+                        ImGui::Text("Texture");
+                        ImGui::Image(*mat->GetTexture()->GetTextureShaderResourceView().GetAddressOf(), ImVec2(100, 100));
+                    }
                 }
                 break;
             }

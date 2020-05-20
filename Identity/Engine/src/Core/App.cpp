@@ -95,6 +95,8 @@ int Engine::Core::App::Run()
     Managers::SceneManager::AddScene(lightScene);
     Managers::SceneManager::SetActiveScene(lightScene);
 
+    //Managers::SceneManager::LoadScene("scene1");
+
     float fixedUpdateTimer = 0.0f;
 
     while (m_applicationIsRunning)
