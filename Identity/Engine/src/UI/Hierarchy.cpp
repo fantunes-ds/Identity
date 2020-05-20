@@ -103,7 +103,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                                        static_cast<float>(rotationQuaternion.ToEuler().y),
                                        static_cast<float>(rotationQuaternion.ToEuler().z)
     };
-    if (ImGui::CollapsingHeader("Transform"), ImGuiTreeNodeFlags_DefaultOpen)
+    if (ImGui::CollapsingHeader("Transform"))
     {
         float* pos[3]   = {&transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z};
         float* rot[3]   = {&rotationEuler.x, &rotationEuler.y, &rotationEuler.z};
@@ -133,6 +133,16 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 if (ImGui::CollapsingHeader("Model Component"))
                 {
                     ImGui::Text("%s", Managers::ResourceManager::FindModel(modelComponent->GetModel())->GetName().c_str());
+                }
+
+                if (ImGui::CollapsingHeader("Material"))
+                {
+                    std::shared_ptr<Rendering::Materials::Material> mat = modelComponent->GetMaterial();
+
+                    //float* diffuse[3] = { &.diffuse.x, &lightData.diffuse.y, &lightData.diffuse.z };
+                    //ImGui::ColorPicker3("Light Color", *color);
+                    ImGui::Text("Texture");
+                    ImGui::Image(*mat->GetTexture()->GetTextureShaderResourceView().GetAddressOf(), ImVec2(100, 100));
                 }
                 break;
             }

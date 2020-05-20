@@ -6,6 +6,8 @@
 #include <Rendering/Renderer.h>
 #include <UI/Dockspace.h>
 
+
+#include "Managers/SceneManager.h"
 #include "UI/Hierarchy.h"
 
 void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
@@ -72,7 +74,10 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             ImGui::MenuItem("New Scene", "Ctrl + N", nullptr);
             ImGui::MenuItem("Open Scene", "Ctrl + O", nullptr);
             ImGui::Separator();
-            ImGui::MenuItem("Save", "Ctrl + S", nullptr);
+            if (ImGui::MenuItem("Save", "Ctrl + S", nullptr))
+            {
+                Managers::SceneManager::SaveActiveScene();
+            }
             ImGui::MenuItem("Save As...", "Ctrl + Shift + S", nullptr);
             ImGui::MenuItem("Build", "Ctrl + B", nullptr);
             ImGui::Separator();
