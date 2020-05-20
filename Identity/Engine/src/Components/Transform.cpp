@@ -51,7 +51,7 @@ bool Engine::Components::Transform::DeleteFromMemory()
 
 void Engine::Components::Transform::Serialize(std::ostream& p_stream)
 {
-    p_stream << typeid(*this).name() << " " << m_id << "\n{\n" <<
+    p_stream << typeid(*this).name() << "\n{\n" <<
         "   m_parent " << m_parent << "\n" <<
         "   m_position " << m_position << "\n" <<
         "   m_forward " << m_forward << "\n" <<

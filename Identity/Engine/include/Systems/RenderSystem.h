@@ -3,6 +3,11 @@
 #include <Systems/ISystem.h>
 #include <Scene/SceneGraph/SceneGraph.h>
 
+namespace Engine::Components
+{
+    class Camera;
+}
+
 namespace Engine::Systems
 {
     class API_ENGINE RenderSystem: public ISystem
@@ -18,6 +23,7 @@ namespace Engine::Systems
         static void SetActiveCamera(int32_t p_id);
 
         static RenderSystem* GetInstance();
+        static std::shared_ptr<Components::Camera> GetActiveCamera();
 
     private:
         RenderSystem() = default;

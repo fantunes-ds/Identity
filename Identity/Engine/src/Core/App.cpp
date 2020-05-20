@@ -23,7 +23,8 @@
 #include <Systems/TransformSystem.h>
 #include <Systems/PhysicsSystem.h>
 #include <Systems/LightSystem.h>
-
+#include "Components/Sound.h"
+#include "Systems/SoundSystem.h"
 #include "UI/Hierarchy.h"
 
 Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
@@ -34,8 +35,8 @@ Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_
 }
 
 Engine::Core::App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) : m_window(p_width, p_height, p_name),
-                                                                                 m_width(p_width), m_height(p_height),
-                                                                                 m_isEditor(p_isEditor)
+m_width(p_width), m_height(p_height),
+m_isEditor(p_isEditor)
 {
     Input::Input::InitInput();
 }
@@ -52,24 +53,28 @@ int Engine::Core::App::Run()
 
     //--CAMERA--
     Objects::GameObject camera;
-    camera.GetTransform()->Translate(Vector3F{0.0f, -5.0f, -10.0f});
+    camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
     camera.AddComponent<Components::Camera>(m_width, m_height);
     Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
+
+    auto soundTest = std::make_shared<Objects::GameObject>("soundTest");
+    soundTest->AddComponent<Components::Sound>("../Engine/Resources/Sounds/test.mp3");
+    soundTest->FindComponentOfType<Components::Sound>()->SetVolume(0.25f);
     //----------
 
     // camera.AddComponent<Components::BoxCollider>();
     // camera.FindComponentOfType<Components::BoxCollider>()->SetMass(1);
 
     Managers::SceneManager::LoadScene("scene1");
-    Managers::SceneManager::SaveActiveScene();
 
     auto PlayCamera = std::make_shared<Objects::GameObject>("Camera");
     PlayCamera->AddComponent<Components::Camera>(m_width, m_height);
     Managers::SceneManager::GetActiveScene()->SetActiveCamera(PlayCamera->FindComponentOfType<Components::Camera>());
     Managers::SceneManager::GetActiveScene()->AddGameObject(PlayCamera);
+    Managers::SceneManager::GetActiveScene()->AddGameObject(soundTest);
 
     float fixedUpdateTimer = 0.0f;
-    // Systems::PhysicsSystem::FixedUpdate();
+
     while (m_applicationIsRunning)
     {
         Tools::Time::Start();
@@ -78,6 +83,7 @@ int Engine::Core::App::Run()
             return *eCode;
         }
         StartFrame();
+        
 
         // Events
         // (will be moved below DoFrame once we get rid of all ImGUI calls on Engine)
@@ -96,10 +102,11 @@ int Engine::Core::App::Run()
 
         //Systems
         Systems::PhysicsSystem::Update(deltaTime);
-
         Systems::TransformSystem::Update(deltaTime);
         Systems::LightSystem::Update(deltaTime);
         Systems::CameraSystem::Update(deltaTime);
+        Systems::SoundSystem::Update(deltaTime);
+
 
         fixedUpdateTimer += deltaTime;
         //todo this should never go below 0

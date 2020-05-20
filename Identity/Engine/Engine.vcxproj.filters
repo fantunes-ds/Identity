@@ -63,6 +63,9 @@
     <ClCompile Include="src\UI\Dockspace.cpp" />
     <ClCompile Include="src\Systems\PhysicsSystem.cpp" />
     <ClCompile Include="src\UI\Hierarchy.cpp" />
+    <ClCompile Include="src\Components\Sound.cpp" />
+    <ClCompile Include="src\Systems\SoundSystem.cpp" />
+    <ClCompile Include="src\UI\Console.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Components\IComponent.h" />
@@ -140,6 +143,9 @@
     <ClInclude Include="include\Systems\PhysicsSystem.h" />
     <ClInclude Include="include\UI\Hierarchy.h" />
     <ClInclude Include="include\Serialize\ISerializeable.h" />
+    <ClInclude Include="include\Components\Sound.h" />
+    <ClInclude Include="include\Systems\SoundSystem.h" />
+    <ClInclude Include="include\UI\Console.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />

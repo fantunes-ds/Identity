@@ -27,6 +27,7 @@ int Editor::Core::Core::Update()
     {
         m_engine.Init();
         Engine::Containers::EventContainer::GetEvent("OnGUI").AddListener(this, &Core::EditorBase);
+        Engine::Containers::EventContainer::GetEvent("OnGUI").AddListener(&m_console, &Engine::UI::Console::Draw);
         return m_engine.Run();
     }
     catch (const Engine::Tools::IdentityException& e)

@@ -147,7 +147,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
 void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode)
 {
-    auto camera = CameraSystem::GetCamera(GetInstance()->m_activeCamera);
+    auto camera = GetActiveCamera();
     auto mesh   = p_sceneNode->GetMesh();
 
     std::shared_ptr<Rendering::Lights::ILight> lightType;
@@ -243,4 +243,9 @@ Engine::Systems::RenderSystem* Engine::Systems::RenderSystem::GetInstance()
     }
 
     return m_instance;
+}
+
+std::shared_ptr<Engine::Components::Camera> Engine::Systems::RenderSystem::GetActiveCamera()
+{
+    return CameraSystem::GetCamera(GetInstance()->m_activeCamera);
 }
