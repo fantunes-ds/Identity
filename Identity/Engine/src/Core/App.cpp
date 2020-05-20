@@ -52,28 +52,13 @@ int Engine::Core::App::Run()
     Managers::ResourceManager::Deserialize();
 
     //--CAMERA--
-<<<<<<< Updated upstream
     Objects::GameObject camera;
     camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
     camera.AddComponent<Components::Camera>(m_width, m_height);
     Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
-
-    auto soundTest = std::make_shared<Objects::GameObject>("soundTest");
-    soundTest->AddComponent<Components::Sound>("../Engine/Resources/Sounds/test.mp3");
-    soundTest->FindComponentOfType<Components::Sound>()->SetVolume(0.25f);
     //----------
 
-    // Managers::SceneManager::LoadScene("LightTesting");
-
-<<<<<<< Updated upstream
-    Managers::SceneManager::LoadScene("scene1");
-
-    auto PlayCamera = std::make_shared<Objects::GameObject>("Camera");
-    PlayCamera->AddComponent<Components::Camera>(m_width, m_height);
-    Managers::SceneManager::GetActiveScene()->SetActiveCamera(PlayCamera->FindComponentOfType<Components::Camera>());
-    Managers::SceneManager::GetActiveScene()->AddGameObject(PlayCamera);
-    Managers::SceneManager::GetActiveScene()->AddGameObject(soundTest);
-
+    auto lightScene = std::make_shared<Scene::Scene>("LightScene");
 
     auto cube = std::make_shared<Objects::GameObject>("Cube");
     cube->GetTransform()->SetPosition({ -0.5f, -0.5f, -8.f });
@@ -107,17 +92,8 @@ int Engine::Core::App::Run()
     light2->AddComponent<Components::ModelComponent>("Cube");
     lightScene->AddGameObject(light2);
 
-
     Managers::SceneManager::AddScene(lightScene);
     Managers::SceneManager::SetActiveScene(lightScene);
-
-    // Managers::SceneManager::SaveActiveScene();
-
-    // auto PlayCamera = std::make_shared<Objects::GameObject>("Camera");
-    // PlayCamera->AddComponent<Components::Camera>(m_width, m_height);
-    // Managers::SceneManager::GetActiveScene()->SetActiveCamera(PlayCamera->FindComponentOfType<Components::Camera>());
-    // Managers::SceneManager::GetActiveScene()->AddGameObject(PlayCamera);
->>>>>>> Stashed changes
 
     float fixedUpdateTimer = 0.0f;
 
