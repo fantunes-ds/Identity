@@ -105,3 +105,15 @@ bool Engine::Components::ModelComponent::DeleteFromMemory()
 {
     return Managers::ResourceManager::RemoveModel(m_model);
 }
+
+
+void Engine::Components::ModelComponent::SetMaterial(const std::string& p_name)
+{
+    if (p_name == "RenderText")
+    {
+        const std::string info("You cannot use this Material on an object");
+        MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
+        return;
+    }
+    m_material = Managers::ResourceManager::GetMaterial(p_name);
+}
