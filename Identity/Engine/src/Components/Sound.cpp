@@ -107,7 +107,7 @@ void Engine::Components::Sound::PlaySound()
         m_isPlaying = true;
         m_sound->setVolume(m_volume);
         m_sound->setMinDistance(m_minDistance);
-        m_sound->setMinDistance(m_maxDistance);
+        m_sound->setMaxDistance(m_maxDistance);
     }
 }
 
@@ -120,9 +120,7 @@ void Engine::Components::Sound::Pause()
 void Engine::Components::Sound::Stop()
 {
     if (m_sound)
-    {
         m_sound->stop();
-    }
 }
 
 void Engine::Components::Sound::SetActive(bool p_active)
