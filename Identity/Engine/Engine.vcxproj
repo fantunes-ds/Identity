@@ -297,6 +297,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Tools\ImGUI\imstb_textedit.h" />
     <ClInclude Include="include\Tools\ImGUI\imstb_truetype.h" />
     <ClInclude Include="include\Tools\Time.h" />
+    <ClInclude Include="include\UI\Console.h" />
     <ClInclude Include="include\UI\Dockspace.h" />
     <ClInclude Include="include\UI\Hierarchy.h" />
     <ClInclude Include="include\UI\UIManager.h" />
@@ -330,6 +331,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Systems\LightSystem.cpp" />
     <ClCompile Include="src\Systems\SoundSystem.cpp" />
     <ClCompile Include="src\Tools\Time.cpp" />
+    <ClCompile Include="src\UI\Console.cpp" />
     <ClCompile Include="src\UI\Dockspace.cpp" />
     <ClCompile Include="src\UI\Hierarchy.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />

@@ -23,8 +23,6 @@
 #include <Systems/TransformSystem.h>
 #include <Systems/PhysicsSystem.h>
 #include <Systems/LightSystem.h>
-
-
 #include "Components/Sound.h"
 #include "Systems/SoundSystem.h"
 #include "UI/Hierarchy.h"
@@ -74,7 +72,6 @@ int Engine::Core::App::Run()
     Managers::SceneManager::GetActiveScene()->SetActiveCamera(PlayCamera->FindComponentOfType<Components::Camera>());
     Managers::SceneManager::GetActiveScene()->AddGameObject(PlayCamera);
     Managers::SceneManager::GetActiveScene()->AddGameObject(soundTest);
-    soundTest->FindComponentOfType<Components::Sound>()->PlaySound();
 
     float fixedUpdateTimer = 0.0f;
 
@@ -86,6 +83,7 @@ int Engine::Core::App::Run()
             return *eCode;
         }
         StartFrame();
+        
 
         // Events
         // (will be moved below DoFrame once we get rid of all ImGUI calls on Engine)
@@ -145,7 +143,7 @@ void Engine::Core::App::DoFrame(float p_deltaTime) const
     Systems::RenderSystem::GetInstance()->IUpdate(p_deltaTime, m_isEditor);
 }
 
-void Engine::Core::App::EndFrame() const
+void Engine::Core::App::EndFrame()
 {
     ImGuiIO& io = ImGui::GetIO();
     (void)io;

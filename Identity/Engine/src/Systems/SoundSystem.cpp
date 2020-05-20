@@ -25,10 +25,10 @@ void Engine::Systems::SoundSystem::IUpdate(const float p_deltaTime, bool p_isEdi
     auto& activeCamPos = Systems::RenderSystem::GetActiveCamera()->GetPosition();
     auto targetDir = Systems::RenderSystem::GetActiveCamera()->GetGameObject()->GetTransform()->GetForward() - activeCamPos;
 
-    m_soundEngine->setListenerPosition(irrklang::vec3df(activeCamPos.x, activeCamPos.y, activeCamPos.z), 
+    m_soundEngine->setListenerPosition(irrklang::vec3df(activeCamPos.x, activeCamPos.y, activeCamPos.z),
         irrklang::vec3df(targetDir.x, targetDir.y, targetDir.z));
 
-    for (auto& sound: m_sounds)
+    for (auto& sound : m_sounds)
     {
         if (sound.second->IsActive() && sound.second->GetISound())
         {
