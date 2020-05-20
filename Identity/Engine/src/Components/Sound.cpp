@@ -5,11 +5,12 @@
 
 Engine::Components::Sound::Sound(Objects::GameObject* p_gameObject) : IComponent{ p_gameObject, SOUND }
 {
-
+    Systems::SoundSystem::AddSound(std::shared_ptr<Components::Sound>(this));
 }
 
 Engine::Components::Sound::Sound(Objects::GameObject* p_gameObject, const std::string& p_soundFile) : IComponent{ p_gameObject, SOUND }, m_soundFile{ p_soundFile }
 {
+    Systems::SoundSystem::AddSound(std::shared_ptr<Components::Sound>(this));
 }
 
 void Engine::Components::Sound::Serialize(std::ostream& p_stream)
@@ -88,6 +89,9 @@ bool Engine::Components::Sound::operator==(IComponent* p_other)
 
 void Engine::Components::Sound::PlaySound()
 {
+    if (m_isPlaying)
+        return;
+
     const auto& position = m_gameObject->GetTransform()->GetPosition();
 
     if (m_playSoundIn3D)
@@ -100,9 +104,25 @@ void Engine::Components::Sound::PlaySound()
 
     if (m_sound)
     {
+        m_isPlaying = true;
         m_sound->setVolume(m_volume);
         m_sound->setMinDistance(m_minDistance);
         m_sound->setMinDistance(m_maxDistance);
+    }
+}
+
+void Engine::Components::Sound::Pause()
+{
+    if(m_sound)
+        m_sound->setIsPaused(!m_sound->getIsPaused());
+}
+
+void Engine::Components::Sound::Stop()
+{
+    if (m_sound)
+    {
+        m_sound->stop();
+        m_sound->drop();
     }
 }
 

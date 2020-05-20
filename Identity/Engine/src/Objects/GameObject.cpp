@@ -48,10 +48,8 @@ void GameObject::DeleteFromMemory()
 
 void GameObject::Serialize(std::ostream& p_stream)
 {
-    p_stream << "\nGAMEOBJECT\n" << m_name << " " << m_id << "\n" <<
+    p_stream << "\nGAMEOBJECT\n" << m_name << "\n" <<
         "m_isActive " << m_isActive << "\n";
-
-    GetTransform()->Serialize(p_stream);
 
     for (auto component: GetAllComponents())
     {
@@ -80,7 +78,6 @@ void GameObject::Deserialize(std::vector<std::string>& p_strings)
         if (i == 1)
         {
             m_name = words[0];
-            m_id = std::stoi(words[1]);
         }
         else if (words[0] == "m_isActive")
         {
