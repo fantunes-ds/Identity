@@ -143,7 +143,7 @@ void Engine::Core::App::DoFrame(float p_deltaTime) const
     Systems::RenderSystem::GetInstance()->IUpdate(p_deltaTime, m_isEditor);
 }
 
-void Engine::Core::App::EndFrame()
+void Engine::Core::App::EndFrame() const
 {
     ImGuiIO& io = ImGui::GetIO();
     (void)io;
