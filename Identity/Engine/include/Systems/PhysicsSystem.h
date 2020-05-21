@@ -9,6 +9,7 @@
 namespace Engine {
     namespace Components {
         class BoxCollider;
+        class SphereCollider;
     }
 }
 
@@ -21,9 +22,11 @@ namespace Engine::Systems
 
         static PhysicsSystem* GetInstance();
 
-        static std::shared_ptr<Components::BoxCollider> AddCollider(Components::BoxCollider* p_collider);
+        static std::shared_ptr<Components::BoxCollider> AddBoxCollider(Components::BoxCollider* p_collider);
+        static std::shared_ptr<Components::SphereCollider> AddSphereCollider(Components::SphereCollider* p_collider);
         static void RemoveCollider(int32_t p_id);
         static std::map<int32_t, std::shared_ptr<Components::BoxCollider>>& GetColliders() { return GetInstance()->m_colliders; }
+        static std::map<int32_t, std::shared_ptr<Components::SphereCollider>>& GetSphereColliders() { return GetInstance()->m_sphereColliders; }
         static btDiscreteDynamicsWorld* GetWorld() { return GetInstance()->m_dynamicsWorld; }
         static void Update(const float p_deltaTime);
         static void FixedUpdate();
@@ -35,6 +38,7 @@ namespace Engine::Systems
 
         inline static PhysicsSystem* m_instance;
         std::map<int32_t, std::shared_ptr<Components::BoxCollider>> m_colliders;
+        std::map<int32_t, std::shared_ptr<Components::SphereCollider>> m_sphereColliders;
 
         //TODO: create class that wraps bullet classes
         btDefaultCollisionConfiguration* m_collisionConfiguration;

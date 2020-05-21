@@ -16,6 +16,8 @@
 #include <Components/Sound.h>
 #include <Components/Light.h>
 
+#include <Components/SphereCollider.h>
+
 using namespace Engine::Objects;
 
 GameObject::GameObject()
@@ -50,6 +52,8 @@ void GameObject::Serialize(std::ostream& p_stream)
 {
     p_stream << "\nGAMEOBJECT\n" << m_name << "\n" <<
         "m_isActive " << m_isActive << "\n";
+
+    GetTransform()->Serialize(p_stream);
 
     for (auto component: GetAllComponents())
     {
@@ -98,6 +102,10 @@ void GameObject::Deserialize(std::vector<std::string>& p_strings)
             else if (words[1] == "Engine::Components::BoxCollider")
             {
                 int id = AddComponent<Components::BoxCollider>(componentBlock);
+            }
+            else if (words[1] == "Engine::Components::SphereCollider")
+            {
+                int id = AddComponent<Components::SphereCollider>(componentBlock);
             }
             else if (words[1] == "Engine::Rendering::Lights::DirectionalLight")
             {

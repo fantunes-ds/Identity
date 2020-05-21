@@ -225,6 +225,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Components\SphereCollider.h" />
     <ClInclude Include="include\Components\IComponent.h" />
     <ClInclude Include="include\Components\Light.h" />
     <ClInclude Include="include\Components\ModelComponent.h" />
@@ -308,6 +309,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Components\IComponent.cpp" />
     <ClCompile Include="src\Components\Light.cpp" />
     <ClCompile Include="src\Components\Sound.cpp" />
+    <ClCompile Include="src\Components\SphereCollider.cpp" />
     <ClCompile Include="src\Systems\PhysicsSystem.cpp" />
     <ClCompile Include="src\Managers\ResourceManager.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />

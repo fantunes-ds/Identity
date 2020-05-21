@@ -1,18 +1,17 @@
 #include <stdafx.h>
 
 #include <LinearMath/btVector3.h>
-#include <BulletCollision/CollisionShapes/btBoxShape.h>
+#include <BulletCollision/CollisionShapes/btSphereShape.h>
 
-#include <Components/BoxCollider.h>
+#include <Components/SphereCollider.h>
 #include <Objects/GameObject.h>
 #include <Systems/PhysicsSystem.h>
 #include <Managers/ResourceManager.h>
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameObject, BOX_COLLIDER}
+Engine::Components::SphereCollider::SphereCollider(Objects::GameObject* p_gameObject) : IComponent{ p_gameObject, SPHERE_COLLIDER }
 {
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
-    m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
-    m_dimensions = { 1.0f, 1.0f, 1.0f };
+    m_sphere = new btSphereShape(1.0f);
     btTransform trans;
     auto       position = m_gameObject->GetTransform()->GetPosition();
     auto       rotation = m_gameObject->GetTransform()->GetRotation();
@@ -22,21 +21,21 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
     trans.setOrigin(btVector3(position.x, position.y, position.z));
     trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
 
-    m_box->calculateLocalInertia(m_mass, localInertia);
+    m_sphere->calculateLocalInertia(m_mass, localInertia);
 
     m_motionState = new btDefaultMotionState(trans);
-    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_sphere, localInertia);
     m_rigidbody = new btRigidBody(rbInfo);
 
-    ObjectElements::Model model = ConstructBox();
+    ObjectElements::Model model = ConstructSphere();
 
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
 
-    Systems::PhysicsSystem::AddBoxCollider(this);
+    Systems::PhysicsSystem::AddSphereCollider(this);
 }
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::vector<std::string> p_block) : IComponent{ p_gameObject, BOX_COLLIDER }
+Engine::Components::SphereCollider::SphereCollider(Engine::Objects::GameObject* p_gameObject, std::vector<std::string> p_block) : IComponent{ p_gameObject, Engine::Components::SPHERE_COLLIDER }
 {
     std::vector<std::string> words;
 
@@ -61,26 +60,18 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
             m_offset.y = std::stof(words[2]);
             m_offset.z = std::stof(words[3]);
         }
-        else if (words[0] == "m_box")
+        else if (words[0] == "m_radius")
         {
-            m_box = new btBoxShape(btVector3(std::stof(words[1]), std::stof(words[2]), std::stof(words[3])));
+            m_sphere = new btSphereShape(1.0f);
         }
 
         words.clear();
     }
 
     //TODO: Memory leak here
-    /*delete m_box;
+    /*delete m_sphere;
     delete m_rigidbody;
     delete m_motionState;*/
-
-    // m_box->getHalfExtentsWithMargin().getX()
-    // m_box->getHalfExtentsWithMargin().getY()
-    // m_box->getHalfExtentsWithMargin().getZ()
-    
-    m_dimensions = { m_box->getHalfExtentsWithMargin().getX(),
-                     m_box->getHalfExtentsWithMargin().getY(),
-                     m_box->getHalfExtentsWithMargin().getZ() };
 
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     btTransform trans;
@@ -96,82 +87,81 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     trans.setIdentity();
     trans.setOrigin(btVector3(position.x, position.y, position.z));
     trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
-    m_box->calculateLocalInertia(m_mass, localInertia);
+    m_sphere->calculateLocalInertia(m_mass, localInertia);
 
     m_motionState = new btDefaultMotionState(trans);
-    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_sphere, localInertia);
     m_rigidbody = new btRigidBody(rbInfo);
 
-    ObjectElements::Model model = ConstructBox();
+    ObjectElements::Model model = ConstructSphere();
 
     //TODO add a "AddModel" that take a model as parametre
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
 
-    Systems::PhysicsSystem::AddBoxCollider(this);
+    Systems::PhysicsSystem::AddSphereCollider(this);
 }
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{p_gameObject, BOX_COLLIDER}
+Engine::Components::SphereCollider::SphereCollider(Objects::GameObject* p_gameObject, std::shared_ptr<SphereCollider> p_other) : IComponent{ p_gameObject, SPHERE_COLLIDER }
 {
     //init data
+    btTransform trans;
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
+    auto position = m_gameObject->GetTransform()->GetPosition();
+    auto rotation = m_gameObject->GetTransform()->GetRotation();
+
     m_mass = p_other->m_mass;
     m_offset = p_other->m_offset;
-    m_box = p_other->m_box;
-    m_dimensions = p_other->m_dimensions;
-    // m_motionState = p_other->m_motionState;
-
-    btTransform trans;
-    // p_other->m_motionState->getWorldTransform(trans);
-    auto       position = m_gameObject->GetTransform()->GetPosition();
-    auto       rotation = m_gameObject->GetTransform()->GetRotation();
+    m_sphere = p_other->m_sphere;
     
     Vector3D offsetD = m_offset;
     Quaternion q = rotation * offsetD * Quaternion::Conjugate(rotation);
-    
     offsetD = { q.GetXAxisValue(), q.GetYAxisValue(), q.GetZAxisValue() };
     Vector3D offset = offsetD;
-    
-    // position += offset;
-    
+    position += offset;
+
     trans.setIdentity();
     trans.setOrigin(btVector3(position.x, position.y, position.z));
     trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
-
-    m_box->calculateLocalInertia(m_mass, localInertia);
+    m_sphere->calculateLocalInertia(m_mass, localInertia);
 
     m_motionState = new btDefaultMotionState(trans);
-
-    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_sphere, localInertia);
     m_rigidbody = new btRigidBody(rbInfo);
 
-    ObjectElements::Model model = ConstructBox();
+    ObjectElements::Model model = ConstructSphere();
+
     //TODO add a "AddModel" that take a model as parametre
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
 
-    Systems::PhysicsSystem::AddBoxCollider(this);
+    Systems::PhysicsSystem::AddSphereCollider(this);
 }
 
-Engine::Components::BoxCollider::~BoxCollider()
+Engine::Components::SphereCollider::~SphereCollider()
 {
-    Engine::Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
-    delete m_box;
+    if (m_rigidbody)
+        Engine::Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
+
+    if (m_model)
+        Managers::ResourceManager::RemoveModel(m_model->GetID());
+
+    delete m_sphere;
     delete m_motionState;
     delete m_rigidbody;
 }
 
-void Engine::Components::BoxCollider::Serialize(std::ostream& p_stream)
+void Engine::Components::SphereCollider::Serialize(std::ostream& p_stream)
 {
     p_stream << typeid(*this).name() << "\n{\n" <<
         "   m_mass " << m_mass << "\n" <<
         "   m_offset " << m_offset.x << " " << m_offset.y << " " << m_offset.z << "\n" <<
-        "   m_box " << m_box->getHalfExtentsWithMargin().getX() << " " << m_box->getHalfExtentsWithMargin().getY() << " " << m_box->getHalfExtentsWithMargin().getZ() << "\n" <<
-        "   m_model " << m_model->GetID() << "\n" <<
+        "   m_scale " << m_scale.x << " " << m_scale.y << " " << m_scale.z << "\n" <<
+        "   m_radius " << m_sphere->getRadius() << "\n" <<
         "}\n";
 }
 
-void Engine::Components::BoxCollider::Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block)
+void Engine::Components::SphereCollider::Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block)
 {
     m_gameObject = p_gameObject;
 
@@ -198,17 +188,23 @@ void Engine::Components::BoxCollider::Deserialize(Objects::GameObject* p_gameObj
             m_offset.y = std::stof(words[2]);
             m_offset.z = std::stof(words[3]);
         }
-        else if (words[0] == "m_box")
+        else if (words[0] == "m_scale")
         {
-            m_dimensions = { std::stof(words[1]), std::stof(words[2]), std::stof(words[3]) };
-            m_box = new btBoxShape(btVector3(m_dimensions.x, m_dimensions.y, m_dimensions.z));
+            m_scale.x = std::stof(words[1]);
+            m_scale.y = std::stof(words[2]);
+            m_scale.z = std::stof(words[3]);
+        }
+        else if (words[0] == "m_radius")
+        {
+            delete m_sphere;
+            m_sphere = new btSphereShape(std::stof(words[1]));
         }
 
         words.clear();
     }
 
     //TODO: Memory leak here
-    /*delete m_box;
+    /*delete m_sphere;
     delete m_rigidbody;
     delete m_motionState;*/
 
@@ -226,20 +222,21 @@ void Engine::Components::BoxCollider::Deserialize(Objects::GameObject* p_gameObj
     trans.setIdentity();
     trans.setOrigin(btVector3(position.x, position.y, position.z));
     trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
-    m_box->calculateLocalInertia(m_mass, localInertia);
+    m_sphere->calculateLocalInertia(m_mass, localInertia);
 
     m_motionState = new btDefaultMotionState(trans);
-    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_sphere, localInertia);
     m_rigidbody = new btRigidBody(rbInfo);
 
-    ObjectElements::Model model = ConstructBox();
+    ObjectElements::Model model = ConstructSphere();
 
     //TODO add a "AddModel" that take a model as parametre
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
+
 }
 
-Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
+Matrix4F Engine::Components::SphereCollider::GetWorldMatrix() const
 {
     btScalar    m[16];
     btTransform trans;
@@ -258,12 +255,8 @@ Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
     return mat.Transpose();
 }
 
-void Engine::Components::BoxCollider::SetPositionOffset(GPM::Vector3F p_offset)
+void Engine::Components::SphereCollider::SetPositionOffset(GPM::Vector3F p_offset)
 {
-    if (this == nullptr)
-        return;
-
-    //TODO change the center of object here
     m_offset = p_offset;
 
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
@@ -281,14 +274,9 @@ void Engine::Components::BoxCollider::SetPositionOffset(GPM::Vector3F p_offset)
     trans.setOrigin(btVector3(position.x, position.y, position.z));
     trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
 
-    m_box->calculateLocalInertia(m_mass, localInertia);
-    m_motionState = new btDefaultMotionState(trans);
-    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
-    m_rigidbody = new btRigidBody(rbInfo);
-
 }
 
-void Engine::Components::BoxCollider::SetMass(float p_mass)
+void Engine::Components::SphereCollider::SetMass(float p_mass)
 {
     m_mass = p_mass;
 
@@ -299,51 +287,59 @@ void Engine::Components::BoxCollider::SetMass(float p_mass)
 
     auto localInertia = btVector3(0.0f, 0.0f, 0.0f);
 
-    if (m_box)
-        m_box->calculateLocalInertia(m_mass, localInertia);
+    if (m_sphere)
+        m_sphere->calculateLocalInertia(m_mass, localInertia);
 
-    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_sphere, localInertia);
     delete m_rigidbody;
     m_rigidbody = new btRigidBody(rbInfo);
     Systems::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
 }
 
-void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimensions)
+void Engine::Components::SphereCollider::SetRadius(float p_radius)
 {
-    if (this == nullptr)
-        return;
-
-    m_dimensions = p_dimensions;
-
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
 
     if (m_rigidbody)
     {
-        delete m_box;
-
+        delete m_sphere;
         Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
-        m_box = new btBoxShape(btVector3(p_dimensions.x, p_dimensions.y, p_dimensions.z));
-        m_rigidbody->setCollisionShape(m_box);
-        m_box->calculateLocalInertia(m_mass, localInertia);
+        m_sphere = new btSphereShape(p_radius);
+        m_rigidbody->setCollisionShape(m_sphere);
+        m_sphere->calculateLocalInertia(m_mass, localInertia);
         m_rigidbody->setMassProps(m_mass, localInertia);
         m_rigidbody->updateInertiaTensor();
         Systems::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
     }
 
-    ObjectElements::Model model = ConstructBox();
     Managers::ResourceManager::RemoveModel(m_model->GetID());
+    ObjectElements::Model model = ConstructSphere();
+
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
 }
 
-bool Engine::Components::BoxCollider::DeleteFromMemory()
+/*void Engine::Components::SphereCollider::SetScale(const GPM::Vector3F& p_scale)
+{
+    m_scale = p_scale;
+    m_sphere->setLocalScaling(btVector3(m_scale.x, m_scale.y, m_scale.z));
+    Systems::PhysicsSystem::GetWorld()->updateSingleAabb(m_rigidbody);
+
+    Managers::ResourceManager::RemoveModel(m_model->GetID());
+    ObjectElements::Model model = ConstructSphere();
+
+    const int32_t id = Managers::ResourceManager::AddModel(model);
+    m_model = Managers::ResourceManager::FindModel(id);
+}*/
+
+bool Engine::Components::SphereCollider::DeleteFromMemory()
 {
     Managers::ResourceManager::RemoveModel(m_model->GetID());
     Systems::PhysicsSystem::RemoveCollider(GetID());
     return true;
 }
 
-void Engine::Components::BoxCollider::SetActive(bool p_active)
+void Engine::Components::SphereCollider::SetActive(bool p_active)
 {
     m_isActive = p_active;
 
@@ -359,80 +355,34 @@ void Engine::Components::BoxCollider::SetActive(bool p_active)
     }
 }
 
-Engine::ObjectElements::Model Engine::Components::BoxCollider::ConstructBox()
+Engine::ObjectElements::Model Engine::Components::SphereCollider::ConstructSphere()
 {
-    btVector3   a;
-    btVector3   b;
-    btTransform trans;
-
-    m_motionState->getWorldTransform(trans);
-    m_box->getAabb(trans, a, b);
-
     std::vector<Geometry::Vertex> vertices;
     std::vector<unsigned short>   indices;
 
-    for (int i = 0; i < m_box->getNumVertices(); ++i)
+    float radius = m_sphere->getRadius();
+
+    for (int i = 0; i < 16; ++i)
     {
-        btVector3 vertex;
-        m_box->getVertex(i, vertex);
-        vertices.emplace_back(Geometry::Vertex{ Vector3F{vertex.getX(), vertex.getY(), vertex.getZ()}, Vector2F{}, GPM::Vector3F{} });
+        float a = static_cast<float>(i);
+        vertices.emplace_back(Geometry::Vertex{ Vector3F{ std::cosf(a / 2) * radius * m_scale.x, std::sinf(a / 2) * radius * m_scale.y, 0.0f }, 
+            Vector2F{}, GPM::Vector3F{} });
+        
+        indices.emplace_back(i);
+    }
+    for (int i = 0; i < 16; ++i)
+    {
+        float a = static_cast<float>(i);
+        vertices.emplace_back(Geometry::Vertex{ Vector3F{ 0.0f, std::sinf(a / 2) * radius * m_scale.y, std::cosf(a / 2) * radius * m_scale.z }, Vector2F{}, GPM::Vector3F{} });
+        indices.emplace_back(i + 16);
     }
 
-    //Back
-
-    indices.emplace_back(0);
-    indices.emplace_back(1);
-    indices.emplace_back(2);
-
-    indices.emplace_back(2);
-    indices.emplace_back(3);
-    indices.emplace_back(0);
-
-
-    //Left
-    indices.emplace_back(4);
-    indices.emplace_back(0);
-    indices.emplace_back(2);
-
-    indices.emplace_back(2);
-    indices.emplace_back(6);
-    indices.emplace_back(4);
-
-    //bottom
-    indices.emplace_back(0);
-    indices.emplace_back(4);
-    indices.emplace_back(5);
-
-    indices.emplace_back(5);
-    indices.emplace_back(1);
-    indices.emplace_back(0);
-
-    //right
-    indices.emplace_back(5);
-    indices.emplace_back(1);
-    indices.emplace_back(3);
-
-    indices.emplace_back(3);
-    indices.emplace_back(7);
-    indices.emplace_back(5);
-
-    //top
-    indices.emplace_back(7);
-    indices.emplace_back(3);
-    indices.emplace_back(2);
-
-    indices.emplace_back(2);
-    indices.emplace_back(6);
-    indices.emplace_back(7);
-
-    //front
-    indices.emplace_back(6);
-    indices.emplace_back(5);
-    indices.emplace_back(4);
-
-    indices.emplace_back(4);
-    indices.emplace_back(7);
-    indices.emplace_back(6);
+    for (int i = 0; i < 16; ++i)
+    {
+        float a = static_cast<float>(i);
+        vertices.emplace_back(Geometry::Vertex{ Vector3F{ std::cosf(a / 2) * radius * m_scale.x, 0.0f, std::sinf(a / 2) * radius * m_scale.z }, Vector2F{}, GPM::Vector3F{} });
+        indices.emplace_back(i + 32);
+    }
 
     ObjectElements::Model model;
 

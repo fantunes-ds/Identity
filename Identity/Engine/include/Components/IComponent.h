@@ -17,7 +17,8 @@ namespace Engine::Components
         BOX_COLLIDER = 2,
         CAMERA = 3,
         LIGHT = 4,
-        SOUND = 5
+        SOUND = 5,
+        SPHERE_COLLIDER = 6
     };
     class API_ENGINE IComponent : public Objects::IObject
     {

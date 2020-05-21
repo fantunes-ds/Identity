@@ -3,6 +3,7 @@
 #include <windows.h>
 
 #include <Components/BoxCollider.h>
+#include <Components/SphereCollider.h>
 #include <Managers/SceneManager.h>
 #include <Scene/Scene.h>
 
@@ -151,6 +152,10 @@ void Engine::Managers::SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene
         for (auto component : gameObject->FindAllComponentsOfType<Components::ModelComponent>())
         {
             tmpOBJ->AddComponent<Components::ModelComponent>(component);
+        }
+        for (auto component : gameObject->FindAllComponentsOfType<Components::SphereCollider>())
+        {
+            tmpOBJ->AddComponent<Components::SphereCollider>(component);
         }
         p_destination->AddGameObject(tmpOBJ);
     }
