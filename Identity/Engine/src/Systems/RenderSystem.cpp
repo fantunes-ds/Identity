@@ -8,6 +8,7 @@
 #include <Input/Input.h>
 #include <Managers/ResourceManager.h>
 #include <Managers/SceneManager.h>
+#include <Rendering/Lights/ILight.h>
 #include <Rendering/Lights/DirectionalLight.h>
 #include <Rendering/Buffers/VertexConstantBuffer.h>
 #include <Scene/Scene.h>
@@ -72,9 +73,9 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
                 // };
 
                 //create empty lights
-                Rendering::Lights::DirectionalLight::LightData light1, light2;
+                Rendering::Lights::DirectionalLight::LightData lights[4];
                 const Rendering::Buffers::PCB pcb{
-                        light1, light2, Vector3F::zero,
+                        lights[0], lights[1], lights[2], lights[3],Vector3F::zero,
                         static_cast<float>(mesh->GetMaterial()->GetTextureState()), mesh->GetMaterial()->GetColor()
                 };
 
@@ -118,9 +119,9 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
             // };
 
             //create empty lights
-            Rendering::Lights::DirectionalLight::LightData light1, light2;
+            Rendering::Lights::DirectionalLight::LightData lights[4];
             const Rendering::Buffers::PCB pcb{
-                    light1, light2, Vector3F::zero,
+                    lights[0], lights[1],lights[2],lights[3], Vector3F::zero,
                     static_cast<float>(mesh->GetMaterial()->GetTextureState()), mesh->GetMaterial()->GetColor()
             };
 
@@ -172,9 +173,9 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         // };
 
         //create empty lights
-        Rendering::Lights::DirectionalLight::LightData light1, light2;
+        Rendering::Lights::DirectionalLight::LightData lights[4];
         const Rendering::Buffers::PCB pcb{
-                light1, light2, Vector3F::zero,
+                lights[0], lights[1], lights[2], lights[3],Vector3F::zero,
                 static_cast<float>(screenRect->GetMaterial()->GetTextureState()), screenRect->GetMaterial()->GetColor()
         };
 
@@ -194,16 +195,14 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
     auto camera = GetActiveCamera();
     auto mesh   = p_sceneNode->GetMesh();
 
-    std::shared_ptr<Rendering::Lights::ILight> lightType;
-    std::shared_ptr<Components::Light> light1;
-    Rendering::Lights::ILight::LightData lights[2];
+    Rendering::Lights::ILight::LightData lights[4];
 
     if (!Systems::LightSystem::GetAllLights().empty())
     {
-        for (int i = 0; i < LightSystem::GetLights().size(); ++i)
+        for (int i = 0; i < LightSystem::GetLights().size() && i < 4; ++i)
         {
-            light1 = Systems::LightSystem::GetLights()[i];
-            lightType = light1->GetLight();
+            const std::shared_ptr<Components::Light> light1 = Systems::LightSystem::GetLights()[i];
+            std::shared_ptr<Rendering::Lights::ILight> lightType = light1->GetLight();
             lights[i] = lightType->GetLightData();
         }
     }
@@ -242,7 +241,7 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         //     mesh->GetMaterial()->GetColor()
         // };
         const Rendering::Buffers::PCB pcb{
-            lights[0], lights[1],
+            lights[0], lights[1], lights[2], lights[3],
             camera->GetPosition(), txst,
             mesh->GetMaterial()->GetColor()
         };
