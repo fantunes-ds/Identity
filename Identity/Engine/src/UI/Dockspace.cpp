@@ -119,7 +119,14 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             ImGui::MenuItem("Create Empty", "Ctrl + Shift + N", nullptr);
             if (ImGui::BeginMenu("3D Object"))
             {
-                ImGui::MenuItem("Cube", "", nullptr);
+                if (ImGui::MenuItem("Cube", "", nullptr))
+                {
+                    auto cube = std::make_shared<Objects::GameObject>("Cube");
+                    cube->GetTransform()->SetPosition({ 0.f, 0.f, 0.f });
+                    cube->AddComponent<Components::ModelComponent>("Cube");
+                    auto scene = Managers::SceneManager::GetActiveScene();
+                    scene->AddGameObject(cube);
+                }
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("Light"))
