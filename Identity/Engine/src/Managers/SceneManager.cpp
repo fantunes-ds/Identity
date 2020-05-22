@@ -137,7 +137,7 @@ void Engine::Managers::SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene
     for (auto gameObject : p_source->GetAllGameObjectsInScene())
     {
         //create new gameobject
-        auto name   = gameObject->GetName() + "1";
+        auto name   = gameObject->GetName();
         auto tmpOBJ = std::make_shared<Objects::GameObject>(name);
         //we now have gameobject with same name
 
