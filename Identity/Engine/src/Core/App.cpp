@@ -61,10 +61,10 @@ int Engine::Core::App::Run()
     Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
     //----------
 
-    // Managers::SceneManager::LoadScene("scene1");
+    Managers::SceneManager::LoadScene("Demo");
     
-    auto demoScene = std::make_shared<Scene::Scene>("Demo");
-
+    /*auto demoScene = std::make_shared<Scene::Scene>("Demo");
+    
     auto floor = std::make_shared<Objects::GameObject>("Floor");
     floor->GetTransform()->SetPosition({ -15.f, -5.f, 15.f });
     floor->GetTransform()->SetScale({ 30,2,30 });
@@ -73,7 +73,7 @@ int Engine::Core::App::Run()
     floor->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset({ 15, 1, -15 });
     floor->AddComponent<Components::ModelComponent>("Cube");
     demoScene->AddGameObject(floor);
-
+    
     auto steep = std::make_shared<Objects::GameObject>("Steep");
     steep->GetTransform()->SetPosition({ 4,-3,0 });
     Quaternion rot;
@@ -85,7 +85,7 @@ int Engine::Core::App::Run()
     steep->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset({ 1.5f, 0.1f, -2.5f });
     steep->AddComponent<Components::ModelComponent>("Cube");
     demoScene->AddGameObject(steep);
-
+    
     auto ball = std::make_shared<Objects::GameObject>("Ball");
     ball->GetTransform()->SetPosition({ 5, 3, -3 });
     ball->GetTransform()->SetScale({ 0.5f, 0.5f, 0.5f });
@@ -95,7 +95,7 @@ int Engine::Core::App::Run()
     ball->FindComponentOfType<Components::SphereCollider>()->SetMass(100.0f);
     ball->AddComponent<Components::ModelComponent>("Cube");
     demoScene->AddGameObject(ball);
-
+    
     auto cube1 = std::make_shared<Objects::GameObject>("Cube1");
     cube1->GetTransform()->SetPosition({ 5.5f, -3, 3 });
     cube1->GetTransform()->SetScale({ 0.2f,0.2f,0.2f });
@@ -105,7 +105,7 @@ int Engine::Core::App::Run()
     cube1->FindComponentOfType<Components::BoxCollider>()->SetMass(1);
     cube1->AddComponent<Components::ModelComponent>("Cube");
     demoScene->AddGameObject(cube1);
-
+    
     auto cube2 = std::make_shared<Objects::GameObject>("Cube2");
     cube2->GetTransform()->SetPosition({ 5.3f, -3, 3 });
     cube2->GetTransform()->SetScale({ 0.2f,0.2f,0.2f });
@@ -115,7 +115,7 @@ int Engine::Core::App::Run()
     cube2->FindComponentOfType<Components::BoxCollider>()->SetMass(1);
     cube2->AddComponent<Components::ModelComponent>("Cube");
     demoScene->AddGameObject(cube2);
-
+    
     auto cube3 = std::make_shared<Objects::GameObject>("Cube3");
     cube3->GetTransform()->SetPosition({ 5.3f, -2.8f, 3 });
     cube3->GetTransform()->SetScale({ 0.2f,0.2f,0.2f });
@@ -125,7 +125,7 @@ int Engine::Core::App::Run()
     cube3->FindComponentOfType<Components::BoxCollider>()->SetMass(1);
     cube3->AddComponent<Components::ModelComponent>("Cube");
     demoScene->AddGameObject(cube3);
-
+    
     auto cube4 = std::make_shared<Objects::GameObject>("Cube4");
     cube4->GetTransform()->SetPosition({ 5.5f, -2.8f, 3 });
     cube4->GetTransform()->SetScale({ 0.2f,0.2f,0.2f });
@@ -135,7 +135,7 @@ int Engine::Core::App::Run()
     cube4->FindComponentOfType<Components::BoxCollider>()->SetMass(1);
     cube4->AddComponent<Components::ModelComponent>("Cube");
     demoScene->AddGameObject(cube4);
-
+    
     auto cube5 = std::make_shared<Objects::GameObject>("Cube5");
     cube5->GetTransform()->SetPosition({ 5.3f, -2.6f, 3 });
     cube5->GetTransform()->SetScale({ 0.2f,0.2f,0.2f });
@@ -145,7 +145,7 @@ int Engine::Core::App::Run()
     cube5->FindComponentOfType<Components::BoxCollider>()->SetMass(1);
     cube5->AddComponent<Components::ModelComponent>("Cube");
     demoScene->AddGameObject(cube5);
-
+    
     auto cube6 = std::make_shared<Objects::GameObject>("Cube6");
     cube6->GetTransform()->SetPosition({ 5.5f, -2.6f, 3 });
     cube6->GetTransform()->SetScale({ 0.2f,0.2f,0.2f });
@@ -155,20 +155,6 @@ int Engine::Core::App::Run()
     cube6->FindComponentOfType<Components::BoxCollider>()->SetMass(1);
     cube6->AddComponent<Components::ModelComponent>("Cube");
     demoScene->AddGameObject(cube6);
-
-    // auto cube2 = std::make_shared<Objects::GameObject>("Cube2");
-    // cube2->GetTransform()->SetPosition({ -0.5f, -0.5f, 8.f });
-    // cube2->AddComponent<Components::ModelComponent>("Cube");
-    // lightScene->AddGameObject(cube2);
-    //
-    // auto cube3 = std::make_shared<Objects::GameObject>("Cube3");
-    // cube3->GetTransform()->SetPosition({ -15.f, -5.f, 15.f });
-    // cube3->GetTransform()->SetScale({ 30,2,30 });
-    // cube3->AddComponent<Components::BoxCollider>();
-    // cube3->FindComponentOfType<Components::BoxCollider>()->SetDimensions({ 15, 1, 15 });
-    // cube3->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset({ 15, 1, -15 });
-    // cube3->AddComponent<Components::ModelComponent>("Cube");
-    // lightScene->AddGameObject(cube3);
     
     auto light = std::make_shared<Objects::GameObject>("Light");
     light->GetTransform()->SetPosition({ 1.f, 0.f, 0.f });
@@ -180,7 +166,7 @@ int Engine::Core::App::Run()
     {1.f, 0.f, 0.f,0.5f},
         128.f, 500.f, 20.f,0
     };
-
+    
     //
     light->AddComponent<Components::Light>(lightData);
     light->AddComponent<Components::ModelComponent>("Cube");
@@ -194,7 +180,7 @@ int Engine::Core::App::Run()
     demoScene->AddGameObject(light2);
     
     Managers::SceneManager::AddScene(demoScene);
-    Managers::SceneManager::SetActiveScene(demoScene);
+    Managers::SceneManager::SetActiveScene(demoScene);*/
 
     float fixedUpdateTimer = 0.0f;
 
