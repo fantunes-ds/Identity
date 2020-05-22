@@ -79,11 +79,57 @@ void Engine::Scene::Scene::Save()
     outfile.close();
 }
 
+void Engine::Scene::Scene::SaveAs(const char* p_name)
+{
+    std::ofstream outfile("SaveFiles/Scenes/" + std::string(p_name) + ".IDScene");
+
+    for (auto& node : m_sceneGraph.GetAllSceneNodes())
+    {
+        node.second->GetGameObject()->Serialize(outfile);
+    }
+
+    outfile.close();
+}
+
 void Engine::Scene::Scene::Load(const std::string& p_sceneName)
 {
     std::string file("SaveFiles/Scenes/" + p_sceneName + ".IDScene");
 
     std::ifstream inFile(file);
+
+    std::vector <std::string> block;
+    std::vector <std::string> lines;
+
+    for (std::string line; std::getline(inFile, line); )
+    {
+        lines.push_back(line);
+    }
+
+    for (int i = 0; i < lines.size(); ++i)
+    {
+        if (lines[i] == "GAMEOBJECT")
+        {
+            auto go = std::make_shared<Objects::GameObject>();
+
+            while (lines[i] != ";")
+            {
+                block.push_back(lines[i]);
+                ++i;
+            }
+
+            //send stream of block
+            go->Deserialize(block);
+            m_sceneGraph.AddGameObjectToScene(go);
+            block.clear();
+        }
+    }
+
+    inFile.close();
+}
+
+void Engine::Scene::Scene::Load(std::filesystem::path& p_sceneName)
+{
+    std::ifstream inFile(p_sceneName);
 
     std::vector <std::string> block;
     std::vector <std::string> lines;

@@ -2,15 +2,15 @@
 
 #include <Tools/ImGUI/imgui.h>
 
+#include <Core/App.h>
+#include <Components/BoxCollider.h>
+#include <Components/Camera.h>
+#include <Components/Light.h>
+#include <Components/Sound.h>
 #include <Managers/SceneManager.h>
+#include <Rendering/Renderer.h>
 #include <Scene/Scene.h>
 #include <UI/Hierarchy.h>
-
-#include <Core/App.h>
-#include <Rendering/Renderer.h>
-#include <Components/BoxCollider.h>
-
-#include "Components/Camera.h"
 
 int Engine::UI::Hierarchy::m_currentlySelected = -1;
 
@@ -93,53 +93,75 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
         return;
     }
 
-        //todo Class Inspector to deal with these
+    //todo Class Inspector to deal with these
 
-        auto transform = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject()->GetTransform();
+    auto transform = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject()->GetTransform();
 
-        Quaternion& rotationQuaternion = transform->GetRotation();
-        Vector3F rotationEuler = { static_cast<float>(rotationQuaternion.ToEuler().x), static_cast<float>(rotationQuaternion.ToEuler().y), static_cast<float>(rotationQuaternion.ToEuler().z) };
-        if (ImGui::CollapsingHeader("Transform"), ImGuiTreeNodeFlags_DefaultOpen)
+    Quaternion& rotationQuaternion = transform->GetRotation();
+    Vector3F    rotationEuler      = { static_cast<float>(rotationQuaternion.ToEuler().x),
+                                       static_cast<float>(rotationQuaternion.ToEuler().y),
+                                       static_cast<float>(rotationQuaternion.ToEuler().z)
+    };
+    if (ImGui::CollapsingHeader("Transform"))
+    {
+        float* pos[3]   = {&transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z};
+        float* rot[3]   = {&rotationEuler.x, &rotationEuler.y, &rotationEuler.z};
+        float* scale[3] = {&transform->GetScale().x, &transform->GetScale().y, &transform->GetScale().z};
+        ImGui::DragFloat3("Position", *pos, 0.1f);
+        ImGui::DragFloat3("Rotation", *rot, 0.1f);
+        ImGui::DragFloat3("Scale", *scale, 0.1f);
+    }
+
+    if (rotationEuler.y > 90.0f || rotationEuler.y < -90.0f)
+        rotationEuler = Vector3{rotationEuler.x - 180.0f, ((rotationEuler.y) * -1), rotationEuler.z + 180.0f};
+
+    rotationQuaternion.MakeFromEuler(rotationEuler);
+
+    transform->needUpdate     = true;
+    transform->needAxesUpdate = true;
+
+    for (auto component : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject()->GetAllComponents())
+    {
+        std::shared_ptr<Components::IComponent> Icomponent = Containers::ComponentContainer::FindComponent(component);
+        switch (Icomponent->GetType())
         {
-            float* pos[3] = { &transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z };
-            float* rot[3] = { &rotationEuler.x, &rotationEuler.y, &rotationEuler.z };
-            float* scale[3] = { &transform->GetScale().x, &transform->GetScale().y, &transform->GetScale().z };
-            ImGui::DragFloat3("Position", *pos, 0.1f);
-            ImGui::DragFloat3("Rotation", *rot, 0.1f);
-            ImGui::DragFloat3("Scale", *scale, 0.1f);
-        }
-
-        if (rotationEuler.y > 90.0f || rotationEuler.y < -90.0f)
-            rotationEuler = Vector3{ rotationEuler.x - 180.0f, ((rotationEuler.y) * -1), rotationEuler.z + 180.0f};
-        rotationQuaternion.MakeFromEuler(rotationEuler);
-        transform->needUpdate = true;
-        transform->needAxesUpdate = true;
-
-        for (auto component : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject()->GetAllComponents())
-        {
-
-            std::shared_ptr<Components::IComponent> Icomponent = Containers::ComponentContainer::FindComponent(component);
-            switch (Icomponent->GetType())
-            {
-            case Components::MODEL:
+        case Components::MODEL:
             {
                 std::shared_ptr<Components::ModelComponent> modelComponent = std::dynamic_pointer_cast<Components::ModelComponent>(Icomponent);
-                
-                if (ImGui::CollapsingHeader("Model Component"), ImGuiTreeNodeFlags_DefaultOpen)
+
+                if (ImGui::CollapsingHeader("Model Component"))
                 {
                     ImGui::Text("%s", Managers::ResourceManager::FindModel(modelComponent->GetModel())->GetName().c_str());
                 }
-            break;
+
+                if (ImGui::CollapsingHeader("Material"))
+                {
+                    std::shared_ptr<Rendering::Materials::Material> mat = modelComponent->GetMaterial();
+
+                    if (mat->GetName()._Equal("default"))
+                    {
+                        ImGui::TextWrapped("Using default material. Please add a new material to edit it.");
+                        break;
+                    }
+                    float* objectColor[3] = { &mat->GetColor().x, &mat->GetColor().y, &mat->GetColor().z };
+                    ImGui::ColorPicker3("Light Color", *objectColor);
+                    if (mat->GetTextureState() > 0)
+                    {
+                        ImGui::Text("Texture");
+                        ImGui::Image(*mat->GetTexture()->GetTextureShaderResourceView().GetAddressOf(), ImVec2(100, 100));
+                    }
+                }
+                break;
             }
-            case Components::BOX_COLLIDER:
+        case Components::BOX_COLLIDER:
             {
                 std::shared_ptr<Components::BoxCollider> boxCollider = std::dynamic_pointer_cast<Components::BoxCollider>(Icomponent);
-                if (ImGui::CollapsingHeader("Box Collider"), ImGuiTreeNodeFlags_DefaultOpen)
+                if (ImGui::CollapsingHeader("Box Collider"))
                 {
                     //todo add dimensions, it's weirdly done on BoxCollider for the moment being.
-                    float* dimensions[3] = { &boxCollider->GetDimensions().x, &boxCollider->GetDimensions().y, &boxCollider->GetDimensions().z };
-                    float* offset[3] = { &boxCollider->GetOffset().x, &boxCollider->GetOffset().y, &boxCollider->GetOffset().z };
-                    float* mass = { &boxCollider->GetMass() };
+                    float* dimensions[3] = {&boxCollider->GetDimensions().x, &boxCollider->GetDimensions().y, &boxCollider->GetDimensions().z};
+                    float* offset[3] = {&boxCollider->GetOffset().x, &boxCollider->GetOffset().y, &boxCollider->GetOffset().z};
+                    float* mass = {&boxCollider->GetMass()};
 
                     ImGui::DragFloat3("Dimensions", *dimensions, 0.1f);
                     ImGui::DragFloat("Mass", mass, 0.1f);
@@ -151,30 +173,89 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 }
                 break;
             }
-            case Components::CAMERA:
+        case Components::CAMERA:
             {
-                std::shared_ptr<Components::Camera> boxCollider = std::dynamic_pointer_cast<Components::Camera>(Icomponent);
-                if (ImGui::CollapsingHeader("Camera"), ImGuiTreeNodeFlags_DefaultOpen)
+                std::shared_ptr<Components::Camera> camera = std::dynamic_pointer_cast<Components::Camera>(Icomponent);
+                if (ImGui::CollapsingHeader("Camera"))
                 {
+                    float fov = camera->GetFOV();
 
-                    //ImGui::DragFloat3("Dimensions", *dimensions, 0.1f);
+                    ImGui::SliderFloat("Camera FOV", &fov, 10.f, 180.f, "%1.f");
+
+                    camera->SetFOV(fov);
                 }
                 break;
             }
-            case Components::LIGHT:
+        case Components::LIGHT:
             {
-
+                std::shared_ptr<Components::Light> lightComp = std::dynamic_pointer_cast<Components::Light>(Icomponent);
+                std::shared_ptr<Rendering::Lights::ILight> ILight = lightComp->GetLight();
+                Rendering::Lights::ILight::LightData& lightData = ILight->GetLightData();
+                if (ImGui::CollapsingHeader("Light"))
+                {
+                    float* ambient[3] = { &lightData.ambient.x, &lightData.ambient.y, &lightData.ambient.z };
+                    float* diffuse[3] = { &lightData.diffuse.x, &lightData.diffuse.y, &lightData.diffuse.z };
+                    float* specular[3] = { &lightData.specular.x, &lightData.specular.y, &lightData.specular.z };
+                    float* shininess = { &lightData.shininess };
+                    ImGui::ColorPicker3("Ambient Light Color", *ambient);
+                    ImGui::ColorPicker3("Diffuse Light Color", *diffuse);
+                    ImGui::ColorPicker3("Specular Light Color", *specular);
+                    ImGui::DragFloat("shininess", shininess, 0.1f);
+                }
                 break;
             }
-            case Components::UNSET:
+        case Components::UNSET:
             {
-
-
                 OutputDebugString("Component Type not Set for Inspector Call. Please set the Component Type on your Component to something valid.");
                 break;
             }
+        }
+    }
+    Vector2F windowSize{ ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
+    ImGui::SetCursorPosX((windowSize.x - 200) * 0.5f);
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10.0f);
+
+    if (ImGui::BeginPopup("Add Component"))
+    {
+        std::vector<std::string> types {"BOX_COLLIDER",
+                                        "LIGHT",
+                                        "CAMERA",
+                                        "MODEL",
+                                        "SOUND", };
+        for (auto i = 0; i < types.size(); ++i)
+        {
+            if (ImGui::Button(types[i].c_str(), ImVec2(200,20)))
+            {
+                auto gameObject = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject();
+                const Vector2F size(1920, 1080);
+                switch (i)
+                {
+                case 0:
+                    gameObject->AddComponent<Components::BoxCollider>();
+                    break;
+                case 1:
+                    gameObject->AddComponent<Components::Light>();
+                    break;
+                case 2:
+                    gameObject->AddComponent<Components::Camera>(size.x, size.y);
+                    break;
+                case 3:
+                    gameObject->AddComponent<Components::ModelComponent>();
+                    break;
+                case 4:
+                    gameObject->AddComponent<Components::Sound>();
+                    break;
+                }
             }
         }
-    //}
-        ImGui::End();
+        ImGui::EndPopup();
+    }
+
+    if (ImGui::Button("Add component", ImVec2(200, 20)))
+    {
+        ImGui::SetCursorPosX(ImGui::GetWindowPos().x);
+        ImGui::OpenPopup("Add Component");
+    }
+
+    ImGui::End();
 }

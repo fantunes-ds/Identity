@@ -27,6 +27,7 @@
 #include "Components/Sound.h"
 #include "Systems/SoundSystem.h"
 #include "UI/Hierarchy.h"
+#include <UI/imfilebrowser.h>
 
 Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
@@ -60,10 +61,14 @@ int Engine::Core::App::Run()
     // camera.FindComponentOfType<Components::BoxCollider>()->SetMass(1);
     Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
     //----------
+    std::string scenename{ "Demo" };
+    Managers::SceneManager::LoadScene(scenename);
 
-    Managers::SceneManager::LoadScene("Demo");
+    //Managers::SceneManager::LoadScene("scene1");
 
     float fixedUpdateTimer = 0.0f;
+
+    bool fileBrowserOpened = false;
 
     while (m_applicationIsRunning)
     {
@@ -73,20 +78,20 @@ int Engine::Core::App::Run()
             return *eCode;
         }
         StartFrame();
-        
+
 
         // Events
         // (will be moved below DoFrame once we get rid of all ImGUI calls on Engine)
         Containers::EventContainer::GetEvent("OnGUI").Fire();
 
-        static bool show_demo_window = true;
+        static bool show_demo_window = true; 
 
         static char buffer[1024];
 
         if (show_demo_window)
         {
             ImGui::ShowDemoWindow(&show_demo_window);
-        }
+        }       
 
         float deltaTime = Tools::Time::GetDeltaTime();
 
@@ -107,6 +112,9 @@ int Engine::Core::App::Run()
                 Systems::PhysicsSystem::FixedUpdate();
             fixedUpdateTimer = 0.0f;
         }
+
+
+        
 
         DoFrame(deltaTime);
         EndFrame();

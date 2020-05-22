@@ -301,6 +301,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\UI\Console.h" />
     <ClInclude Include="include\UI\Dockspace.h" />
     <ClInclude Include="include\UI\Hierarchy.h" />
+    <ClInclude Include="include\UI\imfilebrowser.h" />
     <ClInclude Include="include\UI\UIManager.h" />
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>

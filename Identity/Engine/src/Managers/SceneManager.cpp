@@ -4,6 +4,7 @@
 
 #include <Components/BoxCollider.h>
 #include <Components/SphereCollider.h>
+#include <filesystem>
 #include <Managers/SceneManager.h>
 #include <Scene/Scene.h>
 
@@ -55,9 +56,25 @@ std::shared_ptr<Engine::Scene::Scene> Engine::Managers::SceneManager::LoadScene(
     return scene;
 }
 
+std::shared_ptr<Engine::Scene::Scene> Engine::Managers::SceneManager::LoadScene(std::filesystem::path p_path)
+{
+
+    auto scene = std::make_shared<Scene::Scene>();
+    scene->SetName(p_path.string());
+    AddScene(scene);
+    SetActiveScene(scene);
+    scene->Load(p_path);
+    return scene;
+}
+
 void Engine::Managers::SceneManager::SaveActiveScene()
 {
     GetActiveScene()->Save();
+}
+
+void Engine::Managers::SceneManager::SaveActiveSceneAs(const char* p_name)
+{
+    GetActiveScene()->SaveAs(p_name);
 }
 
 void Engine::Managers::SceneManager::SetActiveScene(const std::string& p_name)

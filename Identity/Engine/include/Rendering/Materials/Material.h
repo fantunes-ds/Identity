@@ -39,6 +39,7 @@ namespace Engine::Rendering::Materials
         inline void SetTextureState(const bool p_state) { m_textureState = p_state; }
         inline void SetColor(const Vector3F p_color) { m_color = p_color; }
 
+        [[nodiscard]] Vector3F& GetColor() { return m_color; }
         [[nodiscard]] inline const Vector3F GetColor() const { return m_color; }
         [[nodiscard]] const Microsoft::WRL::ComPtr<ID3DBlob> GetBlob();
         [[nodiscard]] inline const std::shared_ptr<PixelShader> GetPixelShader() const { return m_pixelShader; }

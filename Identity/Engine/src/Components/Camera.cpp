@@ -1,7 +1,5 @@
 #include <stdafx.h>
 
-#include <Tools/ImGUI/imgui.h>
-
 #include <Components/Camera.h>
 #include <Input/Input.h>
 #include <Systems/CameraSystem.h>
@@ -77,6 +75,8 @@ void Engine::Components::Camera::UpdateVectors()
 void Engine::Components::Camera::UpdateCameraPosition(const float p_deltaTime)
 {
     auto transform = m_gameObject->GetTransform();
+
+    float* pos [3] = {&transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z};
 
     //todo all below code is SCRIPTING BEHAVIOUR. A camera DOES NOT have to receive input to be a camera.
     float speed = m_speed;
