@@ -45,6 +45,8 @@ void Lights::DirectionalLight::Serialize(std::ostream& p_stream)
     p_stream << typeid(*this).name() << "\n{\n" <<
         "   m_lightData\n   {\n" <<
         "       shininess " << GetLightData().shininess << "\n" <<
+        "       range " << GetLightData().range << "\n" <<
+        "       intensity " << GetLightData().intensity << "\n" <<
         "       padding " << GetLightData().padding << "\n" <<
         "       position " << GetLightData().position << "\n" <<
         "       ambient " << GetLightData().ambient << "\n" <<
@@ -56,6 +58,8 @@ void Lights::DirectionalLight::Serialize(std::ostream& p_stream)
 void Lights::DirectionalLight::Deserialize(std::vector<std::string>& p_block)
 {
     std::vector <std::string> words;
+
+
 
     for (auto& line: p_block)
     {
@@ -76,6 +80,16 @@ void Lights::DirectionalLight::Deserialize(std::vector<std::string>& p_block)
         {
             GetLightData().shininess = 0.0f;
             GetLightData().shininess = std::stof(words[1]);
+        }
+        else if (words[0] == "range")
+        {
+            GetLightData().range = 0.0f;
+            GetLightData().range = std::stof(words[1]);
+        }
+        else if (words[0] == "intensity")
+        {
+            GetLightData().intensity = 0.0f;
+            GetLightData().intensity = std::stof(words[1]);
         }
         else if (words[0] == "padding")
         {

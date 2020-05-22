@@ -50,7 +50,7 @@ void Engine::Components::Light::Deserialize(Objects::GameObject* p_gameObject, s
 
     light->Deserialize(p_block);
 
-    m_light = light;
+    m_light->GetLightData() = light->GetLightData();
 
     Systems::LightSystem::AddLight(std::make_shared<Light>(*this));
 }
