@@ -96,44 +96,47 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
         for (auto& collider: Systems::PhysicsSystem::GetSphereColliders())
         {
-            auto model = collider.second->GetModel();
-            auto mesh = model->GetMeshes()[0];
-            mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
-            mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
+            if (collider.second->IsActive())
+            {
+                auto model = collider.second->GetModel();
+                auto mesh = model->GetMeshes()[0];
+                mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());
+                mesh->Bind(Rendering::Renderer::GetInstance()->GetContext());
 
-            Matrix4F modelMatrix = collider.second->GetWorldMatrix();
-            Matrix4F normalModel = Matrix4F::Inverse(modelMatrix);
+                Matrix4F modelMatrix = collider.second->GetWorldMatrix();
+                Matrix4F normalModel = Matrix4F::Inverse(modelMatrix);
 
-            Matrix4F view = camera->GetViewMatrix();
-            Matrix4F perspective = camera->GetPerspectiveMatrix();
+                Matrix4F view = camera->GetViewMatrix();
+                Matrix4F perspective = camera->GetPerspectiveMatrix();
 
-            Rendering::Buffers::VCB vcb{ modelMatrix, view, normalModel, perspective };
-            mesh->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
-            const Vector3F cameraPos = camera->GetPosition();
+                Rendering::Buffers::VCB vcb{ modelMatrix, view, normalModel, perspective };
+                mesh->GetMaterial()->GetVertexShader()->GetVCB().Update(vcb);
+                const Vector3F cameraPos = camera->GetPosition();
 
-            // const Rendering::Buffers::PCB pcb{
-            //     Vector4F::zero, Vector4F::one, Vector4F::one,
-            //     Vector4F::zero, Vector4F::one,
-            //     1.0f, Vector3F{}, Vector3F::zero,
-            //     static_cast<float>(mesh->GetMaterial()->GetTextureState()), mesh->GetMaterial()->GetColor()
-            // };
+                // const Rendering::Buffers::PCB pcb{
+                //     Vector4F::zero, Vector4F::one, Vector4F::one,
+                //     Vector4F::zero, Vector4F::one,
+                //     1.0f, Vector3F{}, Vector3F::zero,
+                //     static_cast<float>(mesh->GetMaterial()->GetTextureState()), mesh->GetMaterial()->GetColor()
+                // };
 
-            //create empty lights
-            Rendering::Lights::DirectionalLight::LightData lights[4];
-            const Rendering::Buffers::PCB pcb{
-                    lights[0], lights[1],lights[2],lights[3], Vector3F::zero,
-                    static_cast<float>(mesh->GetMaterial()->GetTextureState()), mesh->GetMaterial()->GetColor()
-            };
+                //create empty lights
+                Rendering::Lights::DirectionalLight::LightData lights[4];
+                const Rendering::Buffers::PCB pcb{
+                        lights[0], lights[1],lights[2],lights[3], Vector3F::zero,
+                        static_cast<float>(mesh->GetMaterial()->GetTextureState()), mesh->GetMaterial()->GetColor()
+                };
 
-            mesh->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
-            Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+                mesh->GetMaterial()->GetPixelShader()->GetPCB().Update(pcb);
+                Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
-            Rendering::Renderer::GetInstance()->Bind(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetTarget(),
-                Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetDepthStencilView());
+                Rendering::Renderer::GetInstance()->Bind(Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetTarget(),
+                    Rendering::Renderer::GetInstance()->GetRenderTextures()[0].GetDepthStencilView());
 
-            GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
+                GFX_THROW_INFO_ONLY(Rendering::Renderer::GetInstance()->GetContext()->DrawIndexed(static_cast<UINT>(mesh->GetIndices().size()), 0u, 0u));
 
-            Rendering::Renderer::GetInstance()->Bind();
+                Rendering::Renderer::GetInstance()->Bind();
+            }
         }
     }
 
