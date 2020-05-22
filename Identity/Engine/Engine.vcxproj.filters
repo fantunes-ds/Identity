@@ -146,6 +146,7 @@
     <ClInclude Include="include\Components\Sound.h" />
     <ClInclude Include="include\Systems\SoundSystem.h" />
     <ClInclude Include="include\UI\Console.h" />
+    <ClInclude Include="include\UI\imfilebrowser.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />

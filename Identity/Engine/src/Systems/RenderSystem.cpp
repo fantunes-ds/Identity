@@ -17,9 +17,6 @@
 #include <Systems/PhysicsSystem.h>
 #include "Systems/LightSystem.h"
 
-
-#define DEBUG_MODE true
-
 Engine::Systems::RenderSystem::~RenderSystem()
 {
     delete m_instance;
@@ -42,7 +39,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         }
     }
 
-    if constexpr (DEBUG_MODE)
+    if (GetInstance()->m_debugMode)
     {
         for (auto collider : Systems::PhysicsSystem::GetColliders())
         {

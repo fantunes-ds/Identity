@@ -21,14 +21,17 @@ namespace Engine::Systems
         static void ResetActiveCamera();
 
         static void SetActiveCamera(int32_t p_id);
+        static void SetDebugMode(bool p_debug) { GetInstance()->m_debugMode = p_debug; }
 
         static RenderSystem* GetInstance();
         static std::shared_ptr<Components::Camera> GetActiveCamera();
+        static bool IsDebugMode() { return GetInstance()->m_debugMode; }
 
     private:
         RenderSystem() = default;
 
         inline static RenderSystem* m_instance;
         int32_t m_activeCamera = -1;
+        bool m_debugMode = true;
     };
 }

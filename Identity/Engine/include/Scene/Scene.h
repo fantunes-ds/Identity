@@ -1,14 +1,10 @@
 #pragma once
 #include <Export.h>
 #include <list>
+#include <filesystem>
 #include <Scene/SceneGraph/SceneGraph.h>
 #include <Objects/GameObject.h>
 #include <Components/Camera.h>
-
-// namespace Engine::Objects
-// {
-//     class GameObject;
-// }
 
 namespace Engine::Components
 {
@@ -37,7 +33,9 @@ namespace Engine::Scene
         std::list<std::shared_ptr<Objects::GameObject>> GetAllGameObjectsInScene();
         void SetActiveOnAll(bool p_active);
         void Save();
+        void SaveAs(const char* p_name);
         void Load(const std::string& p_sceneName);
+        void Load(std::filesystem::path& p_sceneName);
 
     private:
         std::shared_ptr<Components::Camera> m_activeCamera;
