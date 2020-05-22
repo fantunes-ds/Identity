@@ -13,9 +13,10 @@ namespace Engine::Rendering::Lights
             Vector4F ambient;
             Vector4F diffuse;
             Vector4F specular;
-            Vector4F color;
             float shininess;
-            Vector3F padding;
+            float range;
+            float intensity;
+            float padding;
         };
         ILight(LightData p_lightData) : m_lightData{ p_lightData }{}
 

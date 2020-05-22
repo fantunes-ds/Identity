@@ -7,14 +7,15 @@ struct lightSource
     float4 ambient;
     float4 diffuse;
     float4 specular;
-    float4 color;
     float shininess;
-    float3 padding;
+    float range;
+    float intensity;
+    float padding;
 };
 
 cbuffer CBuf
 {
-    lightSource lights[2];
+    lightSource lights[4];
     float3 cameraPos;
     float textureState;
     float3 materialColor;
@@ -33,6 +34,7 @@ struct VS_OUT
 static bool blinn = true;
 
 float3 CalculateLights(lightSource light, VS_OUT f_in);
+float CalculateAttenuation(float distance, float range, float intensity);
 
 float4 main(VS_OUT f_in) : SV_TARGET
 {
@@ -54,32 +56,59 @@ float3 CalculateLights(lightSource light, VS_OUT f_in)
 {
     float3 fColor = (0, 0, 0);
     
+    float distance = length(light.position.rgb - f_in.worldPos);
+    float attenuation = CalculateAttenuation(distance, light.range, light.intensity);
+    
     // ambient calculations
-    float3 ambient = light.ambient.rgb * light.color.rgb;
+    float3 ambient = (light.ambient.rgb * light.ambient.w) * light.diffuse.rgb;
     fColor = ambient;
     
     //diffuse
     f_in.norm = normalize(f_in.norm);
     float3 lightDir = normalize(light.position.rgb - f_in.worldPos);
     float diff = max(dot(f_in.norm, lightDir), 0.0);
-    float3 diffuse = diff * light.color.rgb;
-    fColor += diffuse;
+    float3 diffuse = diff * (light.diffuse.rgb);
+    fColor += (diffuse * attenuation);
     
     //specular
     float3 viewDir = normalize(cameraPos - f_in.worldPos);
     float spec = 0.0f;
+    float3 specular = (0, 0, 0);
     if (blinn)
     {
         float3 halfwayDir = normalize(lightDir + viewDir);
         spec = pow(max(dot(f_in.norm, halfwayDir), 0.0f), light.shininess);
+        specular = (light.specular.rgb * light.specular.w) * spec * light.diffuse.rgb;
     }
     else
     {
         float3 reflectDir = reflect(-lightDir, f_in.norm);
-        spec = pow(max(dot(cameraPos, reflectDir), 0.0f), light.shininess);
+        spec = max(dot(normalize(reflectDir), normalize(cameraPos - viewDir)), 0);
+        if (spec > 0.0f)
+        {
+            spec = pow(spec, light.shininess);
+            specular = (light.specular.rgb * light.specular.w) * spec * light.diffuse.rgb;
+        }
+        
+        //spec = pow(max(dot(cameraPos, reflectDir), 0.0f), light.shininess);
+        //specular = (light.specular.rgb * light.specular.w) * spec * light.diffuse.rgb;
     }
-    float3 specular = light.specular.rgb * spec * light.color.rgb;
-    fColor += specular;
+    fColor += (specular * attenuation);
     
     return fColor;
+}
+
+float CalculateAttenuation(float distance, float range, float intensity)
+{
+    range *= 10;
+    float attenuation = 0.f;
+    float distanceOverRange = distance / range;
+    float distanceOverRange2 = pow(distanceOverRange, 2);
+    float distanceOverRange4 = pow(distanceOverRange2, 2);
+    
+    attenuation = pow(saturate(1.0f - distanceOverRange4), 2);
+    attenuation /= pow(distance, 2) + 1.0f;
+    //return attenuation * intensity;
+    
+    return attenuation = max(1.0f / (distance) - 1.0f / (range), 0.0f);
 }

@@ -11,8 +11,8 @@ Lights::DirectionalLight::DirectionalLight() : ILight{LightData{}}
 
 Lights::DirectionalLight::DirectionalLight(const Vector4F& p_position, const Vector4F&  p_ambient,
                                            const Vector4F& p_diffuse, const Vector4F&   p_specular,
-                                           const Vector4F& p_direction, const Vector4F& p_color,
-                                           const float& p_shininess) : ILight{ LightData{p_position, p_ambient, p_diffuse, p_specular, p_color, p_shininess} }
+                                           const Vector4F& p_direction, const float& p_shininess)
+: ILight{ LightData{p_position, p_ambient, p_diffuse, p_specular, p_shininess} }
 {
     // m_lightData = { p_position, p_ambient, p_diffuse, p_specular, p_color, p_shininess };
 }
@@ -31,7 +31,6 @@ bool Lights::DirectionalLight::operator==(ILight* p_other)
 
 
         if (thisData.shininess == otherData.shininess &&
-            thisData.color == otherData.color &&
             thisData.ambient == otherData.ambient &&
             thisData.diffuse == otherData.diffuse &&
             thisData.position == otherData.position)
@@ -51,7 +50,6 @@ void Lights::DirectionalLight::Serialize(std::ostream& p_stream)
         "       ambient " << GetLightData().ambient << "\n" <<
         "       diffuse " << GetLightData().diffuse << "\n" <<
         "       specular " << GetLightData().specular << "\n" <<
-        "       color " << GetLightData().color << "\n" <<
         "   }\n" << "}\n";
 }
 
@@ -81,9 +79,7 @@ void Lights::DirectionalLight::Deserialize(std::vector<std::string>& p_block)
         }
         else if (words[0] == "padding")
         {
-            GetLightData().padding.x = std::stof(words[1]);
-            GetLightData().padding.y = std::stof(words[2]);
-            GetLightData().padding.z = std::stof(words[3]);
+            GetLightData().padding = std::stof(words[1]);
         }
         else if (words[0] == "position")
         {
@@ -112,13 +108,6 @@ void Lights::DirectionalLight::Deserialize(std::vector<std::string>& p_block)
             GetLightData().specular.y = std::stof(words[2]);
             GetLightData().specular.z = std::stof(words[3]);
             GetLightData().specular.w = std::stof(words[4]);
-        }
-        else if (words[0] == "color")
-        {
-            GetLightData().color.x = std::stof(words[1]);
-            GetLightData().color.y = std::stof(words[2]);
-            GetLightData().color.z = std::stof(words[3]);
-            GetLightData().color.w = std::stof(words[4]);
         }
 
         words.clear();

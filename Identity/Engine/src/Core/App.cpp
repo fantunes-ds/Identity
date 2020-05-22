@@ -53,38 +53,51 @@ int Engine::Core::App::Run()
 
     //--CAMERA--
     Objects::GameObject camera;
-    camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
+    camera.GetTransform()->Translate(Vector3F{ 0.0f, .0f, 0.0f });
     camera.AddComponent<Components::Camera>(m_width, m_height);
+    camera.AddComponent<Components::BoxCollider>();
+    camera.FindComponentOfType<Components::BoxCollider>()->SetMass(1);
     Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
     //----------
 
+    // Managers::SceneManager::LoadScene("scene1");
+    
     auto lightScene = std::make_shared<Scene::Scene>("LightScene");
-
+    
     auto cube = std::make_shared<Objects::GameObject>("Cube");
     cube->GetTransform()->SetPosition({ -0.5f, -0.5f, -8.f });
     cube->AddComponent<Components::ModelComponent>("Cube");
     lightScene->AddGameObject(cube);
-
+    
     auto cube2 = std::make_shared<Objects::GameObject>("Cube2");
     cube2->GetTransform()->SetPosition({ -0.5f, -0.5f, 8.f });
     cube2->AddComponent<Components::ModelComponent>("Cube");
     lightScene->AddGameObject(cube2);
 
+    auto cube3 = std::make_shared<Objects::GameObject>("Cube3");
+    cube3->GetTransform()->SetPosition({ -15.f, -5.f, 15.f });
+    cube3->GetTransform()->SetScale({ 30,2,30 });
+    cube3->AddComponent<Components::BoxCollider>();
+    cube3->FindComponentOfType<Components::BoxCollider>()->SetDimensions({ 15, 1, 15 });
+    cube3->FindComponentOfType<Components::BoxCollider>()->SetPositionOffset({ 15, 1, -15 });
+    cube3->AddComponent<Components::ModelComponent>("Cube");
+    lightScene->AddGameObject(cube3);
+    
     auto light = std::make_shared<Objects::GameObject>("Light");
     light->GetTransform()->SetPosition({ 1.f, 0.f, 0.f });
     light->GetTransform()->SetScale({ 0.2f, 0.2f, 0.2f });
     Rendering::Lights::DirectionalLight::LightData lightData = {
         {light->GetTransform()->GetPosition().x, light->GetTransform()->GetPosition().y, light->GetTransform()->GetPosition().z, 1.0f},
-    {0.1f, 0.1f, 0.1f, 1.f},
-    {0.1f, 0.1f,0.1f, 1.f},
-    {0.5f, 0.5f, 0.5f,1.f},
-    {1.f, 1.f, 1.f,1.f},
-        256.f, {0,0,0}
+    {1.f, 1.f, 1.f, 0.1f},
+    {1.0f, 1.0f,1.0f, 0.1f},
+    {1.f, 0.f, 0.f,0.5f},
+        128.f, 500.f, 20.f,0
     };
+    
     light->AddComponent<Components::Light>(lightData);
     light->AddComponent<Components::ModelComponent>("Cube");
     lightScene->AddGameObject(light);
-
+    
     auto light2 = std::make_shared<Objects::GameObject>("Light2");
     light2->GetTransform()->SetPosition({ -1.f, 0.f, 0.f });
     light2->GetTransform()->SetScale({ 0.2f, 0.2f, 0.2f });
