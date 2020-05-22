@@ -10,6 +10,7 @@
 
 #include <Systems/TransformSystem.h>
 #include "Systems/PhysicsSystem.h"
+#include "Components/Light.h"
 
 
 Engine::Managers::SceneManager::SceneManager()
@@ -156,6 +157,10 @@ void Engine::Managers::SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene
         for (auto component : gameObject->FindAllComponentsOfType<Components::SphereCollider>())
         {
             tmpOBJ->AddComponent<Components::SphereCollider>(component);
+        }
+        for (auto component : gameObject->FindAllComponentsOfType<Components::Light>())
+        {
+            tmpOBJ->AddComponent<Components::Light>(component);
         }
         p_destination->AddGameObject(tmpOBJ);
     }

@@ -12,6 +12,7 @@ namespace Engine::Components
         Light() = delete;
         Light(Objects::GameObject* p_gameObject);
         Light(Objects::GameObject* p_gameObject, Rendering::Lights::ILight::LightData& p_lightData);
+        Light(Objects::GameObject* p_gameObject, std::shared_ptr<Light> p_other);
 
         [[nodiscard]] std::shared_ptr<Rendering::Lights::ILight> GetLight() const { return m_light; }
 

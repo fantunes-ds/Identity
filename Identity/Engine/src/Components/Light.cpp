@@ -7,13 +7,23 @@ Engine::Components::Light::Light(Objects::GameObject* p_gameObject): IComponent{
 {
     // Rendering::Lights::DirectionalLight* light = new Rendering::Lights::DirectionalLight();
     // Containers::LightContainer::AddLight(light);
+    m_isActive = p_gameObject->IsActive();
     m_light = std::make_shared<Rendering::Lights::DirectionalLight>();
     Systems::LightSystem::AddLight(std::make_shared<Light>(*this));
 }
 
 Engine::Components::Light::Light(Objects::GameObject* p_gameObject, Rendering::Lights::DirectionalLight::LightData& p_lightData): IComponent{p_gameObject, LIGHT}
 {
+    m_isActive = p_gameObject->IsActive();
     m_light = std::make_shared<Rendering::Lights::DirectionalLight>(p_lightData);
+    Systems::LightSystem::AddLight(std::make_shared<Light>(*this));
+}
+
+
+Engine::Components::Light::Light(Objects::GameObject* p_gameObject, std::shared_ptr<Light> p_other) : IComponent{p_gameObject, LIGHT}
+{
+    m_isActive = p_gameObject->IsActive();
+    m_light = std::make_shared<Rendering::Lights::DirectionalLight>(p_other->GetLight()->GetLightData());
     Systems::LightSystem::AddLight(std::make_shared<Light>(*this));
 }
 

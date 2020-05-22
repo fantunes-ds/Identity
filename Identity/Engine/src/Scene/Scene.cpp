@@ -22,6 +22,7 @@ Engine::Scene::Scene::~Scene()
 
 void Engine::Scene::Scene::AddGameObject(std::shared_ptr<Objects::GameObject> p_gameObject)
 {
+    p_gameObject->SetActive(true);
     m_sceneGraph.AddGameObjectToScene(p_gameObject);
 }
 

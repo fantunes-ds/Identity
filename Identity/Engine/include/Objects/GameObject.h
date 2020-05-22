@@ -111,6 +111,7 @@ namespace Engine::Objects
 		inline void SetTransform(int32_t p_transform) { m_transform = p_transform; }
 		inline void SetSceneNode(std::shared_ptr<Scene::SceneNode> p_rootNode) { m_rootNode = p_rootNode; }
 		inline void SetActive(bool p_active);
+		inline bool IsActive() { return m_isActive; }
 
 		bool operator==(GameObject& p_other) const;
 
