@@ -2,6 +2,7 @@
 #include <Export.h>
 #include <memory>
 #include <vector>
+#include <filesystem>
 
 namespace Engine::Scene
 {
@@ -21,7 +22,10 @@ namespace Engine::Managers
         static std::shared_ptr<Scene::Scene> GetScene(const std::string& p_name);
         static void                          AddScene(const std::shared_ptr<Scene::Scene> p_scene);
         static std::shared_ptr<Scene::Scene> LoadScene(const std::string& p_name);
+        static std::shared_ptr<Scene::Scene> LoadScene(std::filesystem::path p_path);
+
         static void SaveActiveScene();
+        static void SaveActiveSceneAs(const char* p_name);
 
         static std::unique_ptr<SceneManager>&              GetInstance();
         static std::shared_ptr<Scene::Scene>               GetActiveScene() { return GetInstance()->m_activeScene; }

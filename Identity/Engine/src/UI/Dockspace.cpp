@@ -9,12 +9,13 @@
 
 #include "Managers/SceneManager.h"
 #include "UI/Hierarchy.h"
+#include <UI/imfilebrowser.h>
 
 void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
 {
     static bool               opt_fullscreen_persistant = true;
-    bool                      opt_fullscreen            = opt_fullscreen_persistant;
-    static ImGuiDockNodeFlags dockspace_flags           = ImGuiDockNodeFlags_None;
+    bool                      opt_fullscreen = opt_fullscreen_persistant;
+    static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
     // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
     // because it would be confusing to have two docking targets within each others.
@@ -28,7 +29,7 @@ void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-                ImGuiWindowFlags_NoMove;
+            ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_MenuBar;
     }
 
@@ -59,26 +60,34 @@ void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
         CreateMenuBar(p_appRef);
-        
+
     }
     ImGui::End();
 }
 
 void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
 {
+    static bool showSave = false;
+
     if (ImGui::BeginMenuBar())
     {
         //todo all shortcuts
         if (ImGui::BeginMenu("File"))
         {
             ImGui::MenuItem("New Scene", "Ctrl + N", nullptr);
-            ImGui::MenuItem("Open Scene", "Ctrl + O", nullptr);
+            if (ImGui::MenuItem("Open Scene", "Ctrl + O", nullptr))
+            {
+                UI::FileBrowser::GetInstance()->Open();
+            }
             ImGui::Separator();
             if (ImGui::MenuItem("Save", "Ctrl + S", nullptr))
             {
                 Managers::SceneManager::SaveActiveScene();
             }
-            ImGui::MenuItem("Save As...", "Ctrl + Shift + S", nullptr);
+            if (ImGui::MenuItem("Save As...", "Ctrl + Shift + S", nullptr))
+            {
+                showSave = true;       
+            }
             ImGui::MenuItem("Build", "Ctrl + B", nullptr);
             ImGui::Separator();
             if (ImGui::MenuItem("Exit", nullptr, nullptr))
@@ -137,6 +146,49 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             p_appRef.TestingSimulation();
         }
 
+        ImGui::SetCursorPosX(Rendering::Renderer::GetInstance()->GetWidth() * 0.955f);
+        if (ImGui::Button("Debug Mode"))
+        {
+            Systems::RenderSystem::SetDebugMode(!Systems::RenderSystem::IsDebugMode());
+        }
+
         ImGui::EndMenuBar();
+    }
+
+    UI::FileBrowser::GetInstance()->Display();
+
+    //show load scene dialog
+    if (UI::FileBrowser::GetInstance()->HasSelected())
+    {
+        Engine::Managers::SceneManager::LoadScene(UI::FileBrowser::GetInstance()->GetSelected());
+        UI::FileBrowser::GetInstance()->ClearSelected();
+        UI::FileBrowser::GetInstance()->Close();
+    }
+
+    //show save scene dialog
+    if (showSave)
+    {
+        if (ImGui::Begin("Save As", &showSave, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::SetWindowFocus();
+            ImGui::Text("Enter scene save name: ");
+            ImGui::SameLine();
+            static char buf1[64] = ""; ImGui::InputText(" ", buf1, 64);
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Save"))
+            {
+                Engine::Managers::SceneManager::SaveActiveSceneAs(buf1);
+                showSave = false;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Close"))
+            {
+                showSave = false;
+            }
+            ImGui::Text("Scene will be saved to Editor/SaveFiles/Scenes.");
+
+            ImGui::End();
+        }
     }
 }
