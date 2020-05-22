@@ -12,6 +12,7 @@
 
 #include "Components/Camera.h"
 #include "Components/Light.h"
+#include "Components/Sound.h"
 
 int Engine::UI::Hierarchy::m_currentlySelected = -1;
 
@@ -214,5 +215,51 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
             }
         }
     }
+    Vector2F windowSize{ ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
+    ImGui::SetCursorPosX((windowSize.x - 200) * 0.5f);
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10.0f);
+
+    if (ImGui::BeginPopup("Add Component"))
+    {
+        std::vector<std::string> types {"BOX_COLLIDER",
+                                        "LIGHT",
+                                        "CAMERA",
+                                        "MODEL",
+                                        "SOUND", };
+        for (auto i = 0; i < types.size(); ++i)
+        {
+            if (ImGui::Button(types[i].c_str(), ImVec2(200,20)))
+            {
+                auto gameObject = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject();
+                const Vector2F size(1920, 1080);
+                switch (i)
+                {
+                case 0:
+                    gameObject->AddComponent<Components::BoxCollider>();
+                    break;
+                case 1:
+                    gameObject->AddComponent<Components::Light>();
+                    break;
+                case 2:
+                    gameObject->AddComponent<Components::Camera>(size.x, size.y);
+                    break;
+                case 3:
+                    gameObject->AddComponent<Components::ModelComponent>();
+                    break;
+                case 4:
+                    gameObject->AddComponent<Components::Sound>();
+                    break;
+                }
+            }
+        }
+        ImGui::EndPopup();
+    }
+
+    if (ImGui::Button("Add component", ImVec2(200, 20)))
+    {
+        ImGui::SetCursorPosX(ImGui::GetWindowPos().x);
+        ImGui::OpenPopup("Add Component");
+    }
+
     ImGui::End();
 }
