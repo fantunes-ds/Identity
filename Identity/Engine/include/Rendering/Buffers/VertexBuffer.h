@@ -10,8 +10,19 @@ namespace Engine::Rendering::Buffers
 {
     struct API_ENGINE VertexBuffer
     {
+        /**
+         * @brief Sets parameters and creates the buffers for the vertexBuffer (VBO).
+         * @param p_vertices : The vertices to set on the buffer.
+         */
         void Generate(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, std::vector<Geometry::Vertex>& p_vertices);
+        /**
+         * @brief Attaches the buffer to the current render call.
+         */
         void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
+        /**
+         * @brief Detaches the buffer from the current render call.
+         */
+        void Unbind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& p_context);
 
         bool operator==(const VertexBuffer& p_other) const;
 

@@ -1,6 +1,8 @@
 #include <stdafx.h>
-#include <Rendering/Buffers/PixelConstantBuffer.h>
+
 #include <Tools/DirectX/GraphicsMacros.h>
+
+#include <Rendering/Buffers/PixelConstantBuffer.h>
 
 using namespace Engine::Rendering::Buffers;
 
@@ -19,8 +21,16 @@ void PixelConstantBuffer::GenBuffers()
     PixelConstantShaderData.pSysMem                = &m_pcb;
     GFX_THROW_INFO(Renderer::GetInstance()->GetDevice()->CreateBuffer(&pixelBufferDesc, &PixelConstantShaderData, &m_buffer
                    ));
+}
 
+void PixelConstantBuffer::Bind() const
+{
     Renderer::GetInstance()->GetContext()->PSSetConstantBuffers(0u, 1u, m_buffer.GetAddressOf());
+}
+
+void PixelConstantBuffer::Unbind() const
+{
+    Renderer::GetInstance()->GetContext()->PSSetConstantBuffers(0u, 0u, nullptr);
 }
 
 void PixelConstantBuffer::Update(const PCB& p_filledBuffer) const

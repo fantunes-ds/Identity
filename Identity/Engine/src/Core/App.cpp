@@ -1,138 +1,175 @@
-#include <stdafx.h>
+#define DEBUG_MODE true;
 
-#include <Core/App.h>
+#include <stdafx.h>
 
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
+#include <LinearMath/btVector3.h>
 
-#include <Systems/RenderSystem.h>
+#include <Core/App.h>
+#include <Components/Camera.h>
+#include <Components/Light.h>
+#include <Components/BoxCollider.h>
 #include <Input/Input.h>
+#include <Managers/SceneManager.h>
+#include <Managers/ResourceManager.h>
 #include <Objects/GameObject.h>
-#include <Components/ModelComponent.h>
-#include <Components/CameraComponent.h>
-#include <Containers/MaterialContainer.h>
-#include <Components/LightComponent.h>
+#include <Tools/Time.h>
+#include <Rendering/Renderer.h>
+#include <Scene/Scene.h>
+#include <Systems/RenderSystem.h>
+#include <Systems/CameraSystem.h>
+#include <Systems/TransformSystem.h>
+#include <Systems/PhysicsSystem.h>
+#include <Systems/LightSystem.h>
+#include "Components/Sound.h"
+#include "Systems/SoundSystem.h"
+#include "UI/Hierarchy.h"
 
-using namespace Engine::Core;
+Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
+{
+    btVector3 vec(0.0f, 0.0f, 0.0f);
 
-App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
+    Input::Input::InitInput();
+}
+
+Engine::Core::App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) : m_window(p_width, p_height, p_name),
+m_width(p_width), m_height(p_height),
+m_isEditor(p_isEditor)
 {
     Input::Input::InitInput();
 }
 
-App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name), m_width(p_width), m_height(p_height)
+void Engine::Core::App::Init()
 {
-    Input::Input::InitInput();
+    Containers::EventContainer::AddEvent("OnGUI");
 }
 
-int App::Run() const
+int Engine::Core::App::Run()
 {
-    Systems::RenderSystem renderSystem;
-    Objects::GameObject gameObject;
-    Objects::GameObject gameObject2;
+    m_applicationIsRunning = true;
+    Managers::ResourceManager::Deserialize();
+
+    //--CAMERA--
     Objects::GameObject camera;
-    Objects::GameObject light;
+    camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
+    camera.AddComponent<Components::Camera>(m_width, m_height);
+    Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
+    //----------
 
-    Containers::MaterialContainer::AddMaterial("missing");
-    Containers::MaterialContainer::GetMaterial("missing")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/missing.png");
-    Containers::MaterialContainer::GetMaterial("missing")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
-    Containers::MaterialContainer::GetMaterial("missing")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
+    auto lightScene = std::make_shared<Scene::Scene>("LightScene");
 
-    Containers::MaterialContainer::AddMaterial("LinkTexture");
-    Containers::MaterialContainer::GetMaterial("LinkTexture")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/link.png");
-    Containers::MaterialContainer::GetMaterial("LinkTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
-    Containers::MaterialContainer::GetMaterial("LinkTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
+    auto cube = std::make_shared<Objects::GameObject>("Cube");
+    cube->GetTransform()->SetPosition({ -0.5f, -0.5f, -8.f });
+    cube->AddComponent<Components::ModelComponent>("Cube");
+    lightScene->AddGameObject(cube);
 
-    Containers::MaterialContainer::AddMaterial("LamboTexture");
-    Containers::MaterialContainer::GetMaterial("LamboTexture")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/lambo_text.jpeg");
-    Containers::MaterialContainer::GetMaterial("LamboTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
-    Containers::MaterialContainer::GetMaterial("LamboTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
+    auto cube2 = std::make_shared<Objects::GameObject>("Cube2");
+    cube2->GetTransform()->SetPosition({ -0.5f, -0.5f, 8.f });
+    cube2->AddComponent<Components::ModelComponent>("Cube");
+    lightScene->AddGameObject(cube2);
 
-    // Containers::ModelContainer::AddModel("../Engine/Resources/YoungLink.obj", "statue");
-    // Containers::ModelContainer::AddModel("../Engine/Resources/Lambo.obj", "lambo");
+    auto light = std::make_shared<Objects::GameObject>("Light");
+    light->GetTransform()->SetPosition({ 1.f, 0.f, 0.f });
+    light->GetTransform()->SetScale({ 0.2f, 0.2f, 0.2f });
+    Rendering::Lights::DirectionalLight::LightData lightData = {
+        {light->GetTransform()->GetPosition().x, light->GetTransform()->GetPosition().y, light->GetTransform()->GetPosition().z, 1.0f},
+    {0.1f, 0.1f, 0.1f, 1.f},
+    {0.1f, 0.1f,0.1f, 1.f},
+    {0.5f, 0.5f, 0.5f,1.f},
+    {1.f, 1.f, 1.f,1.f},
+        256.f, {0,0,0}
+    };
+    light->AddComponent<Components::Light>(lightData);
+    light->AddComponent<Components::ModelComponent>("Cube");
+    lightScene->AddGameObject(light);
 
-    camera.AddComponent<Components::CameraComponent>(m_width, m_height);
+    auto light2 = std::make_shared<Objects::GameObject>("Light2");
+    light2->GetTransform()->SetPosition({ -1.f, 0.f, 0.f });
+    light2->GetTransform()->SetScale({ 0.2f, 0.2f, 0.2f });
+    light2->AddComponent<Components::Light>(lightData);
+    light2->AddComponent<Components::ModelComponent>("Cube");
+    lightScene->AddGameObject(light2);
 
+    Managers::SceneManager::AddScene(lightScene);
+    Managers::SceneManager::SetActiveScene(lightScene);
 
-    Containers::LightContainer* test = Containers::LightContainer::GetInstance();
+    float fixedUpdateTimer = 0.0f;
 
-    gameObject.GetTransform()->Translate(Vector3F{3.0f, -5.0f, 4.0f});
-    gameObject.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
-
-    gameObject2.GetTransform()->Translate(Vector3F{6.0f, 5.0f, -4.0f});
-    gameObject2.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
-    gameObject2.GetTransform()->RotateWithEulerAngles(Vector3F{ 45.f, 45.f, 90.f });
-    gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
-
-    camera.GetTransform()->Translate(Vector3F{ 0.0f, 0.0f, -10.0f });
-
-    light.GetTransform()->Translate(Vector3F{10.0f, 4.0f, -10.0f});
-    light.GetTransform()->Scale(Vector3F{0.1f, 0.1f, 0.1f});
-
-    Rendering::Lights::Light::LightData dirLight;
-
-    dirLight.position  = Vector4F(light.GetTransform()->GetPosition().x * -1, light.GetTransform()->GetPosition().y, light.GetTransform()->GetPosition().z * -1, 1.0f);
-    dirLight.ambient   = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
-    dirLight.diffuse   = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
-    dirLight.specular  = Vector4F(0.5f, 0.5f ,0.5f, 1.0f);
-    dirLight.color     = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
-    dirLight.shininess = 32.0f;
-
-    camera.AddComponent<Components::CameraComponent>(m_width, m_height);
-    // gameObject.AddComponent<Components::ModelComponent>("../Engine/Resources/statue.obj", "statue");
-    // gameObject2.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
-    light.AddComponent<Components::ModelComponent>("../Engine/Resources/Box.fbx", "cube");
-    light.AddComponent<Components::LightComponent>(dirLight);
-
-    for (auto& mesh : gameObject.GetModel()->GetMeshes())
+    while (m_applicationIsRunning)
     {
-        mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LinkTexture"));
-    }
-
-    for (auto& mesh : gameObject2.GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LamboTexture"));
-    }
-
-    renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::CameraComponent>()->GetCamera()->GetID());
-
-
-
-    while (true)
-    {
+        Tools::Time::Start();
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;
         }
+        StartFrame();
+        
 
-        DoFrame(renderSystem);
+        // Events
+        // (will be moved below DoFrame once we get rid of all ImGUI calls on Engine)
+        Containers::EventContainer::GetEvent("OnGUI").Fire();
+
+        static bool show_demo_window = true;
+
+        static char buffer[1024];
+
+        if (show_demo_window)
+        {
+            ImGui::ShowDemoWindow(&show_demo_window);
+        }
+
+        float deltaTime = Tools::Time::GetDeltaTime();
+
+        //Systems
+        Systems::PhysicsSystem::Update(deltaTime);
+        Systems::TransformSystem::Update(deltaTime);
+        Systems::LightSystem::Update(deltaTime);
+        Systems::CameraSystem::Update(deltaTime);
+        Systems::SoundSystem::Update(deltaTime);
+
+
+        fixedUpdateTimer += deltaTime;
+        //todo this should never go below 0
+        //update could be at 0.01f
+        if (fixedUpdateTimer >= 0.01f)// || fixedUpdateTimer < 0)
+        {
+            if (RunBullet)
+                Systems::PhysicsSystem::FixedUpdate();
+            fixedUpdateTimer = 0.0f;
+        }
+
+        DoFrame(deltaTime);
+        EndFrame();
+        Tools::Time::Stop();
     }
+
+    Managers::ResourceManager::Serialize();
 }
 
-void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
+void Engine::Core::App::StartFrame() const
 {
-    Rendering::Renderer::GetInstance()->ClearBuffer(0.3f, 0.3f, 0.3f);
-    if (_INPUT->keyboard.IsKeyHeld('R'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(1.0f, 0.0f, 0.0f);
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
+}
 
-    if (_INPUT->keyboard.IsKeyHeld('G'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(0.0f, 1.0f, 0.0f);
-
-    if (_INPUT->keyboard.IsKeyHeld('B'))
-        Rendering::Renderer::GetInstance()->ClearBuffer(0.0f, 0.0f, 1.0f);
+void Engine::Core::App::DoFrame(float p_deltaTime) const
+{
+    Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
 
     if (_INPUT->keyboard.IsKeyDown('F'))
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());
 
-    ImGui_ImplDX11_NewFrame();
-    ImGui_ImplWin32_NewFrame();
-    ImGui::NewFrame();
+    Systems::RenderSystem::GetInstance()->IUpdate(p_deltaTime, m_isEditor);
+}
 
-    p_renderSystem.Update();
+void Engine::Core::App::EndFrame() const
+{
+    ImGuiIO& io = ImGui::GetIO();
+    (void)io;
 
-    static bool show_demo_window = true;
     ImGui::Begin("Identity UI Tools");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::End();
@@ -140,7 +177,6 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         ImGui::UpdatePlatformWindows();
@@ -148,4 +184,48 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem) const
     }
 
     Rendering::Renderer::GetInstance()->EndFrame();
+}
+
+//TODO this should be in scene manager
+void Engine::Core::App::TestingSimulation(bool p_stop)
+{
+    //Possible Spaghetti code
+    UI::Hierarchy::m_currentlySelected = -1;
+
+    if (!RunBullet && !p_stop)
+    {
+        // if (!Managers::SceneManager::GetPlayScene())
+        // InitScene(true);
+
+        auto playScene = std::make_shared<Scene::Scene>();
+        playScene->SetName("play");
+        auto activeScene = Managers::SceneManager::GetActiveScene();
+        Managers::SceneManager::DuplicateScene(playScene, activeScene);
+        Managers::SceneManager::AddScene(playScene);
+        Managers::SceneManager::SetActiveScene(playScene);
+        Managers::SceneManager::SetPlayScene(activeScene);
+        Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
+        Managers::SceneManager::GetPlayScene()->SetActiveOnAll(false);
+
+        // Systems::RenderSystem::SetActiveCamera(Managers::SceneManager::GetPlayScene()->GetActiveCamera()->GetID());
+
+        //deactivate editor scene
+
+        // Managers::SceneManager::SetActiveScene(Managers::SceneManager::GetPlayScene());
+        // Managers::SceneManager::SetPlayScene(activeScene);
+        RunBullet = true;
+    }
+    else if (RunBullet)
+    {
+        auto active = Managers::SceneManager::GetActiveScene();
+        Managers::SceneManager::SetActiveScene(Managers::SceneManager::GetPlayScene());
+        Managers::SceneManager::SetPlayScene(active);
+        Managers::SceneManager::GetPlayScene()->SetActiveOnAll(false);
+        Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
+
+        //TODO delete old play scene
+        Managers::SceneManager::DeletePlayScene();
+
+        RunBullet = false;
+    }
 }

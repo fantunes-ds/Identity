@@ -1,11 +1,12 @@
 #include <stdafx.h>
-#include <Rendering/Window.h>
-#include <Rendering/Renderer.h>
+
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
-#include <Input/Input.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
-#include "Containers/EventContainer.h"
+
+#include <Input/Input.h>
+#include <Rendering/Window.h>
+#include <Rendering/Renderer.h>
 
 using namespace Engine::Rendering;
 
@@ -46,7 +47,7 @@ Window::WindowClass::~WindowClass()
 
 Window::Window(int p_width, int p_height, const char* p_name) : m_width(p_width), m_height(p_height)
 {
-    //adjust the size ot he window so the coosen resolution is for the user view and not for the entire window
+    //adjust the size ot he window so the chosen resolution is for the user view and not for the entire window
     RECT wr;
     wr.left   = 100;
     wr.right  = p_width + wr.left;
@@ -171,12 +172,11 @@ LRESULT Window::HandleMsgThunk(const HWND p_hwnd, const UINT p_msg, const WPARAM
     return window->HandleMsg(p_hwnd, p_msg, p_wParam, p_lParam);
 }
 
-extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
-
 LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam)
 {
     if (ImGui_ImplWin32_WndProcHandler(p_hwnd, p_msg, p_wParam, p_lParam))
         return true;
+
     // no default switch case because windows sends a lot of different
     // random unknown messages, and we don't need to filter them all.
     switch (p_msg)
@@ -215,20 +215,25 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
                 }
             }
             break;
-            /*********** KEYBOARD MESSAGES ***********/
+
+        /*********** KEYBOARD MESSAGES ***********/
         case WM_KEYDOWN:
-            // sys-key commands need to be handled to track ALT key (VK_MENU) and F10
         case WM_SYSKEYDOWN:
+
             if (!(p_lParam & 0x40000000) || _INPUT->keyboard.IsAutoRepeatEnabled()) // filter auto-repeat
             {
                 _INPUT->keyboard.OnKeyPressed(static_cast<unsigned char>(p_wParam));
             }
             break;
+
         case WM_KEYUP:
         case WM_SYSKEYUP:
+
             _INPUT->keyboard.OnKeyReleased(static_cast<unsigned char>(p_wParam));
             break;
+
         case WM_CHAR:
+
             _INPUT->keyboard.OnChar(static_cast<unsigned char>(p_wParam));
             break;
             /*********** END KEYBOARD MESSAGES ***********/
@@ -315,7 +320,7 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
                     break;
 
                 auto& rip = reinterpret_cast<const RAWINPUT&>(*m_rawBuffer.data());
-                if ( rip.header.dwType == RIM_TYPEMOUSE && (rip.data.mouse.lLastX != 0 || rip.data.mouse.lLastY != 0))
+                if ( rip.header.dwType == RIM_TYPEMOUSE && (rip.data.mouse.lLastX != 0.0f || rip.data.mouse.lLastY != 0.0f))
                 {
                     _INPUT->mouse.OnRawDelta(rip.data.mouse.lLastX, rip.data.mouse.lLastY);
                 }

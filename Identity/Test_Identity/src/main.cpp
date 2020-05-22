@@ -9,7 +9,9 @@ int CALLBACK WinMain(
 {
     try
     {
-        return Engine::Core::App{1280, 720, "testing resize"}.Run();
+        Engine::Core::App engine = { 1280, 720, "Identity (Beta)" };
+        engine.Init();
+        return engine.Run();
     }
     catch(const Engine::Tools::IdentityException& e)
     {

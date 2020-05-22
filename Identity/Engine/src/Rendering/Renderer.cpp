@@ -1,13 +1,18 @@
 #include <stdafx.h>
-#include <Rendering/Renderer.h>
+
 #include <d3dcompiler.h>
+
+#include <3DLoader/ObjectLoader.h>
+#include <Managers/ResourceManager.h>
+#include <Rendering/Renderer.h>
 #include <Tools/DirectX/dxerr.h>
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
-#include <3DLoader/ObjectLoader.h>
 #include <Tools/DirectX/GraphicsMacros.h>
 
 using namespace Engine::Rendering;
+
+constexpr bool V_SYNC = true;
 
 std::unique_ptr<Renderer> Renderer::instance;
 Renderer::Renderer(const HWND& p_hwnd, const int& p_clientWidth, const int& p_clientHeight) :
@@ -34,36 +39,80 @@ Renderer::Renderer(const HWND& p_hwnd, const int& p_clientWidth, const int& p_cl
     GFX_THROW_INFO(m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m_4xMsaaQuality));
 
     CreateSwapChain(p_hwnd);
-    SetBackBuffer();
-    SetDepthStencilBuffer();
-    SetRenderTarget();
-
-    m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     SetViewPort(m_width, m_height);
+    SetBackBuffer();
+    SetDepthStencilBuffers();
+    m_pContext->OMSetRenderTargets(0, m_pTarget.GetAddressOf(), nullptr);
 
+    m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
+
 }
 
 void Renderer::EndFrame() const
 {
     HRESULT hr;
 
-    if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
+    if (V_SYNC)
     {
-        if (hr == DXGI_ERROR_DEVICE_REMOVED)
+        if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
         {
-            throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
+            if (hr == DXGI_ERROR_DEVICE_REMOVED)
+            {
+                throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
+            }
+            throw GFX_EXCEPT(hr);
         }
-        throw GFX_EXCEPT(hr);
+    }
+    else
+    {
+        if (FAILED(hr = m_pSwapChain->Present(0u, 0u)))
+        {
+            if (hr == DXGI_ERROR_DEVICE_REMOVED)
+            {
+                throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
+            }
+            throw GFX_EXCEPT(hr);
+        }
+    }
+}   
+
+void Renderer::ClearBuffers(const float& p_red, const float& p_green, const float& p_blue) const
+{
+    const float colour[] = { p_red, p_green, p_blue, 1.0f };
+    
+    m_pContext->ClearRenderTargetView(GetTarget().Get(), colour);
+    m_pContext->ClearDepthStencilView(GetDepthStencilView().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
+
+    for (auto& RT : m_renderTextures)
+    {
+        m_pContext->ClearRenderTargetView(RT.GetTarget().Get(), colour);
+        if(*RT.GetDepthStencilView().GetAddressOf() != nullptr)
+            m_pContext->ClearDepthStencilView(RT.GetDepthStencilView().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
     }
 }
 
-void Renderer::ClearBuffer(const float& p_red, const float& p_green, const float& p_blue) const
+void Renderer::Bind(const bool p_bindDefaultDepthStencil)
 {
-    const float colour[] = { p_red, p_green, p_blue, 1.0f };
-    m_pContext->ClearRenderTargetView(m_pTarget.Get(), colour);
-    m_pContext->ClearDepthStencilView(m_pDepthStencil.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
+    if (p_bindDefaultDepthStencil)
+        m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), *m_pDepthStencilView.GetAddressOf());
+    else
+        m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), nullptr);
+}
+
+void Renderer::Bind(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target, const bool p_bindDefaultDepthStencil) const
+{
+    if (p_bindDefaultDepthStencil)
+        m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), *m_pDepthStencilView.GetAddressOf());
+    else
+        m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), nullptr);
+
+}
+
+void Renderer::Bind(Microsoft::WRL::ComPtr<ID3D11RenderTargetView> p_target, const Microsoft::WRL::ComPtr<ID3D11DepthStencilView> p_ds) const
+{
+    m_pContext->OMSetRenderTargets(1, p_target.GetAddressOf(), *p_ds.GetAddressOf());
 }
 
 void Renderer::ResetContext()
@@ -72,15 +121,9 @@ void Renderer::ResetContext()
     m_pContext->OMSetRenderTargets(0, nullView.GetAddressOf(), nullptr);
 
     m_pTarget.Reset();
-    m_pDepthStencil.Reset();
+    m_pDepthStencilView.Reset();
     m_pContext->Flush();
 }
-
-void Renderer::SetRenderTarget()
-{
-    m_pContext->OMSetRenderTargets(1, m_pTarget.GetAddressOf(), m_pDepthStencil.Get());
-}
-
 
 void Renderer::CreateSwapChain(const HWND& p_hwnd)
 {
@@ -91,7 +134,7 @@ void Renderer::CreateSwapChain(const HWND& p_hwnd)
     swapChainDesc.BufferDesc.Width = 0;
     swapChainDesc.BufferDesc.Height = 0;
     swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-    swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
+    swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
     swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
     swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
@@ -129,41 +172,54 @@ void Renderer::CreateSwapChain(const HWND& p_hwnd)
     GFX_THROW_INFO(dxgiFactory->CreateSwapChain(m_pDevice.Get(), &swapChainDesc, &m_pSwapChain));
 }
 
-
-void Renderer::SetDepthStencilBuffer()
+void Renderer::SetDepthStencilBuffers()
 {
     HRESULT hr;
 
-    D3D11_TEXTURE2D_DESC depthStencilDesc;
-    depthStencilDesc.Width = m_width;
-    depthStencilDesc.Height = m_height;
-    depthStencilDesc.MipLevels = 1;
-    depthStencilDesc.ArraySize = 1;
-    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+    dsDesc.DepthEnable = TRUE;
+    dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDSState;
+    GFX_THROW_INFO(m_pDevice->CreateDepthStencilState(&dsDesc, &pDSState));
+
+    m_pContext->OMSetDepthStencilState(pDSState.Get(), 1u);
+
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
+    D3D11_TEXTURE2D_DESC descDepth;
+    descDepth.Width = m_width;
+    descDepth.Height = m_height;
+    descDepth.MipLevels = 1;
+    descDepth.ArraySize = 1;
+    descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
     //with 4x msaa
     if (m_enable4xMSAA)
     {
-        depthStencilDesc.SampleDesc.Count = 4;
-        depthStencilDesc.SampleDesc.Quality = m_4xMsaaQuality - 1;
+        descDepth.SampleDesc.Count = 4;
+        descDepth.SampleDesc.Quality = m_4xMsaaQuality - 1;
     }
     //without
     else
     {
-        depthStencilDesc.SampleDesc.Count = 1;
-        depthStencilDesc.SampleDesc.Quality = 0;
+        descDepth.SampleDesc.Count = 1;
+        descDepth.SampleDesc.Quality = 0;
     }
 
-    depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthStencilDesc.CPUAccessFlags = 0;
-    depthStencilDesc.MiscFlags = 0;
+    descDepth.Usage = D3D11_USAGE_DEFAULT;
+    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    descDepth.CPUAccessFlags = 0;
+    descDepth.MiscFlags = 0;
 
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
-    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer));
-    GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(depthStencilBuffer.Get(), nullptr, &m_pDepthStencil));
+    GFX_THROW_INFO(m_pDevice->CreateTexture2D(&descDepth, NULL, &pDepthStencil));
+
+    D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
+    descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    descDSV.Texture2D.MipSlice = 0u;
+    GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &m_pDepthStencilView));
 }
-
 
 void Renderer::SetViewPort(const float& p_width, const float& p_height) const
 {
@@ -182,7 +238,11 @@ void Renderer::InitRenderer(const HWND p_hwnd, const int p_clientWidth, const in
     if (instance != nullptr)
         MessageBox(p_hwnd, "ERROR : Singleton duplication !?", "An instance was already found for Renderer. It is forbidden to have two singletons.", MB_OK | MB_ICONERROR);
     else
+    {
         instance = std::make_unique<Renderer>(p_hwnd, p_clientWidth, p_clientHeight);
+        instance->CreateRenderTexture();
+        instance->CreateRect();
+    }
 }
 
 void Renderer::SetBackBuffer()
@@ -194,16 +254,40 @@ void Renderer::SetBackBuffer()
     GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_pTarget));
 }
 
-void Renderer::Resize(const float& p_width, const float& p_height)
+void Renderer::CreateRenderTexture()
+{
+    const RenderTexture sceneRenderTexture{ static_cast<UINT>(m_width), static_cast<UINT>(m_height), true };
+    m_renderTextures.push_back(sceneRenderTexture);
+}
+
+void Renderer::CreateRect()
+{
+    // I have to invert Y value for some reason I don't understand yet.
+    std::vector<Geometry::Vertex> quadvtx{ Geometry::Vertex{ Vector3F{-1.0f, 1.0f, 0.f}, Vector2F{0.0f, -1.0f}, Vector3F::zero },
+                                           Geometry::Vertex{ Vector3F{1.0f, 1.0f, 0.f}, Vector2F{1.0f, -1.0f}, Vector3F::zero },
+                                           Geometry::Vertex{ Vector3F{-1.0f, -1.0f, 0.f}, Vector2F{0.0f, 0.0f}, Vector3F::zero },
+                                           Geometry::Vertex{ Vector3F{1.0f, -1.0f, 0.f}, Vector2F{1.0f, 0.0f}, Vector3F::zero } };
+    std::vector<unsigned short> quadidx = { 3,2,1,1,2,0 };
+
+    //The quad is the screen "camera rect" we might want to store it somewhere later.
+    m_rect = std::make_shared<ObjectElements::Mesh>(quadvtx, quadidx);
+    m_rect->SetMaterial(Managers::ResourceManager::GetMaterial("RenderText"));
+    m_rect->GetMaterial()->SetTextureState(true);
+}
+
+void Renderer::Resize(const float p_width, const float p_height)
 {
     HRESULT hr;
+
+    if (p_width == 0.0f || p_height == 0.0f)
+        return;
 
     m_width = p_width;
     m_height = p_height;
 
     ResetContext();
 
-    if (isFullscreen)
+    if (m_isFullscreen)
     {
         GFX_THROW_INFO(m_pSwapChain->ResizeBuffers(
             0,
@@ -212,7 +296,7 @@ void Renderer::Resize(const float& p_width, const float& p_height)
             DXGI_FORMAT_UNKNOWN,
             0
         ));
-        SetViewPort(m_fullWidth, m_height);
+        SetViewPort(m_fullWidth, m_fullHeight);
     }
     else
     {
@@ -225,19 +309,15 @@ void Renderer::Resize(const float& p_width, const float& p_height)
         ));
         SetViewPort(m_width, m_height);
     }
-    m_pSwapChain->SetFullscreenState(isFullscreen, nullptr);
+    m_pSwapChain->SetFullscreenState(m_isFullscreen, nullptr);
 
     SetBackBuffer();
-
-    SetDepthStencilBuffer();
-    SetRenderTarget();
+    SetDepthStencilBuffers();
 }
 
-void Renderer::GetResolution(int& p_width, int& p_height)
+void Renderer::GetResolution(int& p_width, int& p_height) const
 {
-    ChangeResolution();
-
-    if (isFullscreen)
+    if (m_isFullscreen)
     {
         p_width = static_cast<int>(m_fullWidth);
         p_height = static_cast<int>(m_fullHeight);
@@ -251,7 +331,7 @@ void Renderer::GetResolution(int& p_width, int& p_height)
 
 void Renderer::SetFullscreen(const bool& p_state)
 {
-    isFullscreen = p_state;
+    m_isFullscreen = p_state;
 
     Resize(m_fullWidth, m_fullHeight);
 }
@@ -260,24 +340,6 @@ void Renderer::ChangeResolution()
 {
     const char* res[] = { "1920x1080", "1280x720", "800x600" };
     static const char* currentItem = "1920x1080";
-
-    if (ImGui::Begin("Render Tool"))
-    {
-        // ImGui::SliderFloat("Camera FOV", &angle, 10.f, 180.f, "%1.f");
-        if (ImGui::BeginCombo("Fullscreen Resolution", currentItem, ImGuiComboFlags_NoArrowButton))
-        {
-            for (auto& re : res)
-            {
-                const bool isSelected = (currentItem == re); // You can store your selection however you want, outside or inside your objects
-                if (ImGui::Selectable(re, isSelected))
-                    currentItem = re;
-                if (isSelected)
-                    ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
-            }
-
-            ImGui::EndCombo();
-        }
-    }ImGui::End();
 
     std::string selected = currentItem;
     std::replace(selected.begin(), selected.end(), 'x', ' ');
@@ -294,13 +356,11 @@ void Renderer::ChangeResolution()
     Resize(m_width, m_height);
 }
 
-
-
 #pragma region ExceptionsClass
 
 #pragma region HrExceptionClass
-Renderer::HrException::HrException(int p_line, const char* p_file, HRESULT p_hr,
-    std::vector<std::string> p_infoMsg) noexcept
+Renderer::HrException::HrException(int p_line, const char* p_file, const HRESULT p_hr,
+                                   const std::vector<std::string>& p_infoMsg) noexcept
     : Exception(p_line, p_file),
     m_hr(p_hr)
 {
@@ -363,7 +423,7 @@ std::string Renderer::HrException::GetErrorInfo() const noexcept
 #pragma endregion
 
 #pragma region InfoExceptionClass
-Renderer::InfoException::InfoException(int p_line, const char* p_file, std::vector<std::string> p_infoMsg) noexcept
+Renderer::InfoException::InfoException(const int p_line, const char* p_file, const std::vector<std::string>& p_infoMsg) noexcept
     : Exception(p_line, p_file)
 {
     for (const auto& msg : p_infoMsg)

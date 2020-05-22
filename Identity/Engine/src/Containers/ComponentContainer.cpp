@@ -1,9 +1,9 @@
 #include <stdafx.h>
+
 #include <typeinfo>
 #include <windows.h>
+
 #include <Containers/ComponentContainer.h>
-#include <Tools/IDCounter.h>
-#include "Containers/EventContainer.h"
 
 Engine::Containers::ComponentContainer::~ComponentContainer()
 {
@@ -14,24 +14,55 @@ int32_t Engine::Containers::ComponentContainer::AddComponent(Components::ICompon
 {
     for (auto& component : GetInstance()->m_components)
     {
-        if (typeid(*component.second) == typeid(*p_component))
+        /*if (typeid(*component.second) == typeid(*p_component))
         {
+            //TODO: Not the right way to compare
             if (*component.second == p_component)
             {
                 std::string type = typeid(*p_component).name();
 
                 if (component.first == p_component->GetID())
                 {
-                    const std::string error("ComponentContainer::AddComponent<" + type + ">(Components::IComponent* p_component): Tried to add a Component that already exists");
+                    const std::string error("ComponentContainer::AddComponent<" + type +
+                                            ">(Components::IComponent* p_component): Tried to add a Component that already exists");
                     MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
                     return component.first;
                 }
-                //GetInstance()->m_components.insert_or_assign(p_component->GetID(), std::shared_ptr<Engine::Components::IComponent>(p_component));
+            }
+        }*/
+    }
+
+    GetInstance()->m_components.insert_or_assign(p_component->GetID(),
+                                                 std::shared_ptr<Engine::Components::IComponent>(p_component));
+    return p_component->GetID();
+}
+
+
+int32_t Engine::Containers::ComponentContainer::AddComponentEditor(Components::IComponent* p_component)
+{
+    for (auto& component : GetInstance()->m_componentsEditor)
+    {
+        if (typeid(*component.second) == typeid(*p_component))
+        {
+            //TODO: Not the right way to compare
+            if (*component.second == p_component)
+            {
+                std::string type = typeid(*p_component).name();
+
+                if (component.first == p_component->GetID())
+                {
+                    const std::string error("ComponentContainer::AddComponent<" + type +
+                                            ">(Components::IComponent* p_component): Tried to add a Component that already exists");
+                    MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+                    return component.first;
+                }
             }
         }
     }
 
-    GetInstance()->m_components.insert_or_assign(p_component->GetID(), std::shared_ptr<Engine::Components::IComponent>(p_component));
+    p_component->SetActive(false);
+    GetInstance()->m_componentsEditor.insert_or_assign(p_component->GetID(),
+                                                       std::shared_ptr<Engine::Components::IComponent>(p_component));
     return p_component->GetID();
 }
 
@@ -39,10 +70,10 @@ void Engine::Containers::ComponentContainer::RemoveComponent(int32_t p_id, bool 
 {
     if (p_deleteFromMemory)
     {
-        GetInstance()->m_components.at(p_id)->DeleteFromMemory();
+        GetInstance()->FindComponent(p_id)->DeleteFromMemory();
     }
 
-    GetInstance()->m_components.erase(p_id);
+    //GetInstance()->m_components.erase(p_id);
 }
 
 Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::GetInstance()
@@ -51,11 +82,33 @@ Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::
     {
         m_instance = new ComponentContainer();
     }
-    
+
     return m_instance;
 }
 
 std::shared_ptr<Engine::Components::IComponent> Engine::Containers::ComponentContainer::FindComponent(int32_t p_id)
 {
-    return GetAllComponents().at(p_id);
+    auto it = GetAllComponents().find(p_id);
+
+    if (it == GetAllComponents().end())
+    {
+        const std::string error("ComponentContainer::FindComponent(int32_t p_id): could not find Component with ID " + p_id);
+        MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
+        return nullptr;
+    }
+
+    return it->second;
+}
+
+void Engine::Containers::ComponentContainer::CopyCompNS()
+{
+    // m_componentsEditor.insert(m_components.begin(), m_components.end());
+    SwitchComp();
+}
+
+void Engine::Containers::ComponentContainer::SwitchCompNS()
+{
+    auto tmpComp       = m_components;
+    m_components       = m_componentsEditor;
+    m_componentsEditor = tmpComp;
 }

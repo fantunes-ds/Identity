@@ -1,36 +1,34 @@
 #pragma once
 #include <Export.h>
-#include <Systems/IECSSystem.h>
-#include <3DLoader/ObjectElements/Model.h>
-#include <Rendering/Renderer.h>
-#include <Rendering/Lights/Light.h>
-#include "Events/Event.h"
-#include "Rendering/Materials/Texture.h"
+#include <Systems/ISystem.h>
+#include <Scene/SceneGraph/SceneGraph.h>
+
+namespace Engine::Components
+{
+    class Camera;
+}
 
 namespace Engine::Systems
 {
-    class API_ENGINE RenderSystem: public IECSSystem
+    class API_ENGINE RenderSystem: public ISystem
     {
     public:
-        RenderSystem();
-        virtual ~RenderSystem() = default;
+        ~RenderSystem();
 
-        void DrawScene();
-        void Update() override;
+        static void DrawScene(float p_deltaTime, bool p_isEditor);
+        static void DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode);
+        void IUpdate(float p_deltaTime, bool p_isEditor = false) override;
+        static void ResetActiveCamera();
 
-        /**
-         * @brief As soon as we have a LightContainer, this method should be deleted.
-         * @return returns the new light's id if successful, -1 if unsuccessful.
-         */
-        uint32_t AddLight(Rendering::Lights::Light& p_light);
+        static void SetActiveCamera(int32_t p_id);
 
-        void ResetActiveCamera();
-
-        void SetActiveCamera(int32_t p_id);
+        static RenderSystem* GetInstance();
+        static std::shared_ptr<Components::Camera> GetActiveCamera();
 
     private:
-        std::map<int, std::shared_ptr<Rendering::Lights::Light>> m_lights;
+        RenderSystem() = default;
 
+        inline static RenderSystem* m_instance;
         int32_t m_activeCamera = -1;
     };
 }
