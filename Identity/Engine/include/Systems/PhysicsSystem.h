@@ -24,8 +24,10 @@ namespace Engine::Systems
 
         static std::shared_ptr<Components::BoxCollider> AddBoxCollider(Components::BoxCollider* p_collider);
         static std::shared_ptr<Components::SphereCollider> AddSphereCollider(Components::SphereCollider* p_collider);
-        static void RemoveCollider(int32_t p_id);
-        static std::map<int32_t, std::shared_ptr<Components::BoxCollider>>& GetColliders() { return GetInstance()->m_colliders; }
+        static void RemoveBoxCollider(int32_t p_id);
+        static void RemoveSphereCollider(int32_t p_id);
+
+        static std::map<int32_t, std::shared_ptr<Components::BoxCollider>>& GetColliders() { return GetInstance()->m_boxColliders; }
         static std::map<int32_t, std::shared_ptr<Components::SphereCollider>>& GetSphereColliders() { return GetInstance()->m_sphereColliders; }
         static btDiscreteDynamicsWorld* GetWorld() { return GetInstance()->m_dynamicsWorld; }
         static void Update(const float p_deltaTime);
@@ -37,7 +39,7 @@ namespace Engine::Systems
         float m_fixedUpdateCounter = 0.0f;
 
         inline static PhysicsSystem* m_instance;
-        std::map<int32_t, std::shared_ptr<Components::BoxCollider>> m_colliders;
+        std::map<int32_t, std::shared_ptr<Components::BoxCollider>> m_boxColliders;
         std::map<int32_t, std::shared_ptr<Components::SphereCollider>> m_sphereColliders;
 
         //TODO: create class that wraps bullet classes

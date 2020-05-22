@@ -44,13 +44,12 @@ Engine::Systems::PhysicsSystem* Engine::Systems::PhysicsSystem::GetInstance()
 std::shared_ptr<Engine::Components::BoxCollider> Engine::Systems::PhysicsSystem::AddBoxCollider(Components::BoxCollider* p_collider)
 {
     auto coll = std::shared_ptr<Components::BoxCollider>(p_collider);
-    GetInstance()->m_colliders.insert_or_assign(p_collider->GetID(), coll);
+    GetInstance()->m_boxColliders.insert_or_assign(p_collider->GetID(), coll);
     GetInstance()->m_dynamicsWorld->addRigidBody(coll->GetBtRigidbody());
     return coll;
 }
 
-std::shared_ptr<Engine::Components::SphereCollider> Engine::Systems::PhysicsSystem::AddSphereCollider(
-    Components::SphereCollider* p_collider)
+std::shared_ptr<Engine::Components::SphereCollider> Engine::Systems::PhysicsSystem::AddSphereCollider(Components::SphereCollider* p_collider)
 {
     auto coll = std::shared_ptr<Components::SphereCollider>(p_collider);
     GetInstance()->m_sphereColliders.insert_or_assign(p_collider->GetID(), coll);
@@ -58,17 +57,24 @@ std::shared_ptr<Engine::Components::SphereCollider> Engine::Systems::PhysicsSyst
     return coll;
 }
 
-void Engine::Systems::PhysicsSystem::RemoveCollider(int32_t p_id)
+void Engine::Systems::PhysicsSystem::RemoveBoxCollider(int32_t p_id)
 {
-    GetInstance()->m_colliders.erase(p_id);
+    Managers::ResourceManager::RemoveModel(GetInstance()->m_boxColliders.at(p_id)->GetModel()->GetID());
+    GetInstance()->m_boxColliders.erase(p_id);
+}
+
+void Engine::Systems::PhysicsSystem::RemoveSphereCollider(int32_t p_id)
+{
+    Managers::ResourceManager::RemoveModel(GetInstance()->m_sphereColliders.at(p_id)->GetModel()->GetID());
+    GetInstance()->m_sphereColliders.erase(p_id);
 }
 
 void Engine::Systems::PhysicsSystem::Update(const float p_deltaTime)
 {
-    auto colliders = GetInstance()->m_colliders;
+    auto colliders = GetInstance()->m_boxColliders;
     std::cout << "this is for test";
 
-    for (auto& collider : GetInstance()->m_colliders)
+    for (auto& collider : GetInstance()->m_boxColliders)
     {
         if (!collider.second->IsActive())
             continue;
@@ -123,10 +129,10 @@ void Engine::Systems::PhysicsSystem::FixedUpdate()
 
     GetInstance()->m_dynamicsWorld->stepSimulation(1.0f / 60.0f, 0);
 
-    auto colliders = GetInstance()->m_colliders;
+    auto colliders = GetInstance()->m_boxColliders;
     std::cout << "this is for test";
 
-    for (auto& collider : GetInstance()->m_colliders)
+    for (auto& collider : GetInstance()->m_boxColliders)
     {
         if (collider.second->IsActive())
         {

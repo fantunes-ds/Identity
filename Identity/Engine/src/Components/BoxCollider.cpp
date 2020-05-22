@@ -339,7 +339,7 @@ void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimen
 bool Engine::Components::BoxCollider::DeleteFromMemory()
 {
     Managers::ResourceManager::RemoveModel(m_model->GetID());
-    Systems::PhysicsSystem::RemoveCollider(GetID());
+    Systems::PhysicsSystem::RemoveBoxCollider(GetID());
     return true;
 }
 

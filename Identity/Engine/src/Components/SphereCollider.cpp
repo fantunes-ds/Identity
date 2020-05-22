@@ -335,7 +335,7 @@ void Engine::Components::SphereCollider::SetRadius(float p_radius)
 bool Engine::Components::SphereCollider::DeleteFromMemory()
 {
     Managers::ResourceManager::RemoveModel(m_model->GetID());
-    Systems::PhysicsSystem::RemoveCollider(GetID());
+    Systems::PhysicsSystem::RemoveSphereCollider(GetID());
     return true;
 }
 
