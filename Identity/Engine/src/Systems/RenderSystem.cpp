@@ -247,9 +247,12 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         //     camera->GetPosition(), txst,
         //     mesh->GetMaterial()->GetColor()
         // };
+
+        Vector3F invertedZCameraPos{ camera->GetPosition().x, camera->GetPosition().y, -camera->GetPosition().z };
+
         const Rendering::Buffers::PCB pcb{
             {lights[0], lights[1], lights[2], lights[3]},
-            camera->GetPosition(), txst,
+            invertedZCameraPos, txst,
             mesh->GetMaterial()->GetColor()
         };
 
