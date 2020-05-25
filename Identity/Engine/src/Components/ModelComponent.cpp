@@ -12,6 +12,8 @@ Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameOb
 
 Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject): IComponent{p_gameObject, MODEL}, m_model{0}
 {
+    m_model = -1;
+    m_material = Managers::ResourceManager::GetMaterial("default");
 }
 
 Engine::Components::ModelComponent::ModelComponent(Objects::GameObject*            p_gameObject,
