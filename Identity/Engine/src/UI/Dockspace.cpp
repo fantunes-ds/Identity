@@ -7,12 +7,10 @@
 #include <UI/Dockspace.h>
 
 
-#include "Managers/SceneManager.h"
-#include "UI/Hierarchy.h"
+#include <Managers/SceneManager.h>
 #include <UI/imfilebrowser.h>
 #include <Components/ModelComponent.h>
 #include <Objects/GameObject.h>
-#include <Managers/SceneManager.h>
 #include <Scene/Scene.h>
 
 void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
@@ -36,19 +34,11 @@ void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
             ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_MenuBar;
     }
-
-    // When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background 
-    // and handle the pass-thru hole, so we ask Begin() to not render a background.
     if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
         window_flags |= ImGuiWindowFlags_NoBackground;
     static bool test = true;
-    // Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-    // This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
-    // all active windows docked into it will lose their parent and become undocked.
-    // We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
-    // any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    ImGui::Begin("DockSpace Demo", &test, window_flags);
+    ImGui::Begin("Identity Dockspace", &test, window_flags);
     ImGui::PopStyleVar();
 
     if (opt_fullscreen)
@@ -60,7 +50,7 @@ void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
     // DockSpace
     if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
     {
-        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+        ImGuiID dockspace_id = ImGui::GetID("Identity Dockspace");
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
         CreateMenuBar(p_appRef);
@@ -72,9 +62,11 @@ void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
 void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
 {
     static bool showSave = false;
+    static bool MatCreationPopup = false;
 
     if (ImGui::BeginMenuBar())
     {
+
         //todo all shortcuts
         if (ImGui::BeginMenu("File"))
         {
@@ -112,6 +104,7 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             }
             ImGui::EndMenu();
         }
+
         if (ImGui::BeginMenu("Assets"))
         {
             if (ImGui::BeginMenu("Create"))
@@ -120,7 +113,11 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
                 ImGui::Separator();
                 ImGui::MenuItem("Scene", "", nullptr);
                 ImGui::Separator();
-                ImGui::MenuItem("Material", "", nullptr);
+
+                if (ImGui::MenuItem("Material", "", nullptr))
+                {
+                    MatCreationPopup = true;
+                }
                 ImGui::EndMenu();
             }
             ImGui::EndMenu();
@@ -146,13 +143,6 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
                 }
                 ImGui::EndMenu();
             }
-            if (ImGui::BeginMenu("Light"))
-            {
-                ImGui::MenuItem("Directional Light", "", nullptr);
-                ImGui::EndMenu();
-            }
-
-            ImGui::MenuItem("Camera", "", nullptr);
             ImGui::EndMenu();
         }
 
@@ -210,5 +200,46 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
 
             ImGui::End();
         }
+    }
+    if (MatCreationPopup)
+    {
+        ImGui::Begin("Material Creator");
+        ImGui::Text("Please Choose a name");
+
+        static char* name = new char[512];
+        static std::string texName;
+
+        ImGui::InputText("Material name", name, sizeof(name));
+
+        if (ImGui::BeginPopup("Dock-Select Texture"))
+        {
+            ImGui::Text("Choose Texture");
+            for (auto& texture : Managers::ResourceManager::GetAllTextures())
+            {
+                if (texture->GetName() == "NoName")
+                    continue;
+
+                if (ImGui::Button(texture->GetName().c_str()))
+                {
+                    texName = texture->GetName();
+                }
+            }
+
+            ImGui::Button("Add new texture");
+
+            ImGui::EndPopup();
+        }
+
+        if (ImGui::Button("Choose a texture"))
+        {
+            ImGui::OpenPopup("Dock-Select Texture");
+        }
+        ImGui::Separator();
+        if (ImGui::Button("Create Material"))
+        {
+            MatCreationPopup = false;
+            Managers::ResourceManager::CreateMaterial(name, "defaultPS", "defaultVS", texName);
+        }
+        ImGui::End();
     }
 }

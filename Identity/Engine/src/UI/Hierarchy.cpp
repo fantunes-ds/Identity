@@ -135,15 +135,54 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     if (const auto model = Managers::ResourceManager::FindModel(modelComponent->GetModel()))
                         ImGui::Text("Current model : %s", model->GetName().c_str());
 
-                    if (ImGui::Button("Update"))
+                    if (ImGui::BeginPopup("Select Mesh"))
                     {
-                        
+                        ImGui::Text("Choose Model");
+                        for (auto& model : Managers::ResourceManager::GetAllModels())
+                        {
+                            if (model->GetName() == "NoName")
+                                continue;
+
+                            if (ImGui::Button(model->GetName().c_str()))
+                            {
+                                modelComponent->SetModel(model->GetID());
+                            }
+                        }ImGui::Button("Add new model");
+
+                        ImGui::EndPopup();
+                    }
+
+                    if (ImGui::Button("Change Model"))
+                    {
+                        ImGui::OpenPopup("Select Mesh");
                     }
                 }
 
                 if (ImGui::CollapsingHeader("Material"))
                 {
                     std::shared_ptr<Rendering::Materials::Material> mat = modelComponent->GetMaterial();
+
+                    if (ImGui::BeginPopup("Select Material"))
+                    {
+                        ImGui::Text("Choose Material");
+                        for (auto& material : Managers::ResourceManager::GetAllMaterials())
+                        {
+                            if (material->GetName() == "NoName" || material->GetName() == "RenderText")
+                                continue;
+
+                            if (ImGui::Button(material->GetName().c_str()))
+                            {
+                                modelComponent->SetMaterial(material->GetName());
+                            }
+                        }
+
+                        ImGui::EndPopup();
+                    }
+
+                    if (ImGui::Button("Change Material"))
+                    {
+                        ImGui::OpenPopup("Select Material");
+                    }
 
                     if (mat == nullptr)
                         break;
@@ -155,10 +194,38 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     }
                     float* objectColor[3] = { &mat->GetColor().x, &mat->GetColor().y, &mat->GetColor().z };
                     ImGui::ColorEdit3("Light Color", *objectColor, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-                    if (mat->GetTextureState() > 0)
+                    if (mat->GetTextureState() == true)
                     {
                         ImGui::Text("Texture");
                         ImGui::Image(*mat->GetTexture()->GetTextureShaderResourceView().GetAddressOf(), ImVec2(100, 100));
+                    }
+
+                    if (ImGui::BeginPopup("Select Texture"))
+                    {
+                        ImGui::Text("Choose Texture");
+                        if (ImGui::Button("None"))
+                        {
+                            modelComponent->GetMaterial()->SetTexture(nullptr);
+                            modelComponent->GetMaterial()->SetTextureState(false);
+                        }
+                        for (auto& texture : Managers::ResourceManager::GetAllTextures())
+                        {
+                            if (texture->GetName() == "NoName")
+                                continue;
+                            
+                            if (ImGui::Button(texture->GetName().c_str()))
+                            {
+                                modelComponent->GetMaterial()->SetTexture(texture);
+                            }
+                        }
+                        ImGui::Button("Add new texture");
+
+                        ImGui::EndPopup();
+                    }
+
+                    if (ImGui::Button("Change Texture"))
+                    {
+                        ImGui::OpenPopup("Select Texture");
                     }
                 }
                 break;
