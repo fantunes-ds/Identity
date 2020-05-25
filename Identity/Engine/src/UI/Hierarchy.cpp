@@ -263,8 +263,9 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                                         "LIGHT",
                                         "CAMERA",
                                         "MODEL",
-                                        "SOUND", };
-        for (auto i = 0; i < types.size(); ++i)
+                                        "SOUND",
+                                        "SPHERE_COLLIDER" };
+        for (unsigned int i = 0; i < types.size(); ++i)
         {
             if (ImGui::Button(types[i].c_str(), ImVec2(200,20)))
             {
@@ -286,6 +287,9 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     break;
                 case 4:
                     gameObject->AddComponent<Components::Sound>();
+                    break;
+                case 5:
+                    gameObject->AddComponent<Components::SphereCollider>();
                     break;
                 }
             }
