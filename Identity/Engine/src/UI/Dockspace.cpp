@@ -128,7 +128,12 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
 
         if (ImGui::BeginMenu("GameObject"))
         {
-            ImGui::MenuItem("Create Empty", "Ctrl + Shift + N", nullptr);
+            if (ImGui::MenuItem("Create Empty", "Ctrl + Shift + N", nullptr))
+            {
+                auto cube = std::make_shared<Objects::GameObject>("GameObject");
+                auto scene = Managers::SceneManager::GetActiveScene();
+                scene->AddGameObject(cube);
+            }
             if (ImGui::BeginMenu("3D Object"))
             {
                 if (ImGui::MenuItem("Cube", "", nullptr))
