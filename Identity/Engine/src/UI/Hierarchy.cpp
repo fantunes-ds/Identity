@@ -4,6 +4,7 @@
 
 #include <Core/App.h>
 #include <Components/BoxCollider.h>
+#include <Components/SphereCollider.h>
 #include <Components/Camera.h>
 #include <Components/Light.h>
 #include <Components/Sound.h>
@@ -153,7 +154,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                         break;
                     }
                     float* objectColor[3] = { &mat->GetColor().x, &mat->GetColor().y, &mat->GetColor().z };
-                    ImGui::ColorPicker3("Light Color", *objectColor);
+                    ImGui::ColorEdit3("Light Color", *objectColor, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
                     if (mat->GetTextureState() > 0)
                     {
                         ImGui::Text("Texture");
@@ -226,10 +227,22 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     float* diffuse[4] = { &lightData.diffuse.x, &lightData.diffuse.y, &lightData.diffuse.z, &lightData.diffuse.w };
                     float* specular[4] = { &lightData.specular.x, &lightData.specular.y, &lightData.specular.z, &lightData.specular.w };
                     float* shininess = { &lightData.shininess };
-                    ImGui::ColorPicker4("Ambient Light Color", *ambient, ImGuiColorEditFlags_PickerHueWheel);
-                    ImGui::ColorPicker4("Diffuse Light Color", *diffuse, ImGuiColorEditFlags_PickerHueWheel);
-                    ImGui::ColorPicker4("Specular Light Color", *specular, ImGuiColorEditFlags_PickerHueWheel);
-                    ImGui::DragFloat("shininess", shininess, 0.1f);
+                    ImGui::ColorEdit3("Ambient Color", *ambient, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+                    ImGui::SameLine();
+                    ImGui::Text("Ambient Color");
+                    ImGui::SetNextItemWidth(100);
+                    ImGui::SliderFloat("Ambient intensity", &lightData.ambient.w, 0.00f, 1.0f, "%01f");
+                    ImGui::Separator();
+                    ImGui::ColorEdit3("Diffuse Light Color", *diffuse, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+                    ImGui::SetNextItemWidth(100);
+                    ImGui::SliderFloat("Diffuse intensity", &lightData.diffuse.w, 0.00f, 1.0f, "%01f");
+                    ImGui::Separator();
+                    ImGui::ColorEdit3("Specular Light Color", *specular, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+                    ImGui::SetNextItemWidth(100);
+                    ImGui::SliderFloat("Specular intensity", &lightData.specular.w, 0.00f, 1.0f, "%01f");
+                    ImGui::Separator();
+                    ImGui::SetNextItemWidth(100);
+                    ImGui::SliderFloat("shininess", shininess, 0.00f, 1.0f, "%01f");
                 }
                 break;
             }
