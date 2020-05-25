@@ -131,12 +131,16 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 
                 if (ImGui::CollapsingHeader("Model Component"))
                 {
-                    ImGui::Text("%s", Managers::ResourceManager::FindModel(modelComponent->GetModel())->GetName().c_str());
+                    if (const auto model = Managers::ResourceManager::FindModel(modelComponent->GetModel()))
+                        ImGui::Text("Current model : %s", model->GetName().c_str());
                 }
 
                 if (ImGui::CollapsingHeader("Material"))
                 {
                     std::shared_ptr<Rendering::Materials::Material> mat = modelComponent->GetMaterial();
+
+                    if (mat == nullptr)
+                        break;
 
                     if (mat->GetName()._Equal("default"))
                     {

@@ -266,7 +266,8 @@ void Engine::Components::BoxCollider::SetPositionOffset(GPM::Vector3F p_offset)
     //TODO change the center of object here
     m_offset = p_offset;
 
-    btVector3 localInertia(0.0f, 0.0f, 0.0f);
+    btVector3 localInertia = m_rigidbody->getLocalInertia();
+    // btVector3 localInertia(0.0f, 0.0f, 0.0f);
     btTransform trans;
     auto position = m_gameObject->GetTransform()->GetPosition();
     auto rotation = m_gameObject->GetTransform()->GetRotation();
@@ -282,10 +283,13 @@ void Engine::Components::BoxCollider::SetPositionOffset(GPM::Vector3F p_offset)
     trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
 
     m_box->calculateLocalInertia(m_mass, localInertia);
+    delete m_motionState;
     m_motionState = new btDefaultMotionState(trans);
     btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
+    Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
+    delete m_rigidbody;
     m_rigidbody = new btRigidBody(rbInfo);
-
+    Systems::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
 }
 
 void Engine::Components::BoxCollider::SetMass(float p_mass)
@@ -315,18 +319,25 @@ void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimen
 
     m_dimensions = p_dimensions;
 
-    btVector3 localInertia(0.0f, 0.0f, 0.0f);
-
     if (m_rigidbody)
     {
-        delete m_box;
 
+        
         Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
+
+        delete m_box;
         m_box = new btBoxShape(btVector3(p_dimensions.x, p_dimensions.y, p_dimensions.z));
-        m_rigidbody->setCollisionShape(m_box);
+        btVector3 localInertia = m_rigidbody->getLocalInertia();
         m_box->calculateLocalInertia(m_mass, localInertia);
-        m_rigidbody->setMassProps(m_mass, localInertia);
-        m_rigidbody->updateInertiaTensor();
+        btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_box, localInertia);
+        Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
+        delete m_rigidbody;
+        m_rigidbody = new btRigidBody(rbInfo);
+
+        // m_rigidbody->setCollisionShape(m_box);
+        // m_box->calculateLocalInertia(m_mass, localInertia);
+        // m_rigidbody->setMassProps(m_mass, localInertia);
+        // m_rigidbody->updateInertiaTensor();
         Systems::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
     }
 

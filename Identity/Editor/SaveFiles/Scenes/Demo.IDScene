@@ -87,25 +87,25 @@ m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 5 3 -3
+   m_position 5 6.3 -3
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.5 0.5 0.5
    m_rotation 0 0 0 1
-   m_worldTransform 0.5 0 0 5 0 0.5 0 3 0 0 0.5 -3 0 0 0 1
+   m_worldTransform 0.5 0 0 5 0 0.5 0 6.3 0 0 0.5 -3 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 5 3 -3
+   m_position 5 6.3 -3
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.5 0.5 0.5
    m_rotation 0 0 0 1
-   m_worldTransform 0.5 0 0 5 0 0.5 0 3 0 0 0.5 -3 0 0 0 1
+   m_worldTransform 0.5 0 0 5 0 0.5 0 6.3 0 0 0.5 -3 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::SphereCollider
@@ -113,7 +113,7 @@ class Engine::Components::SphereCollider
    m_mass 100
    m_offset 0.25 0.25 -0.25
    m_scale 1 1 1
-   m_radius 1
+   m_radius 0.5
 }
 class Engine::Components::ModelComponent
 {
@@ -154,7 +154,7 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 0.1 0.1 -0.1
    m_box 0.1 0.1 0.1
-   m_model 88
+   m_model 3446
 }
 class Engine::Components::ModelComponent
 {
@@ -195,7 +195,7 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 0.1 0.1 -0.1
    m_box 0.1 0.1 0.1
-   m_model 100
+   m_model 3590
 }
 class Engine::Components::ModelComponent
 {
@@ -236,7 +236,7 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 0.1 0.1 -0.1
    m_box 0.1 0.1 0.1
-   m_model 112
+   m_model 3938
 }
 class Engine::Components::ModelComponent
 {
@@ -461,5 +461,210 @@ class Engine::Components::ModelComponent
 {
    m_model Cube
    m_material default
+}
+;
+
+GAMEOBJECT
+Cube
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 4 1 4
+   m_forward -0 -0.34202 0.939693
+   m_right 1 -0 0
+   m_up 0 -0.939693 -0.34202
+   m_scale 3 0.2 5
+   m_rotation -0.173648 0 0 0.984808
+   m_worldTransform 3 0 0 4 0 0.187939 1.7101 1 0 -0.068404 4.69846 4 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 4 1 4
+   m_forward -0 -0.34202 0.939693
+   m_right 1 -0 0
+   m_up 0 -0.939693 -0.34202
+   m_scale 3 0.2 5
+   m_rotation -0.173648 0 0 0.984808
+   m_worldTransform 3 0 0 4 0 0.187939 1.7101 1 0 -0.068404 4.69846 4 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::ModelComponent
+{
+   m_model Cube
+   m_material default
+}
+class Engine::Components::BoxCollider
+{
+   m_mass 0
+   m_offset 1.5 0.1 -2.5
+   m_box 1.5 0.1 2.5
+   m_model 4163
+}
+;
+
+GAMEOBJECT
+Cube
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 4 2 0
+   m_forward -0 0.34202 0.939693
+   m_right 1 0 0
+   m_up 0 -0.939693 0.34202
+   m_scale 3 0.2 5
+   m_rotation 0.173648 0 0 0.984808
+   m_worldTransform 3 0 0 4 0 0.187939 -1.7101 2 0 0.068404 4.69846 0 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 4 2 0
+   m_forward -0 0.34202 0.939693
+   m_right 1 0 0
+   m_up 0 -0.939693 0.34202
+   m_scale 3 0.2 5
+   m_rotation 0.173648 0 0 0.984808
+   m_worldTransform 3 0 0 4 0 0.187939 -1.7101 2 0 0.068404 4.69846 0 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::ModelComponent
+{
+   m_model Cube
+   m_material default
+}
+class Engine::Components::BoxCollider
+{
+   m_mass 0
+   m_offset 1.5 0.1 -2.5
+   m_box 1.5 0.1 2.5
+   m_model 4631
+}
+;
+
+GAMEOBJECT
+Cube
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5.1 -3 3
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 0.2 0.2 0.2
+   m_rotation 0 0 0 1
+   m_worldTransform 0.2 0 0 5.1 0 0.2 0 -3 0 0 0.2 3 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5.1 -3 3
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 0.2 0.2 0.2
+   m_rotation 0 0 0 1
+   m_worldTransform 0.2 0 0 5.1 0 0.2 0 -3 0 0 0.2 3 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::ModelComponent
+{
+   m_model Cube
+   m_material default
+}
+class Engine::Components::BoxCollider
+{
+   m_mass 1
+   m_offset 0.1 0.1 -0.1
+   m_box 0.1 0.1 0.1
+   m_model 6506
+}
+;
+
+GAMEOBJECT
+Cube
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5.1 -2.8 3
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 0.2 0.2 0.2
+   m_rotation 0 0 0 1
+   m_worldTransform 0.2 0 0 5.1 0 0.2 0 -2.8 0 0 0.2 3 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5.1 -2.8 3
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 0.2 0.2 0.2
+   m_rotation 0 0 0 1
+   m_worldTransform 0.2 0 0 5.1 0 0.2 0 -2.8 0 0 0.2 3 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::ModelComponent
+{
+   m_model Cube
+   m_material default
+}
+class Engine::Components::BoxCollider
+{
+   m_mass 1
+   m_offset 0.1 0.1 -0.1
+   m_box 0.1 0.1 0.1
+   m_model 7415
+}
+;
+
+GAMEOBJECT
+Cube
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5.1 -2.6 3
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 0.2 0.2 0.2
+   m_rotation 0 0 0 1
+   m_worldTransform 0.2 0 0 5.1 0 0.2 0 -2.6 0 0 0.2 3 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5.1 -2.6 3
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 0.2 0.2 0.2
+   m_rotation 0 0 0 1
+   m_worldTransform 0.2 0 0 5.1 0 0.2 0 -2.6 0 0 0.2 3 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::ModelComponent
+{
+   m_model Cube
+   m_material default
+}
+class Engine::Components::BoxCollider
+{
+   m_mass 1
+   m_offset 0.1 0.1 -0.1
+   m_box 0.1 0.1 0.1
+   m_model 8891
 }
 ;
