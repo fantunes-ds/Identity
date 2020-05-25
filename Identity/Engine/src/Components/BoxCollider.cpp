@@ -8,7 +8,7 @@
 #include <Systems/PhysicsSystem.h>
 #include <Managers/ResourceManager.h>
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : IComponent{p_gameObject, BOX_COLLIDER}
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) : ICollider{p_gameObject, BOX_COLLIDER}
 {
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_box = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
@@ -36,7 +36,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
     Systems::PhysicsSystem::AddBoxCollider(this);
 }
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::vector<std::string> p_block) : IComponent{ p_gameObject, BOX_COLLIDER }
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::vector<std::string> p_block) : ICollider{ p_gameObject, BOX_COLLIDER }
 {
     std::vector<std::string> words;
 
@@ -111,7 +111,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     Systems::PhysicsSystem::AddBoxCollider(this);
 }
 
-Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : IComponent{p_gameObject, BOX_COLLIDER}
+Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : ICollider{p_gameObject, BOX_COLLIDER}
 {
     //init data
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
@@ -351,11 +351,13 @@ void Engine::Components::BoxCollider::SetActive(bool p_active)
     {
         m_rigidbody->forceActivationState(DISABLE_SIMULATION);
         m_rigidbody->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
+        Systems::PhysicsSystem::GetWorld()->removeCollisionObject(m_rigidbody);
     }
     else
     {
         m_rigidbody->forceActivationState(ACTIVE_TAG);
         m_rigidbody->setCollisionFlags(!btCollisionObject::CF_NO_CONTACT_RESPONSE);
+        //Systems::PhysicsSystem::GetWorld()->addCollisionObject(m_rigidbody);
     }
 }
 

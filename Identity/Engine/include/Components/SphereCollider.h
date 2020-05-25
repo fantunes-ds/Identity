@@ -8,10 +8,13 @@
 #include <3DLoader/ObjectElements/Model.h>
 #include <Components/Transform.h>
 
+#include "Physics/CollisionInfo.h"
+#include <Physics/ICollider.h>
+
 namespace Engine::Components
 {
 
-    class API_ENGINE SphereCollider: public IComponent
+    class API_ENGINE SphereCollider: public Physics::ICollider
     {
     public:
         SphereCollider(Objects::GameObject* p_gameObject, std::shared_ptr<SphereCollider> p_other);
@@ -28,6 +31,7 @@ namespace Engine::Components
         [[nodiscard]] GPM::Matrix4F GetWorldMatrix() const;
         std::shared_ptr<ObjectElements::Model> GetModel() { return m_model; }
         btRigidBody* GetBtRigidbody() { return m_rigidbody; }
+        btSphereShape* GetShape() {return m_sphere; }
         btDefaultMotionState* GetMotionState() { return m_motionState; }
         GPM::Vector3F& GetOffset() { return m_offset; }
         float& GetMass() { return m_mass; }

@@ -8,7 +8,7 @@
 #include <Systems/PhysicsSystem.h>
 #include <Managers/ResourceManager.h>
 
-Engine::Components::SphereCollider::SphereCollider(Objects::GameObject* p_gameObject) : IComponent{ p_gameObject, SPHERE_COLLIDER }
+Engine::Components::SphereCollider::SphereCollider(Objects::GameObject* p_gameObject) : ICollider{ p_gameObject, SPHERE_COLLIDER }
 {
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_sphere = new btSphereShape(1.0f);
@@ -35,7 +35,7 @@ Engine::Components::SphereCollider::SphereCollider(Objects::GameObject* p_gameOb
     Systems::PhysicsSystem::AddSphereCollider(this);
 }
 
-Engine::Components::SphereCollider::SphereCollider(Engine::Objects::GameObject* p_gameObject, std::vector<std::string> p_block) : IComponent{ p_gameObject, Engine::Components::SPHERE_COLLIDER }
+Engine::Components::SphereCollider::SphereCollider(Engine::Objects::GameObject* p_gameObject, std::vector<std::string> p_block) : ICollider{ p_gameObject, Engine::Components::SPHERE_COLLIDER }
 {
     std::vector<std::string> words;
 
@@ -102,8 +102,9 @@ Engine::Components::SphereCollider::SphereCollider(Engine::Objects::GameObject* 
     Systems::PhysicsSystem::AddSphereCollider(this);
 }
 
-Engine::Components::SphereCollider::SphereCollider(Objects::GameObject* p_gameObject, std::shared_ptr<SphereCollider> p_other) : IComponent{ p_gameObject, SPHERE_COLLIDER }
+Engine::Components::SphereCollider::SphereCollider(Objects::GameObject* p_gameObject, std::shared_ptr<SphereCollider> p_other) : ICollider{ p_gameObject, SPHERE_COLLIDER }
 {
+    
     //init data
     btTransform trans;
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
@@ -347,6 +348,7 @@ void Engine::Components::SphereCollider::SetActive(bool p_active)
     {
         m_rigidbody->forceActivationState(DISABLE_SIMULATION);
         m_rigidbody->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
+        Systems::PhysicsSystem::GetWorld()->removeCollisionObject(m_rigidbody);
     }
     else
     {

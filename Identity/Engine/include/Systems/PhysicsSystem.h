@@ -32,6 +32,10 @@ namespace Engine::Systems
         static btDiscreteDynamicsWorld* GetWorld() { return GetInstance()->m_dynamicsWorld; }
         static void Update(const float p_deltaTime);
         static void FixedUpdate();
+        static void BulletTickCallback(btDynamicsWorld* p_world, btScalar p_timeStep);
+        static std::shared_ptr<Components::BoxCollider> FindBoxCollider(const btCollisionObject* p_collisionObject);
+        static std::shared_ptr<Engine::Components::SphereCollider> FindSphereCollider(const btCollisionObject* p_collisionObject);
+        static std::shared_ptr<Engine::Physics::ICollider> FindCollider(const btCollisionObject* p_collisionObject);
 
     private:
         PhysicsSystem();

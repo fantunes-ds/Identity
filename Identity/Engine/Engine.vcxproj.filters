@@ -67,6 +67,8 @@
     <ClCompile Include="src\Systems\SoundSystem.cpp" />
     <ClCompile Include="src\UI\Console.cpp" />
     <ClCompile Include="src\Components\SphereCollider.cpp" />
+    <ClCompile Include="src\Physics\CollisionInfo.cpp" />
+    <ClCompile Include="src\Physics\ICollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Components\IComponent.h" />
@@ -149,6 +151,8 @@
     <ClInclude Include="include\UI\Console.h" />
     <ClInclude Include="include\UI\imfilebrowser.h" />
     <ClInclude Include="include\Components\SphereCollider.h" />
+    <ClInclude Include="include\Physics\CollisionInfo.h" />
+    <ClInclude Include="include\Physics\ICollider.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Tools\DirectX\DXGetErrorDescription.inl" />

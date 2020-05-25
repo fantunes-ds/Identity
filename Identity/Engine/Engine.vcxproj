@@ -232,6 +232,8 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Components\Sound.h" />
     <ClInclude Include="include\Managers\ResourceManager.h" />
     <ClInclude Include="include\Managers\SceneManager.h" />
+    <ClInclude Include="include\Physics\CollisionInfo.h" />
+    <ClInclude Include="include\Physics\ICollider.h" />
     <ClInclude Include="include\Rendering\Lights\DirectionalLight.h" />
     <ClInclude Include="include\Rendering\Materials\PixelShader.h" />
     <ClInclude Include="include\Rendering\Materials\VertexShader.h" />
@@ -311,6 +313,8 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Components\Light.cpp" />
     <ClCompile Include="src\Components\Sound.cpp" />
     <ClCompile Include="src\Components\SphereCollider.cpp" />
+    <ClCompile Include="src\Physics\CollisionInfo.cpp" />
+    <ClCompile Include="src\Physics\ICollider.cpp" />
     <ClCompile Include="src\Systems\PhysicsSystem.cpp" />
     <ClCompile Include="src\Managers\ResourceManager.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
