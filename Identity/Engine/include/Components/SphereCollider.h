@@ -28,15 +28,8 @@ namespace Engine::Components
         /***
          * @brief returns Bullet Physics' Matrix that concerns this BoxCollider.
          */
-        [[nodiscard]] GPM::Matrix4F GetWorldMatrix() const;
-        std::shared_ptr<ObjectElements::Model> GetModel() { return m_model; }
-        btRigidBody* GetBtRigidbody() { return m_rigidbody; }
-        btSphereShape* GetShape() {return m_sphere; }
-        btDefaultMotionState* GetMotionState() { return m_motionState; }
-        GPM::Vector3F& GetOffset() { return m_offset; }
-        float& GetMass() { return m_mass; }
-
-        void SetPositionOffset(GPM::Vector3F p_offset); 
+        btSphereShape* GetShape() const {return m_sphere; }
+        
         void SetMass(float p_mass);
         void SetRadius(float p_radius);
 
@@ -46,18 +39,14 @@ namespace Engine::Components
         bool operator==(IComponent* p_other) override { return false; }
         bool DeleteFromMemory() override;
         void SetActive(bool p_active) override;
+        void SetPositionOffset(GPM::Vector3F p_offset) override; 
+
     private:
         /**
          * @brief Builds a Model that visually represents this SphereCollider's transform. 
          */
         ObjectElements::Model ConstructSphere();
-
-        float m_mass;
-        Vector3F m_offset;
         Vector3F m_scale = Vector3F::one;
         btSphereShape* m_sphere;
-        btDefaultMotionState* m_motionState;
-        btRigidBody* m_rigidbody;
-        std::shared_ptr<ObjectElements::Model> m_model;
     };
 }

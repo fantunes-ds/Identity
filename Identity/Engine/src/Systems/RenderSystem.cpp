@@ -91,7 +91,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         }
 
         Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-        for (auto& collider: Systems::PhysicsSystem::GetSphereColliders())
+        /*for (auto& collider: Systems::PhysicsSystem::GetSphereColliders())
         {
             if (collider.second->IsActive())
             {
@@ -134,7 +134,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
                 Rendering::Renderer::GetInstance()->Bind();
             }
-        }
+        }*/
     }
 
     //Draw to ImGUI Image but not to screen rect

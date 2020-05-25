@@ -32,7 +32,7 @@ Engine::Components::SphereCollider::SphereCollider(Objects::GameObject* p_gameOb
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
 
-    Systems::PhysicsSystem::AddSphereCollider(this);
+    Systems::PhysicsSystem::AddCollider(this);
 }
 
 Engine::Components::SphereCollider::SphereCollider(Engine::Objects::GameObject* p_gameObject, std::vector<std::string> p_block) : ICollider{ p_gameObject, Engine::Components::SPHERE_COLLIDER }
@@ -99,7 +99,7 @@ Engine::Components::SphereCollider::SphereCollider(Engine::Objects::GameObject* 
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
 
-    Systems::PhysicsSystem::AddSphereCollider(this);
+    Systems::PhysicsSystem::AddCollider(this);
 }
 
 Engine::Components::SphereCollider::SphereCollider(Objects::GameObject* p_gameObject, std::shared_ptr<SphereCollider> p_other) : ICollider{ p_gameObject, SPHERE_COLLIDER }
@@ -136,7 +136,7 @@ Engine::Components::SphereCollider::SphereCollider(Objects::GameObject* p_gameOb
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
 
-    Systems::PhysicsSystem::AddSphereCollider(this);
+    Systems::PhysicsSystem::AddCollider(this);
 }
 
 Engine::Components::SphereCollider::~SphereCollider()
@@ -237,25 +237,6 @@ void Engine::Components::SphereCollider::Deserialize(Objects::GameObject* p_game
 
 }
 
-Matrix4F Engine::Components::SphereCollider::GetWorldMatrix() const
-{
-    btScalar    m[16];
-    btTransform trans;
-
-    m_motionState->getWorldTransform(trans);
-    trans.getOpenGLMatrix(m);
-
-    Matrix4F mat
-    {
-        m[0], m[1], m[2], m[3],
-        m[4], m[5], m[6], m[7],
-        m[8], m[9], m[10], m[11],
-        m[12], m[13], m[14], m[15]
-    };
-
-    return mat.Transpose();
-}
-
 void Engine::Components::SphereCollider::SetPositionOffset(GPM::Vector3F p_offset)
 {
     m_offset = p_offset;
@@ -336,7 +317,7 @@ void Engine::Components::SphereCollider::SetRadius(float p_radius)
 bool Engine::Components::SphereCollider::DeleteFromMemory()
 {
     Managers::ResourceManager::RemoveModel(m_model->GetID());
-    Systems::PhysicsSystem::RemoveSphereCollider(GetID());
+    Systems::PhysicsSystem::RemoveCollider(GetID());
     return true;
 }
 

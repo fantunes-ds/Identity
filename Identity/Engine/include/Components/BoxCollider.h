@@ -31,25 +31,19 @@ namespace Engine::Components
         /***
          * @brief returns Bullet Physics' Matrix that concerns this BoxCollider.
          */
-        [[nodiscard]] GPM::Matrix4F GetWorldMatrix() const;
-        std::shared_ptr<ObjectElements::Model> GetModel() { return m_model; }
-        //std::shared_ptr<ObjectElements::Transform> GetTransform() { return m_transform; }
-        btRigidBody* GetBtRigidbody() { return m_rigidbody; }
-        btDefaultMotionState* GetMotionState() { return m_motionState; }
+        
         btBoxShape* GetBtBoxShape() { return m_box; }
-        GPM::Vector3F& GetOffset() { return m_offset; }
-        float& GetMass() { return m_mass; }
         Vector3F& GetDimensions() { return m_dimensions; }
         
         
 
-        void SetPositionOffset(GPM::Vector3F p_offset); 
         void SetMass(float p_mass);
         void SetDimensions(const GPM::Vector3F& p_dimensions);
 
         bool operator==(IComponent* p_other) override { return false; }
         bool DeleteFromMemory() override;
         void SetActive(bool p_active) override;
+        void SetPositionOffset(GPM::Vector3F p_offset) override; 
 
     private:
         /**
@@ -57,13 +51,7 @@ namespace Engine::Components
          */
         ObjectElements::Model ConstructBox();
 
-        float m_mass;
         Vector3F m_dimensions;
-        Vector3F m_offset;
         btBoxShape* m_box;
-        btDefaultMotionState* m_motionState;
-        btRigidBody* m_rigidbody;
-        std::shared_ptr<ObjectElements::Model> m_model;
-        
     };
 }

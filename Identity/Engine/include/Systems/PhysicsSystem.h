@@ -22,19 +22,15 @@ namespace Engine::Systems
 
         static PhysicsSystem* GetInstance();
 
-        static std::shared_ptr<Components::BoxCollider> AddBoxCollider(Components::BoxCollider* p_collider);
-        static std::shared_ptr<Components::SphereCollider> AddSphereCollider(Components::SphereCollider* p_collider);
-        static void RemoveBoxCollider(int32_t p_id);
-        static void RemoveSphereCollider(int32_t p_id);
+        static std::shared_ptr<Physics::ICollider> AddCollider(Physics::ICollider* p_collider);
 
-        static std::map<int32_t, std::shared_ptr<Components::BoxCollider>>& GetColliders() { return GetInstance()->m_boxColliders; }
-        static std::map<int32_t, std::shared_ptr<Components::SphereCollider>>& GetSphereColliders() { return GetInstance()->m_sphereColliders; }
+        static void RemoveCollider(int32_t p_id);
+
+        static std::map<int32_t, std::shared_ptr<Physics::ICollider>>& GetColliders() { return GetInstance()->m_colliders; }
         static btDiscreteDynamicsWorld* GetWorld() { return GetInstance()->m_dynamicsWorld; }
         static void Update(const float p_deltaTime);
         static void FixedUpdate();
         static void BulletTickCallback(btDynamicsWorld* p_world, btScalar p_timeStep);
-        static std::shared_ptr<Components::BoxCollider> FindBoxCollider(const btCollisionObject* p_collisionObject);
-        static std::shared_ptr<Engine::Components::SphereCollider> FindSphereCollider(const btCollisionObject* p_collisionObject);
         static std::shared_ptr<Engine::Physics::ICollider> FindCollider(const btCollisionObject* p_collisionObject);
 
     private:
@@ -43,8 +39,7 @@ namespace Engine::Systems
         float m_fixedUpdateCounter = 0.0f;
 
         inline static PhysicsSystem* m_instance;
-        std::map<int32_t, std::shared_ptr<Components::BoxCollider>> m_boxColliders;
-        std::map<int32_t, std::shared_ptr<Components::SphereCollider>> m_sphereColliders;
+        std::map<int32_t, std::shared_ptr<Physics::ICollider>> m_colliders;
 
         //TODO: create class that wraps bullet classes
         btDefaultCollisionConfiguration* m_collisionConfiguration;

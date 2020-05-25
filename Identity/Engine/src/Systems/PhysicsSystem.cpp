@@ -43,64 +43,23 @@ Engine::Systems::PhysicsSystem* Engine::Systems::PhysicsSystem::GetInstance()
     return m_instance;
 }
 
-std::shared_ptr<Engine::Components::BoxCollider> Engine::Systems::PhysicsSystem::AddBoxCollider(Components::BoxCollider* p_collider)
+std::shared_ptr<Engine::Physics::ICollider> Engine::Systems::PhysicsSystem::AddCollider(Physics::ICollider* p_collider)
 {
-    auto coll = std::shared_ptr<Components::BoxCollider>(p_collider);
-    GetInstance()->m_boxColliders.insert_or_assign(p_collider->GetID(), coll);
+    auto coll = std::shared_ptr<Physics::ICollider>(p_collider);
+    GetInstance()->m_colliders.insert_or_assign(p_collider->GetID(), coll);
     GetInstance()->m_dynamicsWorld->addRigidBody(coll->GetBtRigidbody());
     return coll;
 }
 
-std::shared_ptr<Engine::Components::SphereCollider> Engine::Systems::PhysicsSystem::AddSphereCollider(Components::SphereCollider* p_collider)
+void Engine::Systems::PhysicsSystem::RemoveCollider(int32_t p_id)
 {
-    auto coll = std::shared_ptr<Components::SphereCollider>(p_collider);
-    GetInstance()->m_sphereColliders.insert_or_assign(p_collider->GetID(), coll);
-    GetInstance()->m_dynamicsWorld->addRigidBody(coll->GetBtRigidbody());
-    return coll;
-}
-
-void Engine::Systems::PhysicsSystem::RemoveBoxCollider(int32_t p_id)
-{
-    Managers::ResourceManager::RemoveModel(GetInstance()->m_boxColliders.at(p_id)->GetModel()->GetID());
-    GetInstance()->m_boxColliders.erase(p_id);
-}
-
-void Engine::Systems::PhysicsSystem::RemoveSphereCollider(int32_t p_id)
-{
-    Managers::ResourceManager::RemoveModel(GetInstance()->m_sphereColliders.at(p_id)->GetModel()->GetID());
-    GetInstance()->m_sphereColliders.erase(p_id);
+    Managers::ResourceManager::RemoveModel(GetInstance()->m_colliders.at(p_id)->GetModel()->GetID());
+    GetInstance()->m_colliders.erase(p_id);
 }
 
 void Engine::Systems::PhysicsSystem::Update(const float p_deltaTime)
 {
-    auto colliders = GetInstance()->m_boxColliders;
-    std::cout << "this is for test";
-
-    for (auto& collider : GetInstance()->m_boxColliders)
-    {
-        if (!collider.second->IsActive())
-            continue;
-
-        btTransform trans;
-        trans.setIdentity();
-        auto position = collider.second->GetGameObject()->GetTransform()->GetPosition();
-        auto rotation = collider.second->GetGameObject()->GetTransform()->GetRotation();
-
-        Vector3D offsetD = collider.second->GetOffset();
-        Quaternion q = rotation * offsetD * Quaternion::Conjugate(rotation);
-        offsetD = { q.GetXAxisValue(), q.GetYAxisValue(), q.GetZAxisValue() };
-        Vector3D offset = offsetD;
-        position += offset;
-
-        trans.setIdentity();
-        trans.setOrigin(btVector3(position.x, position.y, position.z));
-        trans.setRotation(btQuaternion(rotation.GetXAxisValue(), rotation.GetYAxisValue(), rotation.GetZAxisValue(), rotation.w));
-
-        collider.second->GetBtRigidbody()->setWorldTransform(trans);
-        collider.second->GetMotionState()->setWorldTransform(trans);
-    }
-
-    for (auto& collider : GetInstance()->m_sphereColliders)
+    for (auto& collider : GetInstance()->m_colliders)
     {
         if (!collider.second->IsActive())
             continue;
@@ -130,15 +89,7 @@ void Engine::Systems::PhysicsSystem::FixedUpdate()
     btTransform trans;
 
     //Set collision variables before simulation
-    for (auto& collider : GetInstance()->m_boxColliders)
-    {
-        if (collider.second->IsActive())
-        {
-            collider.second->SetHasCollidedLastFrame(collider.second->GetHasCollidedThisFrame());
-            collider.second->SetHasCollidedThisFrame(false);
-        }
-    }
-    for (auto& collider : GetInstance()->m_sphereColliders)
+    for (auto& collider : GetInstance()->m_colliders)
     {
         if (collider.second->IsActive())
         {
@@ -151,29 +102,7 @@ void Engine::Systems::PhysicsSystem::FixedUpdate()
     GetInstance()->m_dynamicsWorld->stepSimulation(1.0f / 60.0f, 0);
 
     //Update collider positions
-    for (auto& collider : GetInstance()->m_boxColliders)
-    {
-        if (collider.second->IsActive())
-        {
-            //TODO: wrap all Bullet math variables
-            collider.second->GetMotionState()->getWorldTransform(trans);
-            Vector3F offset = collider.second->GetOffset();
-
-            btVector3& collPos = trans.getOrigin();
-            btQuaternion collRot = trans.getRotation();
-            btQuaternion quatOffset(offset.x, offset.y, offset.z, 0.0f);
-            btQuaternion qpq = collRot * quatOffset * collRot.inverse();
-
-            collider.second->GetGameObject()->GetTransform()->SetPosition(Vector3F(collPos.getX(), collPos.getY(), collPos.getZ()) -
-                Vector3F(qpq.getX(), qpq.getY(), qpq.getZ()));
-
-            collider.second->GetGameObject()->GetTransform()->SetRotation(Quaternion(collRot.getX(), collRot.getY(),
-                collRot.getZ(), collRot.getW()));
-
-            collider.second->GetGameObject()->GetTransform()->UpdateWorldTransformMatrix();
-        }
-    }
-    for (auto& collider : GetInstance()->m_sphereColliders)
+    for (auto& collider : GetInstance()->m_colliders)
     {
         if (collider.second->IsActive())
         {
@@ -197,14 +126,7 @@ void Engine::Systems::PhysicsSystem::FixedUpdate()
     }
 
     //Call Collision events
-    for (auto& collider : GetInstance()->m_boxColliders)
-    {
-        if (collider.second->IsActive())
-        {
-            collider.second->ActOnCollisionInfo();
-        }
-    }
-    for (auto& collider : GetInstance()->m_sphereColliders)
+    for (auto& collider : GetInstance()->m_colliders)
     {
         if (collider.second->IsActive())
         {
@@ -265,46 +187,7 @@ void Engine::Systems::PhysicsSystem::BulletTickCallback(btDynamicsWorld* p_world
 std::shared_ptr<Engine::Physics::ICollider> Engine::Systems::PhysicsSystem::FindCollider(
     const btCollisionObject* p_collisionObject)
 {
-    for (auto& collider : GetInstance()->m_boxColliders)
-    {
-        if (collider.second->IsActive())
-        {
-            if (static_cast<const btCollisionObject*>(collider.second->GetBtRigidbody()) == p_collisionObject)
-                return collider.second;
-        }
-    }
-
-    for (auto& collider : GetInstance()->m_sphereColliders)
-    {
-        if (collider.second->IsActive())
-        {
-            if (static_cast<const btCollisionObject*>(collider.second->GetBtRigidbody()) == p_collisionObject)
-                return collider.second;
-        }
-    }
-
-    return nullptr;
-}
-
-std::shared_ptr<Engine::Components::BoxCollider> Engine::Systems::PhysicsSystem::FindBoxCollider(
-    const btCollisionObject* p_collisionObject)
-{
-    for (auto& collider : GetInstance()->m_boxColliders)
-    {
-        if (collider.second->IsActive())
-        {
-            if (static_cast<const btCollisionObject*>(collider.second->GetBtRigidbody()) == p_collisionObject)
-                return collider.second;
-        }
-    }
-
-    return nullptr;
-}
-
-std::shared_ptr<Engine::Components::SphereCollider> Engine::Systems::PhysicsSystem::FindSphereCollider(
-    const btCollisionObject* p_collisionObject)
-{
-    for (auto& collider : GetInstance()->m_sphereColliders)
+    for (auto& collider : GetInstance()->m_colliders)
     {
         if (collider.second->IsActive())
         {

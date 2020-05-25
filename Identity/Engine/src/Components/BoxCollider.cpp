@@ -33,7 +33,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject) 
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
 
-    Systems::PhysicsSystem::AddBoxCollider(this);
+    Systems::PhysicsSystem::AddCollider(this);
 }
 
 Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::vector<std::string> p_block) : ICollider{ p_gameObject, BOX_COLLIDER }
@@ -108,7 +108,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
 
-    Systems::PhysicsSystem::AddBoxCollider(this);
+    Systems::PhysicsSystem::AddCollider(this);
 }
 
 Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, std::shared_ptr<BoxCollider> p_other) : ICollider{p_gameObject, BOX_COLLIDER}
@@ -150,7 +150,7 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
 
-    Systems::PhysicsSystem::AddBoxCollider(this);
+    Systems::PhysicsSystem::AddCollider(this);
 }
 
 Engine::Components::BoxCollider::~BoxCollider()
@@ -239,24 +239,6 @@ void Engine::Components::BoxCollider::Deserialize(Objects::GameObject* p_gameObj
     m_model = Managers::ResourceManager::FindModel(id);
 }
 
-Matrix4F Engine::Components::BoxCollider::GetWorldMatrix() const
-{
-    btScalar    m[16];
-    btTransform trans;
-
-    m_motionState->getWorldTransform(trans);
-    trans.getOpenGLMatrix(m);
-
-    Matrix4F mat
-    {
-        m[0], m[1], m[2], m[3],
-        m[4], m[5], m[6], m[7],
-        m[8], m[9], m[10], m[11],
-        m[12], m[13], m[14], m[15]
-    };
-
-    return mat.Transpose();
-}
 
 void Engine::Components::BoxCollider::SetPositionOffset(GPM::Vector3F p_offset)
 {
@@ -350,7 +332,7 @@ void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimen
 bool Engine::Components::BoxCollider::DeleteFromMemory()
 {
     Managers::ResourceManager::RemoveModel(m_model->GetID());
-    Systems::PhysicsSystem::RemoveBoxCollider(GetID());
+    Systems::PhysicsSystem::RemoveCollider(GetID());
     return true;
 }
 
