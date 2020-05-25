@@ -133,6 +133,11 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 {
                     if (const auto model = Managers::ResourceManager::FindModel(modelComponent->GetModel()))
                         ImGui::Text("Current model : %s", model->GetName().c_str());
+
+                    if (ImGui::Button("Update"))
+                    {
+                        
+                    }
                 }
 
                 if (ImGui::CollapsingHeader("Material"))
@@ -197,13 +202,13 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 Rendering::Lights::ILight::LightData& lightData = ILight->GetLightData();
                 if (ImGui::CollapsingHeader("Light"))
                 {
-                    float* ambient[3] = { &lightData.ambient.x, &lightData.ambient.y, &lightData.ambient.z };
-                    float* diffuse[3] = { &lightData.diffuse.x, &lightData.diffuse.y, &lightData.diffuse.z };
-                    float* specular[3] = { &lightData.specular.x, &lightData.specular.y, &lightData.specular.z };
+                    float* ambient[4] = { &lightData.ambient.x, &lightData.ambient.y, &lightData.ambient.z, &lightData.ambient.w };
+                    float* diffuse[4] = { &lightData.diffuse.x, &lightData.diffuse.y, &lightData.diffuse.z, &lightData.diffuse.w };
+                    float* specular[4] = { &lightData.specular.x, &lightData.specular.y, &lightData.specular.z, &lightData.specular.w };
                     float* shininess = { &lightData.shininess };
-                    ImGui::ColorPicker3("Ambient Light Color", *ambient);
-                    ImGui::ColorPicker3("Diffuse Light Color", *diffuse);
-                    ImGui::ColorPicker3("Specular Light Color", *specular);
+                    ImGui::ColorPicker4("Ambient Light Color", *ambient, ImGuiColorEditFlags_PickerHueWheel);
+                    ImGui::ColorPicker4("Diffuse Light Color", *diffuse, ImGuiColorEditFlags_PickerHueWheel);
+                    ImGui::ColorPicker4("Specular Light Color", *specular, ImGuiColorEditFlags_PickerHueWheel);
                     ImGui::DragFloat("shininess", shininess, 0.1f);
                 }
                 break;
