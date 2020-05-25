@@ -102,7 +102,6 @@ int Engine::Core::App::Run()
         Systems::CameraSystem::Update(deltaTime);
         Systems::SoundSystem::Update(deltaTime);
 
-
         fixedUpdateTimer += deltaTime;
         //todo this should never go below 0
         //update could be at 0.01f
@@ -112,9 +111,6 @@ int Engine::Core::App::Run()
                 Systems::PhysicsSystem::FixedUpdate();
             fixedUpdateTimer = 0.0f;
         }
-
-
-        
 
         DoFrame(deltaTime);
         EndFrame();

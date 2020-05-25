@@ -182,6 +182,26 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 }
                 break;
             }
+        case Components::SPHERE_COLLIDER:
+        {
+            std::shared_ptr<Components::SphereCollider> sphereCollider = std::dynamic_pointer_cast<Components::SphereCollider>(Icomponent);
+            if (ImGui::CollapsingHeader("Sphere Collider"))
+            {
+                //todo add dimensions, it's weirdly done on BoxCollider for the moment being.
+                float* radius = { &sphereCollider->GetRadius() };
+                float* offset[3] = { &sphereCollider->GetOffset().x, &sphereCollider->GetOffset().y, &sphereCollider->GetOffset().z };
+                float* mass = { &sphereCollider->GetMass() };
+
+                ImGui::DragFloat("Radius", radius, 0.1f);
+                ImGui::DragFloat("Mass", mass, 0.1f);
+                ImGui::DragFloat3("Offset", *offset, 0.1f);
+
+                sphereCollider->SetPositionOffset(sphereCollider->GetOffset());
+                sphereCollider->SetMass(sphereCollider->GetMass());
+                sphereCollider->SetRadius(sphereCollider->GetRadius());
+            }
+            break;
+        }
         case Components::CAMERA:
             {
                 std::shared_ptr<Components::Camera> camera = std::dynamic_pointer_cast<Components::Camera>(Icomponent);

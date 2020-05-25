@@ -31,6 +31,7 @@ namespace Engine::Components
         btDefaultMotionState* GetMotionState() { return m_motionState; }
         GPM::Vector3F& GetOffset() { return m_offset; }
         float& GetMass() { return m_mass; }
+        float& GetRadius() { return m_radius; }
 
         void SetPositionOffset(GPM::Vector3F p_offset); 
         void SetMass(float p_mass);
@@ -49,6 +50,7 @@ namespace Engine::Components
         ObjectElements::Model ConstructSphere();
 
         float m_mass;
+        float m_radius;
         Vector3F m_offset;
         Vector3F m_scale = Vector3F::one;
         btSphereShape* m_sphere;
