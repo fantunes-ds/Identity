@@ -90,7 +90,7 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             }
             if (ImGui::MenuItem("Save As...", "Ctrl + Shift + S", nullptr))
             {
-                showSave = true;       
+                showSave = true;
             }
             ImGui::MenuItem("Build", "Ctrl + B", nullptr);
             ImGui::Separator();
@@ -156,8 +156,12 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             ImGui::EndMenu();
         }
 
-        ImGui::SetCursorPosX(Rendering::Renderer::GetInstance()->GetWidth() / 2);
-        if (ImGui::Button("Play"))
+        ImGui::SetCursorPosX(Rendering::Renderer::GetInstance()->GetWidth() / 3);
+        ImGui::Text(std::string("Scene : " + Managers::SceneManager::GetActiveScene()->GetName()).c_str());
+
+        const ImVec2 size{ 35.0f, 0.0f };
+        ImGui::SetCursorPosX((Rendering::Renderer::GetInstance()->GetWidth() / 2) - size.x);
+        if (ImGui::Button("Play", size))
         {
             p_appRef.TestingSimulation();
         }
