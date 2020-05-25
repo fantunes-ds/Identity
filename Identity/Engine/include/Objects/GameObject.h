@@ -15,7 +15,7 @@ namespace Engine::Objects
 	public:
 		GameObject();
 		GameObject(const std::string& p_name);
-		~GameObject() = default;
+		~GameObject();
 
 		//TODO: works when modifying parent's transform, but doesn't work when modifying child's transform
 		void SetParentObject(std::shared_ptr<GameObject> p_parent);

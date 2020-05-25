@@ -46,6 +46,8 @@ void Engine::Containers::GameObjectContainer::RemoveGameObject(int32_t p_id)
     if (p_id < 0)
         return;
 
+    auto go = GetInstance()->m_gameObjects.find(p_id);
+
     GetInstance()->m_gameObjects.erase(p_id);
 }
 
