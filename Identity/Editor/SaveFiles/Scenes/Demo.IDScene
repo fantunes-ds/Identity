@@ -41,47 +41,6 @@ class Engine::Components::ModelComponent
 ;
 
 GAMEOBJECT
-Steep
-m_isActive 1
-class Engine::Components::Transform
-{
-   m_parent -1
-   m_position 4 -3 0
-   m_forward -0 0.34202 0.939693
-   m_right 1 0 0
-   m_up 0 -0.939694 0.34202
-   m_scale 3 0.2 5
-   m_rotation 0.173648 0 0 0.984808
-   m_worldTransform 3 0 0 4 0 0.187939 -1.7101 -3 0 0.068404 4.69846 0 0 0 0 1
-   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
-}
-class Engine::Components::Transform
-{
-   m_parent -1
-   m_position 4 -3 0
-   m_forward -0 0.34202 0.939693
-   m_right 1 0 0
-   m_up 0 -0.939694 0.34202
-   m_scale 3 0.2 5
-   m_rotation 0.173648 0 0 0.984808
-   m_worldTransform 3 0 0 4 0 0.187939 -1.7101 -3 0 0.068404 4.69846 0 0 0 0 1
-   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
-}
-class Engine::Components::BoxCollider
-{
-   m_mass 0
-   m_offset 1.5 0.1 -2.5
-   m_box 1.5 0.1 2.5
-   m_model 64
-}
-class Engine::Components::ModelComponent
-{
-   m_model Cube
-   m_material default
-}
-;
-
-GAMEOBJECT
 Ball
 m_isActive 1
 class Engine::Components::Transform
