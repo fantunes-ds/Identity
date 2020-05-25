@@ -226,6 +226,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     float* ambient[4] = { &lightData.ambient.x, &lightData.ambient.y, &lightData.ambient.z, &lightData.ambient.w };
                     float* diffuse[4] = { &lightData.diffuse.x, &lightData.diffuse.y, &lightData.diffuse.z, &lightData.diffuse.w };
                     float* specular[4] = { &lightData.specular.x, &lightData.specular.y, &lightData.specular.z, &lightData.specular.w };
+                    float* range = { &lightData.range };
                     float* shininess = { &lightData.shininess };
                     ImGui::ColorEdit3("Ambient Color", *ambient, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
                     ImGui::SameLine();
@@ -242,7 +243,8 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     ImGui::SliderFloat("Specular intensity", &lightData.specular.w, 0.00f, 1.0f, "%.2f");
                     ImGui::Separator();
                     ImGui::SetNextItemWidth(100);
-                    ImGui::SliderFloat("shininess", shininess, 8.0f, 512.0f, "%.0f");
+                    ImGui::SliderFloat("Shininess", shininess, 8.0f, 512.0f, "%.0f");
+                    ImGui::SliderFloat("Range", range, 0.00f, 1.0f, "%.2f");
                 }
                 break;
             }
