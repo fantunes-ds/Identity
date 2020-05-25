@@ -108,9 +108,9 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
         float* pos[3]   = {&transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z};
         float* rot[3]   = {&rotationEuler.x, &rotationEuler.y, &rotationEuler.z};
         float* scale[3] = {&transform->GetScale().x, &transform->GetScale().y, &transform->GetScale().z};
-        ImGui::DragFloat3("Position", *pos, 0.1f);
-        ImGui::DragFloat3("Rotation", *rot, 0.1f);
-        ImGui::DragFloat3("Scale", *scale, 0.1f);
+        ImGui::DragFloat3("Position", *pos, 0.1f,0,0,"%0.2f");
+        ImGui::DragFloat3("Rotation", *rot, 0.1f, 0, 0, "%0.2f");
+        ImGui::DragFloat3("Scale", *scale, 0.1f, 0, 0, "%0.2f");
     }
 
     if (rotationEuler.y > 90.0f || rotationEuler.y < -90.0f)
@@ -173,9 +173,9 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     float* offset[3] = {&boxCollider->GetOffset().x, &boxCollider->GetOffset().y, &boxCollider->GetOffset().z};
                     float* mass = {&boxCollider->GetMass()};
 
-                    ImGui::DragFloat3("Dimensions", *dimensions, 0.1f);
-                    ImGui::DragFloat("Mass", mass, 0.1f);
-                    ImGui::DragFloat3("Offset", *offset, 0.1f);
+                    ImGui::DragFloat3("Dimensions", *dimensions, 0.1f, 0, 0, "%0.2f");
+                    ImGui::DragFloat("Mass", mass, 0.1f, 0, 0, "%0.2f");
+                    ImGui::DragFloat3("Offset", *offset, 0.1f, 0, 0, "%0.2f");
 
                     boxCollider->SetPositionOffset(boxCollider->GetOffset());
                     boxCollider->SetMass(boxCollider->GetMass());
@@ -193,9 +193,9 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 float* offset[3] = { &sphereCollider->GetOffset().x, &sphereCollider->GetOffset().y, &sphereCollider->GetOffset().z };
                 float* mass = { &sphereCollider->GetMass() };
 
-                ImGui::DragFloat("Radius", radius, 0.1f);
-                ImGui::DragFloat("Mass", mass, 0.1f);
-                ImGui::DragFloat3("Offset", *offset, 0.1f);
+                ImGui::DragFloat("Radius", radius, 0.1f, 0, 0, "%0.2f");
+                ImGui::DragFloat("Mass", mass, 0.1f, 0, 0, "%0.2f");
+                ImGui::DragFloat3("Offset", *offset, 0.1f, 0, 0, "%0.2f");
 
                 sphereCollider->SetPositionOffset(sphereCollider->GetOffset());
                 sphereCollider->SetMass(sphereCollider->GetMass());
@@ -210,7 +210,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 {
                     float fov = camera->GetFOV();
 
-                    ImGui::SliderFloat("Camera FOV", &fov, 10.f, 180.f, "%1.f");
+                    ImGui::SliderFloat("Camera FOV", &fov, 10.f, 180.f, "%0.f");
 
                     camera->SetFOV(fov);
                 }
@@ -231,18 +231,18 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     ImGui::SameLine();
                     ImGui::Text("Ambient Color");
                     ImGui::SetNextItemWidth(100);
-                    ImGui::SliderFloat("Ambient intensity", &lightData.ambient.w, 0.00f, 1.0f, "%01f");
+                    ImGui::SliderFloat("Ambient intensity", &lightData.ambient.w, 0.00f, 1.0f, "%.2f");
                     ImGui::Separator();
                     ImGui::ColorEdit3("Diffuse Light Color", *diffuse, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
                     ImGui::SetNextItemWidth(100);
-                    ImGui::SliderFloat("Diffuse intensity", &lightData.diffuse.w, 0.00f, 1.0f, "%01f");
+                    ImGui::SliderFloat("Diffuse intensity", &lightData.diffuse.w, 0.00f, 1.0f, "%.2f");
                     ImGui::Separator();
                     ImGui::ColorEdit3("Specular Light Color", *specular, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
                     ImGui::SetNextItemWidth(100);
-                    ImGui::SliderFloat("Specular intensity", &lightData.specular.w, 0.00f, 1.0f, "%01f");
+                    ImGui::SliderFloat("Specular intensity", &lightData.specular.w, 0.00f, 1.0f, "%.2f");
                     ImGui::Separator();
                     ImGui::SetNextItemWidth(100);
-                    ImGui::SliderFloat("shininess", shininess, 0.00f, 1.0f, "%01f");
+                    ImGui::SliderFloat("shininess", shininess, 8.0f, 512.0f, "%.0f");
                 }
                 break;
             }
