@@ -63,6 +63,11 @@ void Engine::Components::Camera::Deserialize(Objects::GameObject* p_gameObject, 
 {
 }
 
+void Engine::Components::Camera::SetActive(bool p_active)
+{
+    m_isActive = p_active;
+}
+
 void Engine::Components::Camera::UpdateVectors()
 {
     const Quaternion pitch = Quaternion(Vector3F(1.0f, 0.0f, 0.0f), GPM::Tools::Utils::ToRadians(m_pitch));

@@ -27,7 +27,7 @@ namespace Engine::Components
         inline std::shared_ptr<Rendering::Materials::Material> GetMaterial() const { return m_material; }
 
         bool DeleteFromMemory() override;
-        void SetActive(bool p_active) override { m_isActive = p_active; }
+        void SetActive(bool p_active) override;
 
     private:
         int32_t m_model;

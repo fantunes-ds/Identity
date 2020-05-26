@@ -63,6 +63,7 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
 {
     static bool showSave = false;
     static bool MatCreationPopup = false;
+    bool chooseScene = false;
 
     if (ImGui::BeginMenuBar())
     {
@@ -74,6 +75,7 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             if (ImGui::MenuItem("Open Scene", "Ctrl + O", nullptr))
             {
                 UI::FileBrowser::GetInstance()->Open();
+                chooseScene = true;
             }
             ImGui::Separator();
             if (ImGui::MenuItem("Save", "Ctrl + S", nullptr))
@@ -168,11 +170,12 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
     UI::FileBrowser::GetInstance()->Display();
 
     //show load scene dialog
-    if (UI::FileBrowser::GetInstance()->HasSelected())
+    if (UI::FileBrowser::GetInstance()->HasSelected() && chooseScene)
     {
         Engine::Managers::SceneManager::LoadScene(UI::FileBrowser::GetInstance()->GetSelected());
         UI::FileBrowser::GetInstance()->ClearSelected();
         UI::FileBrowser::GetInstance()->Close();
+        chooseScene = false;
     }
 
     //show save scene dialog

@@ -13,6 +13,8 @@
 #include <Scene/Scene.h>
 #include <UI/Hierarchy.h>
 
+#include "UI/imfilebrowser.h"
+
 int Engine::UI::Hierarchy::m_currentlySelected = -1;
 
 std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child)
@@ -94,167 +96,194 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
         return;
     }
 
+    auto gameObject = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject();
+    auto transform = gameObject->GetTransform();
+
+    bool active = gameObject->IsActive();
+    if (ImGui::Checkbox("Active", &active))
+    {
+        gameObject->SetActive(active);
+    }
     //todo Class Inspector to deal with these
 
-    auto transform = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject()->GetTransform();
 
     Quaternion& rotationQuaternion = transform->GetRotation();
-    Vector3F    rotationEuler      = { static_cast<float>(rotationQuaternion.ToEuler().x),
+    Vector3F    rotationEuler = { static_cast<float>(rotationQuaternion.ToEuler().x),
                                        static_cast<float>(rotationQuaternion.ToEuler().y),
                                        static_cast<float>(rotationQuaternion.ToEuler().z)
     };
     if (ImGui::CollapsingHeader("Transform"))
     {
-        float* pos[3]   = {&transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z};
-        float* rot[3]   = {&rotationEuler.x, &rotationEuler.y, &rotationEuler.z};
-        float* scale[3] = {&transform->GetScale().x, &transform->GetScale().y, &transform->GetScale().z};
-        ImGui::DragFloat3("Position", *pos, 0.1f,0,0,"%0.2f");
+        float* pos[3] = { &transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z };
+        float* rot[3] = { &rotationEuler.x, &rotationEuler.y, &rotationEuler.z };
+        float* scale[3] = { &transform->GetScale().x, &transform->GetScale().y, &transform->GetScale().z };
+        ImGui::DragFloat3("Position", *pos, 0.1f, 0, 0, "%0.2f");
         ImGui::DragFloat3("Rotation", *rot, 0.1f, 0, 0, "%0.2f");
         ImGui::DragFloat3("Scale", *scale, 0.1f, 0, 0, "%0.2f");
     }
 
     if (rotationEuler.y > 90.0f || rotationEuler.y < -90.0f)
-        rotationEuler = Vector3{rotationEuler.x - 180.0f, ((rotationEuler.y) * -1), rotationEuler.z + 180.0f};
+        rotationEuler = Vector3{ rotationEuler.x - 180.0f, ((rotationEuler.y) * -1), rotationEuler.z + 180.0f };
 
     rotationQuaternion.MakeFromEuler(rotationEuler);
 
-    transform->needUpdate     = true;
+    transform->needUpdate = true;
     transform->needAxesUpdate = true;
 
-    for (auto component : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject()->GetAllComponents())
+
+    for (auto component : gameObject->GetAllComponents())
     {
         std::shared_ptr<Components::IComponent> Icomponent = Containers::ComponentContainer::FindComponent(component);
+
         switch (Icomponent->GetType())
         {
         case Components::MODEL:
+        {
+            std::shared_ptr<Components::ModelComponent> modelComponent = std::dynamic_pointer_cast<Components::ModelComponent>(Icomponent);
+
+            if (ImGui::CollapsingHeader("Model Component"))
             {
-                std::shared_ptr<Components::ModelComponent> modelComponent = std::dynamic_pointer_cast<Components::ModelComponent>(Icomponent);
-
-                if (ImGui::CollapsingHeader("Model Component"))
+                bool compActive = Icomponent->IsActive();
+                if (ImGui::Checkbox("Active##1", &compActive))
                 {
-                    if (const auto model = Managers::ResourceManager::FindModel(modelComponent->GetModel()))
-                        ImGui::Text("Current model : %s", model->GetName().c_str());
-
-                    if (ImGui::BeginPopup("Select Mesh"))
-                    {
-                        ImGui::Text("Choose Model");
-                        for (auto& model : Managers::ResourceManager::GetAllModels())
-                        {
-                            if (model->GetName() == "NoName")
-                                continue;
-
-                            if (ImGui::Button(model->GetName().c_str()))
-                            {
-                                modelComponent->SetModel(model->GetID());
-                            }
-                        }ImGui::Button("Add new model");
-
-                        ImGui::EndPopup();
-                    }
-
-                    if (ImGui::Button("Change Model"))
-                    {
-                        ImGui::OpenPopup("Select Mesh");
-                    }
+                    Icomponent->SetActive(compActive);
                 }
 
-                if (ImGui::CollapsingHeader("Material"))
+                if (const auto model = Managers::ResourceManager::FindModel(modelComponent->GetModel()))
+                    ImGui::Text("Current model : %s", model->GetName().c_str());
+
+                if (ImGui::BeginPopup("Select Mesh"))
                 {
-                    std::shared_ptr<Rendering::Materials::Material> mat = modelComponent->GetMaterial();
-
-                    if (ImGui::BeginPopup("Select Material"))
+                    ImGui::Text("Choose Model");
+                    for (auto& model : Managers::ResourceManager::GetAllModels())
                     {
-                        ImGui::Text("Choose Material");
-                        for (auto& material : Managers::ResourceManager::GetAllMaterials())
+                        if (model->GetName() == "NoName")
+                            continue;
+
+                        if (ImGui::Button(model->GetName().c_str()))
                         {
-                            if (material->GetName() == "NoName" || material->GetName() == "RenderText")
-                                continue;
-
-                            if (ImGui::Button(material->GetName().c_str()))
-                            {
-                                modelComponent->SetMaterial(material->GetName());
-                            }
+                            modelComponent->SetModel(model->GetID());
                         }
+                    }ImGui::Button("Add new model");
 
-                        ImGui::EndPopup();
-                    }
-
-                    if (ImGui::Button("Change Material"))
-                    {
-                        ImGui::OpenPopup("Select Material");
-                    }
-
-                    if (mat == nullptr)
-                        break;
-
-                    if (mat->GetName()._Equal("default"))
-                    {
-                        ImGui::TextWrapped("Using default material. Please add a new material to edit it.");
-                        break;
-                    }
-                    float* objectColor[3] = { &mat->GetColor().x, &mat->GetColor().y, &mat->GetColor().z };
-                    ImGui::ColorEdit3("Light Color", *objectColor, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-                    if (mat->GetTextureState() == true)
-                    {
-                        ImGui::Text("Texture");
-                        ImGui::Image(*mat->GetTexture()->GetTextureShaderResourceView().GetAddressOf(), ImVec2(100, 100));
-                    }
-
-                    if (ImGui::BeginPopup("Select Texture"))
-                    {
-                        ImGui::Text("Choose Texture");
-                        if (ImGui::Button("None"))
-                        {
-                            modelComponent->GetMaterial()->SetTexture(nullptr);
-                            modelComponent->GetMaterial()->SetTextureState(false);
-                        }
-                        for (auto& texture : Managers::ResourceManager::GetAllTextures())
-                        {
-                            if (texture->GetName() == "NoName")
-                                continue;
-                            
-                            if (ImGui::Button(texture->GetName().c_str()))
-                            {
-                                modelComponent->GetMaterial()->SetTexture(texture);
-                            }
-                        }
-                        ImGui::Button("Add new texture");
-
-                        ImGui::EndPopup();
-                    }
-
-                    if (ImGui::Button("Change Texture"))
-                    {
-                        ImGui::OpenPopup("Select Texture");
-                    }
+                    ImGui::EndPopup();
                 }
-                break;
+
+                if (ImGui::Button("Change Model"))
+                {
+                    ImGui::OpenPopup("Select Mesh");
+                }
             }
+
+            if (ImGui::CollapsingHeader("Material"))
+            {
+                std::shared_ptr<Rendering::Materials::Material> mat = modelComponent->GetMaterial();
+
+                if (ImGui::BeginPopup("Select Material"))
+                {
+                    ImGui::Text("Choose Material");
+                    for (auto& material : Managers::ResourceManager::GetAllMaterials())
+                    {
+                        if (material->GetName() == "NoName" || material->GetName() == "RenderText")
+                            continue;
+
+                        if (ImGui::Button(material->GetName().c_str()))
+                        {
+                            modelComponent->SetMaterial(material->GetName());
+                        }
+                    }
+
+                    ImGui::EndPopup();
+                }
+
+                if (ImGui::Button("Change Material"))
+                {
+                    ImGui::OpenPopup("Select Material");
+                }
+
+                if (mat == nullptr)
+                    break;
+
+                if (mat->GetName()._Equal("default"))
+                {
+                    ImGui::TextWrapped("Using default material. Please add a new material to edit it.");
+                    break;
+                }
+                float* objectColor[3] = { &mat->GetColor().x, &mat->GetColor().y, &mat->GetColor().z };
+                ImGui::ColorEdit3("Light Color", *objectColor, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+                if (mat->GetTextureState() == true)
+                {
+                    ImGui::Text("Texture");
+                    ImGui::Image(*mat->GetTexture()->GetTextureShaderResourceView().GetAddressOf(), ImVec2(100, 100));
+                }
+
+                if (ImGui::BeginPopup("Select Texture"))
+                {
+                    ImGui::Text("Choose Texture");
+                    if (ImGui::Button("None"))
+                    {
+                        modelComponent->GetMaterial()->SetTexture(nullptr);
+                        modelComponent->GetMaterial()->SetTextureState(false);
+                    }
+                    for (auto& texture : Managers::ResourceManager::GetAllTextures())
+                    {
+                        if (texture->GetName() == "NoName")
+                            continue;
+
+                        if (ImGui::Button(texture->GetName().c_str()))
+                        {
+                            modelComponent->GetMaterial()->SetTexture(texture);
+                        }
+                    }
+                    ImGui::Button("Add new texture");
+
+                    ImGui::EndPopup();
+                }
+
+                if (ImGui::Button("Change Texture"))
+                {
+                    ImGui::OpenPopup("Select Texture");
+                }
+            }
+            break;
+        }
         case Components::BOX_COLLIDER:
+        {
+            std::shared_ptr<Components::BoxCollider> boxCollider = std::dynamic_pointer_cast<Components::BoxCollider>(Icomponent);
+            if (ImGui::CollapsingHeader("Box Collider"))
             {
-                std::shared_ptr<Components::BoxCollider> boxCollider = std::dynamic_pointer_cast<Components::BoxCollider>(Icomponent);
-                if (ImGui::CollapsingHeader("Box Collider"))
+                bool compActive = Icomponent->IsActive();
+                if (ImGui::Checkbox("Active##2", &compActive))
                 {
-                    //todo add dimensions, it's weirdly done on BoxCollider for the moment being.
-                    float* dimensions[3] = {&boxCollider->GetDimensions().x, &boxCollider->GetDimensions().y, &boxCollider->GetDimensions().z};
-                    float* offset[3] = {&boxCollider->GetOffset().x, &boxCollider->GetOffset().y, &boxCollider->GetOffset().z};
-                    float* mass = {&boxCollider->GetMass()};
-
-                    ImGui::DragFloat3("Dimensions", *dimensions, 0.1f, 0, 0, "%0.2f");
-                    ImGui::DragFloat("Mass", mass, 0.1f, 0, 0, "%0.2f");
-                    ImGui::DragFloat3("Offset", *offset, 0.1f, 0, 0, "%0.2f");
-
-                    boxCollider->SetPositionOffset(boxCollider->GetOffset());
-                    boxCollider->SetMass(boxCollider->GetMass());
-                    boxCollider->SetDimensions(boxCollider->GetDimensions());
+                    Icomponent->SetActive(compActive);
                 }
-                break;
+
+                //todo add dimensions, it's weirdly done on BoxCollider for the moment being.
+                float* dimensions[3] = { &boxCollider->GetDimensions().x, &boxCollider->GetDimensions().y, &boxCollider->GetDimensions().z };
+                float* offset[3] = { &boxCollider->GetOffset().x, &boxCollider->GetOffset().y, &boxCollider->GetOffset().z };
+                float* mass = { &boxCollider->GetMass() };
+
+                ImGui::DragFloat3("Dimensions", *dimensions, 0.1f, 0, 0, "%0.2f");
+                ImGui::DragFloat("Mass", mass, 0.1f, 0, 0, "%0.2f");
+                ImGui::DragFloat3("Offset", *offset, 0.1f, 0, 0, "%0.2f");
+
+                boxCollider->SetPositionOffset(boxCollider->GetOffset());
+                boxCollider->SetMass(boxCollider->GetMass());
+                boxCollider->SetDimensions(boxCollider->GetDimensions());
             }
+            break;
+        }
         case Components::SPHERE_COLLIDER:
         {
             std::shared_ptr<Components::SphereCollider> sphereCollider = std::dynamic_pointer_cast<Components::SphereCollider>(Icomponent);
             if (ImGui::CollapsingHeader("Sphere Collider"))
             {
+                bool compActive = Icomponent->IsActive();
+                if (ImGui::Checkbox("Active##3", &compActive))
+                {
+                    Icomponent->SetActive(compActive);
+                }
+
                 //todo add dimensions, it's weirdly done on BoxCollider for the moment being.
                 float* radius = { &sphereCollider->GetRadius() };
                 float* offset[3] = { &sphereCollider->GetOffset().x, &sphereCollider->GetOffset().y, &sphereCollider->GetOffset().z };
@@ -271,57 +300,139 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
             break;
         }
         case Components::CAMERA:
+        {
+            std::shared_ptr<Components::Camera> camera = std::dynamic_pointer_cast<Components::Camera>(Icomponent);
+            if (ImGui::CollapsingHeader("Camera"))
             {
-                std::shared_ptr<Components::Camera> camera = std::dynamic_pointer_cast<Components::Camera>(Icomponent);
-                if (ImGui::CollapsingHeader("Camera"))
+                bool compActive = Icomponent->IsActive();
+                if (ImGui::Checkbox("Active##4", &compActive))
                 {
-                    float fov = camera->GetFOV();
-
-                    ImGui::SliderFloat("Camera FOV", &fov, 10.f, 180.f, "%0.f");
-
-                    camera->SetFOV(fov);
+                    Icomponent->SetActive(compActive);
                 }
-                break;
+
+                float fov = camera->GetFOV();
+
+                ImGui::SliderFloat("Camera FOV", &fov, 10.f, 180.f, "%0.f");
+
+                camera->SetFOV(fov);
             }
+            break;
+        }
         case Components::LIGHT:
+        {
+            std::shared_ptr<Components::Light> lightComp = std::dynamic_pointer_cast<Components::Light>(Icomponent);
+            std::shared_ptr<Rendering::Lights::ILight> ILight = lightComp->GetLight();
+            Rendering::Lights::ILight::LightData& lightData = ILight->GetLightData();
+            if (ImGui::CollapsingHeader("Light"))
             {
-                std::shared_ptr<Components::Light> lightComp = std::dynamic_pointer_cast<Components::Light>(Icomponent);
-                std::shared_ptr<Rendering::Lights::ILight> ILight = lightComp->GetLight();
-                Rendering::Lights::ILight::LightData& lightData = ILight->GetLightData();
-                if (ImGui::CollapsingHeader("Light"))
+                bool compActive = Icomponent->IsActive();
+                if (ImGui::Checkbox("Active##5", &compActive))
                 {
-                    float* ambient[4] = { &lightData.ambient.x, &lightData.ambient.y, &lightData.ambient.z, &lightData.ambient.w };
-                    float* diffuse[4] = { &lightData.diffuse.x, &lightData.diffuse.y, &lightData.diffuse.z, &lightData.diffuse.w };
-                    float* specular[4] = { &lightData.specular.x, &lightData.specular.y, &lightData.specular.z, &lightData.specular.w };
-                    float* range = { &lightData.range };
-                    float* shininess = { &lightData.shininess };
-                    float* radius = { &lightData.range };
-
-                    ImGui::ColorEdit3("Ambient Color", *ambient, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-                    ImGui::SameLine();
-                    ImGui::Text("Ambient Color");
-                    ImGui::SetNextItemWidth(100);
-                    ImGui::SliderFloat("Ambient intensity", &lightData.ambient.w, 0.00f, 1.0f, "%.2f");
-                    ImGui::Separator();
-                    ImGui::ColorEdit3("Diffuse Light Color", *diffuse, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-                    ImGui::SetNextItemWidth(100);
-                    ImGui::SliderFloat("Diffuse intensity", &lightData.diffuse.w, 0.00f, 1.0f, "%.2f");
-                    ImGui::Separator();
-                    ImGui::ColorEdit3("Specular Light Color", *specular, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-                    ImGui::SetNextItemWidth(100);
-                    ImGui::SliderFloat("Specular intensity", &lightData.specular.w, 0.00f, 1.0f, "%.2f");
-                    ImGui::Separator();
-                    ImGui::SetNextItemWidth(100);
-                    ImGui::SliderFloat("Shininess", shininess, 8.0f, 512.0f, "%.0f");
-                    ImGui::SliderFloat("Range", range, 0.00f, 1.0f, "%.2f");
+                    Icomponent->SetActive(compActive);
                 }
-                break;
+
+                float* ambient[4] = { &lightData.ambient.x, &lightData.ambient.y, &lightData.ambient.z, &lightData.ambient.w };
+                float* diffuse[4] = { &lightData.diffuse.x, &lightData.diffuse.y, &lightData.diffuse.z, &lightData.diffuse.w };
+                float* specular[4] = { &lightData.specular.x, &lightData.specular.y, &lightData.specular.z, &lightData.specular.w };
+                float* range = { &lightData.range };
+                float* shininess = { &lightData.shininess };
+                float* radius = { &lightData.range };
+
+                ImGui::ColorEdit3("Ambient Color", *ambient, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+                ImGui::SameLine();
+                ImGui::Text("Ambient Color");
+                ImGui::SetNextItemWidth(100);
+                ImGui::SliderFloat("Ambient intensity", &lightData.ambient.w, 0.00f, 1.0f, "%.2f");
+                ImGui::Separator();
+                ImGui::ColorEdit3("Diffuse Light Color", *diffuse, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+                ImGui::SetNextItemWidth(100);
+                ImGui::SliderFloat("Diffuse intensity", &lightData.diffuse.w, 0.00f, 1.0f, "%.2f");
+                ImGui::Separator();
+                ImGui::ColorEdit3("Specular Light Color", *specular, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+                ImGui::SetNextItemWidth(100);
+                ImGui::SliderFloat("Specular intensity", &lightData.specular.w, 0.00f, 1.0f, "%.2f");
+                ImGui::Separator();
+                ImGui::SetNextItemWidth(100);
+                ImGui::SliderFloat("Shininess", shininess, 8.0f, 512.0f, "%.0f");
+                ImGui::SliderFloat("Range", range, 0.00f, 1.0f, "%.2f");
             }
-        case Components::UNSET:
+            break;
+        }
+        case Components::SOUND:
+        {
+            bool chooseSound = false;
+
+            std::shared_ptr<Components::Sound> sound = std::dynamic_pointer_cast<Components::Sound>(Icomponent);
+            if (ImGui::CollapsingHeader("Sound"))
             {
-                OutputDebugString("Component Type not Set for Inspector Call. Please set the Component Type on your Component to something valid.");
-                break;
+                bool compActive = Icomponent->IsActive();
+                if (ImGui::Checkbox("Active##4", &compActive))
+                {
+                    Icomponent->SetActive(compActive);
+                }
+
+                bool playLooped = sound->GetPlayLooped();
+
+                if (ImGui::Checkbox("Play Looped", &playLooped))
+                {
+                    sound->SetPlayLooped(playLooped);
+                }
+
+                bool playPaused = sound->GetStartPaused();
+
+                if (ImGui::Checkbox("Start Paused", &playPaused))
+                {
+                    sound->SetStartPaused(playPaused);
+                }
+
+                float volume = sound->GetVolume();
+                ImGui::SliderFloat("Volume", &volume, 0.f, 1.f, "%0.f");
+                sound->SetVolume(volume);
+
+                bool play3D = sound->GetPlaySoundIn3D();
+
+                if (ImGui::Checkbox("Play in 3D", &play3D))
+                {
+                    sound->SetPlaySoundIn3D(play3D);                  
+                }
+                if (play3D)
+                {
+                    float minDist = sound->GetMinDistance();
+                    float maxDist = sound->GetMaxDistance();
+
+                    ImGui::SliderFloat("Minimum Distance", &minDist, 0.f, 10000.f, "%0.f");
+                    sound->SetMinDistance(minDist);
+
+                    ImGui::SliderFloat("Maximum Distance", &maxDist, 0.f, 10000.f, "%0.f");
+                    sound->SetMinDistance(maxDist);
+                }
+
+
+                ImGui::Text(std::string("Sound file: " + sound->GetFilePath()).c_str());
+                OutputDebugString(sound->GetFilePath().c_str());
+
+                if (ImGui::Button("Set Sound Source"))
+                {
+                    chooseSound = true;
+
+                    UI::FileBrowser::GetInstance()->Open();
+
+                }
+                if (UI::FileBrowser::GetInstance()->HasSelected() && chooseSound)
+                {
+                    sound->SetSoundFile(UI::FileBrowser::GetInstance()->GetSelected());
+                    UI::FileBrowser::GetInstance()->ClearSelected();
+                    UI::FileBrowser::GetInstance()->Close();
+                    chooseSound = false;
+                }
             }
+            break;
+        }
+        case Components::UNSET:
+        {
+            OutputDebugString("Component Type not Set for Inspector Call. Please set the Component Type on your Component to something valid.");
+            break;
+        }
         }
     }
     Vector2F windowSize{ ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
@@ -330,7 +441,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 
     if (ImGui::BeginPopup("Add Component"))
     {
-        std::vector<std::string> types {"BOX_COLLIDER",
+        std::vector<std::string> types{ "BOX_COLLIDER",
                                         "LIGHT",
                                         "CAMERA",
                                         "MODEL",
@@ -338,7 +449,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                                         "SPHERE_COLLIDER" };
         for (unsigned int i = 0; i < types.size(); ++i)
         {
-            if (ImGui::Button(types[i].c_str(), ImVec2(200,20)))
+            if (ImGui::Button(types[i].c_str(), ImVec2(200, 20)))
             {
                 auto gameObject = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject();
                 const Vector2F size(1920, 1080);

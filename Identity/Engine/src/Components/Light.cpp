@@ -37,6 +37,11 @@ bool Engine::Components::Light::DeleteFromMemory()
     return false;
 }
 
+void Engine::Components::Light::SetActive(bool p_active)
+{
+    m_isActive = p_active;
+}
+
 void Engine::Components::Light::Serialize(std::ostream& p_stream)
 {
     m_light->Serialize(p_stream);

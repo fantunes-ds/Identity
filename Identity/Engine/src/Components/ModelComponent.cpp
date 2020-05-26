@@ -106,6 +106,11 @@ bool Engine::Components::ModelComponent::DeleteFromMemory()
     return Managers::ResourceManager::RemoveModel(m_model);
 }
 
+void Engine::Components::ModelComponent::SetActive(bool p_active)
+{
+    m_isActive = p_active;
+}
+
 
 void Engine::Components::ModelComponent::SetMaterial(const std::string& p_name)
 {

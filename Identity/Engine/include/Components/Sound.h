@@ -2,6 +2,7 @@
 #include <Export.h>
 #include <vector>
 #include <Components/IComponent.h>
+#include <filesystem>
 #include <irrKlang.h>
 
 namespace Engine::Components
@@ -31,6 +32,7 @@ namespace Engine::Components
         void SetMinDistance(float p_dist) { m_minDistance = p_dist; }
         void SetMaxDistance(float p_dist) { m_maxDistance = p_dist; }
         void SetVolume(float p_volume);
+        void SetSoundFile(std::filesystem::path p_path) { m_soundFile = p_path.string(); }
 
         [[nodiscard]] bool GetPlayLooped() const { return m_playLooped; }
         [[nodiscard]] bool GetStartPaused() const { return m_startPaused; }
@@ -40,6 +42,7 @@ namespace Engine::Components
         [[nodiscard]] float GetMaxDistance() const { return m_maxDistance; }
         [[nodiscard]] float GetVolume() const { return m_volume; }
         [[nodiscard]] irrklang::ISound* GetISound() const { return m_sound; }
+        [[nodiscard]] const std::string& GetFilePath() const { return m_soundFile; }
 
     private:
         bool m_playLooped = true;
