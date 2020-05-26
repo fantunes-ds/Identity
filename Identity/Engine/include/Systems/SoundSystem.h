@@ -16,9 +16,9 @@ namespace Engine::Systems
         ~SoundSystem();
 
         static void Update(const float p_deltaTime);
+        static void StopAllSounds();
 
         static void AddSound(std::shared_ptr<Components::Sound> p_sound);
-
         static SoundSystem* GetInstance();
         static irrklang::ISoundEngine* GetSoundEngine() { return GetInstance()->m_soundEngine; }
 

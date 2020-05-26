@@ -13,7 +13,9 @@ namespace Engine::Components
 
         Sound(Objects::GameObject* p_gameObject);
         Sound(Objects::GameObject* p_gameObject, const std::string& p_soundFile);
-        virtual ~Sound() = default;
+        Sound(Objects::GameObject* p_gameObject, std::shared_ptr<Sound> p_other);
+        virtual ~Sound();
+        Sound(const Sound&) = default;
 
         void PlaySound();
         void Pause();
@@ -48,7 +50,7 @@ namespace Engine::Components
     private:
         bool m_playLooped = true;
         bool m_startPaused = false;
-        bool m_playSoundIn3D = true;
+        bool m_playSoundIn3D = false;
         bool m_isPlaying = false;
         float m_minDistance = 1.0f;
         float m_maxDistance = 10.0f;

@@ -96,7 +96,9 @@ int Engine::Core::App::Run()
         Systems::TransformSystem::Update(deltaTime);
         Systems::LightSystem::Update(deltaTime);
         Systems::CameraSystem::Update(deltaTime);
-        Systems::SoundSystem::Update(deltaTime);
+
+        if (RunBullet)
+            Systems::SoundSystem::Update(deltaTime);
 
         fixedUpdateTimer += deltaTime;
         //todo this should never go below 0
@@ -195,5 +197,7 @@ void Engine::Core::App::TestingSimulation(bool p_stop)
         Managers::SceneManager::DeleteScene(active);
 
         RunBullet = false;
+
+        Systems::SoundSystem::StopAllSounds();
     }
 }

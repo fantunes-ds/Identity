@@ -9,6 +9,7 @@
 #include <Scene/Scene.h>
 
 #include "Components/Light.h"
+#include "Components/Sound.h"
 
 
 Engine::Managers::SceneManager::SceneManager()
@@ -171,6 +172,10 @@ void Engine::Managers::SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene
         for (auto component : gameObject->FindAllComponentsOfType<Components::SphereCollider>())
         {
             tmpOBJ->AddComponent<Components::SphereCollider>(component);
+        }
+        for (auto component : gameObject->FindAllComponentsOfType<Components::Sound>())
+        {
+            tmpOBJ->AddComponent<Components::Sound>(component);
         }
         for (auto component : gameObject->FindAllComponentsOfType<Components::Light>())
         {
