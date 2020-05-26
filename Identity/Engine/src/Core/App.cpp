@@ -60,7 +60,6 @@ int Engine::Core::App::Run()
     //----------
     std::string scenename{ "Demo" };
     Managers::SceneManager::LoadScene(scenename);
-
     //Managers::SceneManager::LoadScene("scene1");
 
     float fixedUpdateTimer = 0.0f;
@@ -193,7 +192,7 @@ void Engine::Core::App::TestingSimulation(bool p_stop)
         Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
 
         //TODO delete old play scene
-        Managers::SceneManager::DeletePlayScene();
+        Managers::SceneManager::DeleteScene(active);
 
         RunBullet = false;
     }
