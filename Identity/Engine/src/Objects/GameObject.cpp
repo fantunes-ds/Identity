@@ -24,14 +24,14 @@ GameObject::GameObject()
 {
     m_transform = AddComponent<Components::Transform>();
     Systems::TransformSystem::FindTransform(m_transform)->SetGameObject(this);
-    Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
+    Containers::GameObjectContainer::AddGameObject(std::make_shared<GameObject>(*this));
 }
 
 GameObject::GameObject(const std::string& p_name)
 {
     m_isActive = false;
     m_transform = Systems::TransformSystem::AddTransform(std::make_shared<Components::Transform>(p_name));
-    Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
+    Containers::GameObjectContainer::AddGameObject(std::make_shared<GameObject>(*this));
     SetName(p_name);
     auto trm = Systems::TransformSystem::GetTransform(m_transform);
     Containers::ComponentContainer::AddComponent(trm.get());
