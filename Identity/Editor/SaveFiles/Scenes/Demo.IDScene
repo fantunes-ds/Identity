@@ -113,7 +113,7 @@ class Engine::Components::SphereCollider
    m_mass 100
    m_offset 0.25 0.25 -0.25
    m_scale 1 1 1
-   m_radius 0
+   m_radius 0.5
 }
 class Engine::Components::ModelComponent
 {
