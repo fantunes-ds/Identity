@@ -197,8 +197,9 @@ void Engine::Components::SphereCollider::Deserialize(Objects::GameObject* p_game
         }
         else if (words[0] == "m_radius")
         {
+            m_radius = std::stof(words[1]);
             delete m_sphere;
-            m_sphere = new btSphereShape(std::stof(words[1]));
+            m_sphere = new btSphereShape(m_radius);
         }
 
         words.clear();

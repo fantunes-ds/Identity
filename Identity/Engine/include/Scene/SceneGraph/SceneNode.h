@@ -5,6 +5,7 @@
 namespace Engine::ObjectElements
 {
     class Mesh;
+    class Model;
 }
 
 namespace Engine::Objects
@@ -41,6 +42,7 @@ namespace Engine::Scene
         void SetTransform(int32_t p_trans) { m_transform = p_trans; }
         void SetParent(SceneNode* p_parent) { m_parent = p_parent; }
         void SetMesh(std::shared_ptr<ObjectElements::Mesh> p_mesh) { m_mesh = p_mesh; }
+        void SetModel(std::shared_ptr<ObjectElements::Model> p_model);
         void SetGameObject(std::shared_ptr<Objects::GameObject> p_gameObject) { m_gameObject = p_gameObject; }
 
     protected:

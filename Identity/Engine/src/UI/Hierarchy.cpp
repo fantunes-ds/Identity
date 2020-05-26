@@ -137,6 +137,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 
         switch (Icomponent->GetType())
         {
+#pragma region Model
         case Components::MODEL:
         {
             std::shared_ptr<Components::ModelComponent> modelComponent = std::dynamic_pointer_cast<Components::ModelComponent>(Icomponent);
@@ -157,12 +158,16 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     ImGui::Text("Choose Model");
                     for (auto& model : Managers::ResourceManager::GetAllModels())
                     {
-                        if (model->GetName() == "NoName")
+                        if (model->GetName()._Equal("NoName") ||  model->GetName()._Equal(gameObject->GetModel()->GetName()))
                             continue;
 
                         if (ImGui::Button(model->GetName().c_str()))
                         {
                             modelComponent->SetModel(model->GetID());
+                            for (auto go : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
+                                if (go.second->GetGameObject() == gameObject)
+                                    go.second->SetModel(model);
+
                         }
                     }ImGui::Button("Add new model");
 
@@ -174,7 +179,8 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     ImGui::OpenPopup("Select Mesh");
                 }
             }
-
+#pragma endregion
+#pragma region Material
             if (ImGui::CollapsingHeader("Material"))
             {
                 std::shared_ptr<Rendering::Materials::Material> mat = modelComponent->GetMaterial();
@@ -246,6 +252,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 }
             }
             break;
+#pragma endregion
         }
         case Components::BOX_COLLIDER:
         {
