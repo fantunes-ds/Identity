@@ -69,6 +69,22 @@ void Engine::Systems::SoundSystem::AddSound(std::shared_ptr<Components::Sound> p
     GetInstance()->m_sounds.insert_or_assign(p_sound->GetID(), p_sound);
 }
 
+void Engine::Systems::SoundSystem::RemoveSound(std::shared_ptr<Components::Sound> p_sound)
+{
+    if (p_sound == nullptr)
+        return;
+
+    GetInstance()->m_sounds.erase(p_sound->GetID());
+}
+
+void Engine::Systems::SoundSystem::RemoveSound(int32_t p_id)
+{
+    if (p_id < 0)
+        return;
+
+    GetInstance()->m_sounds.erase(p_id);
+}
+
 Engine::Systems::SoundSystem::SoundSystem()
 {
     m_soundEngine = irrklang::createIrrKlangDevice();

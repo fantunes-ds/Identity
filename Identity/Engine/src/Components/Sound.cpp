@@ -111,9 +111,8 @@ bool Engine::Components::Sound::operator==(IComponent* p_other)
 
 bool Engine::Components::Sound::RemoveComponent()
 {
-    //TODO complete this
-
-    return false;
+    Systems::SoundSystem::RemoveSound(m_id);
+    return true;
 }
 
 void Engine::Components::Sound::PlaySound()

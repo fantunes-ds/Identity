@@ -19,6 +19,9 @@ namespace Engine::Systems
         static void StopAllSounds();
 
         static void AddSound(std::shared_ptr<Components::Sound> p_sound);
+        static void RemoveSound(std::shared_ptr<Components::Sound> p_sound);
+        static void RemoveSound(int32_t p_id);
+
         static SoundSystem* GetInstance();
         static irrklang::ISoundEngine* GetSoundEngine() { return GetInstance()->m_soundEngine; }
 
