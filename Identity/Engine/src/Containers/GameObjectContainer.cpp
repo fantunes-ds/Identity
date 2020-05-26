@@ -33,10 +33,7 @@ void Engine::Containers::GameObjectContainer::RemoveGameObject(std::shared_ptr<O
     if (!p_gameObject)
         return;
 
-    for (auto& component : p_gameObject->GetAllComponents())
-    {
-        ComponentContainer::RemoveComponent(component);
-    }
+    p_gameObject->RemoveAllComponents();
 
     GetInstance()->m_gameObjects.erase(p_gameObject->GetID());
 }
@@ -45,6 +42,8 @@ void Engine::Containers::GameObjectContainer::RemoveGameObject(int32_t p_id)
 {
     if (p_id < 0)
         return;
+
+    auto go = GetInstance()->m_gameObjects.find(p_id);
 
     GetInstance()->m_gameObjects.erase(p_id);
 }

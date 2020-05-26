@@ -37,16 +37,18 @@ GameObject::GameObject(const std::string& p_name)
     Containers::ComponentContainer::AddComponent(trm.get());
 }
 
-void GameObject::DeleteFromMemory()
+
+GameObject::~GameObject()
 {
     for (auto& component : m_components)
     {
         Containers::ComponentContainer::RemoveComponent(component);
     }
+}
 
+void GameObject::DeleteFromMemory()
+{
     Containers::GameObjectContainer::RemoveGameObject(GetID());
-
-    Managers::SceneManager::GetActiveScene()->RemoveGameObject(GetID());
 }
 
 void GameObject::Serialize(std::ostream& p_stream)
@@ -186,4 +188,20 @@ bool GameObject::RemoveComponent(int32_t p_id)
     }
 
     return false;
+}
+
+bool GameObject::RemoveAllComponents()
+{
+    //first delete the components
+    for (size_t i = 0; i < m_components.size(); ++i)
+    {
+        std::shared_ptr<Components::IComponent> comp = Containers::ComponentContainer::FindComponent(m_components[i]);
+        comp->RemoveComponent();
+    }
+
+    m_components.clear();
+
+    //then empty the list
+
+    return true;
 }

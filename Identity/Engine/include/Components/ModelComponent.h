@@ -19,6 +19,7 @@ namespace Engine::Components
         void Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block) override;
 
         bool operator==(IComponent* p_other) override;
+        bool RemoveComponent() override;
 
         inline void SetModel(int32_t p_id) { m_model = p_id; }
         inline int32_t GetModel() const { return m_model; }
@@ -27,7 +28,7 @@ namespace Engine::Components
         inline std::shared_ptr<Rendering::Materials::Material> GetMaterial() const { return m_material; }
 
         bool DeleteFromMemory() override;
-        void SetActive(bool p_active) override { m_isActive = p_active; }
+        void SetActive(bool p_active) override;
 
     private:
         int32_t m_model;

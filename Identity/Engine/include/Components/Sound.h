@@ -2,6 +2,7 @@
 #include <Export.h>
 #include <vector>
 #include <Components/IComponent.h>
+#include <filesystem>
 #include <irrKlang.h>
 
 namespace Engine::Components
@@ -12,7 +13,9 @@ namespace Engine::Components
 
         Sound(Objects::GameObject* p_gameObject);
         Sound(Objects::GameObject* p_gameObject, const std::string& p_soundFile);
-        virtual ~Sound() = default;
+        Sound(Objects::GameObject* p_gameObject, std::shared_ptr<Sound> p_other);
+        virtual ~Sound();
+        Sound(const Sound&) = default;
 
         void PlaySound();
         void Pause();
@@ -22,6 +25,7 @@ namespace Engine::Components
         void Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block) override;
         bool DeleteFromMemory() override;
         bool operator==(IComponent* p_other) override;
+        bool RemoveComponent() override;
 
         void SetActive(bool p_active) override;
         void SetPlayLooped(bool p_playLooped) { m_playLooped = p_playLooped; }
@@ -31,6 +35,7 @@ namespace Engine::Components
         void SetMinDistance(float p_dist) { m_minDistance = p_dist; }
         void SetMaxDistance(float p_dist) { m_maxDistance = p_dist; }
         void SetVolume(float p_volume);
+        void SetSoundFile(std::filesystem::path p_path) { m_soundFile = p_path.string(); }
 
         [[nodiscard]] bool GetPlayLooped() const { return m_playLooped; }
         [[nodiscard]] bool GetStartPaused() const { return m_startPaused; }
@@ -40,11 +45,12 @@ namespace Engine::Components
         [[nodiscard]] float GetMaxDistance() const { return m_maxDistance; }
         [[nodiscard]] float GetVolume() const { return m_volume; }
         [[nodiscard]] irrklang::ISound* GetISound() const { return m_sound; }
+        [[nodiscard]] const std::string& GetFilePath() const { return m_soundFile; }
 
     private:
         bool m_playLooped = true;
         bool m_startPaused = false;
-        bool m_playSoundIn3D = true;
+        bool m_playSoundIn3D = false;
         bool m_isPlaying = false;
         float m_minDistance = 1.0f;
         float m_maxDistance = 10.0f;

@@ -200,8 +200,6 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
     if (!Systems::LightSystem::GetAllLights().empty())
     {
         int j = 0;
-        auto allLights = LightSystem::GetLights();
-
         for (int i = 0; i < LightSystem::GetLights().size() && j < 4; ++i)
         {
             const std::shared_ptr<Components::Light> light1 = Systems::LightSystem::GetLights()[i];

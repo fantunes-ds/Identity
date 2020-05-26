@@ -33,6 +33,14 @@ bool Engine::Components::Camera::operator==(IComponent* p_other)
     return false;
 }
 
+
+bool Engine::Components::Camera::RemoveComponent()
+{
+    Systems::CameraSystem::RemoveCamera(GetID());
+    Containers::ComponentContainer::RemoveComponent(GetID());
+    return true;
+}
+
 bool Engine::Components::Camera::DeleteFromMemory()
 {
     return Systems::CameraSystem::RemoveCamera(GetID());
@@ -61,6 +69,11 @@ void Engine::Components::Camera::Serialize(std::ostream& p_stream)
 
 void Engine::Components::Camera::Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block)
 {
+}
+
+void Engine::Components::Camera::SetActive(bool p_active)
+{
+    m_isActive = p_active;
 }
 
 void Engine::Components::Camera::UpdateVectors()

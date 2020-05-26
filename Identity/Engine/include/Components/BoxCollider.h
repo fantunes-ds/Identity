@@ -41,6 +41,9 @@ namespace Engine::Components
         bool operator==(IComponent* p_other) override { return false; }
         bool DeleteFromMemory() override;
         void SetActive(bool p_active) override;
+
+        bool RemoveComponent() override;
+
     private:
         /**
          * @brief Builds a Model that visually represents this BoxCollider's transform. 

@@ -11,7 +11,7 @@
 namespace Engine::Components
 {
 
-    class API_ENGINE SphereCollider: public IComponent
+    class API_ENGINE SphereCollider : public IComponent
     {
     public:
         SphereCollider(Objects::GameObject* p_gameObject, std::shared_ptr<SphereCollider> p_other);
@@ -33,15 +33,16 @@ namespace Engine::Components
         float& GetMass() { return m_mass; }
         float& GetRadius() { return m_radius; }
 
-        void SetPositionOffset(GPM::Vector3F p_offset); 
+        void SetPositionOffset(GPM::Vector3F p_offset);
         void SetMass(float p_mass);
         void SetRadius(float p_radius);
 
         //Not yet functional
         //void SetScale(const GPM::Vector3F& p_scale);
-        
+
         bool operator==(IComponent* p_other) override { return false; }
         bool DeleteFromMemory() override;
+        bool RemoveComponent() override;
         void SetActive(bool p_active) override;
     private:
         /**

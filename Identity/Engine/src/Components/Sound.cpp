@@ -13,6 +13,27 @@ Engine::Components::Sound::Sound(Objects::GameObject* p_gameObject, const std::s
     Systems::SoundSystem::AddSound(std::shared_ptr<Components::Sound>(this));
 }
 
+Engine::Components::Sound::Sound(Objects::GameObject* p_gameObject, std::shared_ptr<Sound> p_other): IComponent{ p_gameObject, SOUND }
+{
+    m_soundFile = p_other->m_soundFile;
+    m_maxDistance = p_other->m_maxDistance;
+    m_minDistance = p_other->m_minDistance;
+    m_playLooped = p_other->m_playLooped;
+    m_playSoundIn3D = p_other->m_playSoundIn3D;
+    m_sound = p_other->m_sound;
+    m_startPaused = p_other->m_startPaused;
+    m_volume = p_other->m_volume;
+    m_isActive = p_other->m_isActive;
+    m_name = p_other->m_name;
+
+    Systems::SoundSystem::AddSound(std::shared_ptr<Components::Sound>(this));
+}
+
+Engine::Components::Sound::~Sound()
+{
+    Stop();
+}
+
 void Engine::Components::Sound::Serialize(std::ostream& p_stream)
 {
     p_stream << typeid(*this).name() << "\n{\n" <<
@@ -87,6 +108,14 @@ bool Engine::Components::Sound::operator==(IComponent* p_other)
     return false;
 }
 
+
+bool Engine::Components::Sound::RemoveComponent()
+{
+    //TODO complete this
+
+    return false;
+}
+
 void Engine::Components::Sound::PlaySound()
 {
     if (m_isPlaying)
@@ -100,7 +129,7 @@ void Engine::Components::Sound::PlaySound()
             irrklang::vec3df(position.x, position.y, position.z), m_playLooped, m_startPaused, true);
     }
     else
-        m_sound = Systems::SoundSystem::GetSoundEngine()->play2D(m_soundFile.c_str());
+        m_sound = Systems::SoundSystem::GetSoundEngine()->play2D(m_soundFile.c_str(), m_playLooped, m_startPaused, true);
 
     if (m_sound)
     {

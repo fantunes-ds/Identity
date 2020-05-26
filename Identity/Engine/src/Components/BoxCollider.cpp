@@ -321,8 +321,6 @@ void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimen
 
     if (m_rigidbody)
     {
-
-        
         Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
 
         delete m_box;
@@ -333,11 +331,6 @@ void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimen
         Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
         delete m_rigidbody;
         m_rigidbody = new btRigidBody(rbInfo);
-
-        // m_rigidbody->setCollisionShape(m_box);
-        // m_box->calculateLocalInertia(m_mass, localInertia);
-        // m_rigidbody->setMassProps(m_mass, localInertia);
-        // m_rigidbody->updateInertiaTensor();
         Systems::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
     }
 
@@ -368,6 +361,14 @@ void Engine::Components::BoxCollider::SetActive(bool p_active)
         m_rigidbody->forceActivationState(ACTIVE_TAG);
         m_rigidbody->setCollisionFlags(!btCollisionObject::CF_NO_CONTACT_RESPONSE);
     }
+}
+
+
+bool Engine::Components::BoxCollider::RemoveComponent()
+{
+    Systems::PhysicsSystem::RemoveBoxCollider(GetID());
+    Containers::ComponentContainer::RemoveComponent(GetID());
+    return true;
 }
 
 Engine::ObjectElements::Model Engine::Components::BoxCollider::ConstructBox()

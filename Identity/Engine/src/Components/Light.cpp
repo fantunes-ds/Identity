@@ -9,6 +9,7 @@ Engine::Components::Light::Light(Objects::GameObject* p_gameObject): IComponent{
     // Containers::LightContainer::AddLight(light);
     m_isActive = p_gameObject->IsActive();
     m_light = std::make_shared<Rendering::Lights::DirectionalLight>();
+    m_light->GetLightData().set = 0;
     Systems::LightSystem::AddLight(std::make_shared<Light>(*this));
 }
 
@@ -37,6 +38,11 @@ bool Engine::Components::Light::DeleteFromMemory()
     return false;
 }
 
+void Engine::Components::Light::SetActive(bool p_active)
+{
+    m_isActive = p_active;
+}
+
 void Engine::Components::Light::Serialize(std::ostream& p_stream)
 {
     m_light->Serialize(p_stream);
@@ -53,4 +59,11 @@ void Engine::Components::Light::Deserialize(Objects::GameObject* p_gameObject, s
     m_light->GetLightData() = light->GetLightData();
 
     Systems::LightSystem::AddLight(std::make_shared<Light>(*this));
+}
+
+bool Engine::Components::Light::RemoveComponent()
+{
+    Systems::LightSystem::RemoveLight(GetID());
+    Containers::ComponentContainer::RemoveComponent(GetID());
+    return true;
 }

@@ -16,7 +16,7 @@ namespace Engine::Rendering::Lights
             float shininess;
             float range;
             float intensity;
-            float padding;
+            float set;
         };
         ILight(LightData p_lightData) : m_lightData{ p_lightData }{}
 
