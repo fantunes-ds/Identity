@@ -8,9 +8,6 @@
 #include <Managers/SceneManager.h>
 #include <Scene/Scene.h>
 
-
-#include <Systems/TransformSystem.h>
-#include "Systems/PhysicsSystem.h"
 #include "Components/Light.h"
 
 

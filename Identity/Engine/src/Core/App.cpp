@@ -11,7 +11,6 @@
 #include <Components/Camera.h>
 #include <Components/Light.h>
 #include <Components/BoxCollider.h>
-#include <Components/SphereCollider.h>
 #include <Input/Input.h>
 #include <Managers/SceneManager.h>
 #include <Managers/ResourceManager.h>
@@ -24,10 +23,8 @@
 #include <Systems/TransformSystem.h>
 #include <Systems/PhysicsSystem.h>
 #include <Systems/LightSystem.h>
-#include "Components/Sound.h"
-#include "Systems/SoundSystem.h"
-#include "UI/Hierarchy.h"
-#include <UI/imfilebrowser.h>
+#include <Systems/SoundSystem.h>
+#include <UI/Hierarchy.h>
 
 Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
@@ -170,7 +167,7 @@ void Engine::Core::App::TestingSimulation(bool p_stop)
         // InitScene(true);
 
         auto playScene = std::make_shared<Scene::Scene>();
-        playScene->SetName("play");
+        playScene->SetName("Play");
         auto activeScene = Managers::SceneManager::GetActiveScene();
         Managers::SceneManager::DuplicateScene(playScene, activeScene);
         Managers::SceneManager::AddScene(playScene);
