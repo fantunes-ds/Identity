@@ -37,16 +37,18 @@ GameObject::GameObject(const std::string& p_name)
     Containers::ComponentContainer::AddComponent(trm.get());
 }
 
-void GameObject::DeleteFromMemory()
+
+GameObject::~GameObject()
 {
     for (auto& component : m_components)
     {
         Containers::ComponentContainer::RemoveComponent(component);
     }
+}
 
+void GameObject::DeleteFromMemory()
+{
     Containers::GameObjectContainer::RemoveGameObject(GetID());
-
-    Managers::SceneManager::GetActiveScene()->RemoveGameObject(GetID());
 }
 
 void GameObject::Serialize(std::ostream& p_stream)

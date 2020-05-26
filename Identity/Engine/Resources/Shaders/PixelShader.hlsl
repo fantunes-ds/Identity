@@ -57,7 +57,7 @@ float3 CalculateLights(lightSource light, VS_OUT f_in)
     float3 fColor = (0, 0, 0);
     
     float distance = length(light.position.rgb - f_in.worldPos);
-    float attenuation = CalculateAttenuation(distance, light.range, light.intensity);
+    float attenuation = CalculateAttenuation(distance, light.range, light.diffuse.w);
     
     // ambient calculations
     float3 ambient = (light.ambient.rgb * light.ambient.w) * light.diffuse.rgb;

@@ -295,6 +295,8 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     float* specular[4] = { &lightData.specular.x, &lightData.specular.y, &lightData.specular.z, &lightData.specular.w };
                     float* range = { &lightData.range };
                     float* shininess = { &lightData.shininess };
+                    float* radius = { &lightData.range };
+
                     ImGui::ColorEdit3("Ambient Color", *ambient, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
                     ImGui::SameLine();
                     ImGui::Text("Ambient Color");
