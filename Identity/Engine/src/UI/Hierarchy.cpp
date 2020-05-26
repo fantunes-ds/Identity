@@ -386,7 +386,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 }
 
                 float volume = sound->GetVolume();
-                ImGui::SliderFloat("Volume", &volume, 0.f, 1.f, "%0.f");
+                ImGui::DragFloat("Volume", &volume, 0.05f, 0.f, 10.0f, "%0.3f");
                 sound->SetVolume(volume);
 
                 bool play3D = sound->GetPlaySoundIn3D();
@@ -400,15 +400,16 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     float minDist = sound->GetMinDistance();
                     float maxDist = sound->GetMaxDistance();
 
-                    ImGui::SliderFloat("Minimum Distance", &minDist, 0.f, 10000.f, "%0.f");
+                    ImGui::DragFloat("Minimum Distance", &minDist, 0.2f, 0, 0, "%0.2f");
                     sound->SetMinDistance(minDist);
 
-                    ImGui::SliderFloat("Maximum Distance", &maxDist, 0.f, 10000.f, "%0.f");
-                    sound->SetMinDistance(maxDist);
+                    ImGui::DragFloat("Maximum Distance", &maxDist, 0.2f, 0, 0, "%0.2f");
+                    sound->SetMaxDistance(maxDist);
                 }
 
 
-                ImGui::Text(std::string("Sound file: " + sound->GetFilePath()).c_str());
+                ImGui::Text("Sound file: ");
+                ImGui::Text(std::string(sound->GetFilePath()).c_str());
 
                 if (ImGui::Button("Set Sound Source"))
                 {

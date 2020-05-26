@@ -125,7 +125,7 @@ void Engine::Components::Sound::PlaySound()
     if (m_playSoundIn3D)
     {
         m_sound = Systems::SoundSystem::GetSoundEngine()->play3D(m_soundFile.c_str(),
-            irrklang::vec3df(position.x, position.y, position.z), m_playLooped, m_startPaused, true);
+            irrklang::vec3df(position.x, position.y, -position.z), m_playLooped, m_startPaused, true);
     }
     else
         m_sound = Systems::SoundSystem::GetSoundEngine()->play2D(m_soundFile.c_str(), m_playLooped, m_startPaused, true);
