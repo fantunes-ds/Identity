@@ -360,7 +360,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
         }
         case Components::SOUND:
         {
-            bool chooseSound = false;
+            static bool chooseSound = false;
 
             std::shared_ptr<Components::Sound> sound = std::dynamic_pointer_cast<Components::Sound>(Icomponent);
             if (ImGui::CollapsingHeader("Sound"))
@@ -409,15 +409,13 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 
 
                 ImGui::Text(std::string("Sound file: " + sound->GetFilePath()).c_str());
-                OutputDebugString(sound->GetFilePath().c_str());
 
                 if (ImGui::Button("Set Sound Source"))
                 {
                     chooseSound = true;
-
                     UI::FileBrowser::GetInstance()->Open();
-
                 }
+
                 if (UI::FileBrowser::GetInstance()->HasSelected() && chooseSound)
                 {
                     sound->SetSoundFile(UI::FileBrowser::GetInstance()->GetSelected());

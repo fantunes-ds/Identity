@@ -113,7 +113,7 @@ class Engine::Components::SphereCollider
    m_mass 100
    m_offset 0.25 0.25 -0.25
    m_scale 1 1 1
-   m_radius 0.5
+   m_radius 0
 }
 class Engine::Components::ModelComponent
 {
@@ -154,7 +154,7 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 0.1 0.1 -0.1
    m_box 0.1 0.1 0.1
-   m_model 3446
+   m_model 88
 }
 class Engine::Components::ModelComponent
 {
@@ -195,7 +195,7 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 0.1 0.1 -0.1
    m_box 0.1 0.1 0.1
-   m_model 3590
+   m_model 100
 }
 class Engine::Components::ModelComponent
 {
@@ -236,12 +236,22 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 0.1 0.1 -0.1
    m_box 0.1 0.1 0.1
-   m_model 3938
+   m_model 112
 }
 class Engine::Components::ModelComponent
 {
    m_model Cube
    m_material default
+}
+class Engine::Components::Sound
+{
+   m_playLooped 1
+   m_startPaused 0
+   m_playSoundIn3D 0
+   m_minDistance 10
+   m_maxDistance 10
+   m_volume 1
+   m_soundFile C:\Users\Gabriel\Documents\ISART_travaux\GP2\Engine\LookingForGroup\Identity\Engine\Resources\Sounds\test.mp3
 }
 ;
 
@@ -473,7 +483,7 @@ class Engine::Components::Transform
    m_position 4 1 4
    m_forward -0 -0.34202 0.939693
    m_right 1 -0 0
-   m_up 0 -0.939693 -0.34202
+   m_up 0 -0.939694 -0.34202
    m_scale 3 0.2 5
    m_rotation -0.173648 0 0 0.984808
    m_worldTransform 3 0 0 4 0 0.187939 1.7101 1 0 -0.068404 4.69846 4 0 0 0 1
@@ -485,7 +495,7 @@ class Engine::Components::Transform
    m_position 4 1 4
    m_forward -0 -0.34202 0.939693
    m_right 1 -0 0
-   m_up 0 -0.939693 -0.34202
+   m_up 0 -0.939694 -0.34202
    m_scale 3 0.2 5
    m_rotation -0.173648 0 0 0.984808
    m_worldTransform 3 0 0 4 0 0.187939 1.7101 1 0 -0.068404 4.69846 4 0 0 0 1
@@ -501,7 +511,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 1.5 0.1 -2.5
    m_box 1.5 0.1 2.5
-   m_model 4163
+   m_model 183
 }
 ;
 
@@ -514,7 +524,7 @@ class Engine::Components::Transform
    m_position 4 2 0
    m_forward -0 0.34202 0.939693
    m_right 1 0 0
-   m_up 0 -0.939693 0.34202
+   m_up 0 -0.939694 0.34202
    m_scale 3 0.2 5
    m_rotation 0.173648 0 0 0.984808
    m_worldTransform 3 0 0 4 0 0.187939 -1.7101 2 0 0.068404 4.69846 0 0 0 0 1
@@ -526,7 +536,7 @@ class Engine::Components::Transform
    m_position 4 2 0
    m_forward -0 0.34202 0.939693
    m_right 1 0 0
-   m_up 0 -0.939693 0.34202
+   m_up 0 -0.939694 0.34202
    m_scale 3 0.2 5
    m_rotation 0.173648 0 0 0.984808
    m_worldTransform 3 0 0 4 0 0.187939 -1.7101 2 0 0.068404 4.69846 0 0 0 0 1
@@ -542,7 +552,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 1.5 0.1 -2.5
    m_box 1.5 0.1 2.5
-   m_model 4631
+   m_model 195
 }
 ;
 
@@ -583,7 +593,7 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 0.1 0.1 -0.1
    m_box 0.1 0.1 0.1
-   m_model 6506
+   m_model 207
 }
 ;
 
@@ -624,7 +634,7 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 0.1 0.1 -0.1
    m_box 0.1 0.1 0.1
-   m_model 7415
+   m_model 219
 }
 ;
 
@@ -665,6 +675,6 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 0.1 0.1 -0.1
    m_box 0.1 0.1 0.1
-   m_model 8891
+   m_model 231
 }
 ;
