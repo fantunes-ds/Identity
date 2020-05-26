@@ -189,3 +189,19 @@ bool GameObject::RemoveComponent(int32_t p_id)
 
     return false;
 }
+
+bool GameObject::RemoveAllComponents()
+{
+    //first delete the components
+    for (size_t i = 0; i < m_components.size(); ++i)
+    {
+        std::shared_ptr<Components::IComponent> comp = Containers::ComponentContainer::FindComponent(m_components[i]);
+        comp->RemoveComponent();
+    }
+
+    m_components.clear();
+
+    //then empty the list
+
+    return true;
+}

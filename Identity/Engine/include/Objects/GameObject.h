@@ -25,6 +25,7 @@ namespace Engine::Objects
 		 * @return returns true Component has been successfully deleted from memory.
 		 */
 		bool RemoveComponent(int32_t p_id);
+		bool RemoveAllComponents();
 
 		template <class T>
 		bool RemoveComponent()
