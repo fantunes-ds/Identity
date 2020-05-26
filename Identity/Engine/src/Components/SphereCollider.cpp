@@ -62,7 +62,8 @@ Engine::Components::SphereCollider::SphereCollider(Engine::Objects::GameObject* 
         }
         else if (words[0] == "m_radius")
         {
-            m_sphere = new btSphereShape(std::stof(words[1]));
+            m_radius = std::stof(words[1]);
+            m_sphere = new btSphereShape(m_radius);
         }
 
         words.clear();
