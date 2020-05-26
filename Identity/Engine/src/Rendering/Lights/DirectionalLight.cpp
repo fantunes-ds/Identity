@@ -7,6 +7,7 @@ using namespace Engine::Rendering;
 
 Lights::DirectionalLight::DirectionalLight() : ILight{LightData{}}
 {
+    GetLightData().set = -1.f;
 }
 
 Lights::DirectionalLight::DirectionalLight(const Vector4F& p_position, const Vector4F&  p_ambient,
@@ -47,7 +48,7 @@ void Lights::DirectionalLight::Serialize(std::ostream& p_stream)
         "       shininess " << GetLightData().shininess << "\n" <<
         "       range " << GetLightData().range << "\n" <<
         "       intensity " << GetLightData().intensity << "\n" <<
-        "       padding " << GetLightData().padding << "\n" <<
+        "       padding " << GetLightData().set << "\n" <<
         "       position " << GetLightData().position << "\n" <<
         "       ambient " << GetLightData().ambient << "\n" <<
         "       diffuse " << GetLightData().diffuse << "\n" <<
@@ -93,7 +94,7 @@ void Lights::DirectionalLight::Deserialize(std::vector<std::string>& p_block)
         }
         else if (words[0] == "padding")
         {
-            GetLightData().padding = std::stof(words[1]);
+            GetLightData().set = std::stof(words[1]);
         }
         else if (words[0] == "position")
         {

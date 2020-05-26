@@ -345,6 +345,14 @@ bool Engine::Components::SphereCollider::DeleteFromMemory()
     return true;
 }
 
+
+bool Engine::Components::SphereCollider::RemoveComponent()
+{
+    Systems::PhysicsSystem::RemoveSphereCollider(GetID());
+    Containers::ComponentContainer::RemoveComponent(GetID());
+    return true;
+}
+
 void Engine::Components::SphereCollider::SetActive(bool p_active)
 {
     m_isActive = p_active;

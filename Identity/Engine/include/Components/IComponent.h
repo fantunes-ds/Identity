@@ -31,6 +31,8 @@ namespace Engine::Components
         virtual void Serialize(std::ostream& p_stream) = 0;
         virtual void Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block) = 0;
 
+        virtual bool RemoveComponent() = 0;
+
         const Type GetType() const { return m_type; }
         void SetGameObject(Objects::GameObject* p_gameObject);
         [[nodiscard]] Objects::GameObject* GetGameObject() const;

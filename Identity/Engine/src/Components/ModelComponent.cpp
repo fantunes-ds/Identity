@@ -10,8 +10,9 @@ Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameOb
 }
 
 
-Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject): IComponent{p_gameObject, MODEL}, m_model{0}
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject): IComponent{p_gameObject, MODEL}, m_model{-1}
 {
+    m_material = Managers::ResourceManager::GetMaterial("default");
 }
 
 Engine::Components::ModelComponent::ModelComponent(Objects::GameObject*            p_gameObject,
@@ -97,6 +98,13 @@ bool Engine::Components::ModelComponent::operator==(IComponent* p_other)
 
         return true;
     }
+
+    return false;
+}
+
+bool Engine::Components::ModelComponent::RemoveComponent()
+{
+    //TODO complete this
 
     return false;
 }
