@@ -22,6 +22,8 @@ namespace Engine::Components
         void Serialize(std::ostream& p_stream) override;
         void Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block) override;
 
+        bool RemoveComponent() override;
+
     private:
         std::shared_ptr<Rendering::Lights::ILight> m_light;
     };

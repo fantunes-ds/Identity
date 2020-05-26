@@ -19,6 +19,7 @@ namespace Engine::Components
         void Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block) override;
 
         bool operator==(IComponent* p_other) override;
+        bool RemoveComponent() override;
 
         inline void SetModel(int32_t p_id) { m_model = p_id; }
         inline int32_t GetModel() const { return m_model; }

@@ -26,6 +26,32 @@ namespace Engine::Objects
 		 */
 		bool RemoveComponent(int32_t p_id);
 
+		template <class T>
+		bool RemoveComponent()
+		{
+			for (auto component : m_components)
+			{
+				if (std::shared_ptr<T> foundComp = std::dynamic_pointer_cast<T>(Containers::ComponentContainer::FindComponent(component)))
+				{
+					for (size_t i = 0; i < m_components.size(); ++i)
+					{
+						if (m_components[i] == foundComp->GetID())
+						{
+							if (foundComp->RemoveComponent())
+							{
+							    m_components.erase(m_components.begin() + i);
+								return true;
+							}
+							return false;
+						}
+					}
+				}
+			}
+
+			return false;
+		}
+
+
 		/**
 		 * @brief Creates a new Component and adds it to the GameObject and the ComponentContainer.
 		 * @return ID of the newly created Component.

@@ -87,6 +87,14 @@ bool Engine::Components::Sound::operator==(IComponent* p_other)
     return false;
 }
 
+
+bool Engine::Components::Sound::RemoveComponent()
+{
+    //TODO complete this
+
+    return false;
+}
+
 void Engine::Components::Sound::PlaySound()
 {
     if (m_isPlaying)

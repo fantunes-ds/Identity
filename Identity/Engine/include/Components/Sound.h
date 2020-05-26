@@ -23,6 +23,7 @@ namespace Engine::Components
         void Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block) override;
         bool DeleteFromMemory() override;
         bool operator==(IComponent* p_other) override;
+        bool RemoveComponent() override;
 
         void SetActive(bool p_active) override;
         void SetPlayLooped(bool p_playLooped) { m_playLooped = p_playLooped; }

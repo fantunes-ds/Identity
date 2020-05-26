@@ -14,6 +14,8 @@ namespace Engine::Components
         ~Camera() = default;
 
         bool operator==(IComponent* p_other) override;
+        bool RemoveComponent() override;
+
         bool DeleteFromMemory() override;
         void Serialize(std::ostream& p_stream) override;
         void Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block) override;
