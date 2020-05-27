@@ -64,6 +64,8 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
     static bool showSave = false;
     static bool MatCreationPopup = false;
     static bool chooseScene = false;
+    static bool addNewModel = false;
+    static bool addNewTexture = false;
 
     if (ImGui::BeginMenuBar())
     {
@@ -119,6 +121,11 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
                 if (ImGui::MenuItem("Material", "", nullptr))
                 {
                     MatCreationPopup = true;
+                }
+                if (ImGui::MenuItem("Model", "", nullptr))
+                {
+                    UI::FileBrowser::GetInstance()->Open();
+                    addNewModel = true;
                 }
                 ImGui::EndMenu();
             }
@@ -210,14 +217,16 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
         ImGui::Begin("Material Creator");
         ImGui::Text("Please Choose a name");
 
-        static char* name = new char[512];
         static std::string texName;
 
-        ImGui::InputText("Material name", name, sizeof(name));
+        static char buf1[64] = "";
+        ImGui::InputText(" ", buf1, 64);
 
         if (ImGui::BeginPopup("Dock-Select Texture"))
         {
             ImGui::Text("Choose Texture");
+            ImGui::Text(texName.c_str());
+
             for (auto& texture : Managers::ResourceManager::GetAllTextures())
             {
                 if (texture->GetName() == "NoName")
@@ -229,7 +238,11 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
                 }
             }
 
-            ImGui::Button("Add new texture");
+            if (ImGui::Button("Add new texture"))
+            {
+                UI::FileBrowser::GetInstance()->Open();
+                addNewTexture = true;
+            }
 
             ImGui::EndPopup();
         }
@@ -242,8 +255,58 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
         if (ImGui::Button("Create Material"))
         {
             MatCreationPopup = false;
-            Managers::ResourceManager::CreateMaterial(name, "defaultPS", "defaultVS", texName);
+            Managers::ResourceManager::CreateMaterial(buf1, "defaultPS", "defaultVS", texName);
         }
         ImGui::End();
+    }
+    if (addNewModel && UI::FileBrowser::GetInstance()->HasSelected())
+    {
+        if (ImGui::Begin("New Model Name", &addNewModel, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::SetWindowFocus();
+            ImGui::Text("Enter new model name: ");
+            ImGui::SameLine();
+            static char buf1[64] = "";
+            ImGui::InputText(" ", buf1, 64);
+            ImGui::SameLine();
+
+            if (ImGui::Button("Save"))
+            {
+                Managers::ResourceManager::AddModel(UI::FileBrowser::GetInstance()->GetSelected().string(), buf1);
+                addNewModel = false;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Close"))
+            {
+                addNewModel = false;
+            }
+
+            ImGui::End();
+        }
+    }
+    if (addNewTexture && UI::FileBrowser::GetInstance()->HasSelected())
+    {
+        if (ImGui::Begin("New Texture Name", &addNewModel, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::SetWindowFocus();
+            ImGui::Text("Enter new texture name: ");
+            ImGui::SameLine();
+            static char buf1[64] = "";
+            ImGui::InputText(" ", buf1, 64);
+            ImGui::SameLine();
+
+            if (ImGui::Button("Save"))
+            {
+                Managers::ResourceManager::AddTexture(UI::FileBrowser::GetInstance()->GetSelected().string(), buf1);
+                addNewTexture = false;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Close"))
+            {
+                addNewTexture = false;
+            }
+
+            ImGui::End();
+        }
     }
 }

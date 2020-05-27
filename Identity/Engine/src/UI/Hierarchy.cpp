@@ -88,6 +88,8 @@ void Engine::UI::Hierarchy::CreateHierarchy(Core::App& p_appRef)
 
 void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 {
+    static bool loadNewModel = false;
+
     ImGui::Begin("Inspector");
 
     if (p_id < 0)
@@ -169,7 +171,13 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                                     go.second->SetModel(model);
 
                         }
-                    }ImGui::Button("Add new model");
+                    }
+
+                    if (ImGui::Button("Add new model"))
+                    {
+                        UI::FileBrowser::GetInstance()->Open();
+                        loadNewModel = true;
+                    }
 
                     ImGui::EndPopup();
                 }
@@ -492,4 +500,32 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
     }
 
     ImGui::End();
+
+    //if loading new model
+    if (UI::FileBrowser::GetInstance()->HasSelected() && loadNewModel)
+    {
+        if (ImGui::Begin("New Model Name", &loadNewModel, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::SetWindowFocus();
+            ImGui::Text("Enter new model name: ");
+            ImGui::SameLine();
+            static char buf1[64] = ""; ImGui::InputText(" ", buf1, 64);
+            ImGui::SameLine();
+
+            if (ImGui::Button("Save"))
+            {
+                Managers::ResourceManager::AddModel(UI::FileBrowser::GetInstance()->GetSelected().string(), buf1);
+                loadNewModel = false;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Close"))
+            {
+                loadNewModel = false;
+            }
+
+            ImGui::End();
+        }
+    }
+        
+    
 }

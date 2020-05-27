@@ -45,7 +45,7 @@ namespace Engine::Managers
 
     private:
         bool DeletePlaySceneNS();
-        bool DeleteSceneNS(std::shared_ptr<Scene::Scene>& p_scene);
+        //bool DeleteSceneNS(std::shared_ptr<Scene::Scene>& p_scene);
 
         inline static std::unique_ptr<SceneManager> m_instance{nullptr};
         std::vector<std::shared_ptr<Scene::Scene>>  m_scenes;
