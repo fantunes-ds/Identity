@@ -62,7 +62,8 @@ Engine::Components::SphereCollider::SphereCollider(Engine::Objects::GameObject* 
         }
         else if (words[0] == "m_radius")
         {
-            m_sphere = new btSphereShape(std::stof(words[1]));
+            m_radius = std::stof(words[1]);
+            m_sphere = new btSphereShape(m_radius);
         }
 
         words.clear();
@@ -112,6 +113,7 @@ Engine::Components::SphereCollider::SphereCollider(Objects::GameObject* p_gameOb
     auto rotation = m_gameObject->GetTransform()->GetRotation();
 
     m_mass = p_other->m_mass;
+    m_radius = p_other->m_radius;
     m_offset = p_other->m_offset;
     m_sphere = p_other->m_sphere;
     
@@ -158,7 +160,7 @@ void Engine::Components::SphereCollider::Serialize(std::ostream& p_stream)
         "   m_mass " << m_mass << "\n" <<
         "   m_offset " << m_offset.x << " " << m_offset.y << " " << m_offset.z << "\n" <<
         "   m_scale " << m_scale.x << " " << m_scale.y << " " << m_scale.z << "\n" <<
-        "   m_radius " << m_sphere->getRadius() << "\n" <<
+        "   m_radius " << m_radius << "\n" <<
         "}\n";
 }
 
@@ -197,8 +199,9 @@ void Engine::Components::SphereCollider::Deserialize(Objects::GameObject* p_game
         }
         else if (words[0] == "m_radius")
         {
+            m_radius = std::stof(words[1]);
             delete m_sphere;
-            m_sphere = new btSphereShape(std::stof(words[1]));
+            m_sphere = new btSphereShape(m_radius);
         }
 
         words.clear();
@@ -282,15 +285,20 @@ void Engine::Components::SphereCollider::SetRadius(float p_radius)
 {
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
 
+    m_radius = p_radius;
+
     if (m_rigidbody)
     {
-        delete m_sphere;
         Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
+        delete m_sphere;
         m_sphere = new btSphereShape(p_radius);
-        m_rigidbody->setCollisionShape(m_sphere);
+        btVector3 localInertia = m_rigidbody->getLocalInertia();
         m_sphere->calculateLocalInertia(m_mass, localInertia);
-        m_rigidbody->setMassProps(m_mass, localInertia);
-        m_rigidbody->updateInertiaTensor();
+
+        btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, m_motionState, m_sphere, localInertia);
+        Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
+        delete m_rigidbody;
+        m_rigidbody = new btRigidBody(rbInfo);
         Systems::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
     }
 
@@ -318,6 +326,14 @@ bool Engine::Components::SphereCollider::DeleteFromMemory()
 {
     Managers::ResourceManager::RemoveModel(m_model->GetID());
     Systems::PhysicsSystem::RemoveCollider(GetID());
+    return true;
+}
+
+
+bool Engine::Components::SphereCollider::RemoveComponent()
+{
+    Systems::PhysicsSystem::RemoveCollider(GetID());
+    Containers::ComponentContainer::RemoveComponent(GetID());
     return true;
 }
 

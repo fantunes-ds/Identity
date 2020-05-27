@@ -43,6 +43,8 @@ namespace Engine::Components
         bool operator==(IComponent* p_other) override { return false; }
         bool DeleteFromMemory() override;
         void SetActive(bool p_active) override;
+
+        bool RemoveComponent() override;
         void SetPositionOffset(GPM::Vector3F p_offset) override; 
 
     private:

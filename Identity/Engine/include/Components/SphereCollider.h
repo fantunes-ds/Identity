@@ -28,6 +28,7 @@ namespace Engine::Components
         /***
          * @brief returns Bullet Physics' Matrix that concerns this BoxCollider.
          */
+        float& GetRadius() { return m_radius; }
         btSphereShape* GetShape() const {return m_sphere; }
         
         void SetMass(float p_mass);
@@ -35,9 +36,10 @@ namespace Engine::Components
 
         //Not yet functional
         //void SetScale(const GPM::Vector3F& p_scale);
-        
+
         bool operator==(IComponent* p_other) override { return false; }
         bool DeleteFromMemory() override;
+        bool RemoveComponent() override;
         void SetActive(bool p_active) override;
         void SetPositionOffset(GPM::Vector3F p_offset) override; 
 
@@ -46,6 +48,7 @@ namespace Engine::Components
          * @brief Builds a Model that visually represents this SphereCollider's transform. 
          */
         ObjectElements::Model ConstructSphere();
+        float m_radius;
         Vector3F m_scale = Vector3F::one;
         btSphereShape* m_sphere;
     };

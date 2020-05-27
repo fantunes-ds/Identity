@@ -7,6 +7,8 @@
 #include <Managers/SceneManager.h>
 #include <Scene/Scene.h>
 
+#include "Containers/GameObjectContainer.h"
+
 Engine::Scene::SceneNode::SceneNode(std::shared_ptr<Objects::GameObject> p_gameObject) : m_gameObject{ p_gameObject }
 {
 }
@@ -44,6 +46,7 @@ void Engine::Scene::SceneNode::RemoveChild(std::shared_ptr<SceneNode> p_child)
         if (it->get()->GetID() == p_child->GetID())
         {
             m_children.erase(it);
+            Containers::GameObjectContainer::RemoveGameObject(p_child->GetGameObject());
             return;
         }
     }      
@@ -92,6 +95,17 @@ std::vector<std::shared_ptr<Engine::Scene::SceneNode>> Engine::Scene::SceneNode:
     }
 
     return std::move(children);
+}
+
+void Engine::Scene::SceneNode::SetModel(std::shared_ptr<ObjectElements::Model> p_model)
+{
+    for (auto& child : m_children)
+        RemoveChild(child);
+
+    m_children.clear();
+
+    for (unsigned int i = 0; i < p_model->GetMeshes().size(); ++i)
+        AddChild(std::make_shared<SceneNode>(p_model->GetMeshes()[i]));
 }
 
 

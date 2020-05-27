@@ -8,10 +8,8 @@
 #include <Managers/SceneManager.h>
 #include <Scene/Scene.h>
 
-
-#include <Systems/TransformSystem.h>
-#include "Systems/PhysicsSystem.h"
 #include "Components/Light.h"
+#include "Components/Sound.h"
 
 
 Engine::Managers::SceneManager::SceneManager()
@@ -154,7 +152,7 @@ void Engine::Managers::SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene
     for (auto gameObject : p_source->GetAllGameObjectsInScene())
     {
         //create new gameobject
-        auto name   = gameObject->GetName();
+        auto name   = gameObject->GetName() + "1";
         auto tmpOBJ = std::make_shared<Objects::GameObject>(name);
         //we now have gameobject with same name
 
@@ -174,6 +172,10 @@ void Engine::Managers::SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene
         for (auto component : gameObject->FindAllComponentsOfType<Components::SphereCollider>())
         {
             tmpOBJ->AddComponent<Components::SphereCollider>(component);
+        }
+        for (auto component : gameObject->FindAllComponentsOfType<Components::Sound>())
+        {
+            tmpOBJ->AddComponent<Components::Sound>(component);
         }
         for (auto component : gameObject->FindAllComponentsOfType<Components::Light>())
         {

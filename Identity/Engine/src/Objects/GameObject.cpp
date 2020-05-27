@@ -24,29 +24,31 @@ GameObject::GameObject()
 {
     m_transform = AddComponent<Components::Transform>();
     Systems::TransformSystem::FindTransform(m_transform)->SetGameObject(this);
-    Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
+    Containers::GameObjectContainer::AddGameObject(std::make_shared<GameObject>(*this));
 }
 
 GameObject::GameObject(const std::string& p_name)
 {
     m_isActive = false;
     m_transform = Systems::TransformSystem::AddTransform(std::make_shared<Components::Transform>(p_name));
-    Containers::GameObjectContainer::AddGameObject(std::shared_ptr<GameObject>(this));
+    Containers::GameObjectContainer::AddGameObject(std::make_shared<GameObject>(*this));
     SetName(p_name);
     auto trm = Systems::TransformSystem::GetTransform(m_transform);
     Containers::ComponentContainer::AddComponent(trm.get());
 }
 
-void GameObject::DeleteFromMemory()
+
+GameObject::~GameObject()
 {
     for (auto& component : m_components)
     {
         Containers::ComponentContainer::RemoveComponent(component);
     }
+}
 
+void GameObject::DeleteFromMemory()
+{
     Containers::GameObjectContainer::RemoveGameObject(GetID());
-
-    Managers::SceneManager::GetActiveScene()->RemoveGameObject(GetID());
 }
 
 void GameObject::Serialize(std::ostream& p_stream)
@@ -186,4 +188,20 @@ bool GameObject::RemoveComponent(int32_t p_id)
     }
 
     return false;
+}
+
+bool GameObject::RemoveAllComponents()
+{
+    //first delete the components
+    for (size_t i = 0; i < m_components.size(); ++i)
+    {
+        std::shared_ptr<Components::IComponent> comp = Containers::ComponentContainer::FindComponent(m_components[i]);
+        comp->RemoveComponent();
+    }
+
+    m_components.clear();
+
+    //then empty the list
+
+    return true;
 }

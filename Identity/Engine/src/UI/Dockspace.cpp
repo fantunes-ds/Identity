@@ -7,12 +7,10 @@
 #include <UI/Dockspace.h>
 
 
-#include "Managers/SceneManager.h"
-#include "UI/Hierarchy.h"
+#include <Managers/SceneManager.h>
 #include <UI/imfilebrowser.h>
 #include <Components/ModelComponent.h>
 #include <Objects/GameObject.h>
-#include <Managers/SceneManager.h>
 #include <Scene/Scene.h>
 
 void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
@@ -36,19 +34,11 @@ void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
             ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_MenuBar;
     }
-
-    // When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background 
-    // and handle the pass-thru hole, so we ask Begin() to not render a background.
     if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
         window_flags |= ImGuiWindowFlags_NoBackground;
     static bool test = true;
-    // Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-    // This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
-    // all active windows docked into it will lose their parent and become undocked.
-    // We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
-    // any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    ImGui::Begin("DockSpace Demo", &test, window_flags);
+    ImGui::Begin("Identity Dockspace", &test, window_flags);
     ImGui::PopStyleVar();
 
     if (opt_fullscreen)
@@ -60,7 +50,7 @@ void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
     // DockSpace
     if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
     {
-        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+        ImGuiID dockspace_id = ImGui::GetID("Identity Dockspace");
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
         CreateMenuBar(p_appRef);
@@ -72,9 +62,14 @@ void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
 void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
 {
     static bool showSave = false;
+    static bool MatCreationPopup = false;
+    static bool chooseScene = false;
+    static bool addNewModel = false;
+    static bool addNewTexture = false;
 
     if (ImGui::BeginMenuBar())
     {
+
         //todo all shortcuts
         if (ImGui::BeginMenu("File"))
         {
@@ -82,6 +77,7 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             if (ImGui::MenuItem("Open Scene", "Ctrl + O", nullptr))
             {
                 UI::FileBrowser::GetInstance()->Open();
+                chooseScene = true;
             }
             ImGui::Separator();
             if (ImGui::MenuItem("Save", "Ctrl + S", nullptr))
@@ -90,7 +86,7 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             }
             if (ImGui::MenuItem("Save As...", "Ctrl + Shift + S", nullptr))
             {
-                showSave = true;       
+                showSave = true;
             }
             ImGui::MenuItem("Build", "Ctrl + B", nullptr);
             ImGui::Separator();
@@ -112,6 +108,7 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             }
             ImGui::EndMenu();
         }
+
         if (ImGui::BeginMenu("Assets"))
         {
             if (ImGui::BeginMenu("Create"))
@@ -120,7 +117,16 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
                 ImGui::Separator();
                 ImGui::MenuItem("Scene", "", nullptr);
                 ImGui::Separator();
-                ImGui::MenuItem("Material", "", nullptr);
+
+                if (ImGui::MenuItem("Material", "", nullptr))
+                {
+                    MatCreationPopup = true;
+                }
+                if (ImGui::MenuItem("Model", "", nullptr))
+                {
+                    UI::FileBrowser::GetInstance()->Open();
+                    addNewModel = true;
+                }
                 ImGui::EndMenu();
             }
             ImGui::EndMenu();
@@ -146,18 +152,15 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
                 }
                 ImGui::EndMenu();
             }
-            if (ImGui::BeginMenu("Light"))
-            {
-                ImGui::MenuItem("Directional Light", "", nullptr);
-                ImGui::EndMenu();
-            }
-
-            ImGui::MenuItem("Camera", "", nullptr);
             ImGui::EndMenu();
         }
 
-        ImGui::SetCursorPosX(Rendering::Renderer::GetInstance()->GetWidth() / 2);
-        if (ImGui::Button("Play"))
+        ImGui::SetCursorPosX(Rendering::Renderer::GetInstance()->GetWidth() / 3);
+        ImGui::Text(std::string("Scene : " + Managers::SceneManager::GetActiveScene()->GetName()).c_str());
+
+        const ImVec2 size{ 35.0f, 0.0f };
+        ImGui::SetCursorPosX((Rendering::Renderer::GetInstance()->GetWidth() / 2) - size.x);
+        if (ImGui::Button("Play", size))
         {
             p_appRef.TestingSimulation();
         }
@@ -174,11 +177,13 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
     UI::FileBrowser::GetInstance()->Display();
 
     //show load scene dialog
-    if (UI::FileBrowser::GetInstance()->HasSelected())
+    if (UI::FileBrowser::GetInstance()->HasSelected() && chooseScene)
     {
         Engine::Managers::SceneManager::LoadScene(UI::FileBrowser::GetInstance()->GetSelected());
         UI::FileBrowser::GetInstance()->ClearSelected();
         UI::FileBrowser::GetInstance()->Close();
+        chooseScene = false;
+
     }
 
     //show save scene dialog
@@ -191,7 +196,7 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             ImGui::SameLine();
             static char buf1[64] = ""; ImGui::InputText(" ", buf1, 64);
             ImGui::SameLine();
-            
+
             if (ImGui::Button("Save"))
             {
                 Engine::Managers::SceneManager::SaveActiveSceneAs(buf1);
@@ -203,6 +208,103 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
                 showSave = false;
             }
             ImGui::Text("Scene will be saved to Editor/SaveFiles/Scenes.");
+
+            ImGui::End();
+        }
+    }
+    if (MatCreationPopup)
+    {
+        ImGui::Begin("Material Creator");
+        ImGui::Text("Please Choose a name");
+
+        static std::string texName;
+
+        static char buf1[64] = "";
+        ImGui::InputText(" ", buf1, 64);
+
+        if (ImGui::BeginPopup("Dock-Select Texture"))
+        {
+            ImGui::Text("Choose Texture");
+            ImGui::Text(texName.c_str());
+
+            for (auto& texture : Managers::ResourceManager::GetAllTextures())
+            {
+                if (texture->GetName() == "NoName")
+                    continue;
+
+                if (ImGui::Button(texture->GetName().c_str()))
+                {
+                    texName = texture->GetName();
+                }
+            }
+
+            if (ImGui::Button("Add new texture"))
+            {
+                UI::FileBrowser::GetInstance()->Open();
+                addNewTexture = true;
+            }
+
+            ImGui::EndPopup();
+        }
+
+        if (ImGui::Button("Choose a texture"))
+        {
+            ImGui::OpenPopup("Dock-Select Texture");
+        }
+        ImGui::Separator();
+        if (ImGui::Button("Create Material"))
+        {
+            MatCreationPopup = false;
+            Managers::ResourceManager::CreateMaterial(buf1, "defaultPS", "defaultVS", texName);
+        }
+        ImGui::End();
+    }
+    if (addNewModel && UI::FileBrowser::GetInstance()->HasSelected())
+    {
+        if (ImGui::Begin("New Model Name", &addNewModel, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::SetWindowFocus();
+            ImGui::Text("Enter new model name: ");
+            ImGui::SameLine();
+            static char buf1[64] = "";
+            ImGui::InputText(" ", buf1, 64);
+            ImGui::SameLine();
+
+            if (ImGui::Button("Save"))
+            {
+                Managers::ResourceManager::AddModel(UI::FileBrowser::GetInstance()->GetSelected().string(), buf1);
+                addNewModel = false;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Close"))
+            {
+                addNewModel = false;
+            }
+
+            ImGui::End();
+        }
+    }
+    if (addNewTexture && UI::FileBrowser::GetInstance()->HasSelected())
+    {
+        if (ImGui::Begin("New Texture Name", &addNewModel, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::SetWindowFocus();
+            ImGui::Text("Enter new texture name: ");
+            ImGui::SameLine();
+            static char buf1[64] = "";
+            ImGui::InputText(" ", buf1, 64);
+            ImGui::SameLine();
+
+            if (ImGui::Button("Save"))
+            {
+                Managers::ResourceManager::AddTexture(UI::FileBrowser::GetInstance()->GetSelected().string(), buf1);
+                addNewTexture = false;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Close"))
+            {
+                addNewTexture = false;
+            }
 
             ImGui::End();
         }

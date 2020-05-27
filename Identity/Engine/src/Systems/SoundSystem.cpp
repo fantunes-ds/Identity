@@ -30,12 +30,17 @@ void Engine::Systems::SoundSystem::IUpdate(const float p_deltaTime, bool p_isEdi
 
     for (auto& sound : m_sounds)
     {
-        if (sound.second->IsActive() && sound.second->GetISound())
+        if (sound.second->IsActive())
         {
-            if (sound.second->GetISound()->isFinished())
+            if (sound.second->GetISound())
             {
-                sound.second->SetIsPlaying(false);
+                if (sound.second->GetISound()->isFinished())
+                {
+                    sound.second->SetIsPlaying(false);
+                }
             }
+
+            sound.second->PlaySound();
         }
     }
 }
@@ -51,9 +56,33 @@ void Engine::Systems::SoundSystem::Update(const float p_deltaTime)
     GetInstance()->IUpdate(p_deltaTime);
 }
 
+void Engine::Systems::SoundSystem::StopAllSounds()
+{
+    for (auto sound: GetInstance()->m_sounds)
+    {
+        sound.second->Stop();
+    }
+}
+
 void Engine::Systems::SoundSystem::AddSound(std::shared_ptr<Components::Sound> p_sound)
 {
     GetInstance()->m_sounds.insert_or_assign(p_sound->GetID(), p_sound);
+}
+
+void Engine::Systems::SoundSystem::RemoveSound(std::shared_ptr<Components::Sound> p_sound)
+{
+    if (p_sound == nullptr)
+        return;
+
+    GetInstance()->m_sounds.erase(p_sound->GetID());
+}
+
+void Engine::Systems::SoundSystem::RemoveSound(int32_t p_id)
+{
+    if (p_id < 0)
+        return;
+
+    GetInstance()->m_sounds.erase(p_id);
 }
 
 Engine::Systems::SoundSystem::SoundSystem()

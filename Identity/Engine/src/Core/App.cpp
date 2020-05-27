@@ -11,7 +11,6 @@
 #include <Components/Camera.h>
 #include <Components/Light.h>
 #include <Components/BoxCollider.h>
-#include <Components/SphereCollider.h>
 #include <Input/Input.h>
 #include <Managers/SceneManager.h>
 #include <Managers/ResourceManager.h>
@@ -24,10 +23,8 @@
 #include <Systems/TransformSystem.h>
 #include <Systems/PhysicsSystem.h>
 #include <Systems/LightSystem.h>
-#include "Components/Sound.h"
-#include "Systems/SoundSystem.h"
-#include "UI/Hierarchy.h"
-#include <UI/imfilebrowser.h>
+#include <Systems/SoundSystem.h>
+#include <UI/Hierarchy.h>
 
 Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
@@ -63,7 +60,6 @@ int Engine::Core::App::Run()
     //----------
     std::string scenename{ "Demo" };
     Managers::SceneManager::LoadScene(scenename);
-
     //Managers::SceneManager::LoadScene("scene1");
 
     float fixedUpdateTimer = 0.0f;
@@ -100,8 +96,9 @@ int Engine::Core::App::Run()
         Systems::TransformSystem::Update(deltaTime);
         Systems::LightSystem::Update(deltaTime);
         Systems::CameraSystem::Update(deltaTime);
-        Systems::SoundSystem::Update(deltaTime);
 
+        if (RunBullet)
+            Systems::SoundSystem::Update(deltaTime);
 
         fixedUpdateTimer += deltaTime;
         //todo this should never go below 0
@@ -112,9 +109,6 @@ int Engine::Core::App::Run()
                 Systems::PhysicsSystem::FixedUpdate();
             fixedUpdateTimer = 0.0f;
         }
-
-
-        
 
         DoFrame(deltaTime);
         EndFrame();
@@ -174,7 +168,7 @@ void Engine::Core::App::TestingSimulation(bool p_stop)
         // InitScene(true);
 
         auto playScene = std::make_shared<Scene::Scene>();
-        playScene->SetName("play");
+        playScene->SetName("Play");
         auto activeScene = Managers::SceneManager::GetActiveScene();
         Managers::SceneManager::DuplicateScene(playScene, activeScene);
         Managers::SceneManager::AddScene(playScene);
@@ -203,5 +197,7 @@ void Engine::Core::App::TestingSimulation(bool p_stop)
         Managers::SceneManager::DeletePlayScene();
 
         RunBullet = false;
+
+        Systems::SoundSystem::StopAllSounds();
     }
 }

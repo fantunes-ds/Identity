@@ -40,7 +40,7 @@ float4 main(VS_OUT f_in) : SV_TARGET
 {
     float3 fColor = (0, 0, 0);
     
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 4; ++i)
         fColor += CalculateLights(lights[i], f_in);
     
     f_in.vertexColor = float4(materialColor, 1);
@@ -54,10 +54,13 @@ float4 main(VS_OUT f_in) : SV_TARGET
 
 float3 CalculateLights(lightSource light, VS_OUT f_in)
 {
+    if (light.padding < 0)
+        return (0, 0, 0);
+    
     float3 fColor = (0, 0, 0);
     
     float distance = length(light.position.rgb - f_in.worldPos);
-    float attenuation = CalculateAttenuation(distance, light.range, light.intensity);
+    float attenuation = CalculateAttenuation(distance, light.range, light.diffuse.w);
     
     // ambient calculations
     float3 ambient = (light.ambient.rgb * light.ambient.w) * light.diffuse.rgb;

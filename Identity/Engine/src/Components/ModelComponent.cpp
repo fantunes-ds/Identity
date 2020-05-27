@@ -10,7 +10,7 @@ Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameOb
 }
 
 
-Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject): IComponent{p_gameObject, MODEL}, m_model{0}
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject): IComponent{p_gameObject, MODEL}, m_model{-1}
 {
     m_model = -1;
     m_material = Managers::ResourceManager::GetMaterial("default");
@@ -103,9 +103,21 @@ bool Engine::Components::ModelComponent::operator==(IComponent* p_other)
     return false;
 }
 
+bool Engine::Components::ModelComponent::RemoveComponent()
+{
+    //TODO complete this
+
+    return false;
+}
+
 bool Engine::Components::ModelComponent::DeleteFromMemory()
 {
     return Managers::ResourceManager::RemoveModel(m_model);
+}
+
+void Engine::Components::ModelComponent::SetActive(bool p_active)
+{
+    m_isActive = p_active;
 }
 
 
