@@ -30,14 +30,11 @@ void Engine::Systems::SoundSystem::IUpdate(const float p_deltaTime, bool p_isEdi
 
     for (auto& sound : m_sounds)
     {
-        if (sound.second->IsActive())
+        if (sound.second->IsActive() && sound.second->GetISound())
         {
-            if (sound.second->GetISound())
+            if (sound.second->GetISound()->isFinished())
             {
-                if (sound.second->GetISound()->isFinished())
-                {
-                    sound.second->SetIsPlaying(false);
-                }
+                sound.second->SetIsPlaying(false);
             }
 
             sound.second->PlaySound();
@@ -58,7 +55,7 @@ void Engine::Systems::SoundSystem::Update(const float p_deltaTime)
 
 void Engine::Systems::SoundSystem::StopAllSounds()
 {
-    for (auto sound: GetInstance()->m_sounds)
+    for (auto sound : GetInstance()->m_sounds)
     {
         sound.second->Stop();
     }
