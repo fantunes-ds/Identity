@@ -144,7 +144,7 @@ Engine::Components::SphereCollider::SphereCollider(Objects::GameObject* p_gameOb
 Engine::Components::SphereCollider::~SphereCollider()
 {
     if (m_rigidbody)
-        Engine::Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
+        Engine::Systems::PhysicsSystem::GetWorld()->removeCollisionObject(m_rigidbody);
 
     if (m_model)
         Managers::ResourceManager::RemoveModel(m_model->GetID());

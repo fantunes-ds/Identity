@@ -155,7 +155,12 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
 
 Engine::Components::BoxCollider::~BoxCollider()
 {
-    Engine::Systems::PhysicsSystem::GetWorld()->removeRigidBody(m_rigidbody);
+    if (m_rigidbody)
+        Engine::Systems::PhysicsSystem::GetWorld()->removeCollisionObject(m_rigidbody);
+
+    if (m_model)
+        Managers::ResourceManager::RemoveModel(m_model->GetID());
+
     delete m_box;
     delete m_motionState;
     delete m_rigidbody;

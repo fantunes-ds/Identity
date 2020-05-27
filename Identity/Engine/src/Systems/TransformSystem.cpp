@@ -67,6 +67,14 @@ int32_t Engine::Systems::TransformSystem::AddTransform(std::shared_ptr<Component
     return p_transform->GetID();
 }
 
+void Engine::Systems::TransformSystem::RemoveTransform(int32_t p_id)
+{
+    if (p_id < 0)
+        return;
+
+    GetInstance()->m_transforms.erase(p_id);
+}
+
 std::shared_ptr<Engine::Components::Transform> Engine::Systems::TransformSystem::FindTransform(uint32_t p_id)
 {
     return GetInstance()->m_transforms.at(p_id);
@@ -74,6 +82,5 @@ std::shared_ptr<Engine::Components::Transform> Engine::Systems::TransformSystem:
 
 std::shared_ptr<Engine::Components::Transform> Engine::Systems::TransformSystem::GetTransform(uint32_t p_id)
 {
-    auto instance = GetInstance();
     return GetInstance()->m_transforms.at(p_id);
 }

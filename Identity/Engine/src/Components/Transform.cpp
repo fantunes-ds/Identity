@@ -3,9 +3,11 @@
 #include <Components/Transform.h>
 #include <Systems/TransformSystem.h>
 
+#include "Containers/ComponentContainer.h"
+
 Engine::Components::Transform::Transform(Objects::GameObject* p_gameObject) : IComponent{p_gameObject, TRANSFORM}, m_position{Vector3F::zero},
-m_forward{Vector3F::forward}, m_right{Vector3F::right}, m_up{Vector3F::up}, m_scale{Vector3F::one},
-m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} }
+                                                                              m_forward{Vector3F::forward}, m_right{Vector3F::right}, m_up{Vector3F::up}, m_scale{Vector3F::one},
+                                                                              m_rotation{ Quaternion{0.0, 0.0, 0.0, 1.0} }
 {
     Systems::TransformSystem::AddTransform(std::shared_ptr<Transform>(this));
 }
@@ -41,6 +43,13 @@ void Engine::Components::Transform::CopyFrom(std::shared_ptr<Transform> p_other)
 
 bool Engine::Components::Transform::operator==(IComponent* p_other)
 {
+    return true;
+}
+
+bool Engine::Components::Transform::RemoveComponent()
+{
+    Systems::TransformSystem::RemoveTransform(m_id);
+    Containers::ComponentContainer::RemoveComponent(m_id);
     return true;
 }
 
