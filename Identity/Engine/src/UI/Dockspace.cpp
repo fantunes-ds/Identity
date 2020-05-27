@@ -63,7 +63,7 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
 {
     static bool showSave = false;
     static bool MatCreationPopup = false;
-    bool chooseScene = false;
+    static bool chooseScene = false;
 
     if (ImGui::BeginMenuBar())
     {
@@ -176,6 +176,7 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
         UI::FileBrowser::GetInstance()->ClearSelected();
         UI::FileBrowser::GetInstance()->Close();
         chooseScene = false;
+
     }
 
     //show save scene dialog
@@ -188,7 +189,7 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             ImGui::SameLine();
             static char buf1[64] = ""; ImGui::InputText(" ", buf1, 64);
             ImGui::SameLine();
-            
+
             if (ImGui::Button("Save"))
             {
                 Engine::Managers::SceneManager::SaveActiveSceneAs(buf1);
