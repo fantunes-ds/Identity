@@ -164,25 +164,15 @@ void Engine::Core::App::TestingSimulation(bool p_stop)
 
     if (!RunBullet && !p_stop)
     {
-        // if (!Managers::SceneManager::GetPlayScene())
-        // InitScene(true);
-
         auto playScene = std::make_shared<Scene::Scene>();
         playScene->SetName("Play");
         auto activeScene = Managers::SceneManager::GetActiveScene();
         Managers::SceneManager::DuplicateScene(playScene, activeScene);
-        //Managers::SceneManager::AddScene(playScene);
         Managers::SceneManager::SetActiveScene(playScene);
         Managers::SceneManager::SetPlayScene(activeScene);
         Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
         Managers::SceneManager::GetPlayScene()->SetActiveOnAll(false);
 
-        // Systems::RenderSystem::SetActiveCamera(Managers::SceneManager::GetPlayScene()->GetActiveCamera()->GetID());
-
-        //deactivate editor scene
-
-        // Managers::SceneManager::SetActiveScene(Managers::SceneManager::GetPlayScene());
-        // Managers::SceneManager::SetPlayScene(activeScene);
         RunBullet = true;
     }
     else if (RunBullet)

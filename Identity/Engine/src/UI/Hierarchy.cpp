@@ -101,7 +101,24 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
     auto gameObject = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject();
     auto transform = gameObject->GetTransform();
 
+    static char buf1[64] = "";
+    std::string name = gameObject->GetName();
+
+    for (int i = 0; i < name.length(); ++i)
+    {
+        buf1[i] = name[i];
+    }
+
+    ImGui::InputText(" ", buf1, 64);
+    ImGui::SameLine();
+
+    gameObject->SetName(buf1);
+    gameObject->GetSceneNode()->SetName(buf1);
+
+    memset(buf1, 0, 64);
+
     bool active = gameObject->IsActive();
+
     if (ImGui::Checkbox("Active", &active))
     {
         gameObject->SetActive(active);

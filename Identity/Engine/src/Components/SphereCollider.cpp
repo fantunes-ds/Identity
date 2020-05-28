@@ -309,6 +309,7 @@ void Engine::Components::SphereCollider::SetRadius(float p_radius)
     m_model = Managers::ResourceManager::FindModel(id);
 }
 
+//Not functional yet
 /*void Engine::Components::SphereCollider::SetScale(const GPM::Vector3F& p_scale)
 {
     m_scale = p_scale;
