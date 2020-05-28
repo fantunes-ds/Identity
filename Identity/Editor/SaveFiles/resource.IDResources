@@ -1,7 +1,16 @@
 MODEL ../Engine/Resources/YoungLink.obj Link
 MODEL ../Engine/Resources/Lambo.obj Lambo
 MODEL ../Engine/Resources/cube.obj Cube
+MODEL ../Engine/Resources/earth.blend Earth
+MODEL ../Engine/Resources/Mini_Ninja.obj Ninja
+MODEL ../Engine/Resources/Box.OBJ Box
 TEXTURE ../Engine/Resources/link.png LinkText
 TEXTURE ../Engine/Resources/lambo_text.jpeg LamboText
+TEXTURE ../Engine/Resources/Earth.jpg EartText
+TEXTURE ../Engine/Resources/Ninja_T.png NinjaText
+TEXTURE ../Engine/Resources/Wood_Alpha_003.jpeg WoodText
 MATERIAL LinkMat defaultPS defaultVS LinkText 1 1 1
 MATERIAL LamboMat defaultPS defaultVS LamboText 1 1 1
+MATERIAL NinjaMat defaultPS defaultVS NinjaText 1 1 1
+MATERIAL WoodMat defaultPS defaultVS WoodText 1 1 1
+MATERIAL Color defaultPS defaultVS NO_TEXTURE 1 1 1
