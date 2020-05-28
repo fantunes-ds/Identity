@@ -106,6 +106,11 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             {
                 p_appRef.TestingSimulation(true);
             }
+            ImGui::Separator();
+            if (ImGui::MenuItem("Ambient Light intensity"))
+            {
+                // todo Change ambient value here
+            }
             ImGui::EndMenu();
         }
 
