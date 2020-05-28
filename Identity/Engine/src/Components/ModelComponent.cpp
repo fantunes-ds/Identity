@@ -3,6 +3,9 @@
 #include <Components/ModelComponent.h>
 #include <Objects/GameObject.h>
 
+#include <Managers/SceneManager.h>
+#include <Scene/Scene.h>
+
 Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const int32_t p_id): IComponent{p_gameObject, MODEL}
 {
     m_model = p_id;
@@ -105,14 +108,14 @@ bool Engine::Components::ModelComponent::operator==(IComponent* p_other)
 
 bool Engine::Components::ModelComponent::RemoveComponent()
 {
-    //TODO complete this
-
-    return false;
+    m_gameObject->GetSceneNode()->SetModel(nullptr);
+    Containers::ComponentContainer::RemoveComponent(m_id);
+    return true;
 }
 
 bool Engine::Components::ModelComponent::DeleteFromMemory()
 {
-    return Managers::ResourceManager::RemoveModel(m_model);
+    return false;
 }
 
 void Engine::Components::ModelComponent::SetActive(bool p_active)

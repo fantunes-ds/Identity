@@ -68,12 +68,13 @@ int32_t Engine::Containers::ComponentContainer::AddComponentEditor(Components::I
 
 void Engine::Containers::ComponentContainer::RemoveComponent(int32_t p_id, bool p_deleteFromMemory)
 {
-    if (p_deleteFromMemory)
+    /*if (p_deleteFromMemory)
     {
-        GetInstance()->FindComponent(p_id)->DeleteFromMemory();
-    }
+        if (GetInstance()->FindComponent(p_id))
+            GetInstance()->FindComponent(p_id)->RemoveComponent();
+    }*/
 
-    //GetInstance()->m_components.erase(p_id);
+    GetInstance()->m_components.erase(p_id);
 }
 
 Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::GetInstance()
@@ -88,6 +89,9 @@ Engine::Containers::ComponentContainer* Engine::Containers::ComponentContainer::
 
 std::shared_ptr<Engine::Components::IComponent> Engine::Containers::ComponentContainer::FindComponent(int32_t p_id)
 {
+    if (p_id < 0)
+        return nullptr;
+    
     auto it = GetAllComponents().find(p_id);
 
     if (it == GetAllComponents().end())

@@ -37,7 +37,6 @@ bool Engine::Components::Camera::operator==(IComponent* p_other)
 bool Engine::Components::Camera::RemoveComponent()
 {
     Systems::CameraSystem::RemoveCamera(GetID());
-    Containers::ComponentContainer::RemoveComponent(GetID());
     return true;
 }
 

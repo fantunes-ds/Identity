@@ -112,6 +112,7 @@ bool Engine::Components::Sound::operator==(IComponent* p_other)
 bool Engine::Components::Sound::RemoveComponent()
 {
     Systems::SoundSystem::RemoveSound(m_id);
+    Containers::ComponentContainer::RemoveComponent(m_id);
     return true;
 }
 
