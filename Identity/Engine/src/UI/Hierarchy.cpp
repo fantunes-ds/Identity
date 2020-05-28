@@ -115,6 +115,8 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
     gameObject->SetName(buf1);
     gameObject->GetSceneNode()->SetName(buf1);
 
+    memset(buf1, 0, 64);
+
     bool active = gameObject->IsActive();
 
     if (ImGui::Checkbox("Active", &active))
