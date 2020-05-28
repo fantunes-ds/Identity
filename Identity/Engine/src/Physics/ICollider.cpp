@@ -62,8 +62,10 @@ Matrix4F Engine::Physics::ICollider::GetWorldMatrix() const
 
 GPM::Vector3F Engine::Physics::ICollider::GetVelocity()
 {
-    const btVector3& vel = m_rigidbody->getLinearVelocity();
+    if (!m_rigidbody)
+        return GPM::Vector3F::zero;
 
+    const btVector3& vel = m_rigidbody->getLinearVelocity();
     return std::move(GPM::Vector3F(vel.getX(), vel.getY(), vel.getZ()));
 }
 
