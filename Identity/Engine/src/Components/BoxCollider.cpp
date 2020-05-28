@@ -117,9 +117,8 @@ Engine::Components::BoxCollider::BoxCollider(Objects::GameObject* p_gameObject, 
     btVector3 localInertia(0.0f, 0.0f, 0.0f);
     m_mass = p_other->m_mass;
     m_offset = p_other->m_offset;
-    m_box = p_other->m_box;
+    m_box = new btBoxShape(*p_other->m_box);
     m_dimensions = p_other->m_dimensions;
-    // m_motionState = p_other->m_motionState;
 
     btTransform trans;
     // p_other->m_motionState->getWorldTransform(trans);

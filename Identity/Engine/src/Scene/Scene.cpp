@@ -14,10 +14,6 @@ Engine::Scene::Scene::Scene(const std::string& p_name)
 
 Engine::Scene::Scene::~Scene()
 {
-    for (auto go : GetAllGameObjectsInScene())
-    {
-        go.reset();
-    }
 }
 
 void Engine::Scene::Scene::AddGameObject(std::shared_ptr<Objects::GameObject> p_gameObject)
@@ -34,6 +30,14 @@ void Engine::Scene::Scene::RemoveGameObject(std::shared_ptr<Objects::GameObject>
 void Engine::Scene::Scene::RemoveGameObject(int32_t p_id)
 {
     //for (auto& node: m_sceneGraph.)
+}
+
+void Engine::Scene::Scene::ClearScene()
+{
+    for (auto go : GetAllGameObjectsInScene())
+    {
+        go->DeleteFromMemory();
+    }
 }
 
 std::shared_ptr<Engine::Objects::GameObject> Engine::Scene::Scene::GetGameObject(const std::string& p_name)

@@ -171,7 +171,7 @@ void Engine::Core::App::TestingSimulation(bool p_stop)
         playScene->SetName("Play");
         auto activeScene = Managers::SceneManager::GetActiveScene();
         Managers::SceneManager::DuplicateScene(playScene, activeScene);
-        Managers::SceneManager::AddScene(playScene);
+        //Managers::SceneManager::AddScene(playScene);
         Managers::SceneManager::SetActiveScene(playScene);
         Managers::SceneManager::SetPlayScene(activeScene);
         Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
@@ -193,7 +193,6 @@ void Engine::Core::App::TestingSimulation(bool p_stop)
         Managers::SceneManager::GetPlayScene()->SetActiveOnAll(false);
         Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
 
-        //TODO delete old play scene
         Managers::SceneManager::DeletePlayScene();
 
         RunBullet = false;

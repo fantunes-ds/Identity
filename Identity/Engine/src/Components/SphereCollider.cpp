@@ -115,7 +115,7 @@ Engine::Components::SphereCollider::SphereCollider(Objects::GameObject* p_gameOb
     m_mass = p_other->m_mass;
     m_radius = p_other->m_radius;
     m_offset = p_other->m_offset;
-    m_sphere = p_other->m_sphere;
+    m_sphere = new btSphereShape(*p_other->m_sphere);
     
     Vector3D offsetD = m_offset;
     Quaternion q = rotation * offsetD * Quaternion::Conjugate(rotation);

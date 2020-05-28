@@ -104,6 +104,9 @@ void Engine::Scene::SceneNode::SetModel(std::shared_ptr<ObjectElements::Model> p
 
     m_children.clear();
 
+    if (!p_model)
+        return;
+
     for (unsigned int i = 0; i < p_model->GetMeshes().size(); ++i)
         AddChild(std::make_shared<SceneNode>(p_model->GetMeshes()[i]));
 }
