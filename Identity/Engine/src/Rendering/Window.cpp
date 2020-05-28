@@ -4,9 +4,11 @@
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
 
+#include <Managers/ResourceManager.h>
 #include <Input/Input.h>
 #include <Rendering/Window.h>
 #include <Rendering/Renderer.h>
+
 
 using namespace Engine::Rendering;
 
@@ -177,6 +179,17 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
     if (ImGui_ImplWin32_WndProcHandler(p_hwnd, p_msg, p_wParam, p_lParam))
         return true;
 
+    ImGuiIO& io = ImGui::GetIO();
+    (void)io;
+
+
+    //Block all other input if we're sending data into an ImGui Input field
+    if (io.WantTextInput)
+    {
+        Input::Input::GetInstance()->keyboard.ClearStates();
+        return true;
+    }
+
     // no default switch case because windows sends a lot of different
     // random unknown messages, and we don't need to filter them all.
     switch (p_msg)
@@ -192,6 +205,7 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
         }
         break;
     case WM_CLOSE:
+        Managers::ResourceManager::Serialize();
         PostQuitMessage(0);
         return 0;
 
