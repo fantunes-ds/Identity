@@ -185,9 +185,13 @@ bool GameObject::RemoveComponent(int32_t p_id)
     {
         if (m_components[i] == p_id)
         {
-            m_components.erase(m_components.begin() + i);
-            Containers::ComponentContainer::RemoveComponent(p_id);
-            return true;
+            auto comp = Containers::ComponentContainer::FindComponent(p_id);
+            if (comp->RemoveComponent())
+            {
+                m_components.erase(m_components.begin() + i);
+                return true;
+            }
+            return false;
         }
     }
 
