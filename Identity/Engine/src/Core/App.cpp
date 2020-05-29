@@ -60,6 +60,7 @@ int Engine::Core::App::Run()
     //----------
     std::string scenename{ "Demo" };
     Managers::SceneManager::LoadScene(scenename);
+
     //Managers::SceneManager::LoadScene("scene1");
 
     float fixedUpdateTimer = 0.0f;
@@ -87,7 +88,7 @@ int Engine::Core::App::Run()
         if (show_demo_window)
         {
             ImGui::ShowDemoWindow(&show_demo_window);
-        }       
+        }
 
         float deltaTime = Tools::Time::GetDeltaTime();
 

@@ -581,11 +581,11 @@ void Engine::Managers::ResourceManager::DeserializeNS()
             else
                 CreateMaterialNS(words[1], words[2], words[3], words[4]);
 
-            /*Vector3F color;
+            Vector3F color;
             color.x = std::stof(words[5]);
             color.y = std::stof(words[6]);
             color.z = std::stof(words[7]);
-            GetMaterial(words[1])->SetColor(color);*/
+            GetMaterial(words[1])->SetColor(color);
         }
 
         words.clear();

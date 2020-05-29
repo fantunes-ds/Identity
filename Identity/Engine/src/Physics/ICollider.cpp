@@ -2,10 +2,47 @@
 #include <Components/SphereCollider.h>
 #include <Objects/GameObject.h>
 
-#include "Components/Sound.h"
+#include <Components/Sound.h>
+#include <Components/BoxCollider.h>
+#include <Managers/SceneManager.h>
+#include <Scene/Scene.h>
 
 void Engine::Physics::ICollider::OnCollisionEnter()
 {
+    if (m_gameObject->GetName() == "Ball" && m_collisionInfo->GetCollision()->GetName() == "Steep1")
+    {
+        Quaternion q;
+        q.MakeFromEuler({ 200, 0, 0 });
+        m_gameObject->FindComponentOfType<Components::Sound>()->PlaySound();
+        m_collisionInfo->GetCollision()->FindComponentOfType<Components::BoxCollider>()->SetMass(5);
+        // m_collisionInfo->GetCollision()->GetTransform()->SetRotation(q);
+
+        auto support = Managers::SceneManager::GetActiveScene()->GetGameObject("Support2");
+        if (support)
+            support->FindComponentOfType<Components::BoxCollider>()->SetMass(10);
+
+        // m_gameObject->GetTransform()->SetRotation(q);
+        // m_collisionInfo->GetCollision()->FindComponentOfType<Components::Sound>()->PlaySound();
+    }
+    if (m_gameObject->GetName() == "Ball" && m_collisionInfo->GetCollision()->GetName() == "Steep2")
+    {
+        Quaternion q;
+        q.MakeFromEuler({ -20, 0, 0 });
+        m_gameObject->FindComponentOfType<Components::Sound>()->PlaySound();
+        m_collisionInfo->GetCollision()->GetTransform()->SetRotation(q);
+        // m_gameObject->GetTransform()->SetRotation(q);
+        // m_collisionInfo->GetCollision()->FindComponentOfType<Components::Sound>()->PlaySound();
+    }
+    if (m_gameObject->GetName() == "Ball" && m_collisionInfo->GetCollision()->GetName() == "Steep3")
+    {
+        Quaternion q;
+        q.MakeFromEuler({ 200, 0, 0 });
+        m_gameObject->FindComponentOfType<Components::Sound>()->PlaySound();
+        m_collisionInfo->GetCollision()->GetTransform()->SetRotation(q);
+        // m_gameObject->GetTransform()->SetRotation(q);
+        // m_collisionInfo->GetCollision()->FindComponentOfType<Components::Sound>()->PlaySound();
+    }
+
     std::string str(m_gameObject->GetName() + " On collision enter with " + m_collisionInfo->GetCollision()->GetName() + "\n");
     //OutputDebugString(str.c_str());
 }

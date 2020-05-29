@@ -27,6 +27,7 @@ namespace Engine::Systems
         static std::shared_ptr<Components::Camera> GetActiveCamera();
         static bool IsDebugMode() { return GetInstance()->m_debugMode; }
 
+        Vector4F m_ambientColor{1.f, 1.f, 1.f, 0.1f};
     private:
         RenderSystem() = default;
 

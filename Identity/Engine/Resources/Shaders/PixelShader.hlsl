@@ -16,6 +16,7 @@ struct lightSource
 cbuffer CBuf
 {
     lightSource lights[4];
+    float4 ambientColor;
     float3 cameraPos;
     float textureState;
     float3 materialColor;
@@ -63,7 +64,7 @@ float3 CalculateLights(lightSource light, VS_OUT f_in)
     float attenuation = CalculateAttenuation(distance, light.range, light.diffuse.w);
     
     // ambient calculations
-    float3 ambient = (light.ambient.rgb * light.ambient.w) * light.diffuse.rgb;
+    float3 ambient = (ambientColor.rgb * ambientColor.w);
     fColor = ambient;
     
     //diffuse

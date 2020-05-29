@@ -31,7 +31,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 15 1 -15
    m_box 15 1 15
-   m_model 131
+   m_model 250
 }
 class Engine::Components::ModelComponent
 {
@@ -41,207 +41,84 @@ class Engine::Components::ModelComponent
 ;
 
 GAMEOBJECT
-Steep
+Steep1
 m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 4 -3 0
-   m_forward -0 0.34202 0.939693
+   m_position -2.9 3.8 -12.8
+   m_forward -0 1.22465e-16 -1
    m_right 1 0 0
-   m_up 0 -0.939694 0.34202
-   m_scale 3 0.2 5
-   m_rotation 0.173648 0 0 0.984808
-   m_worldTransform 3 0 0 4 0 0.187939 -1.7101 -3 0 0.068404 4.69846 0 0 0 0 1
+   m_up -0 1 1.22465e-16
+   m_scale 5 0.2 3
+   m_rotation 1 0 0 6.12323e-17
+   m_worldTransform 5 0 0 -2.9 0 -0.2 -3.67394e-16 3.8 0 2.44929e-17 -3 -12.8 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 4 -3 0
-   m_forward -0 0.34202 0.939693
+   m_position -2.9 3.8 -12.8
+   m_forward -0 1.22465e-16 -1
    m_right 1 0 0
-   m_up 0 -0.939694 0.34202
-   m_scale 3 0.2 5
-   m_rotation 0.173648 0 0 0.984808
-   m_worldTransform 3 0 0 4 0 0.187939 -1.7101 -3 0 0.068404 4.69846 0 0 0 0 1
+   m_up -0 1 1.22465e-16
+   m_scale 5 0.2 3
+   m_rotation 1 0 0 6.12323e-17
+   m_worldTransform 5 0 0 -2.9 0 -0.2 -3.67394e-16 3.8 0 2.44929e-17 -3 -12.8 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::ModelComponent
+{
+   m_model Cube
+   m_material Brown
+}
+class Engine::Components::BoxCollider
+{
+   m_mass 1
+   m_offset 2.5 0.1 -1.5
+   m_box 2.5 0.1 1.5
+   m_model 263
+}
+;
+
+GAMEOBJECT
+Steep1SupportLeft
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position -2.45 3.5 -10.8
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 0.1 0.1 2
+   m_rotation 0 0 0 1
+   m_worldTransform 0.1 0 0 -2.45 0 0.1 0 3.5 0 0 2 -10.8 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position -2.45 3.5 -10.8
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 0.1 0.1 2
+   m_rotation 0 0 0 1
+   m_worldTransform 0.1 0 0 -2.45 0 0.1 0 3.5 0 0 2 -10.8 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::BoxCollider
 {
    m_mass 0
-   m_offset 1.5 0.1 -2.5
-   m_box 1.5 0.1 2.5
-   m_model 143
+   m_offset 0.05 0.05 -1
+   m_box 0.05 0.05 1
+   m_model 274
 }
 class Engine::Components::ModelComponent
 {
    m_model Cube
-   m_material default
-}
-;
-
-GAMEOBJECT
-Ball
-m_isActive 1
-class Engine::Components::Transform
-{
-   m_parent -1
-   m_position 5.5 6.3 -3
-   m_forward -0 -0 1
-   m_right 1 0 0
-   m_up 0 -1 0
-   m_scale 0.5 0.5 0.5
-   m_rotation 0 0 0 1
-   m_worldTransform 0.5 0 0 5.5 0 0.5 0 6.3 0 0 0.5 -3 0 0 0 1
-   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
-}
-class Engine::Components::Transform
-{
-   m_parent -1
-   m_position 5.5 6.3 -3
-   m_forward -0 -0 1
-   m_right 1 0 0
-   m_up 0 -1 0
-   m_scale 0.5 0.5 0.5
-   m_rotation 0 0 0 1
-   m_worldTransform 0.5 0 0 5.5 0 0.5 0 6.3 0 0 0.5 -3 0 0 0 1
-   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
-}
-class Engine::Components::SphereCollider
-{
-   m_mass 100
-   m_offset 0 0 0
-   m_scale 1 1 1
-   m_radius 0.5
-}
-class Engine::Components::ModelComponent
-{
-   m_model Earth
-   m_material default
-}
-;
-
-GAMEOBJECT
-Ninja1
-m_isActive 1
-class Engine::Components::Transform
-{
-   m_parent -1
-   m_position 5.5 -3 1.8
-   m_forward -0 -0 1
-   m_right 1 0 0
-   m_up 0 -1 0
-   m_scale 0.01 0.01 0.01
-   m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 5.5 0 0.01 0 -3 0 0 0.01 1.8 0 0 0 1
-   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
-}
-class Engine::Components::Transform
-{
-   m_parent -1
-   m_position 5.5 -3 1.8
-   m_forward -0 -0 1
-   m_right 1 0 0
-   m_up 0 -1 0
-   m_scale 0.01 0.01 0.01
-   m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 5.5 0 0.01 0 -3 0 0 0.01 1.8 0 0 0 1
-   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
-}
-class Engine::Components::BoxCollider
-{
-   m_mass 1
-   m_offset 0 0.55 0
-   m_box 0.25 0.55 0.15
-   m_model 27767
-}
-class Engine::Components::ModelComponent
-{
-   m_model Link
-   m_material NinjaMat
-}
-;
-
-GAMEOBJECT
-Ninja2
-m_isActive 1
-class Engine::Components::Transform
-{
-   m_parent -1
-   m_position 5.15 -3 2.1
-   m_forward -0 -0 1
-   m_right 1 0 0
-   m_up 0 -1 0
-   m_scale 0.01 0.01 0.01
-   m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 5.15 0 0.01 0 -3 0 0 0.01 2.1 0 0 0 1
-   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
-}
-class Engine::Components::Transform
-{
-   m_parent -1
-   m_position 5.15 -3 2.1
-   m_forward -0 -0 1
-   m_right 1 0 0
-   m_up 0 -1 0
-   m_scale 0.01 0.01 0.01
-   m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 5.15 0 0.01 0 -3 0 0 0.01 2.1 0 0 0 1
-   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
-}
-class Engine::Components::BoxCollider
-{
-   m_mass 1
-   m_offset 0 0.55 0
-   m_box 0.25 0.55 0.15
-   m_model 28880
-}
-class Engine::Components::ModelComponent
-{
-   m_model Link
-   m_material NinjaMat
-}
-;
-
-GAMEOBJECT
-Ninja3
-m_isActive 1
-class Engine::Components::Transform
-{
-   m_parent -1
-   m_position 5.85 -3 2.1
-   m_forward -0 -0 1
-   m_right 1 0 0
-   m_up 0 -1 0
-   m_scale 0.01 0.01 0.01
-   m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 5.85 0 0.01 0 -3 0 0 0.01 2.1 0 0 0 1
-   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
-}
-class Engine::Components::Transform
-{
-   m_parent -1
-   m_position 5.85 -3 2.1
-   m_forward -0 -0 1
-   m_right 1 0 0
-   m_up 0 -1 0
-   m_scale 0.01 0.01 0.01
-   m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 5.85 0 0.01 0 -3 0 0 0.01 2.1 0 0 0 1
-   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
-}
-class Engine::Components::BoxCollider
-{
-   m_mass 1
-   m_offset 0 0.55 0
-   m_box 0.25 0.55 0.15
-   m_model 29804
-}
-class Engine::Components::ModelComponent
-{
-   m_model Link
-   m_material NinjaMat
+   m_material Grey
 }
 class Engine::Components::Sound
 {
@@ -256,112 +133,204 @@ class Engine::Components::Sound
 ;
 
 GAMEOBJECT
-Ninja4
+Steep1SupportRight
 m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 5.5 -3 2.4
+   m_position 1.55 3.5 -10.8
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
-   m_scale 0.01 0.01 0.01
+   m_scale 0.1 0.1 2
    m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 5.5 0 0.01 0 -3 0 0 0.01 2.4 0 0 0 1
+   m_worldTransform 0.1 0 0 1.55 0 0.1 0 3.5 0 0 2 -10.8 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 5.5 -3 2.4
+   m_position 1.55 3.5 -10.8
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
-   m_scale 0.01 0.01 0.01
+   m_scale 0.1 0.1 2
    m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 5.5 0 0.01 0 -3 0 0 0.01 2.4 0 0 0 1
+   m_worldTransform 0.1 0 0 1.55 0 0.1 0 3.5 0 0 2 -10.8 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::BoxCollider
 {
-   m_mass 1
-   m_offset 0 0.55 0
-   m_box 0.25 0.55 0.15
-   m_model 38210
+   m_mass 0
+   m_offset 0.05 0.05 -1
+   m_box 0.05 0.05 1
+   m_model 287
 }
 class Engine::Components::ModelComponent
 {
-   m_model Link
-   m_material NinjaMat
+   m_model Cube
+   m_material Grey
 }
 ;
 
 GAMEOBJECT
-Ninja5
+Steep2
 m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 4.8 -3 2.4
+   m_position 4 1 5
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
-   m_scale 0.01 0.01 0.01
+   m_scale 3 0.2 5
    m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 4.8 0 0.01 0 -3 0 0 0.01 2.4 0 0 0 1
+   m_worldTransform 3 0 0 4 0 0.2 0 1 0 0 5 5 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 4.8 -3 2.4
+   m_position 4 1 5
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
-   m_scale 0.01 0.01 0.01
+   m_scale 3 0.2 5
    m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 4.8 0 0.01 0 -3 0 0 0.01 2.4 0 0 0 1
+   m_worldTransform 3 0 0 4 0 0.2 0 1 0 0 5 5 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
-}
-class Engine::Components::BoxCollider
-{
-   m_mass 1
-   m_offset 0 0.55 0
-   m_box 0.25 0.55 0.15
-   m_model 38294
 }
 class Engine::Components::ModelComponent
 {
-   m_model Link
-   m_material NinjaMat
+   m_model Cube
+   m_material Brown
+}
+class Engine::Components::BoxCollider
+{
+   m_mass 0
+   m_offset 1.5 0.1 -2.5
+   m_box 1.5 0.1 2.5
+   m_model 300
 }
 ;
 
 GAMEOBJECT
-Ninja6
+Steep3
 m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 6.2 -3 2.4
-   m_forward -0 -0 1
+   m_position 4 -0.9 -5
+   m_forward -0 1.22465e-16 -1
    m_right 1 0 0
-   m_up 0 -1 0
-   m_scale 0.01 0.01 0.01
-   m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 6.2 0 0.01 0 -3 0 0 0.01 2.4 0 0 0 1
+   m_up -0 1 1.22465e-16
+   m_scale 3 0.2 5
+   m_rotation 1 0 0 6.12323e-17
+   m_worldTransform 3 0 0 4 0 -0.2 -6.12323e-16 -0.9 0 2.44929e-17 -5 -5 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 6.2 -3 2.4
+   m_position 4 -0.9 -5
+   m_forward -0 1.22465e-16 -1
+   m_right 1 0 0
+   m_up -0 1 1.22465e-16
+   m_scale 3 0.2 5
+   m_rotation 1 0 0 6.12323e-17
+   m_worldTransform 3 0 0 4 0 -0.2 -6.12323e-16 -0.9 0 2.44929e-17 -5 -5 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::BoxCollider
+{
+   m_mass 0
+   m_offset 1.5 0.1 -2.5
+   m_box 1.5 0.1 2.5
+   m_model 311
+}
+class Engine::Components::ModelComponent
+{
+   m_model Cube
+   m_material Brown
+}
+;
+
+GAMEOBJECT
+Ball
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 1.1 4.6 -11.7
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
-   m_scale 0.01 0.01 0.01
+   m_scale 0.05 0.05 0.05
    m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 6.2 0 0.01 0 -3 0 0 0.01 2.4 0 0 0 1
+   m_worldTransform 0.05 0 0 1.1 0 0.05 0 4.6 0 0 0.05 -11.7 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 1.1 4.6 -11.7
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 0.05 0.05 0.05
+   m_rotation 0 0 0 1
+   m_worldTransform 0.05 0 0 1.1 0 0.05 0 4.6 0 0 0.05 -11.7 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::SphereCollider
+{
+   m_mass 100
+   m_offset 0 0 0
+   m_scale 1 1 1
+   m_radius 0.5
+}
+class Engine::Components::ModelComponent
+{
+   m_model RocketBall
+   m_material Color
+}
+class Engine::Components::Sound
+{
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 0
+   m_minDistance 1
+   m_maxDistance 10
+   m_volume 1
+   m_soundFile C:\Users\lilga\Downloads\EngineAssets\SOUNDS\ball.mp3
+}
+;
+
+GAMEOBJECT
+Link
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5.5 3.8 -4.2
+   m_forward -1 -0 0
+   m_right 0 0 1
+   m_up 0 -1 0
+   m_scale 0.01 0.01 0.01
+   m_rotation 0 0.707107 0 0.707107
+   m_worldTransform 0 0 0.01 5.5 0 0.01 0 3.8 -0.01 0 0 -4.2 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5.5 3.8 -4.2
+   m_forward -1 -0 0
+   m_right 0 0 1
+   m_up 0 -1 0
+   m_scale 0.01 0.01 0.01
+   m_rotation 0 0.707107 0 0.707107
+   m_worldTransform 0 0 0.01 5.5 0 0.01 0 3.8 -0.01 0 0 -4.2 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::BoxCollider
@@ -369,12 +338,135 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 0 0.55 0
    m_box 0.25 0.55 0.15
-   m_model 38474
+   m_model 336
 }
 class Engine::Components::ModelComponent
 {
    m_model Link
-   m_material NinjaMat
+   m_material LinkMat
+}
+;
+
+GAMEOBJECT
+DonkeyKong
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 4.85 3.8 -0.9
+   m_forward -1 -0 0
+   m_right 0 0 1
+   m_up 0 -1 0
+   m_scale 0.05 0.05 0.05
+   m_rotation 0 0.707107 0 0.707107
+   m_worldTransform 0 0 0.05 4.85 0 0.05 0 3.8 -0.05 0 0 -0.9 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 4.85 3.8 -0.9
+   m_forward -1 -0 0
+   m_right 0 0 1
+   m_up 0 -1 0
+   m_scale 0.05 0.05 0.05
+   m_rotation 0 0.707107 0 0.707107
+   m_worldTransform 0 0 0.05 4.85 0 0.05 0 3.8 -0.05 0 0 -0.9 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::BoxCollider
+{
+   m_mass 1
+   m_offset 0 0.55 0
+   m_box 0.45 0.55 0.45
+   m_model 348
+}
+class Engine::Components::ModelComponent
+{
+   m_model DonkeyKong
+   m_material DonkeyMat
+}
+;
+
+GAMEOBJECT
+Support3
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5.65 0.9 0.3
+   m_forward -0.00698126 -0 0.999976
+   m_right 0.999976 0 0.00698126
+   m_up 0 -1 0
+   m_scale 1.6 0.1 0.1
+   m_rotation 0 0.00349065 0 0.999994
+   m_worldTransform 1.59996 0 0.000698126 5.65 0 0.1 0 0.9 -0.01117 0 0.0999976 0.3 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5.65 0.9 0.3
+   m_forward -0.00698126 -0 0.999976
+   m_right 0.999976 0 0.00698126
+   m_up 0 -1 0
+   m_scale 1.6 0.1 0.1
+   m_rotation 0 0.00349065 0 0.999994
+   m_worldTransform 1.59996 0 0.000698126 5.65 0 0.1 0 0.9 -0.01117 0 0.0999976 0.3 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::BoxCollider
+{
+   m_mass 0
+   m_offset 0.9 0.05 -0.05
+   m_box 0.9 0.05 0.05
+   m_model 392
+}
+class Engine::Components::ModelComponent
+{
+   m_model Cube
+   m_material Grey
+}
+;
+
+GAMEOBJECT
+Support4
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5.65 4.4 -3.7
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 1.8 0.1 0.1
+   m_rotation 0 0 0 1
+   m_worldTransform 1.8 0 0 5.65 0 0.1 0 4.4 0 0 0.1 -3.7 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5.65 4.4 -3.7
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 1.8 0.1 0.1
+   m_rotation 0 0 0 1
+   m_worldTransform 1.8 0 0 5.65 0 0.1 0 4.4 0 0 0.1 -3.7 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::BoxCollider
+{
+   m_mass 0
+   m_offset 0.9 0.05 -0.05
+   m_box 0.9 0.05 0.05
+   m_model 404
+}
+class Engine::Components::ModelComponent
+{
+   m_model Cube
+   m_material LinkMat
 }
 ;
 
@@ -384,38 +476,38 @@ m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 5.15 -3 2.7
+   m_position 5.15 -3 3
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.01 0.01 0.01
    m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 5.15 0 0.01 0 -3 0 0 0.01 2.7 0 0 0 1
+   m_worldTransform 0.01 0 0 5.15 0 0.01 0 -3 0 0 0.01 3 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 5.15 -3 2.7
+   m_position 5.15 -3 3
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.01 0.01 0.01
    m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 5.15 0 0.01 0 -3 0 0 0.01 2.7 0 0 0 1
+   m_worldTransform 0.01 0 0 5.15 0 0.01 0 -3 0 0 0.01 3 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::ModelComponent
 {
    m_model Link
-   m_material NinjaMat
+   m_material LinkMat
 }
 class Engine::Components::BoxCollider
 {
    m_mass 1
    m_offset 0 0.55 0
    m_box 0.25 0.55 0.15
-   m_model 38693
+   m_model 417
 }
 ;
 
@@ -425,38 +517,38 @@ m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 5.85 -3 2.7
+   m_position 5.85 -3 3
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.01 0.01 0.01
    m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 5.85 0 0.01 0 -3 0 0 0.01 2.7 0 0 0 1
+   m_worldTransform 0.01 0 0 5.85 0 0.01 0 -3 0 0 0.01 3 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 5.85 -3 2.7
+   m_position 5.85 -3 3
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.01 0.01 0.01
    m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 5.85 0 0.01 0 -3 0 0 0.01 2.7 0 0 0 1
+   m_worldTransform 0.01 0 0 5.85 0 0.01 0 -3 0 0 0.01 3 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::ModelComponent
 {
    m_model Link
-   m_material NinjaMat
+   m_material LinkMat
 }
 class Engine::Components::BoxCollider
 {
    m_mass 1
    m_offset 0 0.55 0
    m_box 0.25 0.55 0.15
-   m_model 39350
+   m_model 429
 }
 ;
 
@@ -466,38 +558,38 @@ m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 6.55 -3 2.7
+   m_position 6.55 -3 3
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.01 0.01 0.01
    m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 6.55 0 0.01 0 -3 0 0 0.01 2.7 0 0 0 1
+   m_worldTransform 0.01 0 0 6.55 0 0.01 0 -3 0 0 0.01 3 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 6.55 -3 2.7
+   m_position 6.55 -3 3
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.01 0.01 0.01
    m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 6.55 0 0.01 0 -3 0 0 0.01 2.7 0 0 0 1
+   m_worldTransform 0.01 0 0 6.55 0 0.01 0 -3 0 0 0.01 3 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::ModelComponent
 {
    m_model Link
-   m_material NinjaMat
+   m_material LinkMat
 }
 class Engine::Components::BoxCollider
 {
    m_mass 1
    m_offset 0 0.55 0
    m_box 0.25 0.55 0.15
-   m_model 40088
+   m_model 441
 }
 ;
 
@@ -507,38 +599,38 @@ m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 4.45 -3 2.7
+   m_position 4.45 -3 3
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.01 0.01 0.01
    m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 4.45 0 0.01 0 -3 0 0 0.01 2.7 0 0 0 1
+   m_worldTransform 0.01 0 0 4.45 0 0.01 0 -3 0 0 0.01 3 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 4.45 -3 2.7
+   m_position 4.45 -3 3
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.01 0.01 0.01
    m_rotation 0 0 0 1
-   m_worldTransform 0.01 0 0 4.45 0 0.01 0 -3 0 0 0.01 2.7 0 0 0 1
+   m_worldTransform 0.01 0 0 4.45 0 0.01 0 -3 0 0 0.01 3 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::ModelComponent
 {
    m_model Link
-   m_material NinjaMat
+   m_material LinkMat
 }
 class Engine::Components::BoxCollider
 {
    m_mass 1
    m_offset 0 0.55 0
    m_box 0.25 0.55 0.15
-   m_model 41927
+   m_model 453
 }
 ;
 
@@ -639,71 +731,64 @@ class Engine::Components::ModelComponent
 ;
 
 GAMEOBJECT
-Cube
+Statue
 m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 4 1 4
-   m_forward -0 -0.34202 0.939693
-   m_right 1 -0 0
-   m_up 0 -0.939694 -0.34202
-   m_scale 3 0.2 5
-   m_rotation -0.173648 0 0 0.984808
-   m_worldTransform 3 0 0 4 0 0.187939 1.7101 1 0 -0.068404 4.69846 4 0 0 0 1
+   m_position -8.5 0 0
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 0.2 0.2 0.2
+   m_rotation 0 0 0 1
+   m_worldTransform 0.2 0 0 -8.5 0 0.2 0 0 0 0 0.2 0 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 4 1 4
-   m_forward -0 -0.34202 0.939693
-   m_right 1 -0 0
-   m_up 0 -0.939694 -0.34202
-   m_scale 3 0.2 5
-   m_rotation -0.173648 0 0 0.984808
-   m_worldTransform 3 0 0 4 0 0.187939 1.7101 1 0 -0.068404 4.69846 4 0 0 0 1
+   m_position -8.5 0 0
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 0.2 0.2 0.2
+   m_rotation 0 0 0 1
+   m_worldTransform 0.2 0 0 -8.5 0 0.2 0 0 0 0 0.2 0 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::ModelComponent
 {
-   m_model Cube
-   m_material default
-}
-class Engine::Components::BoxCollider
-{
-   m_mass 0
-   m_offset 1.5 0.1 -2.5
-   m_box 1.5 0.1 2.5
-   m_model 1079
+   m_model BlockA
+   m_material WoodMat
 }
 ;
 
 GAMEOBJECT
-Cube
+Light3
 m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 4 2 0
-   m_forward -0 0.34202 0.939693
+   m_position 0 0 1
+   m_forward -0 -0 1
    m_right 1 0 0
-   m_up 0 -0.939694 0.34202
-   m_scale 3 0.2 5
-   m_rotation 0.173648 0 0 0.984808
-   m_worldTransform 3 0 0 4 0 0.187939 -1.7101 2 0 0.068404 4.69846 0 0 0 0 1
+   m_up 0 -1 0
+   m_scale 0.2 0.2 0.2
+   m_rotation 0 0 0 1
+   m_worldTransform 0.2 0 0 0 0 0.2 0 0 0 0 0.2 1 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 4 2 0
-   m_forward -0 0.34202 0.939693
+   m_position 0 0 1
+   m_forward -0 -0 1
    m_right 1 0 0
-   m_up 0 -0.939694 0.34202
-   m_scale 3 0.2 5
-   m_rotation 0.173648 0 0 0.984808
-   m_worldTransform 3 0 0 4 0 0.187939 -1.7101 2 0 0.068404 4.69846 0 0 0 0 1
+   m_up 0 -1 0
+   m_scale 0.2 0.2 0.2
+   m_rotation 0 0 0 1
+   m_worldTransform 0.2 0 0 0 0 0.2 0 0 0 0 0.2 1 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::ModelComponent
@@ -711,11 +796,107 @@ class Engine::Components::ModelComponent
    m_model Cube
    m_material default
 }
+class Engine::Rendering::Lights::DirectionalLight
+{
+   m_lightData
+   {
+       shininess 128
+       range 1
+       intensity 0
+       padding 0
+       position 0 0 1 1
+       ambient 1 0.9999 0.9999 0.1
+       diffuse 1 0.9999 0.9999 0.1
+       specular 1 0.9999 0.9999 1
+   }
+}
+;
+
+GAMEOBJECT
+Light4
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 0 0 -1
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 0.2 0.2 0.2
+   m_rotation 0 0 0 1
+   m_worldTransform 0.2 0 0 0 0 0.2 0 0 0 0 0.2 -1 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 0 0 -1
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 0.2 0.2 0.2
+   m_rotation 0 0 0 1
+   m_worldTransform 0.2 0 0 0 0 0.2 0 0 0 0 0.2 -1 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::ModelComponent
+{
+   m_model Cube
+   m_material default
+}
+class Engine::Rendering::Lights::DirectionalLight
+{
+   m_lightData
+   {
+       shininess 128
+       range 1
+       intensity 0
+       padding 0
+       position 0 0 -1 1
+       ambient 1 0.9999 0.9999 0.1
+       diffuse 1 0.9999 0.9999 0.1
+       specular 1 0.95949 0.95949 1
+   }
+}
+;
+
+GAMEOBJECT
+Wall
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5.4 2.6 -12.8
+   m_forward -1.49976e-32 -1.22465e-16 -1
+   m_right -1 1.22465e-16 1.02856e-38
+   m_up -1.22465e-16 -1 1.22465e-16
+   m_scale 5 5 1
+   m_rotation 6.12323e-17 1 6.12323e-17 3.7494e-33
+   m_worldTransform -5 6.12323e-16 1.49976e-32 5.4 6.12323e-16 5 1.22465e-16 2.6 -5.14279e-38 6.12323e-16 -1 -12.8 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 5.4 2.6 -12.8
+   m_forward -1.49976e-32 -1.22465e-16 -1
+   m_right -1 1.22465e-16 1.02856e-38
+   m_up -1.22465e-16 -1 1.22465e-16
+   m_scale 5 5 1
+   m_rotation 6.12323e-17 1 6.12323e-17 3.7494e-33
+   m_worldTransform -5 6.12323e-16 1.49976e-32 5.4 6.12323e-16 5 1.22465e-16 2.6 -5.14279e-38 6.12323e-16 -1 -12.8 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::ModelComponent
+{
+   m_model Wall
+   m_material WallMat
+}
 class Engine::Components::BoxCollider
 {
    m_mass 0
-   m_offset 1.5 0.1 -2.5
-   m_box 1.5 0.1 2.5
-   m_model 1091
+   m_offset 4.8 2.2 0
+   m_box 10 7.8 0.01
+   m_model 517
 }
 ;

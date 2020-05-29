@@ -110,6 +110,14 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             if (ImGui::MenuItem("Ambient Light intensity"))
             {
                 // todo Change ambient value here
+                // float* ambient[4] = { &lightData.ambient.x, &lightData.ambient.y, &lightData.ambient.z, &lightData.ambient.w };
+                float* ambient[4] = {
+                    &Systems::RenderSystem::GetInstance()->m_ambientColor.x,
+                    &Systems::RenderSystem::GetInstance()->m_ambientColor.x,
+                    &Systems::RenderSystem::GetInstance()->m_ambientColor.x,
+                    &Systems::RenderSystem::GetInstance()->m_ambientColor.x,
+                };
+                ImGui::ColorEdit3("Ambient Color", *ambient, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
             }
             ImGui::EndMenu();
         }

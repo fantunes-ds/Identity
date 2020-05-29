@@ -4,13 +4,43 @@ MODEL ../Engine/Resources/cube.obj Cube
 MODEL ../Engine/Resources/earth.blend Earth
 MODEL ../Engine/Resources/Mini_Ninja.obj Ninja
 MODEL ../Engine/Resources/Box.OBJ Box
+MODEL C:\Users\lilga\Downloads\EngineAssets\DonkeyKong\dk.obj DonkeyKong
+MODEL C:\Users\lilga\Downloads\EngineAssets\default_ball\default_ball.obj RocketBall
+MODEL C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockA\babyblockA.3DS BlockA
+MODEL C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockB\babyblockB.3DS BlockB
+MODEL C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockC\babyblockC.3DS BlockC
+MODEL C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockD\babyblockD.3DS BlockD
+MODEL C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockE\babyblockE.3DS BlockE
+MODEL H:\ISART\Project\Engine\LookingForGroup\Identity\Engine\Resources\statue.obj Statue
+MODEL C:\Users\lilga\Downloads\EngineAssets\wall\wall.obj Wall
 TEXTURE ../Engine/Resources/link.png LinkText
 TEXTURE ../Engine/Resources/lambo_text.jpeg LamboText
 TEXTURE ../Engine/Resources/Earth.jpg EartText
 TEXTURE ../Engine/Resources/Ninja_T.png NinjaText
 TEXTURE ../Engine/Resources/Wood_Alpha_003.jpeg WoodText
+TEXTURE C:\Users\lilga\Downloads\EngineAssets\DonkeyKong\donkeykong.png DonkeyText
+TEXTURE C:\Users\lilga\Downloads\EngineAssets\default_ball\Ball_Default00_D.png RocketBallText
+TEXTURE C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockA\colour.JPG BlockAColor
+TEXTURE C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockB\colour.JPG BlockBColor
+TEXTURE C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockC\colour.JPG BlockCColor
+TEXTURE C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockD\colour.JPG BlockDColor
+TEXTURE C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockE\colour.JPG BlockEColor
+TEXTURE C:\Users\lilga\Downloads\EngineAssets\marbre.jpg MarbreText
+TEXTURE C:\Users\lilga\Downloads\EngineAssets\wall\CinderblockSloppy0005_1_S.jpg WallText
 MATERIAL LinkMat defaultPS defaultVS LinkText 1 1 1
 MATERIAL LamboMat defaultPS defaultVS LamboText 1 1 1
 MATERIAL NinjaMat defaultPS defaultVS NinjaText 1 1 1
-MATERIAL WoodMat defaultPS defaultVS WoodText 1 1 1
-MATERIAL Color defaultPS defaultVS NO_TEXTURE 1 1 1
+MATERIAL WoodMat defaultPS defaultVS WoodText 1 0.867796 0.635899
+MATERIAL Color defaultPS defaultVS RocketBallText 1 0.9999 0.9999
+MATERIAL Brown defaultPS defaultVS NO_TEXTURE 0.387692 0.200769 0
+MATERIAL Black defaultPS defaultVS NO_TEXTURE 0 0 0
+MATERIAL DonkeyMat defaultPS defaultVS DonkeyText 1 0.9999 0.9999
+MATERIAL RocketBallMat defaultPS defaultVS RocketBallText 1 1 1
+MATERIAL BlockAMat defaultPS defaultVS BlockAColor 1 1 1
+MATERIAL BlockBMat defaultPS defaultVS BlockBColor 1 1 1
+MATERIAL BlockCMat defaultPS defaultVS BlockCColor 1 1 1
+MATERIAL BlockDMat defaultPS defaultVS BlockDColor 1 1 1
+MATERIAL BlockEMat defaultPS defaultVS BlockEColor 1 1 1
+MATERIAL MarbreMat defaultPS defaultVS MarbreText 1 0.999955 0.9999
+MATERIAL WallMat defaultPS defaultVS WallText 0.931093 0.554657 0.41017
+MATERIAL Grey defaultPS defaultVS NO_TEXTURE 0.446608 0.446563 0.446563

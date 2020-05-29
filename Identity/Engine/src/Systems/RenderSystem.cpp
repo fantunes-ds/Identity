@@ -24,6 +24,11 @@ Engine::Systems::RenderSystem::~RenderSystem()
     delete m_instance;
 }
 
+
+
+Engine::Rendering::Lights::ILight::LightData lights[4];
+
+
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
 {
     HRESULT hr;
@@ -31,6 +36,21 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
     Rendering::Renderer::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     auto camera = Systems::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
+
+    if (!Systems::LightSystem::GetAllLights().empty())
+    {
+        int j = 0;
+        for (int i = 0; i < LightSystem::GetLights().size() && j < 4; ++i)
+        {
+            const std::shared_ptr<Components::Light> light1 = Systems::LightSystem::GetLights()[i];
+            if (light1->GetGameObject()->IsActive())
+            {
+                std::shared_ptr<Rendering::Lights::ILight> lightType = light1->GetLight();
+                lights[j] = lightType->GetLightData();
+                ++j;
+            }
+        }
+    }
 
     for (auto& sceneNode : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
     {
@@ -70,9 +90,9 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
                 // };
 
                 //create empty lights
-                Rendering::Lights::DirectionalLight::LightData lights[4];
+                // Rendering::Lights::DirectionalLight::LightData lights[4];
                 const Rendering::Buffers::PCB pcb{
-                    {lights[0], lights[1], lights[2], lights[3]},Vector3F::zero,
+                    {lights[0], lights[1], lights[2], lights[3]}, GetInstance()->m_ambientColor,Vector3F::zero,
                         static_cast<float>(mesh->GetMaterial()->GetTextureState()), mesh->GetMaterial()->GetColor()
                 };
 
@@ -129,9 +149,9 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         // };
 
         //create empty lights
-        Rendering::Lights::DirectionalLight::LightData lights[4];
+        // Rendering::Lights::DirectionalLight::LightData lights[4];
         const Rendering::Buffers::PCB pcb{
-            {lights[0], lights[1], lights[2], lights[3]},Vector3F::zero,
+            {lights[0], lights[1], lights[2], lights[3]}, GetInstance()->m_ambientColor,Vector3F::zero,
                 static_cast<float>(screenRect->GetMaterial()->GetTextureState()), screenRect->GetMaterial()->GetColor()
         };
 
@@ -151,22 +171,7 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
     auto camera = GetActiveCamera();
     auto mesh   = p_sceneNode->GetMesh();
 
-    Rendering::Lights::ILight::LightData lights[4];
 
-    if (!Systems::LightSystem::GetAllLights().empty())
-    {
-        int j = 0;
-        for (int i = 0; i < LightSystem::GetLights().size() && j < 4; ++i)
-        {
-            const std::shared_ptr<Components::Light> light1 = Systems::LightSystem::GetLights()[i];
-            if (light1->GetGameObject()->IsActive())
-            {
-                std::shared_ptr<Rendering::Lights::ILight> lightType = light1->GetLight();
-                lights[j] = lightType->GetLightData();
-                ++j;
-            }
-        }
-    }
 
     if (p_sceneNode->IsRoot())
     {
@@ -205,7 +210,7 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
         Vector3F invertedZCameraPos{ camera->GetPosition().x, camera->GetPosition().y, -camera->GetPosition().z };
 
         const Rendering::Buffers::PCB pcb{
-            {lights[0], lights[1], lights[2], lights[3]},
+            {lights[0], lights[1], lights[2], lights[3]}, GetInstance()->m_ambientColor,
             invertedZCameraPos, txst,
             mesh->GetMaterial()->GetColor()
         };
