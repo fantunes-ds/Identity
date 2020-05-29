@@ -7,19 +7,22 @@
 void Engine::Physics::ICollider::OnCollisionEnter()
 {
     std::string str(m_gameObject->GetName() + " On collision enter with " + m_collisionInfo->GetCollision()->GetName() + "\n");
-    OutputDebugString(str.c_str());
+    //OutputDebugString(str.c_str());
 }
 
 void Engine::Physics::ICollider::OnCollisionStay()
 {
     std::string str(m_gameObject->GetName() + " On collision stay with " + m_collisionInfo->GetCollision()->GetName() + "\n");
-    OutputDebugString(str.c_str());
+    //OutputDebugString(str.c_str());
 }
 
 void Engine::Physics::ICollider::OnCollisionExit()
 {
-    std::string str(m_gameObject->GetName() + " On collision exit " +  "\n");
-    OutputDebugString(str.c_str());
+    if (m_gameObject->GetName() == "Ball (1)" && m_collisionInfo->GetCollision()->GetName() == "Steep (1)")
+    {
+        std::string str();
+        //OutputDebugString(str.c_str());
+    }
 }
 
 void Engine::Physics::ICollider::ActOnCollisionInfo()
@@ -30,8 +33,10 @@ void Engine::Physics::ICollider::ActOnCollisionInfo()
         OnCollisionEnter();
     else if (!m_hasCollidedThisFrame && m_hasCollidedLastFrame)
     {
-        m_collisionInfo = nullptr;
         OnCollisionExit();
+        m_collisionInfo = nullptr;
+        m_hasCollidedLastFrame = false;
+        m_hasCollidedThisFrame = false;
     }
 }
 
@@ -53,6 +58,15 @@ Matrix4F Engine::Physics::ICollider::GetWorldMatrix() const
     };
 
     return mat.Transpose();
+}
+
+GPM::Vector3F Engine::Physics::ICollider::GetVelocity()
+{
+    if (!m_rigidbody)
+        return GPM::Vector3F::zero;
+
+    const btVector3& vel = m_rigidbody->getLinearVelocity();
+    return std::move(GPM::Vector3F(vel.getX(), vel.getY(), vel.getZ()));
 }
 
 bool Engine::Physics::ICollider::IsColliding()

@@ -40,16 +40,6 @@ GameObject::GameObject(const std::string& p_name)
 
 GameObject::~GameObject()
 {
-    /*for (auto& component : m_components)
-    {
-        if (Containers::ComponentContainer::FindComponent(component))
-            Containers::ComponentContainer::FindComponent(component)->RemoveComponent();
-        //Containers::ComponentContainer::RemoveComponent(component);
-    }
-
-    m_components.clear();
-
-    Containers::GameObjectContainer::RemoveGameObject(m_id);*/
 }
 
 void GameObject::DeleteFromMemory()

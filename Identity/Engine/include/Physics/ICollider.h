@@ -25,6 +25,7 @@ namespace Engine::Physics
         [[nodiscard]] GPM::Matrix4F GetWorldMatrix() const;
         GPM::Vector3F& GetOffset() { return m_offset; }
         float& GetMass() { return m_mass; }
+        GPM::Vector3F GetVelocity();
         bool IsColliding();
 
         void SetHasCollidedThisFrame(bool p_coll) { m_hasCollidedThisFrame = p_coll; }
