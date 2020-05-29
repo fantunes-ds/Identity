@@ -28,6 +28,8 @@ void Engine::Scene::SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::Ga
             auto child = std::make_shared<SceneNode>(mesh);
             rootNode->AddChild(child);
             child->SetName(rootNode->GetGameObject()->GetName() + "(" + std::to_string(submeshNumber) + ")");
+            child->GetGameObject()->SetName(rootNode->GetGameObject()->GetName() + "(" + std::to_string(submeshNumber) + ")");
+            child->GetGameObject()->SetSceneNode(child);
         }
     }
 

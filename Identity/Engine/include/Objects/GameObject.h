@@ -132,11 +132,11 @@ namespace Engine::Objects
 		[[nodiscard]] std::shared_ptr<Components::Transform> GetTransform() const;
 		[[nodiscard]] inline uint32_t GetTransformID() const { return m_transform; }
 		[[nodiscard]] std::shared_ptr<ObjectElements::Model> GetModel() const;
-		[[nodiscard]] std::shared_ptr<Scene::SceneNode> GetSceneNode() const { return m_rootNode; }
+		[[nodiscard]] std::shared_ptr<Scene::SceneNode> GetSceneNode() const { return m_sceneNode; }
 		inline std::vector<int32_t>& GetAllComponents() { return m_components; }
 		
 		inline void SetTransform(int32_t p_transform) { m_transform = p_transform; }
-		inline void SetSceneNode(std::shared_ptr<Scene::SceneNode> p_rootNode) { m_rootNode = p_rootNode; }
+		inline void SetSceneNode(std::shared_ptr<Scene::SceneNode> p_node) { m_sceneNode = p_node; }
 		inline void SetActive(bool p_active);
 		inline bool IsActive() { return m_isActive; }
 
@@ -146,6 +146,6 @@ namespace Engine::Objects
 		bool m_isActive = true;
 		int32_t m_transform = -1;
 		std::vector<int32_t> m_components;
-		std::shared_ptr<Scene::SceneNode> m_rootNode = nullptr;
+		std::shared_ptr<Scene::SceneNode> m_sceneNode = nullptr;
 	};
 }
