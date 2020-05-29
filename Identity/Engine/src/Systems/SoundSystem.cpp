@@ -36,8 +36,6 @@ void Engine::Systems::SoundSystem::IUpdate(const float p_deltaTime, bool p_isEdi
             {
                 sound.second->SetIsPlaying(false);
             }
-
-            sound.second->PlaySound();
         }
     }
 }
