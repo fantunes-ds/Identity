@@ -77,7 +77,7 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 2.5 0.1 -1.5
    m_box 2.5 0.1 1.5
-   m_model 263
+   m_model 40926
 }
 ;
 
@@ -113,7 +113,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0.05 0.05 -1
    m_box 0.05 0.05 1
-   m_model 274
+   m_model 38718
 }
 class Engine::Components::ModelComponent
 {
@@ -151,7 +151,7 @@ class Engine::Components::Transform
 {
    m_parent -1
    m_position 1.55 3.5 -10.8
-   m_forward -0 -0 1
+   m_forward -0 -0 1d
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.1 0.1 2
@@ -164,7 +164,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0.05 0.05 -1
    m_box 0.05 0.05 1
-   m_model 287
+   m_model 39927
 }
 class Engine::Components::ModelComponent
 {
@@ -210,7 +210,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 1.5 0.1 -2.5
    m_box 1.5 0.1 2.5
-   m_model 300
+   m_model 275
 }
 ;
 
@@ -246,7 +246,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 1.5 0.1 -2.5
    m_box 1.5 0.1 2.5
-   m_model 311
+   m_model 286
 }
 class Engine::Components::ModelComponent
 {
@@ -261,25 +261,25 @@ m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 1.1 4.6 -11.7
+   m_position 5.5 6.3 -3.4
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.05 0.05 0.05
    m_rotation 0 0 0 1
-   m_worldTransform 0.05 0 0 1.1 0 0.05 0 4.6 0 0 0.05 -11.7 0 0 0 1
+   m_worldTransform 0.05 0 0 5.5 0 0.05 0 6.3 0 0 0.05 -3.4 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 1.1 4.6 -11.7
+   m_position 5.5 6.3 -3.4
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.05 0.05 0.05
    m_rotation 0 0 0 1
-   m_worldTransform 0.05 0 0 1.1 0 0.05 0 4.6 0 0 0.05 -11.7 0 0 0 1
+   m_worldTransform 0.05 0 0 5.5 0 0.05 0 6.3 0 0 0.05 -3.4 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::SphereCollider
@@ -338,7 +338,7 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 0 0.55 0
    m_box 0.25 0.55 0.15
-   m_model 336
+   m_model 311
 }
 class Engine::Components::ModelComponent
 {
@@ -379,7 +379,7 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 0 0.55 0
    m_box 0.45 0.55 0.45
-   m_model 348
+   m_model 323
 }
 class Engine::Components::ModelComponent
 {
@@ -740,9 +740,9 @@ class Engine::Components::Transform
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
-   m_scale 0.2 0.2 0.2
+   m_scale 0.02 0.02 0.02
    m_rotation 0 0 0 1
-   m_worldTransform 0.2 0 0 -8.5 0 0.2 0 0 0 0 0.2 0 0 0 0 1
+   m_worldTransform 0.02 0 0 -8.5 0 0.02 0 0 0 0 0.02 0 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::Transform
@@ -752,15 +752,15 @@ class Engine::Components::Transform
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
-   m_scale 0.2 0.2 0.2
+   m_scale 0.02 0.02 0.02
    m_rotation 0 0 0 1
-   m_worldTransform 0.2 0 0 -8.5 0 0.2 0 0 0 0 0.2 0 0 0 0 1
+   m_worldTransform 0.02 0 0 -8.5 0 0.02 0 0 0 0 0.02 0 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::ModelComponent
 {
-   m_model BlockA
-   m_material WoodMat
+   m_model Statue
+   m_material MarbreMat
 }
 ;
 
@@ -868,11 +868,11 @@ class Engine::Components::Transform
    m_parent -1
    m_position 5.4 2.6 -12.8
    m_forward -1.49976e-32 -1.22465e-16 -1
-   m_right -1 1.22465e-16 1.02856e-38
+   m_right -1 1.22465e-16 -1.46937e-39
    m_up -1.22465e-16 -1 1.22465e-16
    m_scale 5 5 1
    m_rotation 6.12323e-17 1 6.12323e-17 3.7494e-33
-   m_worldTransform -5 6.12323e-16 1.49976e-32 5.4 6.12323e-16 5 1.22465e-16 2.6 -5.14279e-38 6.12323e-16 -1 -12.8 0 0 0 1
+   m_worldTransform -5 6.12323e-16 1.49976e-32 5.4 6.12323e-16 5 1.22465e-16 2.6 0 6.12323e-16 -1 -12.8 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::Transform
@@ -880,11 +880,11 @@ class Engine::Components::Transform
    m_parent -1
    m_position 5.4 2.6 -12.8
    m_forward -1.49976e-32 -1.22465e-16 -1
-   m_right -1 1.22465e-16 1.02856e-38
+   m_right -1 1.22465e-16 -1.46937e-39
    m_up -1.22465e-16 -1 1.22465e-16
    m_scale 5 5 1
    m_rotation 6.12323e-17 1 6.12323e-17 3.7494e-33
-   m_worldTransform -5 6.12323e-16 1.49976e-32 5.4 6.12323e-16 5 1.22465e-16 2.6 -5.14279e-38 6.12323e-16 -1 -12.8 0 0 0 1
+   m_worldTransform -5 6.12323e-16 1.49976e-32 5.4 6.12323e-16 5 1.22465e-16 2.6 0 6.12323e-16 -1 -12.8 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::ModelComponent
@@ -897,6 +897,6 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 4.8 2.2 0
    m_box 10 7.8 0.01
-   m_model 521
+   m_model 517
 }
 ;

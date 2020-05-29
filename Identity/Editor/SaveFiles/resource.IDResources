@@ -4,29 +4,29 @@ MODEL ../Engine/Resources/cube.obj Cube
 MODEL ../Engine/Resources/earth.blend Earth
 MODEL ../Engine/Resources/Mini_Ninja.obj Ninja
 MODEL ../Engine/Resources/Box.OBJ Box
-MODEL C:\Users\lilga\Downloads\EngineAssets\DonkeyKong\dk.obj DonkeyKong
-MODEL C:\Users\lilga\Downloads\EngineAssets\default_ball\default_ball.obj RocketBall
-MODEL C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockA\babyblockA.3DS BlockA
-MODEL C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockB\babyblockB.3DS BlockB
-MODEL C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockC\babyblockC.3DS BlockC
-MODEL C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockD\babyblockD.3DS BlockD
-MODEL C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockE\babyblockE.3DS BlockE
-MODEL H:\ISART\Project\Engine\LookingForGroup\Identity\Engine\Resources\statue.obj Statue
-MODEL C:\Users\lilga\Downloads\EngineAssets\wall\wall.obj Wall
+MODEL ../Engine/Resources/EngineAssets\DonkeyKong\dk.obj DonkeyKong
+MODEL ../Engine/Resources/EngineAssets\default_ball\default_ball.obj RocketBall
+MODEL ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockA\babyblockA.3DS BlockA
+MODEL ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockB\babyblockB.3DS BlockB
+MODEL ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockC\babyblockC.3DS BlockC
+MODEL ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockD\babyblockD.3DS BlockD
+MODEL ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockE\babyblockE.3DS BlockE
+MODEL ../Engine/Resources/statue.obj Statue
+MODEL ../Engine/Resources/EngineAssets\wall\wall.obj Wall
 TEXTURE ../Engine/Resources/link.png LinkText
 TEXTURE ../Engine/Resources/lambo_text.jpeg LamboText
 TEXTURE ../Engine/Resources/Earth.jpg EartText
 TEXTURE ../Engine/Resources/Ninja_T.png NinjaText
 TEXTURE ../Engine/Resources/Wood_Alpha_003.jpeg WoodText
-TEXTURE C:\Users\lilga\Downloads\EngineAssets\DonkeyKong\donkeykong.png DonkeyText
-TEXTURE C:\Users\lilga\Downloads\EngineAssets\default_ball\Ball_Default00_D.png RocketBallText
-TEXTURE C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockA\colour.JPG BlockAColor
-TEXTURE C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockB\colour.JPG BlockBColor
-TEXTURE C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockC\colour.JPG BlockCColor
-TEXTURE C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockD\colour.JPG BlockDColor
-TEXTURE C:\Users\lilga\Downloads\EngineAssets\baby_block_models\babyblockmodels\babyblockE\colour.JPG BlockEColor
-TEXTURE C:\Users\lilga\Downloads\EngineAssets\marbre.jpg MarbreText
-TEXTURE C:\Users\lilga\Downloads\EngineAssets\wall\CinderblockSloppy0005_1_S.jpg WallText
+TEXTURE ../Engine/Resources/EngineAssets\DonkeyKong\donkeykong.png DonkeyText
+TEXTURE ../Engine/Resources/EngineAssets\default_ball\Ball_Default00_D.png RocketBallText
+TEXTURE ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockA\colour.JPG BlockAColor
+TEXTURE ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockB\colour.JPG BlockBColor
+TEXTURE ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockC\colour.JPG BlockCColor
+TEXTURE ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockD\colour.JPG BlockDColor
+TEXTURE ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockE\colour.JPG BlockEColor
+TEXTURE ../Engine/Resources/EngineAssets\marbre.jpg MarbreText
+TEXTURE ../Engine/Resources/EngineAssets\wall\CinderblockSloppy0005_1_S.jpg WallText
 MATERIAL LinkMat defaultPS defaultVS LinkText 1 1 1
 MATERIAL LamboMat defaultPS defaultVS LamboText 1 1 1
 MATERIAL NinjaMat defaultPS defaultVS NinjaText 1 1 1
