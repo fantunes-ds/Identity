@@ -34,7 +34,7 @@ void Engine::Containers::GameObjectContainer::RemoveGameObject(std::shared_ptr<O
         return;
 
     p_gameObject->RemoveAllComponents();
-
+    p_gameObject->DeleteFromMemory();
     GetInstance()->m_gameObjects.erase(p_gameObject->GetID());
 }
 

@@ -46,6 +46,8 @@ void Engine::Managers::SceneManager::AddScene(const std::shared_ptr<Scene::Scene
 
 std::shared_ptr<Engine::Scene::Scene> Engine::Managers::SceneManager::LoadScene(const std::string& p_name)
 {
+    auto activeScene = Managers::SceneManager::GetActiveScene();
+    activeScene->ClearScene();
     auto scene = std::make_shared<Scene::Scene>();
     scene->SetName(p_name);
     AddScene(scene);
@@ -56,7 +58,8 @@ std::shared_ptr<Engine::Scene::Scene> Engine::Managers::SceneManager::LoadScene(
 
 std::shared_ptr<Engine::Scene::Scene> Engine::Managers::SceneManager::LoadScene(std::filesystem::path p_path)
 {
-
+    auto activeScene = Managers::SceneManager::GetActiveScene();
+    activeScene->ClearScene();
     auto scene = std::make_shared<Scene::Scene>();
     scene->SetName(p_path.string());
     AddScene(scene);
