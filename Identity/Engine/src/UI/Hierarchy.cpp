@@ -209,6 +209,11 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 {
                     ImGui::OpenPopup("Select Mesh");
                 }
+
+                if (ImGui::Button("Remove Component"))
+                {
+                    gameObject->RemoveComponent(modelComponent->GetID());
+                }
             }
 #pragma endregion
 #pragma region Material
@@ -308,6 +313,11 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 boxCollider->SetPositionOffset(boxCollider->GetOffset());
                 boxCollider->SetMass(boxCollider->GetMass());
                 boxCollider->SetDimensions(boxCollider->GetDimensions());
+
+                if (ImGui::Button("Remove Component"))
+                {
+                    gameObject->RemoveComponent(boxCollider->GetID());
+                }
             }
             break;
         }
@@ -334,7 +344,14 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 sphereCollider->SetPositionOffset(sphereCollider->GetOffset());
                 sphereCollider->SetMass(sphereCollider->GetMass());
                 sphereCollider->SetRadius(sphereCollider->GetRadius());
+
+                if (ImGui::Button("Remove Component"))
+                {
+                    gameObject->RemoveComponent(sphereCollider->GetID());
+                }
             }
+
+
             break;
         }
         case Components::CAMERA:
@@ -353,6 +370,10 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 ImGui::SliderFloat("Camera FOV", &fov, 10.f, 180.f, "%0.f");
 
                 camera->SetFOV(fov);
+                if (ImGui::Button("Remove Component"))
+                {
+                    gameObject->RemoveComponent(camera->GetID());
+                }
             }
             break;
         }
@@ -393,7 +414,13 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 ImGui::SetNextItemWidth(100);
                 ImGui::SliderFloat("Shininess", shininess, 8.0f, 512.0f, "%.0f");
                 ImGui::SliderFloat("Range", range, 0.00f, 1.0f, "%.2f");
+
+                if (ImGui::Button("Remove Component"))
+                {
+                    gameObject->RemoveComponent(lightComp ->GetID());
+                }
             }
+
             break;
         }
         case Components::SOUND:
@@ -462,7 +489,13 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     UI::FileBrowser::GetInstance()->Close();
                     chooseSound = false;
                 }
+
+                if (ImGui::Button("Remove Component"))
+                {
+                    gameObject->RemoveComponent(sound->GetID());
+                }
             }
+
             break;
         }
         case Components::UNSET:
