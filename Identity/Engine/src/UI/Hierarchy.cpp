@@ -216,7 +216,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     ImGui::OpenPopup("Select Mesh");
                 }
 
-                if (ImGui::Button("Remove Component"))
+                if (ImGui::Button("Remove Component##1"))
                 {
                     gameObject->RemoveComponent(modelComponent->GetID());
                 }
@@ -320,7 +320,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 boxCollider->SetMass(boxCollider->GetMass());
                 boxCollider->SetDimensions(boxCollider->GetDimensions());
 
-                if (ImGui::Button("Remove Component"))
+                if (ImGui::Button("Remove Component##2"))
                 {
                     gameObject->RemoveComponent(boxCollider->GetID());
                 }
@@ -351,7 +351,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 sphereCollider->SetMass(sphereCollider->GetMass());
                 sphereCollider->SetRadius(sphereCollider->GetRadius());
 
-                if (ImGui::Button("Remove Component"))
+                if (ImGui::Button("Remove Component##3"))
                 {
                     gameObject->RemoveComponent(sphereCollider->GetID());
                 }
@@ -376,7 +376,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 ImGui::SliderFloat("Camera FOV", &fov, 10.f, 180.f, "%0.f");
 
                 camera->SetFOV(fov);
-                if (ImGui::Button("Remove Component"))
+                if (ImGui::Button("Remove Component##4"))
                 {
                     gameObject->RemoveComponent(camera->GetID());
                 }
@@ -421,7 +421,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 ImGui::SliderFloat("Shininess", shininess, 8.0f, 512.0f, "%.0f");
                 ImGui::SliderFloat("Range", range, 0.00f, 1.0f, "%.2f");
 
-                if (ImGui::Button("Remove Component"))
+                if (ImGui::Button("Remove Component##5"))
                 {
                     gameObject->RemoveComponent(lightComp ->GetID());
                 }
@@ -496,7 +496,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     chooseSound = false;
                 }
 
-                if (ImGui::Button("Remove Component"))
+                if (ImGui::Button("Remove Component##6"))
                 {
                     gameObject->RemoveComponent(sound->GetID());
                 }
