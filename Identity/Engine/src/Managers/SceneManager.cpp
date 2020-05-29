@@ -154,6 +154,8 @@ void Engine::Managers::SceneManager::DuplicateScene(std::shared_ptr<Scene::Scene
         //create new gameobject
         auto name   = gameObject->GetName() + " (1)";
         auto tmpOBJ = std::make_shared<Objects::GameObject>(name);
+        tmpOBJ->SetActive(gameObject->IsActive());
+
         //we now have gameobject with same name
 
         //change the transform to be the same
