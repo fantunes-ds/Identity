@@ -176,7 +176,7 @@ bool GameObject::operator==(GameObject& p_other) const
 
 void GameObject::SetParentObject(std::shared_ptr<GameObject> p_parent)
 {
-    p_parent->GetSceneNode()->AddChild(m_rootNode);
+    p_parent->GetSceneNode()->AddChild(m_sceneNode);
 }
 
 bool GameObject::RemoveComponent(int32_t p_id)

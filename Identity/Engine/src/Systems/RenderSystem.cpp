@@ -32,7 +32,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
     auto camera = Systems::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
 
-    for (auto& sceneNode : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
+    for (auto& sceneNode : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes())
     {
         if (auto model = sceneNode.second->GetGameObject()->FindComponentOfType<Components::ModelComponent>())
         {

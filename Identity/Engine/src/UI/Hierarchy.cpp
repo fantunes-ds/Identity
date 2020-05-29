@@ -99,9 +99,6 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 
     ImGui::Begin("Inspector");
 
-    //if (Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id) == Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().end())
-    //    return;
-
     auto gameObject = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject();
     auto transform = gameObject->GetTransform();
 
