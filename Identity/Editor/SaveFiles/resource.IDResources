@@ -3,7 +3,6 @@ MODEL ../Engine/Resources/Lambo.obj Lambo
 MODEL ../Engine/Resources/cube.obj Cube
 MODEL ../Engine/Resources/earth.blend Earth
 MODEL ../Engine/Resources/Mini_Ninja.obj Ninja
-MODEL ../Engine/Resources/Box.OBJ Box
 MODEL ../Engine/Resources/EngineAssets\DonkeyKong\dk.obj DonkeyKong
 MODEL ../Engine/Resources/EngineAssets\default_ball\default_ball.obj RocketBall
 MODEL ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockA\babyblockA.3DS BlockA
@@ -13,6 +12,8 @@ MODEL ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblo
 MODEL ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockE\babyblockE.3DS BlockE
 MODEL ../Engine/Resources/statue.obj Statue
 MODEL ../Engine/Resources/EngineAssets\wall\wall.obj Wall
+MODEL C:\Users\Gabriel\Documents\ISART_travaux\GP2\Engine\LookingForGroup\Identity\Engine\Resources\ceiling_lamp.FBX ceiling_lamp
+MODEL C:\Users\Gabriel\Documents\ISART_travaux\GP2\Engine\LookingForGroup\Identity\Engine\Resources\Desk.obj Desk2
 TEXTURE ../Engine/Resources/link.png LinkText
 TEXTURE ../Engine/Resources/lambo_text.jpeg LamboText
 TEXTURE ../Engine/Resources/Earth.jpg EartText
@@ -28,6 +29,10 @@ TEXTURE ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyb
 TEXTURE ../Engine/Resources/EngineAssets/TEXTURES\marbre.jpg MarbreText
 TEXTURE ../Engine/Resources/EngineAssets\wall\CinderblockSloppy0005_1_S.jpg WallText
 TEXTURE ../Engine/Resources/EngineAssets/TEXTURES\metal.jpg MetalText
+TEXTURE C:\Users\Gabriel\Documents\ISART_travaux\GP2\Engine\LookingForGroup\Identity\Engine\Resources\DeskMaterial\WOOD.png DeskWood
+TEXTURE C:\Users\Gabriel\Documents\ISART_travaux\GP2\Engine\LookingForGroup\Identity\Engine\Resources\pladur.jpg PladurTexture
+TEXTURE C:\Users\Gabriel\Documents\ISART_travaux\GP2\Engine\LookingForGroup\Identity\Engine\Resources\stucco.jpg stuccoText
+TEXTURE C:\Users\Gabriel\Documents\ISART_travaux\GP2\Engine\LookingForGroup\Identity\Engine\Resources\DeskText.png Desk2Text
 MATERIAL LinkMat defaultPS defaultVS LinkText 1 1 1
 MATERIAL LamboMat defaultPS defaultVS LamboText 1 1 1
 MATERIAL NinjaMat defaultPS defaultVS NinjaText 1 1 1
@@ -46,3 +51,9 @@ MATERIAL MarbreMat defaultPS defaultVS MarbreText 1 0.999955 0.9999
 MATERIAL WallMat defaultPS defaultVS WallText 0.931093 0.554657 0.41017
 MATERIAL Grey defaultPS defaultVS NO_TEXTURE 0.895104 0.895015 0.895015
 MATERIAL MetalMat defaultPS defaultVS MetalText 1 0.9999 0.9999
+MATERIAL DeskMaterial defaultPS defaultVS DeskWood 1 1 1
+MATERIAL Pladur defaultPS defaultVS PladurTexture 1 0.9999 0.9999
+MATERIAL Stucco defaultPS defaultVS NO_TEXTURE 1 0.9999 0.9999
+MATERIAL Desk2Mat defaultPS defaultVS NO_TEXTURE 1 1 1
+MATERIAL Desk2Mat2 defaultPS defaultVS Desk2Text 1 1 1
+MATERIAL Stucco2 defaultPS defaultVS stuccoText 1 1 1

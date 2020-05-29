@@ -9,37 +9,31 @@
 
 void Engine::Physics::ICollider::OnCollisionEnter()
 {
-    if (m_gameObject->GetName() == "Ball" && m_collisionInfo->GetCollision()->GetName() == "Steep1")
+    /*if (m_gameObject->FindComponentOfType<Components::Sound>())
+    {
+        m_gameObject->FindComponentOfType<Components::Sound>()->Stop();
+        m_gameObject->FindComponentOfType<Components::Sound>()->PlaySound();
+    }*/
+    if (m_gameObject->GetName() == "Ball")
     {
         m_gameObject->FindComponentOfType<Components::Sound>()->Stop();
         m_gameObject->FindComponentOfType<Components::Sound>()->PlaySound();
 
         auto support = Managers::SceneManager::GetActiveScene()->GetGameObject("Steep1SupportRight");
-        if (support)
+        if (support && m_collisionInfo->GetCollision()->GetName() == "Steep1")
             support->FindComponentOfType<Components::BoxCollider>()->SetMass(10);
     }
     if (m_gameObject->GetName() == "Ball" && m_collisionInfo->GetCollision()->GetName() == "Steep2")
     {
-        m_gameObject->FindComponentOfType<Components::Sound>()->Stop();
-        m_gameObject->FindComponentOfType<Components::Sound>()->PlaySound();
-
         auto support = Managers::SceneManager::GetActiveScene()->GetGameObject("Steep2SupportLeft");
         if (support)
             support->FindComponentOfType<Components::BoxCollider>()->SetMass(10);
     }
     if (m_gameObject->GetName() == "Ball" && m_collisionInfo->GetCollision()->GetName() == "Steep3")
     {
-        m_gameObject->FindComponentOfType<Components::Sound>()->Stop();
-        m_gameObject->FindComponentOfType<Components::Sound>()->PlaySound();
-
         auto support = Managers::SceneManager::GetActiveScene()->GetGameObject("Steep3SupportRight");
         if (support)
             support->FindComponentOfType<Components::BoxCollider>()->SetMass(10);
-    }
-    if (m_gameObject->GetName() == "Ball" && m_collisionInfo->GetCollision()->GetName() == "Floor")
-    {
-        m_gameObject->FindComponentOfType<Components::Sound>()->Stop();
-        m_gameObject->FindComponentOfType<Components::Sound>()->PlaySound();
     }
     if (m_gameObject->GetName() == "FlyingLink" && m_collisionInfo->GetCollision()->GetName() == "Stoper")
     {

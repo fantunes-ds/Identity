@@ -152,7 +152,7 @@ void Engine::Systems::PhysicsSystem::BulletTickCallback(btDynamicsWorld* p_world
         {
             btManifoldPoint& pt = contactManifold->getContactPoint(j);
 
-            if (pt.getDistance() < 0.1f)
+            if (pt.getDistance() < 0.02f)
             {
                 const btVector3& ptA = pt.getPositionWorldOnA();
                 const btVector3& ptB = pt.getPositionWorldOnB();
