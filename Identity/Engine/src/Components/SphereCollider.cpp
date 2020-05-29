@@ -302,7 +302,9 @@ void Engine::Components::SphereCollider::SetRadius(float p_radius)
         Systems::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
     }
 
-    Managers::ResourceManager::RemoveModel(m_model->GetID());
+    if (m_model)
+        Managers::ResourceManager::RemoveModel(m_model->GetID());
+
     ObjectElements::Model model = ConstructSphere();
 
     const int32_t id = Managers::ResourceManager::AddModel(model);

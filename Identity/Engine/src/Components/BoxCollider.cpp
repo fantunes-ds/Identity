@@ -320,8 +320,11 @@ void Engine::Components::BoxCollider::SetDimensions(const GPM::Vector3F& p_dimen
         Systems::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
     }
 
+    if (m_model)
+        Managers::ResourceManager::RemoveModel(m_model->GetID());
+
     ObjectElements::Model model = ConstructBox();
-    Managers::ResourceManager::RemoveModel(m_model->GetID());
+
     const int32_t id = Managers::ResourceManager::AddModel(model);
     m_model = Managers::ResourceManager::FindModel(id);
 }
