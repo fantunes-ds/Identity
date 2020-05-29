@@ -37,22 +37,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
 
     auto camera = Systems::CameraSystem::GetCamera(GetInstance()->m_activeCamera);
 
-    if (!Systems::LightSystem::GetAllLights().empty())
-    {
-        int j = 0;
-        for (int i = 0; i < LightSystem::GetLights().size() && j < 4; ++i)
-        {
-            const std::shared_ptr<Components::Light> light1 = Systems::LightSystem::GetLights()[i];
-            if (light1->GetGameObject()->IsActive())
-            {
-                std::shared_ptr<Rendering::Lights::ILight> lightType = light1->GetLight();
-                lights[j] = lightType->GetLightData();
-                ++j;
-            }
-        }
-    }
-
-    for (auto& sceneNode : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
+    for (auto& sceneNode : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes())
     {
         if (auto model = sceneNode.second->GetGameObject()->FindComponentOfType<Components::ModelComponent>())
         {

@@ -50,7 +50,11 @@ Engine::Components::SphereCollider::SphereCollider(Engine::Objects::GameObject* 
             words.push_back(word);
         } while (stringStream);
 
-        if (words[0] == "m_mass")
+        if (words[0] == "m_isActive")
+        {
+            m_isActive = std::stoi(words[1]);
+        }
+        else if (words[0] == "m_mass")
         {
             m_mass = std::stof(words[1]);
         }
@@ -157,6 +161,7 @@ Engine::Components::SphereCollider::~SphereCollider()
 void Engine::Components::SphereCollider::Serialize(std::ostream& p_stream)
 {
     p_stream << typeid(*this).name() << "\n{\n" <<
+        "   m_isActive " << m_isActive << "\n" <<
         "   m_mass " << m_mass << "\n" <<
         "   m_offset " << m_offset.x << " " << m_offset.y << " " << m_offset.z << "\n" <<
         "   m_scale " << m_scale.x << " " << m_scale.y << " " << m_scale.z << "\n" <<
@@ -181,7 +186,11 @@ void Engine::Components::SphereCollider::Deserialize(Objects::GameObject* p_game
             words.push_back(word);
         } while (stringStream);
 
-        if (words[0] == "m_mass")
+        if (words[0] == "m_isActive")
+        {
+            m_isActive = std::stoi(words[1]);
+        }
+        else if (words[0] == "m_mass")
         {
             m_mass = std::stof(words[1]);
         }
@@ -302,7 +311,9 @@ void Engine::Components::SphereCollider::SetRadius(float p_radius)
         Systems::PhysicsSystem::GetWorld()->addRigidBody(m_rigidbody);
     }
 
-    Managers::ResourceManager::RemoveModel(m_model->GetID());
+    if (m_model)
+        Managers::ResourceManager::RemoveModel(m_model->GetID());
+
     ObjectElements::Model model = ConstructSphere();
 
     const int32_t id = Managers::ResourceManager::AddModel(model);

@@ -19,6 +19,9 @@ int Engine::UI::Hierarchy::m_currentlySelected = -1;
 
 std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child)
 {
+    if (!p_child)
+        return nullptr;
+
     static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
     static int                selection_mask = (1 << 2);
     ImGuiTreeNodeFlags        node_flags = base_flags;
@@ -88,15 +91,13 @@ void Engine::UI::Hierarchy::CreateHierarchy(Core::App& p_appRef)
 
 void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 {
+    if (p_id < 0)
+    {
+        return;
+    }
     static bool loadNewModel = false;
 
     ImGui::Begin("Inspector");
-
-    if (p_id < 0)
-    {
-        ImGui::End();
-        return;
-    }
 
     auto gameObject = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject();
     auto transform = gameObject->GetTransform();
@@ -113,7 +114,9 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
     ImGui::SameLine();
 
     gameObject->SetName(buf1);
-    gameObject->GetSceneNode()->SetName(buf1);
+
+    if (gameObject->GetSceneNode())
+        gameObject->GetSceneNode()->SetName(buf1);
 
     memset(buf1, 0, 64);
 
@@ -177,8 +180,14 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     ImGui::Text("Choose Model");
                     for (auto& model : Managers::ResourceManager::GetAllModels())
                     {
-                        if (model->GetName()._Equal("NoName") ||  model->GetName()._Equal(gameObject->GetModel()->GetName()))
-                            continue;
+                        if (gameObject->GetModel() != nullptr)
+                        {
+                            if (model->GetName()._Equal(gameObject->GetModel()->GetName()))
+                                continue;
+                        }
+
+                        if (model->GetName()._Equal("NoName"))
+                                continue;
 
                         if (ImGui::Button(model->GetName().c_str()))
                         {
@@ -202,6 +211,11 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 if (ImGui::Button("Change Model"))
                 {
                     ImGui::OpenPopup("Select Mesh");
+                }
+
+                if (ImGui::Button("Remove Component##1"))
+                {
+                    gameObject->RemoveComponent(modelComponent->GetID());
                 }
             }
 #pragma endregion
@@ -302,6 +316,11 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 boxCollider->SetPositionOffset(boxCollider->GetOffset());
                 boxCollider->SetMass(boxCollider->GetMass());
                 boxCollider->SetDimensions(boxCollider->GetDimensions());
+
+                if (ImGui::Button("Remove Component##2"))
+                {
+                    gameObject->RemoveComponent(boxCollider->GetID());
+                }
             }
             break;
         }
@@ -328,7 +347,14 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 sphereCollider->SetPositionOffset(sphereCollider->GetOffset());
                 sphereCollider->SetMass(sphereCollider->GetMass());
                 sphereCollider->SetRadius(sphereCollider->GetRadius());
+
+                if (ImGui::Button("Remove Component##3"))
+                {
+                    gameObject->RemoveComponent(sphereCollider->GetID());
+                }
             }
+
+
             break;
         }
         case Components::CAMERA:
@@ -347,6 +373,10 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 ImGui::SliderFloat("Camera FOV", &fov, 10.f, 180.f, "%0.f");
 
                 camera->SetFOV(fov);
+                if (ImGui::Button("Remove Component##4"))
+                {
+                    gameObject->RemoveComponent(camera->GetID());
+                }
             }
             break;
         }
@@ -387,7 +417,13 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 ImGui::SetNextItemWidth(100);
                 ImGui::SliderFloat("Shininess", shininess, 8.0f, 512.0f, "%.0f");
                 ImGui::SliderFloat("Range", range, 0.00f, 1.0f, "%.2f");
+
+                if (ImGui::Button("Remove Component##5"))
+                {
+                    gameObject->RemoveComponent(lightComp ->GetID());
+                }
             }
+
             break;
         }
         case Components::SOUND:
@@ -456,7 +492,13 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     UI::FileBrowser::GetInstance()->Close();
                     chooseSound = false;
                 }
+
+                if (ImGui::Button("Remove Component##6"))
+                {
+                    gameObject->RemoveComponent(sound->GetID());
+                }
             }
+
             break;
         }
         case Components::UNSET:

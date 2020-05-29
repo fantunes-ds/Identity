@@ -60,8 +60,6 @@ void GameObject::Serialize(std::ostream& p_stream)
     p_stream << "\nGAMEOBJECT\n" << m_name << "\n" <<
         "m_isActive " << m_isActive << "\n";
 
-    GetTransform()->Serialize(p_stream);
-
     for (auto component: GetAllComponents())
     {
         Containers::ComponentContainer::FindComponent(component)->Serialize(p_stream);
@@ -176,7 +174,7 @@ bool GameObject::operator==(GameObject& p_other) const
 
 void GameObject::SetParentObject(std::shared_ptr<GameObject> p_parent)
 {
-    p_parent->GetSceneNode()->AddChild(m_rootNode);
+    p_parent->GetSceneNode()->AddChild(m_sceneNode);
 }
 
 bool GameObject::RemoveComponent(int32_t p_id)
@@ -185,9 +183,13 @@ bool GameObject::RemoveComponent(int32_t p_id)
     {
         if (m_components[i] == p_id)
         {
-            m_components.erase(m_components.begin() + i);
-            Containers::ComponentContainer::RemoveComponent(p_id);
-            return true;
+            auto comp = Containers::ComponentContainer::FindComponent(p_id);
+            if (comp->RemoveComponent())
+            {
+                m_components.erase(m_components.begin() + i);
+                return true;
+            }
+            return false;
         }
     }
 
