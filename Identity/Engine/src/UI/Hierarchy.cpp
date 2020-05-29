@@ -177,8 +177,14 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     ImGui::Text("Choose Model");
                     for (auto& model : Managers::ResourceManager::GetAllModels())
                     {
-                        if (model->GetName()._Equal("NoName") ||  model->GetName()._Equal(gameObject->GetModel()->GetName()))
-                            continue;
+                        if (gameObject->GetModel() != nullptr)
+                        {
+                            if (model->GetName()._Equal(gameObject->GetModel()->GetName()))
+                                continue;
+                        }
+
+                        if (model->GetName()._Equal("NoName"))
+                                continue;
 
                         if (ImGui::Button(model->GetName().c_str()))
                         {
