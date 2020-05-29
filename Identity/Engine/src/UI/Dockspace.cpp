@@ -61,6 +61,7 @@ void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
 
 void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
 {
+    static bool showColor = false;
     static bool showSave = false;
     static bool MatCreationPopup = false;
     static bool chooseScene = false;
@@ -109,15 +110,10 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             ImGui::Separator();
             if (ImGui::MenuItem("Ambient Light intensity"))
             {
+                showColor = true;
                 // todo Change ambient value here
                 // float* ambient[4] = { &lightData.ambient.x, &lightData.ambient.y, &lightData.ambient.z, &lightData.ambient.w };
-                float* ambient[4] = {
-                    &Systems::RenderSystem::GetInstance()->m_ambientColor.x,
-                    &Systems::RenderSystem::GetInstance()->m_ambientColor.x,
-                    &Systems::RenderSystem::GetInstance()->m_ambientColor.x,
-                    &Systems::RenderSystem::GetInstance()->m_ambientColor.x,
-                };
-                ImGui::ColorEdit3("Ambient Color", *ambient, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+
             }
             ImGui::EndMenu();
         }
@@ -319,6 +315,24 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
                 addNewTexture = false;
             }
 
+            ImGui::End();
+        }
+    }
+    if (showColor)
+    {
+        if (ImGui::Begin("Ambient Color", &showColor, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            float* ambient[4] = {
+            &Systems::RenderSystem::GetInstance()->m_ambientColor.x,
+            &Systems::RenderSystem::GetInstance()->m_ambientColor.y,
+            &Systems::RenderSystem::GetInstance()->m_ambientColor.z,
+            &Systems::RenderSystem::GetInstance()->m_ambientColor.w,
+            };
+            ImGui::ColorEdit4("Ambient Color", *ambient, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+            if (ImGui::Button("Close"))
+            {
+                showColor = false;
+            }
             ImGui::End();
         }
     }

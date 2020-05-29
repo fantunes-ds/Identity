@@ -25,8 +25,9 @@ TEXTURE ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyb
 TEXTURE ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockC\colour.JPG BlockCColor
 TEXTURE ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockD\colour.JPG BlockDColor
 TEXTURE ../Engine/Resources/EngineAssets\baby_block_models\babyblockmodels\babyblockE\colour.JPG BlockEColor
-TEXTURE ../Engine/Resources/EngineAssets\marbre.jpg MarbreText
+TEXTURE ../Engine/Resources/EngineAssets/TEXTURES\marbre.jpg MarbreText
 TEXTURE ../Engine/Resources/EngineAssets\wall\CinderblockSloppy0005_1_S.jpg WallText
+TEXTURE ../Engine/Resources/EngineAssets/TEXTURES\metal.jpg MetalText
 MATERIAL LinkMat defaultPS defaultVS LinkText 1 1 1
 MATERIAL LamboMat defaultPS defaultVS LamboText 1 1 1
 MATERIAL NinjaMat defaultPS defaultVS NinjaText 1 1 1
@@ -43,4 +44,5 @@ MATERIAL BlockDMat defaultPS defaultVS BlockDColor 1 1 1
 MATERIAL BlockEMat defaultPS defaultVS BlockEColor 1 1 1
 MATERIAL MarbreMat defaultPS defaultVS MarbreText 1 0.999955 0.9999
 MATERIAL WallMat defaultPS defaultVS WallText 0.931093 0.554657 0.41017
-MATERIAL Grey defaultPS defaultVS NO_TEXTURE 0.446608 0.446563 0.446563
+MATERIAL Grey defaultPS defaultVS NO_TEXTURE 0.895104 0.895015 0.895015
+MATERIAL MetalMat defaultPS defaultVS MetalText 1 0.9999 0.9999
