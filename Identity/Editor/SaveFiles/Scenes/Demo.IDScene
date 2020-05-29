@@ -897,6 +897,6 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 4.8 2.2 0
    m_box 10 7.8 0.01
-   m_model 517
+   m_model 521
 }
 ;

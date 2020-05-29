@@ -17,7 +17,7 @@ void Engine::Physics::ICollider::OnCollisionEnter()
         m_collisionInfo->GetCollision()->FindComponentOfType<Components::BoxCollider>()->SetMass(5);
         // m_collisionInfo->GetCollision()->GetTransform()->SetRotation(q);
 
-        auto support = Managers::SceneManager::GetActiveScene()->GetGameObject("Support2");
+        auto support = Managers::SceneManager::GetActiveScene()->GetGameObject("Steep1SupportRight");
         if (support)
             support->FindComponentOfType<Components::BoxCollider>()->SetMass(10);
 
