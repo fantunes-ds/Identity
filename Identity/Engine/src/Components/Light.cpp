@@ -51,6 +51,24 @@ void Engine::Components::Light::Serialize(std::ostream& p_stream)
 void Engine::Components::Light::Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block)
 {
     m_gameObject = p_gameObject;
+    std::vector<std::string> words;
+
+    for (auto& line : p_block)
+    {
+        std::stringstream stringStream(line);
+
+        do
+        {
+            std::string word;
+            stringStream >> word;
+            words.push_back(word);
+        } while (stringStream);
+
+        if (words[0] == "m_isActive")
+        {
+            m_isActive = std::stoi(words[1]);
+        }
+    }
 
     auto light = std::make_shared<Rendering::Lights::DirectionalLight>();
 
