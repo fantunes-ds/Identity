@@ -19,6 +19,9 @@ int Engine::UI::Hierarchy::m_currentlySelected = -1;
 
 std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child)
 {
+    if (!p_child)
+        return nullptr;
+
     static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
     static int                selection_mask = (1 << 2);
     ImGuiTreeNodeFlags        node_flags = base_flags;
@@ -88,15 +91,16 @@ void Engine::UI::Hierarchy::CreateHierarchy(Core::App& p_appRef)
 
 void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 {
+    if (p_id < 0)
+    {
+        return;
+    }
     static bool loadNewModel = false;
 
     ImGui::Begin("Inspector");
 
-    if (p_id < 0)
-    {
-        ImGui::End();
-        return;
-    }
+    //if (Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id) == Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().end())
+    //    return;
 
     auto gameObject = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject();
     auto transform = gameObject->GetTransform();
@@ -113,7 +117,9 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
     ImGui::SameLine();
 
     gameObject->SetName(buf1);
-    gameObject->GetSceneNode()->SetName(buf1);
+
+    if (gameObject->GetSceneNode())
+        gameObject->GetSceneNode()->SetName(buf1);
 
     memset(buf1, 0, 64);
 
