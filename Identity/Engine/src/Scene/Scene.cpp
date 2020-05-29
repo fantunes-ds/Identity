@@ -75,7 +75,7 @@ void Engine::Scene::Scene::Save()
 {
     std::ofstream outfile("SaveFiles/Scenes/" + m_name + ".IDScene");
 
-    for (auto& node: m_sceneGraph.GetAllSceneNodes())
+    for (auto& node: m_sceneGraph.GetRootSceneNodes())
     {
         node.second->GetGameObject()->Serialize(outfile);
     }
@@ -87,7 +87,7 @@ void Engine::Scene::Scene::SaveAs(const char* p_name)
 {
     std::ofstream outfile("SaveFiles/Scenes/" + std::string(p_name) + ".IDScene");
 
-    for (auto& node : m_sceneGraph.GetAllSceneNodes())
+    for (auto& node : m_sceneGraph.GetRootSceneNodes())
     {
         node.second->GetGameObject()->Serialize(outfile);
     }

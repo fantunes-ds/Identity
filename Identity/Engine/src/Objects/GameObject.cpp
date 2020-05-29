@@ -60,8 +60,6 @@ void GameObject::Serialize(std::ostream& p_stream)
     p_stream << "\nGAMEOBJECT\n" << m_name << "\n" <<
         "m_isActive " << m_isActive << "\n";
 
-    GetTransform()->Serialize(p_stream);
-
     for (auto component: GetAllComponents())
     {
         Containers::ComponentContainer::FindComponent(component)->Serialize(p_stream);
