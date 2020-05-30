@@ -328,11 +328,7 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             &Systems::RenderSystem::GetInstance()->m_ambientColor.z,
             &Systems::RenderSystem::GetInstance()->m_ambientColor.w,
             };
-            ImGui::ColorEdit4("Ambient Color", *ambient, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-            if (ImGui::Button("Close"))
-            {
-                showColor = false;
-            }
+            ImGui::ColorEdit4("Ambient Color", *ambient, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaBar);
             ImGui::End();
         }
     }
