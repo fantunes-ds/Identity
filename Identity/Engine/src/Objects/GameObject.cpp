@@ -62,7 +62,8 @@ void GameObject::Serialize(std::ostream& p_stream)
 
     for (auto component: GetAllComponents())
     {
-        Containers::ComponentContainer::FindComponent(component)->Serialize(p_stream);
+        if (Containers::ComponentContainer::FindComponent(component))
+            Containers::ComponentContainer::FindComponent(component)->Serialize(p_stream);
     }
 
     p_stream << ";\n";

@@ -117,6 +117,18 @@ Engine::Managers::ResourceManager::ResourceManager()
 
 const int32_t Engine::Managers::ResourceManager::AddModelNS(const std::string& p_path, const std::string& p_name)
 {
+    std::string sep = "\\Engine";
+    std::string relativePath = p_path;
+
+    size_t i = p_path.rfind(sep, p_path.length());
+    if (i != std::string::npos)
+    {
+
+        relativePath = "..\\" + p_path.substr(i + 1, p_path.length() - i);
+    }
+    else
+        relativePath = p_path;
+
     if (p_name.empty())
     {
         const std::string info("No name was entered for the creation of the model. Please create it with a name");
@@ -126,9 +138,9 @@ const int32_t Engine::Managers::ResourceManager::AddModelNS(const std::string& p
 
     for (auto model : m_models)
     {
-        if (model.second->GetPath() == p_path)
+        if (model.second->GetPath() == relativePath)
         {
-            const std::string info("The model located at " + p_path + " is already loaded and will be returned");
+            const std::string info("The model located at " + relativePath + " is already loaded and will be returned");
             MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
             return model.first;
         }
@@ -141,18 +153,18 @@ const int32_t Engine::Managers::ResourceManager::AddModelNS(const std::string& p
         }
     }
 
-    std::shared_ptr<ObjectElements::Model> model = ObjectLoader::LoadModel(p_path);
+    std::shared_ptr<ObjectElements::Model> model = ObjectLoader::LoadModel(relativePath);
 
     if (model == nullptr)
     {
         const std::string error{ "ResourceManager::AddModel(const std::string& p_path, const std::string& p_name): Could not load model at "
-                                + p_path + " because there was no object to be found at that path" };
+                                + relativePath + " because there was no object to be found at that path" };
         MessageBox(nullptr, error.c_str(), "Error", MB_ICONWARNING | MB_OK);
         return -1;
     }
 
     model->SetName(p_name);
-    model->SetPath(p_path);
+    model->SetPath(relativePath);
 
     for (auto& mesh : model->GetMeshes())
         mesh->GenerateBuffers(Rendering::Renderer::GetInstance()->GetDevice());

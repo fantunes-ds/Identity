@@ -13,7 +13,7 @@ MODEL ../Engine/Resources/EngineAssets/baby_block_models/babyblockmodels/babyblo
 MODEL ../Engine/Resources/statue.obj Statue
 MODEL ../Engine/Resources/EngineAssets/wall/wall.obj Wall
 MODEL ../Engine/Resources/ceiling_lamp.FBX ceiling_lamp
-MODEL F:\repos\2019-2020\Identity\Identity\Engine\Resources\Desk.obj Desk
+MODEL ..\Engine\Resources\Desk.obj Desk
 TEXTURE ../Engine/Resources/link.png LinkText
 TEXTURE ../Engine/Resources/lambo_text.jpeg LamboText
 TEXTURE ../Engine/Resources/Earth.jpg EartText

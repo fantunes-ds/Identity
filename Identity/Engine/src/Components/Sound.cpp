@@ -169,3 +169,18 @@ void Engine::Components::Sound::SetVolume(float p_volume)
     if (m_sound)
         m_sound->setVolume(m_volume);
 }
+
+void Engine::Components::Sound::SetSoundFile(std::filesystem::path p_path)
+{
+    std::string sep = "\\Engine";
+    std::string path = p_path.string();
+
+    size_t i = path.rfind(sep, path.length());
+    if (i != std::string::npos)
+    {
+        
+        m_soundFile = "..\\" + path.substr(i + 1, path.length() - i);
+    }
+    else
+        m_soundFile = "NoFile";
+}

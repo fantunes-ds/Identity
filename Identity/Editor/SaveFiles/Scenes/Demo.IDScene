@@ -28,6 +28,17 @@ class Engine::Components::ModelComponent
    m_model Cube
    m_material MetalMat
 }
+class Engine::Components::Sound
+{
+   m_isActive 1
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 1
+   m_minDistance 40
+   m_maxDistance 200
+   m_volume 1
+   m_soundFile C:\Users\Gabriel\Documents\ISART_travaux\GP2\Engine\LookingForGroup\Identity\Engine\Resources\Sounds\floorimpact.wav
+}
 ;
 
 GAMEOBJECT
@@ -57,7 +68,18 @@ class Engine::Components::BoxCollider
    m_mass 30
    m_offset 0 0 0
    m_box 2.5 0.1 1.5
-   m_model 360
+   m_model 361
+}
+class Engine::Components::Sound
+{
+   m_isActive 1
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 1
+   m_minDistance 40
+   m_maxDistance 200
+   m_volume 1
+   m_soundFile ..\Engine\Resources\Sounds\woodknock.wav
 }
 ;
 
@@ -82,24 +104,13 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.05 0.05 1
-   m_model 371
+   m_model 373
 }
 class Engine::Components::ModelComponent
 {
    m_isActive 1
    m_model Cube
    m_material MetalMat
-}
-class Engine::Components::Sound
-{
-   m_isActive 1
-   m_playLooped 1
-   m_startPaused 0
-   m_playSoundIn3D 0
-   m_minDistance 10
-   m_maxDistance 10
-   m_volume 1
-   m_soundFile C:\Users\Gabriel\Documents\ISART_travaux\GP2\Engine\LookingForGroup\Identity\Engine\Resources\Sounds\test.mp3
 }
 ;
 
@@ -124,7 +135,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.05 0.05 1
-   m_model 384
+   m_model 385
 }
 class Engine::Components::ModelComponent
 {
@@ -161,7 +172,18 @@ class Engine::Components::BoxCollider
    m_mass 30
    m_offset 0 0 0
    m_box 2.5 0.1 1.5
-   m_model 397
+   m_model 398
+}
+class Engine::Components::Sound
+{
+   m_isActive 1
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 1
+   m_minDistance 40
+   m_maxDistance 200
+   m_volume 1
+   m_soundFile ..\Engine\Resources\Sounds\woodknock.wav
 }
 ;
 
@@ -186,7 +208,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.05 0.05 1
-   m_model 408
+   m_model 410
 }
 class Engine::Components::ModelComponent
 {
@@ -217,7 +239,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.05 0.05 1
-   m_model 420
+   m_model 422
 }
 class Engine::Components::ModelComponent
 {
@@ -248,13 +270,24 @@ class Engine::Components::BoxCollider
    m_mass 30
    m_offset 0 0 0
    m_box 2.5 0.1 1.5
-   m_model 432
+   m_model 434
 }
 class Engine::Components::ModelComponent
 {
    m_isActive 1
    m_model Cube
    m_material WoodMat
+}
+class Engine::Components::Sound
+{
+   m_isActive 1
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 1
+   m_minDistance 40
+   m_maxDistance 200
+   m_volume 1
+   m_soundFile ..\Engine\Resources\Sounds\woodknock.wav
 }
 ;
 
@@ -279,24 +312,13 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.05 0.05 1
-   m_model 444
+   m_model 447
 }
 class Engine::Components::ModelComponent
 {
    m_isActive 1
    m_model Cube
    m_material MetalMat
-}
-class Engine::Components::Sound
-{
-   m_isActive 1
-   m_playLooped 1
-   m_startPaused 0
-   m_playSoundIn3D 0
-   m_minDistance 10
-   m_maxDistance 10
-   m_volume 1
-   m_soundFile C:\Users\Gabriel\Documents\ISART_travaux\GP2\Engine\LookingForGroup\Identity\Engine\Resources\Sounds\test.mp3
 }
 ;
 
@@ -321,7 +343,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.05 0.05 1
-   m_model 457
+   m_model 459
 }
 class Engine::Components::ModelComponent
 {
@@ -394,13 +416,24 @@ class Engine::Components::BoxCollider
    m_mass 5
    m_offset 0 0.55 0
    m_box 0.25 0.55 0.15
-   m_model 482
+   m_model 484
 }
 class Engine::Components::ModelComponent
 {
    m_isActive 1
    m_model Link
    m_material LinkMat
+}
+class Engine::Components::Sound
+{
+   m_isActive 1
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 1
+   m_minDistance 100
+   m_maxDistance 200
+   m_volume 1
+   m_soundFile ..\Engine\Resources\Sounds\plasticknock.mp3
 }
 ;
 
@@ -425,13 +458,24 @@ class Engine::Components::BoxCollider
    m_mass 5
    m_offset 0 0.55 0
    m_box 0.45 0.55 0.45
-   m_model 494
+   m_model 497
 }
 class Engine::Components::ModelComponent
 {
    m_isActive 1
    m_model DonkeyKong
    m_material DonkeyMat
+}
+class Engine::Components::Sound
+{
+   m_isActive 1
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 1
+   m_minDistance 80
+   m_maxDistance 200
+   m_volume 1
+   m_soundFile ..\Engine\Resources\Sounds\plasticknock.mp3
 }
 ;
 
@@ -444,7 +488,7 @@ class Engine::Components::Transform
    m_position -5.95 3.9 -12.7
    m_forward 1 -2.44929e-16 7.4988e-33
    m_right 7.4988e-33 -0 -1
-   m_up -2.4493e-16 -1 0
+   m_up -2.44929e-16 -1 0
    m_scale 0.005 0.005 0.005
    m_rotation 8.65956e-17 0.707107 8.65956e-17 -0.707107
    m_worldTransform 0 1.22465e-18 -0.005 -5.95 0 0.005 1.22465e-18 3.9 0.005 0 0 -12.7 0 0 0 1
@@ -462,7 +506,18 @@ class Engine::Components::BoxCollider
    m_mass 5
    m_offset 0 0.25 0
    m_box 0.45 0.25 1.15
-   m_model 539
+   m_model 543
+}
+class Engine::Components::Sound
+{
+   m_isActive 1
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 1
+   m_minDistance 20
+   m_maxDistance 200
+   m_volume 1
+   m_soundFile ..\Engine\Resources\Sounds\plasticknock.mp3
 }
 ;
 
@@ -493,7 +548,18 @@ class Engine::Components::BoxCollider
    m_mass 5
    m_offset 0 0.65 0
    m_box 0.35 0.65 0.25
-   m_model 571
+   m_model 576
+}
+class Engine::Components::Sound
+{
+   m_isActive 1
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 1
+   m_minDistance 100
+   m_maxDistance 200
+   m_volume 1
+   m_soundFile ..\Engine\Resources\Sounds\plasticknock.mp3
 }
 ;
 
@@ -524,7 +590,18 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 0 0.55 0
    m_box 0.25 0.55 0.15
-   m_model 659
+   m_model 665
+}
+class Engine::Components::Sound
+{
+   m_isActive 1
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 1
+   m_minDistance 80
+   m_maxDistance 200
+   m_volume 1
+   m_soundFile ..\Engine\Resources\Sounds\plasticknock.mp3
 }
 ;
 
@@ -555,7 +632,18 @@ class Engine::Components::BoxCollider
    m_mass 50
    m_offset 0 0.55 0
    m_box 0.25 0.55 0.15
-   m_model 671
+   m_model 678
+}
+class Engine::Components::Sound
+{
+   m_isActive 1
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 1
+   m_minDistance 80
+   m_maxDistance 200
+   m_volume 1
+   m_soundFile ..\Engine\Resources\Sounds\plasticknock.mp3
 }
 ;
 
@@ -617,7 +705,18 @@ class Engine::Components::BoxCollider
    m_mass 5
    m_offset 0 -0.1 0
    m_box 0.4 0.9 0.3
-   m_model 689
+   m_model 697
+}
+class Engine::Components::Sound
+{
+   m_isActive 1
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 1
+   m_minDistance 80
+   m_maxDistance 200
+   m_volume 1
+   m_soundFile ..\Engine\Resources\Sounds\plasticknock.mp3
 }
 ;
 
@@ -685,12 +784,12 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 6.9 -1.1 0
    m_box 23 12.1 0.01
-   m_model 712
+   m_model 721
 }
 ;
 
 GAMEOBJECT
-Cube
+CatapultSupport
 m_isActive 1
 class Engine::Components::Transform
 {
@@ -716,12 +815,12 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.5 0.75 0.2
-   m_model 724
+   m_model 733
 }
 ;
 
 GAMEOBJECT
-Cube
+Seesaw
 m_isActive 1
 class Engine::Components::Transform
 {
@@ -747,7 +846,18 @@ class Engine::Components::BoxCollider
    m_mass 2
    m_offset 0 0 0
    m_box 0.5 0.1 2.25
-   m_model 736
+   m_model 745
+}
+class Engine::Components::Sound
+{
+   m_isActive 1
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 1
+   m_minDistance 40
+   m_maxDistance 200
+   m_volume 1
+   m_soundFile ..\Engine\Resources\Sounds\woodknock.wav
 }
 ;
 
@@ -778,7 +888,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 6.4 1.7 0
    m_box 15.7 12.1 0.01
-   m_model 748
+   m_model 758
 }
 ;
 
@@ -809,7 +919,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 8.7 0.6 0
    m_box 24.7 12.2 0.01
-   m_model 760
+   m_model 770
 }
 ;
 
@@ -840,7 +950,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 15 10 0.01
-   m_model 772
+   m_model 782
 }
 ;
 
@@ -871,7 +981,18 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 5 0.1 1.5
-   m_model 784
+   m_model 794
+}
+class Engine::Components::Sound
+{
+   m_isActive 1
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 1
+   m_minDistance 40
+   m_maxDistance 200
+   m_volume 1
+   m_soundFile ..\Engine\Resources\Sounds\woodknock.wav
 }
 ;
 
@@ -881,13 +1002,13 @@ m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position -14 9.4 -11.2
+   m_position -14 9.4 -10.7
    m_forward -0 0.66262 0.748955
    m_right 0.999999 0 0
    m_up 0 -0.748955 0.662619
    m_scale 1 0.1 4
    m_rotation 0.354291 0 0 0.935135
-   m_worldTransform 1 0 0 -14 0 0.0748956 -2.65048 9.4 0 0.066262 2.99582 -11.2 0 0 0 1
+   m_worldTransform 1 0 0 -14 0 0.0748956 -2.65048 9.4 0 0.066262 2.99582 -10.7 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::ModelComponent
@@ -902,7 +1023,18 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.5 0.05 2
-   m_model 796
+   m_model 807
+}
+class Engine::Components::Sound
+{
+   m_isActive 1
+   m_playLooped 0
+   m_startPaused 0
+   m_playSoundIn3D 1
+   m_minDistance 80
+   m_maxDistance 200
+   m_volume 1
+   m_soundFile ..\Engine\Resources\Sounds\woodknock.wav
 }
 ;
 
@@ -933,7 +1065,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 1 0.25 0.05
-   m_model 808
+   m_model 820
 }
 ;
 
@@ -964,7 +1096,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.5 0.75 0.2
-   m_model 820
+   m_model 832
 }
 ;
 
@@ -995,7 +1127,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.5 0.05 0.75
-   m_model 832
+   m_model 844
 }
 ;
 
@@ -1026,7 +1158,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 1 0.25 0.05
-   m_model 844
+   m_model 856
 }
 ;
 
@@ -1057,7 +1189,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 2 0.25 0.4
-   m_model 856
+   m_model 868
 }
 ;
 
@@ -1164,6 +1296,18 @@ class Engine::Rendering::Lights::DirectionalLight
 GAMEOBJECT
 GameObject
 m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 0 0 0
+   m_forward -0 -0 1
+   m_right 1 0 0
+   m_up 0 -1 0
+   m_scale 1 1 1
+   m_rotation 0 0 0 1
+   m_worldTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
 class Engine::Rendering::Lights::DirectionalLight
 {
    m_lightData

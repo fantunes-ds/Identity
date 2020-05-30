@@ -22,14 +22,17 @@ void Engine::Scene::SceneGraph::AddGameObjectToScene(std::shared_ptr<Objects::Ga
         int  modelID = p_gameObject->FindComponentOfType<Components::ModelComponent>()->GetModel();
         auto model = Managers::ResourceManager::FindModel(modelID);
 
-        for (auto& mesh : model->GetMeshes())
+        if (model)
         {
-            ++submeshNumber;
-            auto child = std::make_shared<SceneNode>(mesh);
-            rootNode->AddChild(child);
-            child->SetName(rootNode->GetGameObject()->GetName() + "(" + std::to_string(submeshNumber) + ")");
-            child->GetGameObject()->SetName(rootNode->GetGameObject()->GetName() + "(" + std::to_string(submeshNumber) + ")");
-            child->GetGameObject()->SetSceneNode(child);
+            for (auto& mesh : model->GetMeshes())
+            {
+                ++submeshNumber;
+                auto child = std::make_shared<SceneNode>(mesh);
+                rootNode->AddChild(child);
+                child->SetName(rootNode->GetGameObject()->GetName() + "(" + std::to_string(submeshNumber) + ")");
+                child->GetGameObject()->SetName(rootNode->GetGameObject()->GetName() + "(" + std::to_string(submeshNumber) + ")");
+                child->GetGameObject()->SetSceneNode(child);
+            }
         }
     }
 

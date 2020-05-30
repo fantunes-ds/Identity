@@ -35,7 +35,7 @@ namespace Engine::Components
         void SetMinDistance(float p_dist) { m_minDistance = p_dist; }
         void SetMaxDistance(float p_dist) { m_maxDistance = p_dist; }
         void SetVolume(float p_volume);
-        void SetSoundFile(std::filesystem::path p_path) { m_soundFile = p_path.string(); }
+        void SetSoundFile(std::filesystem::path p_path);
 
         [[nodiscard]] bool GetPlayLooped() const { return m_playLooped; }
         [[nodiscard]] bool GetStartPaused() const { return m_startPaused; }
