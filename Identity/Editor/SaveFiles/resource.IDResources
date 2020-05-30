@@ -13,6 +13,7 @@ MODEL ../Engine/Resources/EngineAssets/baby_block_models/babyblockmodels/babyblo
 MODEL ../Engine/Resources/statue.obj Statue
 MODEL ../Engine/Resources/EngineAssets/wall/wall.obj Wall
 MODEL ../Engine/Resources/ceiling_lamp.FBX ceiling_lamp
+MODEL F:\repos\2019-2020\Identity\Identity\Engine\Resources\Desk.obj Desk
 TEXTURE ../Engine/Resources/link.png LinkText
 TEXTURE ../Engine/Resources/lambo_text.jpeg LamboText
 TEXTURE ../Engine/Resources/Earth.jpg EartText
@@ -46,7 +47,7 @@ MATERIAL BlockBMat defaultPS defaultVS BlockBColor 1 1 1
 MATERIAL BlockCMat defaultPS defaultVS BlockCColor 1 1 1
 MATERIAL BlockDMat defaultPS defaultVS BlockDColor 1 1 1
 MATERIAL BlockEMat defaultPS defaultVS BlockEColor 1 1 1
-MATERIAL MarbreMat defaultPS defaultVS MarbreText 1 0.999955 0.9999
+MATERIAL MarbreMat defaultPS defaultVS MarbreText 0 0.763801 0.31898
 MATERIAL WallMat defaultPS defaultVS WallText 0.931093 0.554657 0.41017
 MATERIAL Grey defaultPS defaultVS NO_TEXTURE 0.895104 0.895015 0.895015
 MATERIAL MetalMat defaultPS defaultVS MetalText 1 0.9999 0.9999
