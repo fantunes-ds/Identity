@@ -169,13 +169,14 @@ void Engine::UI::Hierarchy::ShowMenu()
 
 void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 {
-    if (p_id < 0)
-    {
-        return;
-    }
     static bool loadNewModel = false;
 
     ImGui::Begin("Inspector");
+    if (p_id < 0)
+    {
+        ImGui::End();
+        return;
+    }
 
     auto sceneNode = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second;
     auto gameObject = sceneNode->GetGameObject();
