@@ -560,55 +560,18 @@ class Engine::Components::BoxCollider
 ;
 
 GAMEOBJECT
-Light
-m_isActive 1
-class Engine::Components::Transform
-{
-   m_parent -1
-   m_position 6 18.5 -0.5
-   m_forward -0 -0 1
-   m_right 1 0 0
-   m_up 0 -1 0
-   m_scale 0.2 0.2 0.2
-   m_rotation 0 0 0 1
-   m_worldTransform 0.2 0 0 6 0 0.2 0 18.5 0 0 0.2 -0.5 0 0 0 1
-   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
-}
-class Engine::Rendering::Lights::DirectionalLight
-{
-   m_lightData
-   {
-       shininess 113
-       range 1
-       intensity 20
-       padding 0
-       position 6 18.5 -0.5 1
-       ambient 1 1 1 0.21
-       diffuse 1 1 1 0.23
-       specular 1 0.9999 0.9999 0.24
-   }
-}
-class Engine::Components::ModelComponent
-{
-   m_isActive 1
-   m_model Cube
-   m_material default
-}
-;
-
-GAMEOBJECT
 Light2
 m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 14 8.6 14
+   m_position 17.5 2.5 12.5
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.2 0.2 0.2
    m_rotation 0 0 0 1
-   m_worldTransform 0.2 0 0 14 0 0.2 0 8.6 0 0 0.2 14 0 0 0 1
+   m_worldTransform 0.2 0 0 17.5 0 0.2 0 2.5 0 0 0.2 12.5 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Rendering::Lights::DirectionalLight
@@ -616,20 +579,14 @@ class Engine::Rendering::Lights::DirectionalLight
    m_lightData
    {
        shininess 128
-       range 1
+       range 5
        intensity 20
        padding 0
-       position 14 8.6 14 1
-       ambient 1 1 1 0.1
-       diffuse 1 1 1 0.1
-       specular 1 0.9999 0.9999 0.5
+       position 17.5 2.5 12.5 1
+       ambient 1 1 1 0
+       diffuse 1 1 1 0.14
+       specular 1 0.9999 0.9999 1
    }
-}
-class Engine::Components::ModelComponent
-{
-   m_isActive 1
-   m_model Cube
-   m_material default
 }
 ;
 
@@ -660,44 +617,7 @@ class Engine::Components::BoxCollider
    m_mass 5
    m_offset 0 -0.1 0
    m_box 0.4 0.9 0.3
-   m_model 705
-}
-;
-
-GAMEOBJECT
-Light3
-m_isActive 1
-class Engine::Components::Transform
-{
-   m_parent -1
-   m_position -14 8.8 14
-   m_forward -0 -0 1
-   m_right 1 0 0
-   m_up 0 -1 0
-   m_scale 0.2 0.2 0.2
-   m_rotation 0 0 0 1
-   m_worldTransform 0.2 0 0 -14 0 0.2 0 8.8 0 0 0.2 14 0 0 0 1
-   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
-}
-class Engine::Components::ModelComponent
-{
-   m_isActive 1
-   m_model Cube
-   m_material default
-}
-class Engine::Rendering::Lights::DirectionalLight
-{
-   m_lightData
-   {
-       shininess 128
-       range 1
-       intensity 0
-       padding 0
-       position -14 8.8 14 1
-       ambient 1 0.9999 0.9999 0.1
-       diffuse 1 0.9999 0.9999 0.1
-       specular 1 0.9999 0.9999 1
-   }
+   m_model 689
 }
 ;
 
@@ -707,13 +627,13 @@ m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position -14 9.4 -14
+   m_position -14.1 9.4 -14
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.2 0.2 0.2
    m_rotation 0 0 0 1
-   m_worldTransform 0.2 0 0 -14 0 0.2 0 9.4 0 0 0.2 -14 0 0 0 1
+   m_worldTransform 0.2 0 0 -14.1 0 0.2 0 9.4 0 0 0.2 -14 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::ModelComponent
@@ -726,13 +646,13 @@ class Engine::Rendering::Lights::DirectionalLight
 {
    m_lightData
    {
-       shininess 128
+       shininess 225
        range 1
        intensity 0
        padding 0
-       position -14 9.4 -14 1
-       ambient 1 0.9999 0.9999 0.1
-       diffuse 1 0.9999 0.9999 0.1
+       position -14.1 9.4 -14 1
+       ambient 1 0.9999 0.9999 0
+       diffuse 1 0.9999 0.9999 0
        specular 1 0.95949 0.95949 1
    }
 }
@@ -765,7 +685,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 6.9 -1.1 0
    m_box 23 12.1 0.01
-   m_model 739
+   m_model 712
 }
 ;
 
@@ -796,7 +716,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.5 0.75 0.2
-   m_model 751
+   m_model 724
 }
 ;
 
@@ -827,7 +747,7 @@ class Engine::Components::BoxCollider
    m_mass 2
    m_offset 0 0 0
    m_box 0.5 0.1 2.25
-   m_model 763
+   m_model 736
 }
 ;
 
@@ -858,7 +778,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 6.4 1.7 0
    m_box 15.7 12.1 0.01
-   m_model 775
+   m_model 748
 }
 ;
 
@@ -889,7 +809,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 8.7 0.6 0
    m_box 24.7 12.2 0.01
-   m_model 787
+   m_model 760
 }
 ;
 
@@ -902,7 +822,7 @@ class Engine::Components::Transform
    m_position -15.5 5.7 -11.4
    m_forward 1 -2.44929e-16 7.4988e-33
    m_right 7.4988e-33 -0 -1
-   m_up -2.44929e-16 -1 0
+   m_up -2.4493e-16 -1 0
    m_scale 12 12 1
    m_rotation 8.65956e-17 0.707107 8.65956e-17 -0.707107
    m_worldTransform 0 2.93915e-15 -1 -15.5 0 12 2.44929e-16 5.7 12 0 0 -11.4 0 0 0 1
@@ -920,7 +840,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 15 10 0.01
-   m_model 799
+   m_model 772
 }
 ;
 
@@ -951,7 +871,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 5 0.1 1.5
-   m_model 811
+   m_model 784
 }
 ;
 
@@ -982,7 +902,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.5 0.05 2
-   m_model 823
+   m_model 796
 }
 ;
 
@@ -994,8 +914,8 @@ class Engine::Components::Transform
    m_parent -1
    m_position -14 7 -12.05
    m_forward -0 -0 1
-   m_right 0.996195 -0.0871558 0
-   m_up -0.0871558 -0.996195 -0
+   m_right 0.996194 -0.0871557 0
+   m_up -0.0871557 -0.996193 -0
    m_scale 2 0.5 0.1
    m_rotation 0 0 -0.0436194 0.999048
    m_worldTransform 1.99239 0.0435779 0 -14 -0.174312 0.498097 0 7 0 0 0.1 -12.05 0 0 0 1
@@ -1013,7 +933,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 1 0.25 0.05
-   m_model 835
+   m_model 808
 }
 ;
 
@@ -1044,7 +964,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.5 0.75 0.2
-   m_model 847
+   m_model 820
 }
 ;
 
@@ -1075,7 +995,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.5 0.05 0.75
-   m_model 859
+   m_model 832
 }
 ;
 
@@ -1106,7 +1026,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 1 0.25 0.05
-   m_model 871
+   m_model 844
 }
 ;
 
@@ -1137,7 +1057,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 2 0.25 0.4
-   m_model 883
+   m_model 856
 }
 ;
 
@@ -1159,7 +1079,7 @@ class Engine::Components::Transform
 class Engine::Components::ModelComponent
 {
    m_isActive 1
-   m_model Desk2
+   m_model Desk
    m_material Desk2Mat2
 }
 ;
@@ -1210,13 +1130,13 @@ m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 5.3 18.5 1.2
-   m_forward -0.997916 2.44677e-16 0.0645211
-   m_right 0.0645211 -7.90164e-18 0.997916
-   m_up -2.44677e-16 -1 7.90164e-18
+   m_position 5.3 17.8 1.2
+   m_forward 1 -2.44929e-16 7.4988e-33
+   m_right 7.4988e-33 -0 -1
+   m_up -2.44929e-16 -1 0
    m_scale 0.1 0.1 0.1
-   m_rotation 8.65514e-17 0.683915 -8.65514e-17 0.729562
-   m_worldTransform 0.00645211 2.44677e-17 0.0997916 5.3 -7.90164e-19 0.1 -2.44677e-17 18.5 -0.0997916 7.90164e-19 0.00645211 1.2 0 0 0 1
+   m_rotation 8.65956e-17 0.707107 8.65956e-17 -0.707107
+   m_worldTransform 0 2.44929e-17 -0.1 5.3 0 0.1 2.44929e-17 17.8 0.1 0 0 1.2 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::ModelComponent
@@ -1229,11 +1149,11 @@ class Engine::Rendering::Lights::DirectionalLight
 {
    m_lightData
    {
-       shininess 512
-       range 500
+       shininess 8
+       range 5
        intensity 0
        padding 0
-       position 5.3 18.5 1.2 1
+       position 5.3 17.8 1.2 1
        ambient 1 0.9999 0.9999 1
        diffuse 1 0.9999 0.9999 1
        specular 0.958427 0.945686 0.945686 1
