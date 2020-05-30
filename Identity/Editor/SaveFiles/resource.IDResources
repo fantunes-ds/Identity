@@ -14,6 +14,8 @@ MODEL ../Engine/Resources/statue.obj Statue
 MODEL ../Engine/Resources/EngineAssets/wall/wall.obj Wall
 MODEL ../Engine/Resources/ceiling_lamp.FBX ceiling_lamp
 MODEL ..\Engine\Resources\Desk.obj Desk
+MODEL ..\Engine\Resources\recliner.obj black_recliner
+MODEL ..\Engine\Resources\lamp\Table_Lamp.FBX desklamp
 TEXTURE ../Engine/Resources/link.png LinkText
 TEXTURE ../Engine/Resources/lambo_text.jpeg LamboText
 TEXTURE ../Engine/Resources/Earth.jpg EartText
@@ -33,6 +35,8 @@ TEXTURE ../Engine/Resources/DeskMaterial/WOOD.png DeskWood
 TEXTURE ../Engine/Resources/pladur.jpg PladurTexture
 TEXTURE ../Engine/Resources/stucco.jpg stuccoText
 TEXTURE ../Engine/Resources/DeskText.png Desk2Text
+TEXTURE C:\Users\Gabriel\Documents\ISART_travaux\GP2\Engine\LookingForGroup\Identity\Engine\Resources\leather.jpg black_leather_text
+TEXTURE C:\Users\Gabriel\Documents\ISART_travaux\GP2\Engine\LookingForGroup\Identity\Engine\Resources\lamp\table_lamp.jpg lampText
 MATERIAL LinkMat defaultPS defaultVS LinkText 1 1 1
 MATERIAL LamboMat defaultPS defaultVS LamboText 1 1 1
 MATERIAL NinjaMat defaultPS defaultVS NinjaText 1 1 1
@@ -57,3 +61,5 @@ MATERIAL Stucco defaultPS defaultVS NO_TEXTURE 1 0.9999 0.9999
 MATERIAL Desk2Mat defaultPS defaultVS NO_TEXTURE 1 1 1
 MATERIAL Desk2Mat2 defaultPS defaultVS Desk2Text 1 1 1
 MATERIAL Stucco2 defaultPS defaultVS stuccoText 1 1 1
+MATERIAL black_leather defaultPS defaultVS black_leather_text 1 0.9999 0.9999
+MATERIAL deskLamp defaultPS defaultVS lampText 1 1 1

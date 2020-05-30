@@ -20,7 +20,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 28.2 1 17.8
-   m_model 347
+   m_model 463
 }
 class Engine::Components::ModelComponent
 {
@@ -68,7 +68,7 @@ class Engine::Components::BoxCollider
    m_mass 30
    m_offset 0 0 0
    m_box 2.5 0.1 1.5
-   m_model 361
+   m_model 477
 }
 class Engine::Components::Sound
 {
@@ -104,7 +104,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.05 0.05 1
-   m_model 373
+   m_model 489
 }
 class Engine::Components::ModelComponent
 {
@@ -135,7 +135,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.05 0.05 1
-   m_model 385
+   m_model 501
 }
 class Engine::Components::ModelComponent
 {
@@ -172,7 +172,7 @@ class Engine::Components::BoxCollider
    m_mass 30
    m_offset 0 0 0
    m_box 2.5 0.1 1.5
-   m_model 398
+   m_model 514
 }
 class Engine::Components::Sound
 {
@@ -208,7 +208,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.05 0.05 1
-   m_model 410
+   m_model 526
 }
 class Engine::Components::ModelComponent
 {
@@ -239,7 +239,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.05 0.05 1
-   m_model 422
+   m_model 538
 }
 class Engine::Components::ModelComponent
 {
@@ -270,7 +270,7 @@ class Engine::Components::BoxCollider
    m_mass 30
    m_offset 0 0 0
    m_box 2.5 0.1 1.5
-   m_model 434
+   m_model 550
 }
 class Engine::Components::ModelComponent
 {
@@ -312,7 +312,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.05 0.05 1
-   m_model 447
+   m_model 563
 }
 class Engine::Components::ModelComponent
 {
@@ -343,7 +343,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.05 0.05 1
-   m_model 459
+   m_model 575
 }
 class Engine::Components::ModelComponent
 {
@@ -416,7 +416,7 @@ class Engine::Components::BoxCollider
    m_mass 5
    m_offset 0 0.55 0
    m_box 0.25 0.55 0.15
-   m_model 484
+   m_model 600
 }
 class Engine::Components::ModelComponent
 {
@@ -458,7 +458,7 @@ class Engine::Components::BoxCollider
    m_mass 5
    m_offset 0 0.55 0
    m_box 0.45 0.55 0.45
-   m_model 497
+   m_model 613
 }
 class Engine::Components::ModelComponent
 {
@@ -488,7 +488,7 @@ class Engine::Components::Transform
    m_position -5.95 3.9 -12.7
    m_forward 1 -2.44929e-16 7.4988e-33
    m_right 7.4988e-33 -0 -1
-   m_up -2.44929e-16 -1 0
+   m_up -2.4493e-16 -1 0
    m_scale 0.005 0.005 0.005
    m_rotation 8.65956e-17 0.707107 8.65956e-17 -0.707107
    m_worldTransform 0 1.22465e-18 -0.005 -5.95 0 0.005 1.22465e-18 3.9 0.005 0 0 -12.7 0 0 0 1
@@ -506,7 +506,7 @@ class Engine::Components::BoxCollider
    m_mass 5
    m_offset 0 0.25 0
    m_box 0.45 0.25 1.15
-   m_model 543
+   m_model 659
 }
 class Engine::Components::Sound
 {
@@ -548,7 +548,7 @@ class Engine::Components::BoxCollider
    m_mass 5
    m_offset 0 0.65 0
    m_box 0.35 0.65 0.25
-   m_model 576
+   m_model 692
 }
 class Engine::Components::Sound
 {
@@ -590,7 +590,7 @@ class Engine::Components::BoxCollider
    m_mass 1
    m_offset 0 0.55 0
    m_box 0.25 0.55 0.15
-   m_model 665
+   m_model 781
 }
 class Engine::Components::Sound
 {
@@ -632,7 +632,7 @@ class Engine::Components::BoxCollider
    m_mass 50
    m_offset 0 0.55 0
    m_box 0.25 0.55 0.15
-   m_model 678
+   m_model 794
 }
 class Engine::Components::Sound
 {
@@ -648,31 +648,31 @@ class Engine::Components::Sound
 ;
 
 GAMEOBJECT
-Light2
+desklight
 m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 17.5 2.5 12.5
+   m_position 13.9 2.5 14.3
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.2 0.2 0.2
    m_rotation 0 0 0 1
-   m_worldTransform 0.2 0 0 17.5 0 0.2 0 2.5 0 0 0.2 12.5 0 0 0 1
+   m_worldTransform 0.2 0 0 13.9 0 0.2 0 2.5 0 0 0.2 14.3 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Rendering::Lights::DirectionalLight
 {
    m_lightData
    {
-       shininess 128
-       range 5
+       shininess 113
+       range 1.47
        intensity 20
        padding 0
-       position 17.5 2.5 12.5 1
+       position 13.9 2.5 14.3 1
        ambient 1 1 1 0
-       diffuse 1 1 1 0.14
+       diffuse 1 1 1 0.16
        specular 1 0.9999 0.9999 1
    }
 }
@@ -705,7 +705,7 @@ class Engine::Components::BoxCollider
    m_mass 5
    m_offset 0 -0.1 0
    m_box 0.4 0.9 0.3
-   m_model 697
+   m_model 813
 }
 class Engine::Components::Sound
 {
@@ -726,13 +726,13 @@ m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position -14.1 9.4 -14
+   m_position -14.9 9.4 -14
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 0.2 0.2 0.2
    m_rotation 0 0 0 1
-   m_worldTransform 0.2 0 0 -14.1 0 0.2 0 9.4 0 0 0.2 -14 0 0 0 1
+   m_worldTransform 0.2 0 0 -14.9 0 0.2 0 9.4 0 0 0.2 -14 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::ModelComponent
@@ -749,7 +749,7 @@ class Engine::Rendering::Lights::DirectionalLight
        range 1
        intensity 0
        padding 0
-       position -14.1 9.4 -14 1
+       position -14.9 9.4 -14 1
        ambient 1 0.9999 0.9999 0
        diffuse 1 0.9999 0.9999 0
        specular 1 0.95949 0.95949 1
@@ -784,7 +784,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 6.9 -1.1 0
    m_box 23 12.1 0.01
-   m_model 721
+   m_model 837
 }
 ;
 
@@ -815,7 +815,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.5 0.75 0.2
-   m_model 733
+   m_model 849
 }
 ;
 
@@ -846,7 +846,7 @@ class Engine::Components::BoxCollider
    m_mass 2
    m_offset 0 0 0
    m_box 0.5 0.1 2.25
-   m_model 745
+   m_model 861
 }
 class Engine::Components::Sound
 {
@@ -888,7 +888,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 6.4 1.7 0
    m_box 15.7 12.1 0.01
-   m_model 758
+   m_model 874
 }
 ;
 
@@ -919,7 +919,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 8.7 0.6 0
    m_box 24.7 12.2 0.01
-   m_model 770
+   m_model 886
 }
 ;
 
@@ -950,7 +950,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 15 10 0.01
-   m_model 782
+   m_model 898
 }
 ;
 
@@ -981,7 +981,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 5 0.1 1.5
-   m_model 794
+   m_model 910
 }
 class Engine::Components::Sound
 {
@@ -1023,7 +1023,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.5 0.05 2
-   m_model 807
+   m_model 923
 }
 class Engine::Components::Sound
 {
@@ -1065,7 +1065,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 1 0.25 0.05
-   m_model 820
+   m_model 936
 }
 ;
 
@@ -1096,7 +1096,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.5 0.75 0.2
-   m_model 832
+   m_model 948
 }
 ;
 
@@ -1127,7 +1127,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 0.5 0.05 0.75
-   m_model 844
+   m_model 960
 }
 ;
 
@@ -1158,7 +1158,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 1 0.25 0.05
-   m_model 856
+   m_model 972
 }
 ;
 
@@ -1189,7 +1189,7 @@ class Engine::Components::BoxCollider
    m_mass 0
    m_offset 0 0 0
    m_box 2 0.25 0.4
-   m_model 868
+   m_model 984
 }
 ;
 
@@ -1262,13 +1262,13 @@ m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 5.3 17.8 1.2
+   m_position 5.3 17.9 1.2
    m_forward 1 -2.44929e-16 7.4988e-33
    m_right 7.4988e-33 -0 -1
    m_up -2.4493e-16 -1 0
    m_scale 0.1 0.1 0.1
    m_rotation 8.65956e-17 0.707107 8.65956e-17 -0.707107
-   m_worldTransform 0 2.44929e-17 -0.1 5.3 0 0.1 2.44929e-17 17.8 0.1 0 0 1.2 0 0 0 1
+   m_worldTransform 0 2.44929e-17 -0.1 5.3 0 0.1 2.44929e-17 17.9 0.1 0 0 1.2 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Components::ModelComponent
@@ -1281,11 +1281,11 @@ class Engine::Rendering::Lights::DirectionalLight
 {
    m_lightData
    {
-       shininess 8
+       shininess 67
        range 5
        intensity 0
        padding 0
-       position 5.3 17.8 1.2 1
+       position 5.3 17.9 1.2 1
        ambient 1 0.9999 0.9999 1
        diffuse 1 0.9999 0.9999 1
        specular 0.958427 0.945686 0.945686 1
@@ -1299,13 +1299,13 @@ m_isActive 1
 class Engine::Components::Transform
 {
    m_parent -1
-   m_position 0 0 0
+   m_position 3.9 0 0
    m_forward -0 -0 1
    m_right 1 0 0
    m_up 0 -1 0
    m_scale 1 1 1
    m_rotation 0 0 0 1
-   m_worldTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+   m_worldTransform 1 0 0 3.9 0 1 0 0 0 0 1 0 0 0 0 1
    m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 }
 class Engine::Rendering::Lights::DirectionalLight
@@ -1316,10 +1316,64 @@ class Engine::Rendering::Lights::DirectionalLight
        range 0
        intensity 0
        padding 0
-       position 0 0 0 1
+       position 3.9 0 0 1
        ambient 0 0 0 1
-       diffuse 0 0 0 1
-       specular 0 0 0 1
+       diffuse 1 0.9999 0.9999 1
+       specular 1 0.9999 0.9999 1
    }
+}
+;
+
+GAMEOBJECT
+Recliner
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 24.6 -4 -9.5
+   m_forward 0.707106 -0 0.707107
+   m_right 0.707107 -0 -0.707106
+   m_up -0 -1 0
+   m_scale 1.2 1.2 1.2
+   m_rotation 0 -0.382683 0 0.92388
+   m_worldTransform 0.848529 0 -0.848528 24.6 0 1.2 0 -4 0.848528 0 0.848529 -9.5 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::ModelComponent
+{
+   m_isActive 1
+   m_model black_recliner
+   m_material black_leather
+}
+class Engine::Components::BoxCollider
+{
+   m_isActive 1
+   m_mass 0
+   m_offset 0 3.8 -1
+   m_box 3.1 3.5 3.6
+   m_model 7529
+}
+;
+
+GAMEOBJECT
+Desk_Lamp
+m_isActive 1
+class Engine::Components::Transform
+{
+   m_parent -1
+   m_position 13.9 0.4 14.3
+   m_forward -0 0.999998 0
+   m_right 0.569278 0 0.822141
+   m_up -0.822139 -0 0.569277
+   m_scale 0.1 0.1 0.1
+   m_rotation 0.626354 0.328146 -0.328146 0.626354
+   m_worldTransform 0.056928 0.0822144 0 13.9 0 0 -0.1 0.4 -0.0822144 0.056928 0 14.3 0 0 0 1
+   m_localTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+}
+class Engine::Components::ModelComponent
+{
+   m_isActive 1
+   m_model desklamp
+   m_material deskLamp
 }
 ;
