@@ -473,19 +473,11 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     Icomponent->SetActive(compActive);
                 }
 
-                float* ambient[4] = { &lightData.ambient.x, &lightData.ambient.y, &lightData.ambient.z, &lightData.ambient.w };
                 float* diffuse[4] = { &lightData.diffuse.x, &lightData.diffuse.y, &lightData.diffuse.z, &lightData.diffuse.w };
                 float* specular[4] = { &lightData.specular.x, &lightData.specular.y, &lightData.specular.z, &lightData.specular.w };
                 float* range = { &lightData.range };
                 float* shininess = { &lightData.shininess };
-                float* radius = { &lightData.range };
 
-                ImGui::ColorEdit3("Ambient Color", *ambient, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-                ImGui::SameLine();
-                ImGui::Text("Ambient Color");
-                ImGui::SetNextItemWidth(100);
-                ImGui::SliderFloat("Ambient intensity", &lightData.ambient.w, 0.00f, 1.0f, "%.2f");
-                ImGui::Separator();
                 ImGui::ColorEdit3("Diffuse Light Color", *diffuse, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
                 ImGui::SetNextItemWidth(100);
                 ImGui::SliderFloat("Diffuse intensity", &lightData.diffuse.w, 0.00f, 1.0f, "%.2f");
@@ -496,7 +488,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 ImGui::Separator();
                 ImGui::SetNextItemWidth(100);
                 ImGui::SliderFloat("Shininess", shininess, 8.0f, 512.0f, "%.0f");
-                ImGui::SliderFloat("Range", range, 0.00f, 1.0f, "%.2f");
+                ImGui::SliderFloat("Range", range, 0.00f, 5.0f, "%.2f");
 
                 if (ImGui::Button("Remove Component##5"))
                 {
