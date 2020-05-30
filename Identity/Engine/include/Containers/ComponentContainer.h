@@ -25,6 +25,8 @@ namespace Engine::Containers
 
             if (dynamic_cast<Components::IComponent*>(newComp)->GetID() >= 0)
                 id = ComponentContainer::AddComponent(newComp);
+            else
+                delete newComp;
 
             return id;
         }
@@ -48,11 +50,18 @@ namespace Engine::Containers
             return foundComps;
         }
 
+        static void CopyComp() { GetInstance()->CopyCompNS(); }
+        static void SwitchComp() { GetInstance()->SwitchCompNS(); }
+        void CopyCompNS();
+        void SwitchCompNS();
+
+        static int32_t AddComponent(Components::IComponent* p_component);
+        static int32_t AddComponentEditor(Components::IComponent* p_component);
     private:
         ComponentContainer() = default;
-        static int32_t AddComponent(Components::IComponent* p_component);
 
         inline static ComponentContainer* m_instance = nullptr;
         std::map<int32_t, std::shared_ptr<Components::IComponent>> m_components;
+        std::map<int32_t, std::shared_ptr<Components::IComponent>> m_componentsEditor;
     };
 }

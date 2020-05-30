@@ -1,31 +1,38 @@
 #pragma once
 #include <Export.h>
 #include <Systems/ISystem.h>
-#include <3DLoader/ObjectElements/Model.h>
-#include <Rendering/Renderer.h>
-#include <Rendering/Lights/Light.h>
-#include "Events/Event.h"
-#include "Rendering/Materials/Texture.h"
-#include "Scene/SceneGraph/SceneGraph.h"
+#include <Scene/SceneGraph/SceneGraph.h>
+
+namespace Engine::Components
+{
+    class Camera;
+}
 
 namespace Engine::Systems
 {
     class API_ENGINE RenderSystem: public ISystem
     {
     public:
-        RenderSystem() = default;
-        virtual ~RenderSystem() = default;
+        ~RenderSystem();
 
-        void DrawScene(float p_deltaTime);
-        void DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode);
-        void IUpdate(float p_deltaTime) override;
+        static void DrawScene(float p_deltaTime, bool p_isEditor);
+        static void DrawSceneNode(std::shared_ptr<Scene::SceneNode> p_sceneNode);
+        void IUpdate(float p_deltaTime, bool p_isEditor = false) override;
+        static void ResetActiveCamera();
 
-        void ResetActiveCamera();
+        static void SetActiveCamera(int32_t p_id);
+        static void SetDebugMode(bool p_debug) { GetInstance()->m_debugMode = p_debug; }
 
-        void SetActiveCamera(int32_t p_id);
+        static RenderSystem* GetInstance();
+        static std::shared_ptr<Components::Camera> GetActiveCamera();
+        static bool IsDebugMode() { return GetInstance()->m_debugMode; }
 
+        Vector4F m_ambientColor{1.f, 1.f, 1.f, 0.1f};
     private:
-        std::map<int32_t, std::shared_ptr<Rendering::Lights::Light>> m_lights;
+        RenderSystem() = default;
+
+        inline static RenderSystem* m_instance;
         int32_t m_activeCamera = -1;
+        bool m_debugMode = true;
     };
 }

@@ -1,4 +1,5 @@
 #include <stdafx.h>
+
 #include <Input/Keyboard.h>
 
 using namespace Engine::Input;
@@ -119,4 +120,3 @@ void Keyboard::ClearStates() noexcept
     for (auto& key : m_inputBuffer)
         key.second = INVALID;
 }
-

@@ -1,13 +1,18 @@
 #include <stdafx.h>
-#include <Rendering/Renderer.h>
+
 #include <d3dcompiler.h>
+
+#include <3DLoader/ObjectLoader.h>
+#include <Managers/ResourceManager.h>
+#include <Rendering/Renderer.h>
 #include <Tools/DirectX/dxerr.h>
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
-#include <3DLoader/ObjectLoader.h>
 #include <Tools/DirectX/GraphicsMacros.h>
 
 using namespace Engine::Rendering;
+
+constexpr bool V_SYNC = true;
 
 std::unique_ptr<Renderer> Renderer::instance;
 Renderer::Renderer(const HWND& p_hwnd, const int& p_clientWidth, const int& p_clientHeight) :
@@ -49,13 +54,27 @@ void Renderer::EndFrame() const
 {
     HRESULT hr;
 
-    if (FAILED(hr = m_pSwapChain->Present(0u, 0u)))
+    if (V_SYNC)
     {
-        if (hr == DXGI_ERROR_DEVICE_REMOVED)
+        if (FAILED(hr = m_pSwapChain->Present(1u, 0u)))
         {
-            throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
+            if (hr == DXGI_ERROR_DEVICE_REMOVED)
+            {
+                throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
+            }
+            throw GFX_EXCEPT(hr);
         }
-        throw GFX_EXCEPT(hr);
+    }
+    else
+    {
+        if (FAILED(hr = m_pSwapChain->Present(0u, 0u)))
+        {
+            if (hr == DXGI_ERROR_DEVICE_REMOVED)
+            {
+                throw GFX_DEVICE_REMOVED_EXCEPT(m_pDevice->GetDeviceRemovedReason());
+            }
+            throw GFX_EXCEPT(hr);
+        }
     }
 }   
 
@@ -73,7 +92,6 @@ void Renderer::ClearBuffers(const float& p_red, const float& p_green, const floa
             m_pContext->ClearDepthStencilView(RT.GetDepthStencilView().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
     }
 }
-
 
 void Renderer::Bind(const bool p_bindDefaultDepthStencil)
 {
@@ -253,6 +271,8 @@ void Renderer::CreateRect()
 
     //The quad is the screen "camera rect" we might want to store it somewhere later.
     m_rect = std::make_shared<ObjectElements::Mesh>(quadvtx, quadidx);
+    m_rect->SetMaterial(Managers::ResourceManager::GetMaterial("RenderText"));
+    m_rect->GetMaterial()->SetTextureState(true);
 }
 
 void Renderer::Resize(const float p_width, const float p_height)
@@ -335,7 +355,6 @@ void Renderer::ChangeResolution()
 
     Resize(m_width, m_height);
 }
-
 
 #pragma region ExceptionsClass
 

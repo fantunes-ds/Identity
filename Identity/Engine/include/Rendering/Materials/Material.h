@@ -7,10 +7,10 @@
 
 namespace Engine::Rendering::Materials
 {
-    class Material : public Objects::IObject
+    class Material : public Objects::IObject, public Serialize::ISerializeable
     {
     public:
-        Material() = default;
+        Material();
         ~Material() = default;
 
         /**
@@ -20,30 +20,6 @@ namespace Engine::Rendering::Materials
          * @return Return a share_ptr of the created material
          */
         static std::shared_ptr<Material> CreateMaterial(const std::shared_ptr<PixelShader> p_pixelShader, const std::shared_ptr<VertexShader> p_vertexShader);
-
-        /**
-         * @breif Used to add a pixel shader to the current material
-         * @param p_device A pointer to the rendering device of the renderer (will soon be removed)
-         * @param p_path The path of the pixel shader you want to add to the current material
-         * @deprecated The Resource Manager will soon be available so prepare to make the change
-         */
-        void AddPixelShader(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
-
-        /**
-         * @brief Used to add a vertex shader to the current material
-         * @param p_device A pointer to the rendering device of the renderer (will soon be removed)
-         * @param p_path The pat of the vertex shader you want to add to the current material
-         * @deprecated The Resource Manager will soon be available so prepare to make the change
-         */
-        void AddVertexShader(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
-
-        /**
-         * @brief Used to add a texture to the current material
-         * @param p_device A pointer to the rendering device of the renderer (will soon be removed)
-         * @param p_path The path to the texture you want to add to the current material
-         * @deprecated The Resource Manager will soon be available so prepare to make the change
-         */
-        void AddTexture(const Microsoft::WRL::ComPtr<ID3D11Device>& p_device, const std::wstring& p_path);
 
         /**
          * @brief Used to bind the shaders, the constant buffer and the texture to the rendering context
@@ -59,23 +35,28 @@ namespace Engine::Rendering::Materials
 
         inline void SetPixelShader(const std::shared_ptr<PixelShader> p_pixelShader) { m_pixelShader = p_pixelShader; }
         inline void SetVertexShader(const std::shared_ptr<VertexShader> p_vertexShader) { m_vertexShader = p_vertexShader; }
-        inline void SetTexture(const std::shared_ptr<Texture> p_texture) { m_textureWIP = p_texture; }
-        [[nodiscard]] inline const std::shared_ptr<PixelShader> GetPixelShaderWIP() const { return m_pixelShader; }
-        [[nodiscard]] inline const std::shared_ptr<VertexShader> GetVertexShaderWIP() const { return m_vertexShader; }
-        [[nodiscard]] inline const std::shared_ptr<Texture> GetTextureWIP() const { return m_textureWIP; }
+        inline void SetTexture(const std::shared_ptr<Texture> p_texture) { m_texture = p_texture; m_textureState = true; }
+        inline void SetTextureState(const bool p_state) { m_textureState = p_state; }
+        inline void SetColor(const Vector3F p_color) { m_color = p_color; }
 
-        [[nodiscard]] inline Texture& GetTexture() { return m_texture; }
-        [[nodiscard]] inline Shader& GetShader() { return m_shader; }
+        [[nodiscard]] Vector3F& GetColor() { return m_color; }
+        [[nodiscard]] inline const Vector3F GetColor() const { return m_color; }
+        [[nodiscard]] const Microsoft::WRL::ComPtr<ID3DBlob> GetBlob();
+        [[nodiscard]] inline const std::shared_ptr<PixelShader> GetPixelShader() const { return m_pixelShader; }
+        [[nodiscard]] inline const std::shared_ptr<VertexShader> GetVertexShader() const { return m_vertexShader; }
+        [[nodiscard]] inline const std::shared_ptr<Texture> GetTexture() const { return m_texture; }
+        [[nodiscard]] inline const bool GetTextureState() const { return m_textureState; }
+
+
+        void Serialize(std::ostream& p_stream) override;
+        void Unserialize(std::istream& p_stream) override {}
 
     private:
-        std::string m_name{};
-        Shader m_shader{};
-        Texture m_texture{};
+        bool m_textureState{ false };
 
-        //WIP
-        std::shared_ptr<Texture> m_textureWIP{};
+        Vector3F m_color{ 1.0f, 1.0f, 1.0f};
+        std::shared_ptr<Texture> m_texture{nullptr};
         std::shared_ptr<PixelShader> m_pixelShader{};
         std::shared_ptr<VertexShader> m_vertexShader{};
-        //---
     };
 }

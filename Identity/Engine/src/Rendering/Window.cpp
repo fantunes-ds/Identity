@@ -1,11 +1,14 @@
 #include <stdafx.h>
-#include <Rendering/Window.h>
-#include <Rendering/Renderer.h>
+
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
-#include <Input/Input.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
-#include "Containers/EventContainer.h"
+
+#include <Managers/ResourceManager.h>
+#include <Input/Input.h>
+#include <Rendering/Window.h>
+#include <Rendering/Renderer.h>
+
 
 using namespace Engine::Rendering;
 
@@ -171,12 +174,22 @@ LRESULT Window::HandleMsgThunk(const HWND p_hwnd, const UINT p_msg, const WPARAM
     return window->HandleMsg(p_hwnd, p_msg, p_wParam, p_lParam);
 }
 
-extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND p_hwnd, UINT p_msg, WPARAM p_wParam, LPARAM p_lParam);
-
 LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wParam, const LPARAM p_lParam)
 {
     if (ImGui_ImplWin32_WndProcHandler(p_hwnd, p_msg, p_wParam, p_lParam))
         return true;
+
+    ImGuiIO& io = ImGui::GetIO();
+    (void)io;
+
+
+    //Block all other input if we're sending data into an ImGui Input field
+    if (io.WantTextInput)
+    {
+        Input::Input::GetInstance()->keyboard.ClearStates();
+        return true;
+    }
+
     // no default switch case because windows sends a lot of different
     // random unknown messages, and we don't need to filter them all.
     switch (p_msg)
@@ -192,6 +205,7 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
         }
         break;
     case WM_CLOSE:
+        Managers::ResourceManager::Serialize();
         PostQuitMessage(0);
         return 0;
 
@@ -215,20 +229,25 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
                 }
             }
             break;
-            /*********** KEYBOARD MESSAGES ***********/
+
+        /*********** KEYBOARD MESSAGES ***********/
         case WM_KEYDOWN:
-            // sys-key commands need to be handled to track ALT key (VK_MENU) and F10
         case WM_SYSKEYDOWN:
+
             if (!(p_lParam & 0x40000000) || _INPUT->keyboard.IsAutoRepeatEnabled()) // filter auto-repeat
             {
                 _INPUT->keyboard.OnKeyPressed(static_cast<unsigned char>(p_wParam));
             }
             break;
+
         case WM_KEYUP:
         case WM_SYSKEYUP:
+
             _INPUT->keyboard.OnKeyReleased(static_cast<unsigned char>(p_wParam));
             break;
+
         case WM_CHAR:
+
             _INPUT->keyboard.OnChar(static_cast<unsigned char>(p_wParam));
             break;
             /*********** END KEYBOARD MESSAGES ***********/
@@ -244,18 +263,6 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
                     {
                         SetCapture(p_hwnd);
                         _INPUT->mouse.OnMouseEnter();
-                    }
-
-                    if (_INPUT->mouse.m_leftIsPressed)
-                    {
-                        if (pt.x >= m_width)
-                            SetCursorPos(2, pt.y);
-                        if (pt.x <= 0)
-                            SetCursorPos(m_width - 2, pt.y);
-                        if (pt.y >= m_height)
-                            SetCursorPos(pt.x, 2);
-                        if (pt.y <= 0)
-                            SetCursorPos(pt.x, m_width - 2);
                     }
                 }
                 else
@@ -327,7 +334,7 @@ LRESULT Window::HandleMsg(const HWND p_hwnd, const UINT p_msg, const WPARAM p_wP
                     break;
 
                 auto& rip = reinterpret_cast<const RAWINPUT&>(*m_rawBuffer.data());
-                if ( rip.header.dwType == RIM_TYPEMOUSE && (rip.data.mouse.lLastX != 0 || rip.data.mouse.lLastY != 0))
+                if ( rip.header.dwType == RIM_TYPEMOUSE && (rip.data.mouse.lLastX != 0.0f || rip.data.mouse.lLastY != 0.0f))
                 {
                     _INPUT->mouse.OnRawDelta(rip.data.mouse.lLastX, rip.data.mouse.lLastY);
                 }

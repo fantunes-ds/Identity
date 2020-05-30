@@ -9,12 +9,18 @@ namespace Engine::Components
     class API_ENGINE Camera : public IComponent
     {
     public:
-        Camera() = default;
+        Camera() = delete;
         Camera(Objects::GameObject* p_gameObject, const int p_width, const int p_height);
         ~Camera() = default;
 
         bool operator==(IComponent* p_other) override;
+        bool RemoveComponent() override;
+
         bool DeleteFromMemory() override;
+        void Serialize(std::ostream& p_stream) override;
+        void Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block) override;
+
+        void SetActive(bool p_active) override;
 
         /**
          * @brief Updates all variables related to the camera position and rotation if necessary.
@@ -28,9 +34,12 @@ namespace Engine::Components
         [[nodiscard]] const Vector3F&   GetPosition() const noexcept { return m_gameObject->GetTransform()->GetPosition(); }
         [[nodiscard]] const Quaternion& GetRotation() const noexcept { return m_gameObject->GetTransform()->GetRotation(); }
 
-        [[nodiscard]] const float& GetMovementSpeed() const noexcept { return m_speed; }
-        [[nodiscard]] const float& GetMouseSensitivity() const noexcept { return m_sensitivity; }
-        [[nodiscard]] const float& GetZoom() const noexcept { return m_zoom; }
+        [[nodiscard]] float GetMovementSpeed() const noexcept { return m_speed; }
+        [[nodiscard]] float GetMouseSensitivity() const noexcept { return m_sensitivity; }
+        [[nodiscard]] float GetZoom() const noexcept { return m_zoom; }
+        [[nodiscard]] float GetFOV() const noexcept { return m_fovAngle; }
+
+        void                SetFOV(const float p_fov) noexcept { m_fovAngle = p_fov; }
 
     private:
         /**
@@ -65,7 +74,7 @@ namespace Engine::Components
 #pragma region GeneralVariables
         bool needUpdate{false};
         float m_speed{5.f};
-        float m_sensitivity{0.05f};
+        float m_sensitivity{50.0f};
 
         float m_zoom{45.0f};
         float m_yaw{0.0f};

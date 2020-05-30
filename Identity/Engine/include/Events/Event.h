@@ -2,6 +2,7 @@
 #include <Export.h>
 #include <Events/IEventCallback.h>
 #include <Tools/IDCounter.h>
+#include <map>
 
 namespace Engine
 {
@@ -75,7 +76,6 @@ namespace Engine
         void Fire();
 
     private:
-        typedef std::map<const uint32_t, std::shared_ptr<IEventCallback>> CallbackMap;
-        CallbackMap m_actions;
+        std::map<const uint32_t, std::shared_ptr<IEventCallback>> m_actions;
     };
 }
