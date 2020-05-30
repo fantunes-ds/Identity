@@ -1133,7 +1133,7 @@ class Engine::Components::Transform
    m_position 5.3 17.8 1.2
    m_forward 1 -2.44929e-16 7.4988e-33
    m_right 7.4988e-33 -0 -1
-   m_up -2.44929e-16 -1 0
+   m_up -2.4493e-16 -1 0
    m_scale 0.1 0.1 0.1
    m_rotation 8.65956e-17 0.707107 8.65956e-17 -0.707107
    m_worldTransform 0 2.44929e-17 -0.1 5.3 0 0.1 2.44929e-17 17.8 0.1 0 0 1.2 0 0 0 1
@@ -1157,6 +1157,25 @@ class Engine::Rendering::Lights::DirectionalLight
        ambient 1 0.9999 0.9999 1
        diffuse 1 0.9999 0.9999 1
        specular 0.958427 0.945686 0.945686 1
+   }
+}
+;
+
+GAMEOBJECT
+GameObject
+m_isActive 1
+class Engine::Rendering::Lights::DirectionalLight
+{
+   m_lightData
+   {
+       shininess 8
+       range 0
+       intensity 0
+       padding 0
+       position 0 0 0 1
+       ambient 0 0 0 1
+       diffuse 0 0 0 1
+       specular 0 0 0 1
    }
 }
 ;
