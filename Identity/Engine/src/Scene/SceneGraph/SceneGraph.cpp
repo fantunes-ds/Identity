@@ -46,16 +46,19 @@ void Engine::Scene::SceneGraph::RemoveGameObjectFromScene(std::shared_ptr<Object
     if (p_gameObject->GetSceneNode())
     {
         if (p_gameObject->GetSceneNode()->IsRoot())
-            m_rootSceneNodes.erase(p_gameObject->GetID());
+            RemoveRootSceneNode(p_gameObject->GetSceneNode()->GetID());
     }
 
-    RemoveRootSceneNode(p_gameObject->GetSceneNode()->GetID());
     Containers::GameObjectContainer::RemoveGameObject(p_gameObject);
 }
 
 void Engine::Scene::SceneGraph::RemoveRootSceneNode(int32_t p_id)
 {
-    m_rootSceneNodes.erase(p_id);
+    /*for (auto child : m_rootSceneNodes.find(p_id)->second->GetAllChildren())
+            m_rootSceneNodes.erase(child->GetID());*/
+
+    if (m_rootSceneNodes.find(p_id) != m_rootSceneNodes.end())
+            m_rootSceneNodes.erase(p_id);
 }
 
 void Engine::Scene::SceneGraph::UpdateScene(float p_deltaTime)

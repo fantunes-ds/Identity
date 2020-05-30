@@ -36,7 +36,7 @@ void Engine::Scene::Scene::ClearScene()
 {
     for (auto go : GetAllGameObjectsInScene())
     {
-        go->DeleteFromMemory();
+        RemoveGameObject(go);
     }
 }
 

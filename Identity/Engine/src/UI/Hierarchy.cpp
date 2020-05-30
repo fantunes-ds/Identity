@@ -13,6 +13,8 @@
 #include <Scene/Scene.h>
 #include <UI/Hierarchy.h>
 
+
+#include "Containers/GameObjectContainer.h"
 #include "UI/imfilebrowser.h"
 
 int Engine::UI::Hierarchy::m_currentlySelected = -1;
@@ -36,8 +38,15 @@ std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChil
     {
         bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)p_child->GetID(), node_flags, "%s", p_child->GetName().c_str());
         {
+
             if (ImGui::IsItemClicked())
                 m_currentlySelected = p_child->GetID();
+            else if (ImGui::IsMouseClicked(0) && !ImGui::IsAnyItemHovered())
+            {
+                m_currentlySelected = -1;
+                selection_mask = false;
+            }
+
             if (test_drag_and_drop && ImGui::BeginDragDropSource())
             {
                 ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
@@ -56,8 +65,15 @@ std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChil
     {
         node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
         ImGui::TreeNodeEx((void*)(intptr_t)p_child->GetID(), node_flags, "%s", p_child->GetName().c_str());
+
         if (ImGui::IsItemClicked())
             m_currentlySelected = p_child->GetID();
+        else if (ImGui::IsMouseClicked(0) && !ImGui::IsAnyItemHovered())
+        {
+            m_currentlySelected = -1;
+            selection_mask = false;
+        }
+
         if (test_drag_and_drop && ImGui::BeginDragDropSource())
         {
             ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
@@ -84,9 +100,71 @@ void Engine::UI::Hierarchy::CreateHierarchy(Core::App& p_appRef)
         int i = 0;
         for (auto& node : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
             DisplayNextChild(node.second);
+
+        ShowMenu();
     }
     ImGui::End();
     CallInspector(m_currentlySelected);
+}
+
+void Engine::UI::Hierarchy::ShowMenu()
+{
+    if (m_currentlySelected > 0)
+    {
+        if (ImGui::BeginPopupContextWindow("Hierarchy Menu"))
+        {
+            auto gameObject = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(m_currentlySelected)->second->GetGameObject();
+            static char buf1[64] = "";
+            std::string name = gameObject->GetName();
+
+            for (int i = 0; i < name.length(); ++i)
+            {
+                buf1[i] = name[i];
+            }
+
+            ImGui::InputText(" ", buf1, 64);
+            ImGui::SameLine();
+
+            gameObject->SetName(buf1);
+
+            if (gameObject->GetSceneNode())
+                gameObject->GetSceneNode()->SetName(buf1);
+
+            memset(buf1, 0, 64);
+
+            if (ImGui::Button("Delete"))
+            {
+                m_currentlySelected = -1;
+                Managers::SceneManager::GetActiveScene()->GetSceneGraph().RemoveGameObjectFromScene(gameObject);
+            }
+
+            ImGui::EndPopup();
+        }
+    }
+
+    else if (ImGui::BeginPopupContextWindow("Hierarchy Menu"))
+    {
+        if (ImGui::MenuItem("Create Empty", "Ctrl + Shift + N", nullptr))
+        {
+            auto cube = std::make_shared<Objects::GameObject>("GameObject");
+            auto scene = Managers::SceneManager::GetActiveScene();
+            scene->AddGameObject(cube);
+        }
+        if (ImGui::BeginMenu("3D Object"))
+        {
+            if (ImGui::MenuItem("Cube", "", nullptr))
+            {
+                auto cube = std::make_shared<Objects::GameObject>("Cube");
+                cube->GetTransform()->SetPosition({ 0.f, 0.f, 0.f });
+                cube->AddComponent<Components::ModelComponent>("Cube");
+                auto scene = Managers::SceneManager::GetActiveScene();
+                scene->AddGameObject(cube);
+            }
+            ImGui::EndMenu();
+        }
+
+        ImGui::EndPopup();
+    }
 }
 
 void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
@@ -99,7 +177,8 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 
     ImGui::Begin("Inspector");
 
-    auto gameObject = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject();
+    auto sceneNode = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second;
+    auto gameObject = sceneNode->GetGameObject();
     auto transform = gameObject->GetTransform();
 
     static char buf1[64] = "";

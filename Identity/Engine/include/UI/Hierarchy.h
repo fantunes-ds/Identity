@@ -15,6 +15,7 @@ namespace Engine::UI
         ~Hierarchy() = delete;
 
         API_ENGINE static void CreateHierarchy(Core::App& p_appRef);
+        static void ShowMenu();
         static void CallInspector(int32_t p_id);
         static std::shared_ptr<Scene::SceneNode> DisplayNextChild(std::shared_ptr<Scene::SceneNode> p_child);
 
