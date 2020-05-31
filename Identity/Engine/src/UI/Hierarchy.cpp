@@ -307,9 +307,12 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 if (ImGui::BeginPopup("Select Material"))
                 {
                     ImGui::Text("Choose Material");
+                    if (ImGui::Button("None"))
+                        modelComponent->SetMaterial("default");
+                    
                     for (auto& material : Managers::ResourceManager::GetAllMaterials())
                     {
-                        if (material->GetName() == "NoName" || material->GetName() == "RenderText")
+                        if (material->GetName() == "NoName" || material->GetName() == "RenderText" || material->GetName() == "default")
                             continue;
 
                         if (ImGui::Button(material->GetName().c_str()))
