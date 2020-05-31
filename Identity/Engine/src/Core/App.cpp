@@ -81,6 +81,10 @@ int Engine::Core::App::Run()
         // (will be moved below DoFrame once we get rid of all ImGUI calls on Engine)
         Containers::EventContainer::GetEvent("OnGUI").Fire();
 
+
+        static bool p = true;
+        ImGui::ShowDemoWindow(&p);
+
         float deltaTime = Tools::Time::GetDeltaTime();
 
         //Systems

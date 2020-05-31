@@ -170,7 +170,6 @@ void Engine::UI::Hierarchy::ShowMenu()
 void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 {
     static bool loadNewModel = false;
-
     ImGui::Begin("Inspector");
     if (p_id < 0)
     {
@@ -219,9 +218,10 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
         float* pos[3] = { &transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z };
         float* rot[3] = { &rotationEuler.x, &rotationEuler.y, &rotationEuler.z };
         float* scale[3] = { &transform->GetScale().x, &transform->GetScale().y, &transform->GetScale().z };
-        ImGui::DragFloat3("Position", *pos, 0.1f, 0, 0, "%0.2f");
-        ImGui::DragFloat3("Rotation", *rot, 0.1f, 0, 0, "%0.2f");
-        ImGui::DragFloat3("Scale", *scale, 0.1f, 0, 0, "%0.2f");
+        
+        ImGui::Text("Position"); ImGui::SameLine(); ImGui::AlignTextToFramePadding(); ImGui::SetCursorPosX(70.0f); ImGui::DragFloat3("##Position", *pos, 0.1f, 0, 0, "%0.2f");
+        ImGui::Text("Rotation"); ImGui::SameLine(); ImGui::AlignTextToFramePadding(); ImGui::SetCursorPosX(70.0f); ImGui::DragFloat3("##Rotation", *rot, 0.1f, 0, 0, "%0.2f");
+        ImGui::Text("Scale"); ImGui::SameLine(); ImGui::AlignTextToFramePadding(); ImGui::SetCursorPosX(70.0f); ImGui::DragFloat3("##Scale", *scale, 0.1f, 0, 0, "%0.2f");
     }
 
     if (rotationEuler.y > 90.0f || rotationEuler.y < -90.0f)
