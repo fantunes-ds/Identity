@@ -167,7 +167,7 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
         ImGui::SetCursorPosX(Rendering::Renderer::GetInstance()->GetWidth() / 3);
         ImGui::Text(std::string("Scene : " + Managers::SceneManager::GetActiveScene()->GetName()).c_str());
 
-        const ImVec2 size{ 35.0f, 0.0f };
+        const ImVec2 size{ 40.0f, 0.0f };
         ImGui::SetCursorPosX((Rendering::Renderer::GetInstance()->GetWidth() / 2) - size.x);
         if (ImGui::Button("Play", size))
         {
