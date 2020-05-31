@@ -597,7 +597,8 @@ void Engine::Managers::ResourceManager::DeserializeNS()
             color.x = std::stof(words[5]);
             color.y = std::stof(words[6]);
             color.z = std::stof(words[7]);
-            GetMaterial(words[1])->SetColor(color);
+            if (GetMaterial(words[1]))
+                GetMaterial(words[1])->SetColor(color);
         }
 
         words.clear();
