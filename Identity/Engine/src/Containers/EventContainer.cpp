@@ -1,13 +1,17 @@
 #include <stdafx.h>
-#include <Containers/EventContainer.h>
+
 #include <windows.h>
 
-Engine::Containers::EventContainer::~EventContainer()
+#include <Containers/EventContainer.h>
+
+using namespace Engine::Containers;
+
+EventContainer::~EventContainer()
 {
     delete m_instance;
 }
 
-Engine::Containers::EventContainer* Engine::Containers::EventContainer::GetInstance()
+EventContainer* EventContainer::GetInstance()
 {
     if (m_instance == nullptr)
     {
@@ -17,7 +21,7 @@ Engine::Containers::EventContainer* Engine::Containers::EventContainer::GetInsta
     return m_instance;
 }
 
-Engine::Event& Engine::Containers::EventContainer::GetEvent(const std::string& p_name)
+Engine::Event& EventContainer::GetEvent(const std::string& p_name)
 {
     if (GetInstance()->m_events.find(p_name) == GetInstance()->m_events.end())
     {
@@ -29,7 +33,7 @@ Engine::Event& Engine::Containers::EventContainer::GetEvent(const std::string& p
      return GetInstance()->m_events.at(p_name); 
 }
 
-void Engine::Containers::EventContainer::AddEvent(const std::string& p_name)
+void EventContainer::AddEvent(const std::string& p_name)
 {
     GetInstance()->m_events.insert_or_assign(p_name, Event{});
 }

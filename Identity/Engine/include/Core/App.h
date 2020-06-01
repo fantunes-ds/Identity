@@ -3,13 +3,9 @@
 #include <Rendering/Window.h>
 
 #include <Tools/ImGUI/ImGUIManager.h>
-#include <Containers/ModelContainer.h>
 
-namespace Engine {
-    namespace Systems {
-        class RenderSystem;
-    }
-}
+#include <Scene/SceneGraph/SceneNode.h>
+#include <Systems/RenderSystem.h>
 
 namespace Engine::Core
 {
@@ -22,14 +18,23 @@ namespace Engine::Core
     public:
         App();
         ~App() = default;
-        App(int p_width, int p_height, const char* p_name);
+        App(int p_width, int p_height, const char* p_name, bool p_isEditor = false);
         App(const App&) = delete;
         App& operator=(const App&) = delete;
 
-        int Run() const;
+        int Run();
+        void Init();
+        void TestingSimulation(bool p_stop = false);
+        void SetIsApplicationRunning(bool p_state) { m_applicationIsRunning = p_state; }
 
     private:
-        void DoFrame(Systems::RenderSystem& p_renderSystem, float p_deltaTime) const;
+        void StartFrame() const;
+        void DoFrame(float p_deltaTime) const;
+        void EndFrame() const;
+
+        //testing
+        bool RunBullet{ false };
+        //-------
 
     private:
         Tools::UI::ImGUIManager m_imguiManager;
@@ -38,5 +43,7 @@ namespace Engine::Core
         BOOL m_gResult;
         int m_width;
         int m_height;
+        bool m_isEditor;
+        bool m_applicationIsRunning;
     };
 }

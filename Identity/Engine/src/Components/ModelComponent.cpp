@@ -1,36 +1,107 @@
 #include <stdafx.h>
+
 #include <Components/ModelComponent.h>
-#include <Scene/SceneGraph/SceneNode.h>
 #include <Objects/GameObject.h>
 
-Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name): IComponent{ p_gameObject }
+#include <Managers/SceneManager.h>
+#include <Scene/Scene.h>
+
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const int32_t p_id): IComponent{p_gameObject, MODEL}
 {
-    m_model = Containers::ModelContainer::FindModel(p_name);
+    m_model = p_id;
+    m_material = Managers::ResourceManager::GetMaterial("default");
 }
 
-Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file, const std::string& p_name): IComponent{ p_gameObject }
+
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject): IComponent{p_gameObject, MODEL}, m_model{-1}
 {
-    Containers::ModelContainer::AddModel(p_file, p_name);
-    m_model = Containers::ModelContainer::FindModel(p_name);
-    // m_gameObject->SetTransform(Containers::ModelContainer::GetAllModels().at(m_model)->GetRootNode()->GetTransform());
-    auto test = Containers::ModelContainer::GetAllModels().at(m_model)->GetRootNode();
-    test->SetTransform(m_gameObject->GetTransform()->GetID());
-    std::cout << "test";
+    m_model = -1;
+    m_material = Managers::ResourceManager::GetMaterial("default");
+}
+
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject*            p_gameObject,
+                                                   std::shared_ptr<ModelComponent> p_other) : IComponent{p_gameObject, MODEL}
+{
+    m_model = p_other->m_model;
+    m_material = p_other->m_material;
+}
+
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_name): IComponent{p_gameObject, MODEL}
+{
+    m_model = Managers::ResourceManager::GetModel(p_name);
+    m_material = Managers::ResourceManager::GetMaterial("default");
+}
+
+Engine::Components::ModelComponent::ModelComponent(Objects::GameObject* p_gameObject, const std::string& p_file,
+                               const std::string& p_name): IComponent{p_gameObject, MODEL}
+{
+    m_model = Managers::ResourceManager::AddModel(p_file, p_name);
+    m_material = Managers::ResourceManager::GetMaterial("default");
+}
+
+void Engine::Components::ModelComponent::Serialize(std::ostream& p_stream)
+{
+    p_stream << typeid(*this).name() << "\n{\n" <<
+        "   m_isActive " << m_isActive << "\n" <<
+        "   m_model " << Managers::ResourceManager::FindModel(m_model)->GetName() << "\n" <<
+        "   m_material " << m_material->GetName() << "\n" <<
+        "}\n";
+}
+
+void Engine::Components::ModelComponent::Deserialize(Objects::GameObject* p_gameObject, std::vector<std::string>& p_block)
+{
+    m_gameObject = p_gameObject;
+
+    std::vector <std::string> words;
+
+    for (auto& line : p_block)
+    {
+        std::stringstream stringStream(line);
+
+        do
+        {
+            std::string word;
+            stringStream >> word;
+            words.push_back(word);
+        } while (stringStream);
+
+        if (words[0] == "m_isActive")
+        {
+            m_isActive = std::stoi(words[1]);
+        }
+        else if (words[0] == "m_model")
+        {
+            m_model = Managers::ResourceManager::GetModel(words[1]);
+        }
+        else if (words[0] == "m_material")
+        {
+            m_material = Managers::ResourceManager::GetMaterial(words[1]);
+        }
+
+
+        words.clear();
+    }
 }
 
 bool Engine::Components::ModelComponent::operator==(IComponent* p_other)
 {
     if (ModelComponent* other = dynamic_cast<ModelComponent*>(p_other))
     {
-        auto thisModel = Containers::ModelContainer::FindModel(m_model)->GetMeshes();
-        auto otherModel = Containers::ModelContainer::FindModel(other->m_model)->GetMeshes();
+        auto thisModel = Managers::ResourceManager::FindModel(m_model);
+        auto otherModel = Managers::ResourceManager::FindModel(other->m_model);
 
-        if (thisModel.size() != otherModel.size())
+        if (thisModel == nullptr || otherModel == nullptr)
             return false;
 
-        for (size_t i = 0; i < otherModel.size(); ++i)
+        auto thisMeshes = thisModel->GetMeshes();
+        auto otherMeshes = otherModel->GetMeshes();
+
+        if (thisMeshes.size() != otherMeshes.size())
+            return false;
+
+        for (size_t i = 0; i < otherMeshes.size(); ++i)
         {
-            if (thisModel[i] != otherModel[i])
+            if (thisMeshes[i] != otherMeshes[i])
                 return false;
         }
 
@@ -40,7 +111,31 @@ bool Engine::Components::ModelComponent::operator==(IComponent* p_other)
     return false;
 }
 
+bool Engine::Components::ModelComponent::RemoveComponent()
+{
+    m_gameObject->GetSceneNode()->SetModel(nullptr);
+    Containers::ComponentContainer::RemoveComponent(m_id);
+    return true;
+}
+
 bool Engine::Components::ModelComponent::DeleteFromMemory()
 {
-    return Containers::ModelContainer::RemoveModel(m_model);
+    return false;
+}
+
+void Engine::Components::ModelComponent::SetActive(bool p_active)
+{
+    m_isActive = p_active;
+}
+
+
+void Engine::Components::ModelComponent::SetMaterial(const std::string& p_name)
+{
+    if (p_name == "RenderText")
+    {
+        const std::string info("You cannot use this Material on an object");
+        MessageBox(nullptr, info.c_str(), "Info", MB_ICONINFORMATION | MB_OK);
+        return;
+    }
+    m_material = Managers::ResourceManager::GetMaterial(p_name);
 }

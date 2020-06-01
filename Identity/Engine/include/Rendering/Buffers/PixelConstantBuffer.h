@@ -3,15 +3,18 @@
 #include <wrl/client.h>
 #include <WinSetup.h>
 #include <d3d11.h>
-#include <Rendering/Lights/Light.h>
+#include <Rendering/Lights/DirectionalLight.h>
 
 namespace Engine::Rendering::Buffers
 {
     struct PCB
     {
-        Rendering::Lights::Light::LightData lightSource;
+        Rendering::Lights::DirectionalLight::LightData lightSource[4];
+        Vector4F                            ambiantColor;
         Vector3F                            cameraPos;
-        float                               padding;
+        float                               textureState;
+        Vector3F                            materialColor;
+        float                               buffer;
     };
 
     class PixelConstantBuffer

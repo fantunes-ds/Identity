@@ -1,7 +1,9 @@
 #include <stdafx.h>
 #include <Tools/ASSIMP/ASSIMPConversion.h>
 
-GPM::Matrix4F Engine::Tools::ASSIMP::ASSIMPConversion::Mat4x4ToGPM(const aiMatrix4x4& p_matrix)
+using namespace Engine::Tools::ASSIMP;
+
+GPM::Matrix4F ASSIMPConversion::Mat4x4ToGPM(const aiMatrix4x4& p_matrix)
 {
     return Matrix4F
     {

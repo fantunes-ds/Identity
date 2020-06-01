@@ -1,4 +1,5 @@
 #include <stdafx.h>
+
 #include <Containers/MaterialContainer.h>
 
 Engine::Containers::MaterialContainer::~MaterialContainer()
@@ -58,11 +59,10 @@ std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Containers::Mate
     if (GetInstance()->m_material.find(p_id) != GetInstance()->m_material.end())
         return GetInstance()->m_material.at(p_id);
 
-    return GetMaterial(FindMaterial("missing"));
+    return nullptr;
 }
 
-std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Containers::MaterialContainer::GetMaterial(
-    const std::string& p_name)
+std::shared_ptr<Engine::Rendering::Materials::Material> Engine::Containers::MaterialContainer::GetMaterial(const std::string& p_name)
 {
     return GetMaterial(FindMaterial(p_name));
 }

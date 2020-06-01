@@ -1,6 +1,8 @@
 #include <stdafx.h>
-#include <Rendering/Buffers/VertexConstantBuffer.h>
+
 #include <Tools/DirectX/GraphicsMacros.h>
+
+#include <Rendering/Buffers/VertexConstantBuffer.h>
 
 using namespace Engine::Rendering::Buffers;
 

@@ -1,7 +1,10 @@
 #include <stdafx.h>
+
 #include <Events/Event.h>
 
-void Engine::Event::Fire()
+using namespace Engine;
+
+void Event::Fire()
 {
     for (auto action : m_actions)
     {

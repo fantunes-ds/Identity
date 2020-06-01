@@ -225,21 +225,26 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Components\SphereCollider.h" />
     <ClInclude Include="include\Components\IComponent.h" />
-    <ClInclude Include="include\Components\LightComponent.h" />
+    <ClInclude Include="include\Components\Light.h" />
     <ClInclude Include="include\Components\ModelComponent.h" />
+    <ClInclude Include="include\Components\Sound.h" />
     <ClInclude Include="include\Managers\ResourceManager.h" />
+    <ClInclude Include="include\Managers\SceneManager.h" />
+    <ClInclude Include="include\Physics\CollisionInfo.h" />
+    <ClInclude Include="include\Physics\ICollider.h" />
+    <ClInclude Include="include\Rendering\Lights\DirectionalLight.h" />
     <ClInclude Include="include\Rendering\Materials\PixelShader.h" />
     <ClInclude Include="include\Rendering\Materials\VertexShader.h" />
+    <ClInclude Include="include\Serialize\ISerializeable.h" />
     <ClInclude Include="include\Systems\CameraSystem.h" />
-    <ClInclude Include="include\Containers\ColliderContainer.h" />
+    <ClInclude Include="include\Systems\PhysicsSystem.h" />
     <ClInclude Include="include\Containers\ComponentContainer.h" />
     <ClInclude Include="include\Containers\EventContainer.h" />
     <ClInclude Include="include\Containers\GameObjectContainer.h" />
     <ClInclude Include="include\Containers\IContainer.h" />
-    <ClInclude Include="include\Containers\LightContainer.h" />
     <ClInclude Include="include\Containers\MaterialContainer.h" />
-    <ClInclude Include="include\Containers\ModelContainer.h" />
     <ClInclude Include="include\Components\Transform.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Mesh.h" />
     <ClInclude Include="include\3DLoader\ObjectElements\Model.h" />
@@ -247,6 +252,8 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Physics\BulletInclude.h" />
     <ClInclude Include="include\Physics\Rigidbody.h" />
     <ClInclude Include="include\Rendering\Buffers\InputLayout.h" />
+    <ClInclude Include="include\Systems\LightSystem.h" />
+    <ClInclude Include="include\Systems\SoundSystem.h" />
     <ClInclude Include="include\Systems\TransformSystem.h" />
     <ClInclude Include="include\Objects\IObject.h" />
     <ClInclude Include="include\Rendering\Buffers\PixelConstantBuffer.h" />
@@ -277,7 +284,6 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Rendering\Renderer.h" />
     <ClInclude Include="include\Rendering\Window.h" />
     <ClInclude Include="include\stdafx.h" />
-    <ClInclude Include="include\TestDependencies.h" />
     <ClInclude Include="include\Tools\ASSIMP\ASSIMPConversion.h" />
     <ClInclude Include="include\Tools\DirectX\dxerr.h" />
     <ClInclude Include="include\Tools\DirectX\GraphicsMacros.h" />
@@ -293,33 +299,48 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClInclude Include="include\Tools\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="include\Tools\ImGUI\imstb_textedit.h" />
     <ClInclude Include="include\Tools\ImGUI\imstb_truetype.h" />
+    <ClInclude Include="include\Tools\Time.h" />
+    <ClInclude Include="include\UI\Console.h" />
+    <ClInclude Include="include\UI\Dockspace.h" />
+    <ClInclude Include="include\UI\Hierarchy.h" />
+    <ClInclude Include="include\UI\imfilebrowser.h" />
     <ClInclude Include="include\UI\UIManager.h" />
     <ClInclude Include="include\WinSetup.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Components\BoxCollider.cpp" />
     <ClCompile Include="src\Components\IComponent.cpp" />
-    <ClCompile Include="src\Containers\ColliderContainer.cpp" />
+    <ClCompile Include="src\Components\Light.cpp" />
+    <ClCompile Include="src\Components\Sound.cpp" />
+    <ClCompile Include="src\Components\SphereCollider.cpp" />
+    <ClCompile Include="src\Physics\CollisionInfo.cpp" />
+    <ClCompile Include="src\Physics\ICollider.cpp" />
+    <ClCompile Include="src\Systems\PhysicsSystem.cpp" />
     <ClCompile Include="src\Managers\ResourceManager.cpp" />
-    <ClCompile Include="src\Rendering\Lights\Light.cpp" />
-    <ClCompile Include="src\Components\LightComponent.cpp" />
     <ClCompile Include="src\Containers\EventContainer.cpp" />
-    <ClCompile Include="src\Containers\LightContainer.cpp" />
     <ClCompile Include="src\Containers\MaterialContainer.cpp" />
+    <ClCompile Include="src\Managers\SceneManager.cpp" />
     <ClCompile Include="src\Objects\IObject.cpp" />
     <ClCompile Include="src\Components\ModelComponent.cpp" />
+    <ClCompile Include="src\Rendering\Lights\DirectionalLight.cpp" />
     <ClCompile Include="src\Rendering\Materials\PixelShader.cpp" />
     <ClCompile Include="src\Rendering\Materials\VertexShader.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Systems\CameraSystem.cpp" />
     <ClCompile Include="src\Core\App.cpp" />
     <ClCompile Include="src\Containers\ComponentContainer.cpp" />
     <ClCompile Include="src\Containers\GameObjectContainer.cpp" />
-    <ClCompile Include="src\Containers\ModelContainer.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Model.cpp" />
     <ClCompile Include="src\3DLoader\ObjectElements\Mesh.cpp" />
     <ClCompile Include="src\Components\Transform.cpp" />
     <ClCompile Include="src\3DLoader\ObjectLoader.cpp" />
     <ClCompile Include="src\Rendering\RenderTexture.cpp" />
+    <ClCompile Include="src\Systems\LightSystem.cpp" />
+    <ClCompile Include="src\Systems\SoundSystem.cpp" />
+    <ClCompile Include="src\Tools\Time.cpp" />
+    <ClCompile Include="src\UI\Console.cpp" />
+    <ClCompile Include="src\UI\Dockspace.cpp" />
+    <ClCompile Include="src\UI\Hierarchy.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
     <ClInclude Include="src\Core\App.h" />
     <ClCompile Include="src\Rendering\Buffers\InputLayout.cpp" />
@@ -342,10 +363,8 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     <ClCompile Include="src\Components\Camera.cpp" />
     <ClCompile Include="src\Rendering\Renderer.cpp" />
     <ClCompile Include="src\Rendering\Window.cpp" />
-    <ClCompile Include="src\TestDependencies.cpp" />
     <ClCompile Include="src\Tools\ASSIMP\AssimpConversion.cpp" />
     <ClCompile Include="src\Tools\DirectX\dxerr.cpp" />
-    <ClCompile Include="src\Tools\FPSCounter.cpp" />
     <ClCompile Include="src\Tools\IdentityException.cpp" />
     <ClCompile Include="src\Tools\ImGUI\imgui.cpp" />
     <ClCompile Include="src\Tools\ImGUI\ImGUIManager.cpp" />
@@ -360,11 +379,13 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Engine\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Resources\Shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\VertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Engine\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Resources\Shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

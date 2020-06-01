@@ -2,155 +2,136 @@
 
 #include <stdafx.h>
 
-#include <Core/App.h>
-
 #include <Tools/ImGUI/imgui.h>
 #include <Tools/ImGUI/imgui_impl_win32.h>
 #include <Tools/ImGUI/imgui_impl_dx11.h>
-#include <Tools/FPSCounter.h>
-
-#include <Systems/RenderSystem.h>
-
-#include <Input/Input.h>
-#include <Objects/GameObject.h>
-#include <Components/ModelComponent.h>
-#include <Components/Camera.h>
-#include <Containers/MaterialContainer.h>
-#include <Components/LightComponent.h>
 #include <LinearMath/btVector3.h>
+
+#include <Core/App.h>
+#include <Components/Camera.h>
+#include <Components/Light.h>
+#include <Components/BoxCollider.h>
+#include <Input/Input.h>
+#include <Managers/SceneManager.h>
+#include <Managers/ResourceManager.h>
+#include <Objects/GameObject.h>
+#include <Tools/Time.h>
+#include <Rendering/Renderer.h>
+#include <Scene/Scene.h>
+#include <Systems/RenderSystem.h>
 #include <Systems/CameraSystem.h>
 #include <Systems/TransformSystem.h>
+#include <Systems/PhysicsSystem.h>
+#include <Systems/LightSystem.h>
+#include <Systems/SoundSystem.h>
+#include <UI/Hierarchy.h>
 
-#include "Components/BoxCollider.h"
-#include "Containers/ColliderContainer.h"
-
-using namespace Engine::Core;
-
-App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
+Engine::Core::App::App() : m_window(800, 600, "Engine Window"), m_width(800), m_height(600)
 {
     btVector3 vec(0.0f, 0.0f, 0.0f);
 
     Input::Input::InitInput();
 }
 
-App::App(int p_width, int p_height, const char* p_name) : m_window(p_width, p_height, p_name), m_width(p_width), m_height(p_height)
+Engine::Core::App::App(int p_width, int p_height, const char* p_name, const bool p_isEditor) : m_window(p_width, p_height, p_name),
+m_width(p_width), m_height(p_height),
+m_isEditor(p_isEditor)
 {
     Input::Input::InitInput();
 }
 
-int App::Run() const
+void Engine::Core::App::Init()
 {
-    Systems::RenderSystem renderSystem;
-    Tools::FPSCounter fpsCounter(200);
+    Containers::EventContainer::AddEvent("OnGUI");
+}
 
-    Objects::GameObject link("link");
-    Objects::GameObject lambo("lambo");
+int Engine::Core::App::Run()
+{
+    m_applicationIsRunning = true;
+    Managers::ResourceManager::Deserialize();
+
+    //--CAMERA--
     Objects::GameObject camera;
-    Objects::GameObject light;
-
-
-    Containers::MaterialContainer::AddMaterial("missing");
-    Containers::MaterialContainer::GetMaterial("missing")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/missing.png");
-    Containers::MaterialContainer::GetMaterial("missing")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
-    Containers::MaterialContainer::GetMaterial("missing")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
-
-    Containers::MaterialContainer::AddMaterial("LinkTexture");
-    Containers::MaterialContainer::GetMaterial("LinkTexture")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/link.png");
-    Containers::MaterialContainer::GetMaterial("LinkTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
-    Containers::MaterialContainer::GetMaterial("LinkTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
-
-    Containers::MaterialContainer::AddMaterial("LamboTexture");
-    Containers::MaterialContainer::GetMaterial("LamboTexture")->AddTexture(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/lambo_text.jpeg");
-    Containers::MaterialContainer::GetMaterial("LamboTexture")->AddPixelShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/PixelShader.cso");
-    Containers::MaterialContainer::GetMaterial("LamboTexture")->AddVertexShader(Rendering::Renderer::GetInstance()->GetDevice(), L"../Engine/Resources/Shaders/VertexShader.cso");
-
+    camera.GetTransform()->Translate(Vector3F{ 0.0f, .0f, 0.0f });
     camera.AddComponent<Components::Camera>(m_width, m_height);
+    // camera.AddComponent<Components::BoxCollider>();
+    // camera.FindComponentOfType<Components::BoxCollider>()->SetMass(1);
+    Systems::RenderSystem::SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
+    //----------
+    std::string scenename{ "Demo" };
+    Managers::SceneManager::LoadScene(scenename);
 
-    Containers::LightContainer* test = Containers::LightContainer::GetInstance();
+    //Managers::SceneManager::LoadScene("scene1");
 
-    link.GetTransform()->Translate(Vector3F{4.0f, -5.0f, -4.0f});
-    link.GetTransform()->Scale(Vector3F{0.02f, 0.02f, 0.02f});
-    link.GetTransform()->RotateWithEulerAngles(Vector3F{0.02f, -45.0f, 0.02f});
-    link.AddComponent<Components::ModelComponent>("../Engine/Resources/YoungLink.obj", "statue");
-    link.AddComponent<Components::BoxCollider>();
-    link.FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 0.5f, 1.0f, 0.5f });
-    GPM::Vector3F linkOffset{ 0.0f, -1.0f, 0.0f };
-    link.FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(linkOffset);
-    link.FindComponentOfType<Components::BoxCollider>()->SetName("LinkCollider");
+    float fixedUpdateTimer = 0.0f;
 
-    lambo.GetTransform()->Translate(Vector3F{5.0f, 5.0f, -3.0f});
-    lambo.GetTransform()->Scale(Vector3F{ 0.02f, 0.02f, 0.02f });
-    lambo.AddComponent<Components::ModelComponent>("../Engine/Resources/Lambo.obj", "lambo");
-    lambo.AddComponent<Components::BoxCollider>();
-    lambo.FindComponentOfType<Components::BoxCollider>()->SetMass(1);
-    lambo.FindComponentOfType<Components::BoxCollider>()->SetDimensions(GPM::Vector3F{ 2.0f, 1.0f, 5.0f });
-    GPM::Vector3F lamboOffset{ 0.0f, -1.5f, 0.0f };
-    lambo.FindComponentOfType<Components::BoxCollider>()->SetPositionOffset(lamboOffset);
+    bool fileBrowserOpened = false;
 
-
-    camera.GetTransform()->Translate(Vector3F{ 0.0f, -5.0f, -10.0f });
-
-    light.GetTransform()->Translate(Vector3F{ 10.0f, 4.0f, -10.0f });
-    light.GetTransform()->Scale(Vector3F{ 0.01f, 0.01f, 0.01f });
-
-    Rendering::Lights::Light::LightData dirLight;
-
-    dirLight.position = Vector4F(light.GetTransform()->GetPosition().x * -1, light.GetTransform()->GetPosition().y, light.GetTransform()->GetPosition().z * -1, 1.0f);
-    dirLight.ambient = Vector4F(0.1f, 0.1f, 0.1f, 1.0f);
-    dirLight.diffuse = Vector4F(1.0f, 1.0f, 0.95f, 1.0f);
-    dirLight.specular = Vector4F(0.5f, 0.5f, 0.5f, 1.0f);
-    dirLight.color = Vector4F(1.0f, 1.0f, 1.0f, 1.0f);
-    dirLight.shininess = 32.0f;
-
-    light.AddComponent<Components::LightComponent>(dirLight);
-
-    for (auto& mesh : link.GetModel()->GetMeshes())
+    while (m_applicationIsRunning)
     {
-        mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LinkTexture"));
-    }
-
-    for (auto& mesh : lambo.GetModel()->GetMeshes())
-    {
-        mesh->SetMaterial(Containers::MaterialContainer::FindMaterial("LamboTexture"));
-    }
-
-    renderSystem.SetActiveCamera(camera.FindComponentOfType<Components::Camera>()->GetID());
-
-
-    lambo.GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -40.0f, 30.0f });
-
-    while (true)
-    {
-        ImGui_ImplDX11_NewFrame();
-        ImGui_ImplWin32_NewFrame();
-        ImGui::NewFrame();
-        fpsCounter.Start();
-        link.GetTransform()->RotateWithEulerAngles(Vector3F{ 0.0f, -0.0f, 0.02f });
+        Tools::Time::Start();
         if (const auto eCode = Rendering::Window::ProcessMessage())
         {
             return *eCode;
         }
-        Containers::ColliderContainer::Update(fpsCounter.GetDeltaTime());
-        Containers::TransformSystem::Update(fpsCounter.GetDeltaTime());
-        Containers::CameraSystem::Update(fpsCounter.GetDeltaTime());
+        StartFrame();
 
 
-        DoFrame(renderSystem, fpsCounter.GetDeltaTime());
+        // Events
+        // (will be moved below DoFrame once we get rid of all ImGUI calls on Engine)
+        Containers::EventContainer::GetEvent("OnGUI").Fire();
 
-        fpsCounter.Stop();
+        float deltaTime = Tools::Time::GetDeltaTime();
+
+        //Systems
+        Systems::PhysicsSystem::Update(deltaTime);
+        Systems::TransformSystem::Update(deltaTime);
+        Systems::LightSystem::Update(deltaTime);
+        Systems::CameraSystem::Update(deltaTime);
+
+        if (RunBullet)
+            Systems::SoundSystem::Update(deltaTime);
+
+        fixedUpdateTimer += deltaTime;
+        //todo this should never go below 0
+        //update could be at 0.01f
+        if (fixedUpdateTimer >= 0.01f)// || fixedUpdateTimer < 0)
+        {
+            if (RunBullet)
+                Systems::PhysicsSystem::FixedUpdate();
+            fixedUpdateTimer = 0.0f;
+        }
+
+        DoFrame(deltaTime);
+        EndFrame();
+        Tools::Time::Stop();
     }
+
+    Managers::ResourceManager::Serialize();
 }
 
-void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTime) const
+void Engine::Core::App::StartFrame() const
+{
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
+}
+
+void Engine::Core::App::DoFrame(float p_deltaTime) const
 {
     Rendering::Renderer::GetInstance()->ClearBuffers(0.3f, 0.3f, 0.3f);
 
     if (_INPUT->keyboard.IsKeyDown('F'))
         Rendering::Renderer::GetInstance()->SetFullscreen(!Rendering::Renderer::GetInstance()->GetFullscreenState());
 
-    p_renderSystem.IUpdate(p_deltaTime);
+    Systems::RenderSystem::GetInstance()->IUpdate(p_deltaTime, m_isEditor);
+}
 
-    static bool show_demo_window = true;
+void Engine::Core::App::EndFrame() const
+{
+    ImGuiIO& io = ImGui::GetIO();
+    (void)io;
+
     ImGui::Begin("Identity UI Tools");
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::End();
@@ -158,7 +139,6 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTi
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         ImGui::UpdatePlatformWindows();
@@ -166,4 +146,39 @@ void App::DoFrame(Engine::Systems::RenderSystem& p_renderSystem, float p_deltaTi
     }
 
     Rendering::Renderer::GetInstance()->EndFrame();
+}
+
+//TODO this should be in scene manager
+void Engine::Core::App::TestingSimulation(bool p_stop)
+{
+    //Possible Spaghetti code
+    UI::Hierarchy::m_currentlySelected = -1;
+
+    if (!RunBullet && !p_stop)
+    {
+        auto playScene = std::make_shared<Scene::Scene>();
+        playScene->SetName("Play");
+        auto activeScene = Managers::SceneManager::GetActiveScene();
+        Managers::SceneManager::DuplicateScene(playScene, activeScene);
+        Managers::SceneManager::SetActiveScene(playScene);
+        Managers::SceneManager::SetPlayScene(activeScene);
+        Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
+        Managers::SceneManager::GetPlayScene()->SetActiveOnAll(false);
+
+        RunBullet = true;
+    }
+    else if (RunBullet)
+    {
+        auto active = Managers::SceneManager::GetActiveScene();
+        Managers::SceneManager::SetActiveScene(Managers::SceneManager::GetPlayScene());
+        Managers::SceneManager::SetPlayScene(active);
+        Managers::SceneManager::GetPlayScene()->SetActiveOnAll(false);
+        Managers::SceneManager::GetActiveScene()->SetActiveOnAll(true);
+
+        Managers::SceneManager::DeletePlayScene();
+
+        RunBullet = false;
+
+        Systems::SoundSystem::StopAllSounds();
+    }
 }
