@@ -307,6 +307,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
             }
 #pragma endregion
 #pragma region Material
+                //todo fix change material button being too low (bug, probably due to names)
             if (ImGui::CollapsingHeader("Material"), ImGuiTreeNodeFlags_DefaultOpen)
             {
                 ImGui::Dummy(ImVec2(0.0f, 2.0f));
@@ -332,11 +333,6 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     ImGui::EndPopup();
                 }
 
-                if (ImGui::Button("Change Material"))
-                {
-                    ImGui::OpenPopup("Select Material");
-                }
-
                 if (mat == nullptr)
                     break;
 
@@ -344,14 +340,27 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 {
                     ImGui::TextWrapped("Using default material. Please add a new material to edit it.");
                     ImGui::Dummy(ImVec2(0.0f, 2.0f));
+                    if (ImGui::Button("Change Material##1"))
+                    {
+                        ImGui::OpenPopup("Select Material");
+                    }
                     break;
                 }
+                
                 float* objectColor[3] = { &mat->GetColor().x, &mat->GetColor().y, &mat->GetColor().z };
-                ImGui::ColorEdit3("Light Color", *objectColor, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+                ImGui::ColorEdit3("Material Color", *objectColor, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs);
                 if (mat->GetTextureState() == true)
                 {
+                    ImGui::Dummy(ImVec2(0.0f, 2.0f));
                     ImGui::Text("Texture");
                     ImGui::Image(*mat->GetTexture()->GetTextureShaderResourceView().GetAddressOf(), ImVec2(100, 100));
+                    ImGui::Text(mat->GetTexture()->GetName().c_str());
+                    ImGui::Dummy(ImVec2(0.0f, 2.0f));
+                }
+
+                if (ImGui::Button("Change Material##2"))
+                {
+                    ImGui::OpenPopup("Select Material");
                 }
 
                 if (ImGui::BeginPopup("Select Texture"))
