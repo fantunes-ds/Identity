@@ -28,10 +28,10 @@ void Time::Stop()
         GetInstance()->m_previousTimes.pop_front();
     }
 
-    const std::chrono::duration<double> timeStamps = GetInstance()->m_updateFrameTime - GetInstance()->m_lastUpdateFrameTime;
+    const std::chrono::duration<double> timeStamp = GetInstance()->m_updateFrameTime - GetInstance()->m_lastUpdateFrameTime;
 
 
-    if (timeStamps.count() >= 1)
+    if (timeStamp.count() >= 1)
     {
         GetInstance()->m_lastUpdateFrameTime = std::chrono::system_clock::now();
 
@@ -54,9 +54,7 @@ void Time::Update()
 
 int Time::GetFPS()
 {
-    float fps = 1.0f / GetInstance()->m_FPS * 1000.0f;
-
-    return fps;
+    return static_cast<int>(1.0 / GetInstance()->m_FPS);
 }
 
 double Time::GetDeltaTime()

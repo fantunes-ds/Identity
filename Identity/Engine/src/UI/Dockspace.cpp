@@ -13,6 +13,8 @@
 #include <Objects/GameObject.h>
 #include <Scene/Scene.h>
 
+#include "Tools/Time.h"
+
 void Engine::UI::Dockspace::CreateDockspace(Core::App& p_appRef)
 {
     static bool               opt_fullscreen_persistant = true;
@@ -174,6 +176,8 @@ void Engine::UI::Dockspace::CreateMenuBar(Core::App& p_appRef)
             p_appRef.TestingSimulation();
         }
 
+        //std::string()
+        ImGui::Text("FPS: %d", Tools::Time::GetFPS());
         ImGui::SetCursorPosX(Rendering::Renderer::GetInstance()->GetWidth() * 0.955f);
         if (ImGui::Button("Debug Mode"))
         {
