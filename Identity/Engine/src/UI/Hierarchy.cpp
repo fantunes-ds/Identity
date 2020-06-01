@@ -214,7 +214,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                                        static_cast<float>(rotationQuaternion.ToEuler().y),
                                        static_cast<float>(rotationQuaternion.ToEuler().z)
     };
-    if (ImGui::CollapsingHeader("Transform"))
+    if (ImGui::CollapsingHeader("Transform"), ImGuiTreeNodeFlags_DefaultOpen)
     {
         float* pos[3] = { &transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z };
         float* rot[3] = { &rotationEuler.x, &rotationEuler.y, &rotationEuler.z };
@@ -244,7 +244,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
         {
             std::shared_ptr<Components::ModelComponent> modelComponent = std::dynamic_pointer_cast<Components::ModelComponent>(Icomponent);
 
-            if (ImGui::CollapsingHeader("Model Component"))
+            if (ImGui::CollapsingHeader("Model Component", ImGuiTreeNodeFlags_DefaultOpen))
             {
                 bool compActive = Icomponent->IsActive();
                 if (ImGui::Checkbox("Active##1", &compActive))
@@ -300,7 +300,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
             }
 #pragma endregion
 #pragma region Material
-            if (ImGui::CollapsingHeader("Material"))
+            if (ImGui::CollapsingHeader("Material"), ImGuiTreeNodeFlags_DefaultOpen)
             {
                 std::shared_ptr<Rendering::Materials::Material> mat = modelComponent->GetMaterial();
 
@@ -379,7 +379,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
         case Components::BOX_COLLIDER:
         {
             std::shared_ptr<Components::BoxCollider> boxCollider = std::dynamic_pointer_cast<Components::BoxCollider>(Icomponent);
-            if (ImGui::CollapsingHeader("Box Collider"))
+            if (ImGui::CollapsingHeader("Box Collider"), ImGuiTreeNodeFlags_DefaultOpen)
             {
                 bool compActive = Icomponent->IsActive();
                 if (ImGui::Checkbox("Active##2", &compActive))
@@ -410,7 +410,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
         case Components::SPHERE_COLLIDER:
         {
             std::shared_ptr<Components::SphereCollider> sphereCollider = std::dynamic_pointer_cast<Components::SphereCollider>(Icomponent);
-            if (ImGui::CollapsingHeader("Sphere Collider"))
+            if (ImGui::CollapsingHeader("Sphere Collider"), ImGuiTreeNodeFlags_DefaultOpen)
             {
                 bool compActive = Icomponent->IsActive();
                 if (ImGui::Checkbox("Active##3", &compActive))
@@ -443,7 +443,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
         case Components::CAMERA:
         {
             std::shared_ptr<Components::Camera> camera = std::dynamic_pointer_cast<Components::Camera>(Icomponent);
-            if (ImGui::CollapsingHeader("Camera"))
+            if (ImGui::CollapsingHeader("Camera"), ImGuiTreeNodeFlags_DefaultOpen)
             {
                 bool compActive = Icomponent->IsActive();
                 if (ImGui::Checkbox("Active##4", &compActive))
@@ -468,7 +468,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
             std::shared_ptr<Components::Light> lightComp = std::dynamic_pointer_cast<Components::Light>(Icomponent);
             std::shared_ptr<Rendering::Lights::ILight> ILight = lightComp->GetLight();
             Rendering::Lights::ILight::LightData& lightData = ILight->GetLightData();
-            if (ImGui::CollapsingHeader("Light"))
+            if (ImGui::CollapsingHeader("Light"), ImGuiTreeNodeFlags_DefaultOpen)
             {
                 bool compActive = Icomponent->IsActive();
                 if (ImGui::Checkbox("Active##5", &compActive))
@@ -506,7 +506,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
             static bool chooseSound = false;
 
             std::shared_ptr<Components::Sound> sound = std::dynamic_pointer_cast<Components::Sound>(Icomponent);
-            if (ImGui::CollapsingHeader("Sound"))
+            if (ImGui::CollapsingHeader("Sound"), ImGuiTreeNodeFlags_DefaultOpen)
             {
                 bool compActive = Icomponent->IsActive();
                 if (ImGui::Checkbox("Active##4", &compActive))
