@@ -5,7 +5,7 @@
 #include <Components/Camera.h>
 #include <Containers/EventContainer.h>
 
-namespace Engine::Containers
+namespace Engine::Systems
 {
     class API_ENGINE CameraSystem : Systems::ISystem
     {
@@ -18,7 +18,7 @@ namespace Engine::Containers
         static bool RemoveCamera(int32_t p_id);
 
         static void Update(const float p_deltaTime);
-        void IUpdate(const float p_deltaTime) override;
+        void IUpdate(const float p_deltaTime, bool p_isEditor = false) override;
 
         static CameraSystem* GetInstance();
         static std::shared_ptr<Components::Camera> GetCamera(int32_t p_id);

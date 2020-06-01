@@ -1,8 +1,10 @@
-#include "stdafx.h"
+#include <stdafx.h>
 #include <Objects/IObject.h>
 #include <Tools/IDCounter.h>
 
-Engine::Objects::IObject::IObject()
+using namespace Engine::Objects;
+
+IObject::IObject()
 {
-    m_id = Engine::Tools::IDCounter::GetNewID();
+    m_id = Tools::IDCounter::GetNewID();
 }

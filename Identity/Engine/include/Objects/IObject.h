@@ -1,5 +1,6 @@
 #pragma once
 #include <Export.h>
+#include <Serialize/ISerializeable.h>
 
 namespace Engine::Objects
 {
@@ -14,6 +15,7 @@ namespace Engine::Objects
 
         [[nodiscard]] int32_t GetID() const { return m_id; }
         [[nodiscard]] inline const std::string& GetName() const { return m_name; }
+        inline void SetID(int32_t p_id) { m_id = p_id; }
         inline void SetName(const std::string& p_name) { m_name = p_name; }
 
     protected:

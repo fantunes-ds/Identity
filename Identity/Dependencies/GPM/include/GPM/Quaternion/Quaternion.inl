@@ -678,8 +678,8 @@ namespace GPM
 	inline std::ostream& operator<<(std::ostream& p_stream,
 		const Quaternion& p_quaternion)
 	{
-		p_stream << "(w: " << p_quaternion.w << "; x: " << p_quaternion.axis.x << ", y: " << p_quaternion.axis.y <<
-			", z: " << p_quaternion.axis.z << ')';
+		p_stream << p_quaternion.GetXAxisValue() << " " << p_quaternion.GetYAxisValue() << " " << p_quaternion.GetZAxisValue() <<
+			" " << p_quaternion.GetRealValue();
 		return  { p_stream };
 	}
 }

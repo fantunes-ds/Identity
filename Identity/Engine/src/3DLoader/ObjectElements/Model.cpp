@@ -1,14 +1,17 @@
 #include <stdafx.h>
+
 #include <3DLoader/ObjectElements/Model.h>
 #include <3DLoader/ObjectElements/Mesh.h>
 #include <3DLoader/ObjectLoader.h>
 
-void Engine::ObjectElements::Model::AddMesh(const std::shared_ptr<Engine::ObjectElements::Mesh>& p_mesh)
+using namespace Engine::ObjectElements;
+
+void Model::AddMesh(const std::shared_ptr<Mesh>& p_mesh)
 {
     m_meshes.emplace_back(p_mesh);
 }
 
-bool Engine::ObjectElements::Model::operator==(const Model& p_other)
+bool Model::operator==(const Model& p_other)
 {
     if (m_meshes.size() != p_other.m_meshes.size())
         return false;
@@ -21,7 +24,7 @@ bool Engine::ObjectElements::Model::operator==(const Model& p_other)
     return true;
 }
 
-bool Engine::ObjectElements::Model::operator!=(const Model& p_other)
+bool Model::operator!=(const Model& p_other)
 {
     if (m_meshes.size() != p_other.m_meshes.size())
         return true;
@@ -32,4 +35,9 @@ bool Engine::ObjectElements::Model::operator!=(const Model& p_other)
             return true;
     }
     return false;
+}
+
+void Model::Serialize(std::ostream& p_stream)
+{
+    p_stream << "MODEL " << GetPath() << " " << GetName() << '\n';
 }

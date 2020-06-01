@@ -1,6 +1,12 @@
 #pragma once
 #include <Export.h>
 #include <Scene/SceneGraph/SceneNode.h>
+#include <map>
+
+namespace Engine::Objects
+{
+    class GameObject;
+}
 
 namespace Engine::Scene
 {
@@ -14,24 +20,17 @@ namespace Engine::Scene
         ~SceneGraph() = default;
 
         void AddRootSceneNode(std::shared_ptr<SceneNode> p_sceneNode);
+        void AddGameObjectToScene(std::shared_ptr<Objects::GameObject> p_gameObject);
+        void RemoveGameObjectFromScene(std::shared_ptr<Objects::GameObject> p_gameObject);
         void RemoveRootSceneNode(int32_t p_id);
 
         void UpdateScene(const float p_deltaTime);
 
         const std::map<int32_t, std::shared_ptr<SceneNode>>& GetRootSceneNodes() const { return m_rootSceneNodes; }
+        std::map<int32_t, std::shared_ptr<SceneNode>> GetAllSceneNodes();
 
-        static SceneGraph* GetInstance()
-        {
-            if (m_instance == nullptr)
-            {
-                m_instance = new SceneGraph();
-            }
-
-            return m_instance;
-        }
     private:
         std::map<int32_t, std::shared_ptr<SceneNode>> m_rootSceneNodes;
-        inline static SceneGraph* m_instance;
     };
 }
 

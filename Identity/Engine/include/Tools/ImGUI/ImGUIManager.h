@@ -6,6 +6,9 @@ namespace Engine::Tools::UI
     {
     public:
         ImGUIManager();
+        void StyleColorsSurreal();
+        void StyleColorsFilipeLeon();
+        void StylePhysicalFilipeLeon();
         ~ImGUIManager();
     };
 }
