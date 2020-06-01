@@ -15,7 +15,7 @@ struct lightSource
 
 cbuffer CBuf
 {
-    lightSource lights[4];
+    lightSource lights[6];
     float4 ambientColor;
     float3 cameraPos;
     float textureState;
@@ -41,7 +41,9 @@ float4 main(VS_OUT f_in) : SV_TARGET
 {
     float3 fColor = (0, 0, 0);
     
-    for (int i = 0; i < 4; ++i)
+    fColor = (ambientColor.rgb * ambientColor.w);
+    
+    for (int i = 0; i < 6; ++i)
         fColor += CalculateLights(lights[i], f_in);
     
     f_in.vertexColor = float4(materialColor, 1);
@@ -64,8 +66,7 @@ float3 CalculateLights(lightSource light, VS_OUT f_in)
     float attenuation = CalculateAttenuation(distance, light.range, light.diffuse.w);
     
     // ambient calculations
-    float3 ambient = (ambientColor.rgb * ambientColor.w);
-    fColor = ambient;
+    //fColor = (ambientColor.rgb * ambientColor.w);
     
     //diffuse
     f_in.norm = normalize(f_in.norm);
@@ -78,25 +79,11 @@ float3 CalculateLights(lightSource light, VS_OUT f_in)
     float3 viewDir = normalize(cameraPos - f_in.worldPos);
     float spec = 0.0f;
     float3 specular = (0, 0, 0);
-    if (blinn)
-    {
-        float3 halfwayDir = normalize(lightDir + viewDir);
-        spec = pow(max(dot(f_in.norm, halfwayDir), 0.0f), light.shininess);
-        specular = (light.specular.rgb * light.specular.w) * spec * light.diffuse.rgb;
-    }
-    else
-    {
-        float3 reflectDir = reflect(-lightDir, f_in.norm);
-        spec = max(dot(normalize(reflectDir), normalize(cameraPos - viewDir)), 0);
-        if (spec > 0.0f)
-        {
-            spec = pow(spec, light.shininess);
-            specular = (light.specular.rgb * light.specular.w) * spec * light.diffuse.rgb;
-        }
-        
-        //spec = pow(max(dot(cameraPos, reflectDir), 0.0f), light.shininess);
-        //specular = (light.specular.rgb * light.specular.w) * spec * light.diffuse.rgb;
-    }
+    
+    float3 halfwayDir = normalize(lightDir + viewDir);
+    spec = pow(max(dot(f_in.norm, halfwayDir), 0.0f), light.shininess);
+    specular = (light.specular.rgb * light.specular.w) * spec * light.diffuse.rgb;
+    
     fColor += (specular * attenuation);
     
     return fColor;
@@ -114,5 +101,6 @@ float CalculateAttenuation(float distance, float range, float intensity)
     attenuation /= pow(distance, 2) + 1.0f;
     //return attenuation * intensity;
     
-    return attenuation = max(1.0f / (distance) - 1.0f / (range), 0.0f);
+    attenuation = max(1.0f / (distance) - 1.0f / (range), 0.0f);
+    return attenuation * intensity;
 }

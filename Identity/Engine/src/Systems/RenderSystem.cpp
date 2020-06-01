@@ -18,6 +18,7 @@
 #include <Systems/CameraSystem.h>
 #include <Systems/PhysicsSystem.h>
 #include "Systems/LightSystem.h"
+#include <array>
 
 Engine::Systems::RenderSystem::~RenderSystem()
 {
@@ -26,8 +27,8 @@ Engine::Systems::RenderSystem::~RenderSystem()
 
 
 
-Engine::Rendering::Lights::ILight::LightData lights[4];
-
+// Engine::Rendering::Lights::ILight::LightData lights[4];
+std::array<Engine::Rendering::Lights::ILight::LightData, 6> lights;
 
 void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor)
 {
@@ -92,7 +93,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
                 //create empty lights
                 // Rendering::Lights::DirectionalLight::LightData lights[4];
                 const Rendering::Buffers::PCB pcb{
-                    {lights[0], lights[1], lights[2], lights[3]}, GetInstance()->m_ambientColor,Vector3F::zero,
+                    {lights}, GetInstance()->m_ambientColor,Vector3F::zero,
                         static_cast<float>(mesh->GetMaterial()->GetTextureState()), mesh->GetMaterial()->GetColor()
                 };
 
@@ -151,7 +152,7 @@ void Engine::Systems::RenderSystem::DrawScene(float p_deltaTime, bool p_isEditor
         //create empty lights
         // Rendering::Lights::DirectionalLight::LightData lights[4];
         const Rendering::Buffers::PCB pcb{
-            {lights[0], lights[1], lights[2], lights[3]}, GetInstance()->m_ambientColor,Vector3F::zero,
+            {lights}, GetInstance()->m_ambientColor,Vector3F::zero,
                 static_cast<float>(screenRect->GetMaterial()->GetTextureState()), screenRect->GetMaterial()->GetColor()
         };
 
@@ -209,8 +210,8 @@ void Engine::Systems::RenderSystem::DrawSceneNode(std::shared_ptr<Scene::SceneNo
 
         Vector3F invertedZCameraPos{ camera->GetPosition().x, camera->GetPosition().y, -camera->GetPosition().z };
 
-        const Rendering::Buffers::PCB pcb{
-            {lights[0], lights[1], lights[2], lights[3]}, GetInstance()->m_ambientColor,
+        Rendering::Buffers::PCB pcb{
+            {lights}, GetInstance()->m_ambientColor,
             invertedZCameraPos, txst,
             mesh->GetMaterial()->GetColor()
         };

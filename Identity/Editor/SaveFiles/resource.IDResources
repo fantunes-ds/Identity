@@ -35,8 +35,8 @@ TEXTURE ../Engine/Resources/DeskMaterial/WOOD.png DeskWood
 TEXTURE ../Engine/Resources/pladur.jpg PladurTexture
 TEXTURE ../Engine/Resources/stucco.jpg stuccoText
 TEXTURE ../Engine/Resources/DeskText.png Desk2Text
-TEXTURE C:\Users\Gabriel\Documents\ISART_travaux\GP2\Engine\LookingForGroup\Identity\Engine\Resources\leather.jpg black_leather_text
-TEXTURE C:\Users\Gabriel\Documents\ISART_travaux\GP2\Engine\LookingForGroup\Identity\Engine\Resources\lamp\table_lamp.jpg lampText
+TEXTURE ../Engine/Resources\leather.jpg black_leather_text
+TEXTURE ../Engine/Resources\lamp\table_lamp.jpg lampText
 MATERIAL LinkMat defaultPS defaultVS LinkText 1 1 1
 MATERIAL LamboMat defaultPS defaultVS LamboText 1 1 1
 MATERIAL NinjaMat defaultPS defaultVS NinjaText 1 1 1
