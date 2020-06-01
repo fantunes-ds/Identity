@@ -4,13 +4,14 @@
 #include <WinSetup.h>
 #include <d3d11.h>
 #include <Rendering/Lights/DirectionalLight.h>
+#include <array>
 
 namespace Engine::Rendering::Buffers
 {
     struct PCB
     {
-        Rendering::Lights::DirectionalLight::LightData lightSource[4];
-        Vector4F                            ambiantColor;
+        std::array<Rendering::Lights::DirectionalLight::LightData, 6> lightSource;
+        Vector4F                            ambientColor;
         Vector3F                            cameraPos;
         float                               textureState;
         Vector3F                            materialColor;
