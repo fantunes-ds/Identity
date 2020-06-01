@@ -41,7 +41,7 @@ std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChil
 
             if (ImGui::IsItemClicked())
                 m_currentlySelected = p_child->GetID();
-            else if (ImGui::IsMouseClicked(0) && !ImGui::IsAnyItemHovered())
+            else if (ImGui::IsMouseClicked(0) && !ImGui::IsAnyItemHovered() && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootWindow))
             {
                 m_currentlySelected = -1;
                 selection_mask = false;
@@ -68,7 +68,7 @@ std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChil
 
         if (ImGui::IsItemClicked())
             m_currentlySelected = p_child->GetID();
-        else if (ImGui::IsMouseClicked(0) && !ImGui::IsAnyItemHovered())
+        else if (ImGui::IsMouseClicked(0) && !ImGui::IsAnyItemHovered() && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootWindow))
         {
             m_currentlySelected = -1;
             selection_mask = false;
