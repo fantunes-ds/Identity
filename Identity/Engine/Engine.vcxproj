@@ -111,7 +111,7 @@
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders
-copy /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
+xcopy /s /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
 copy /y $(SolutionDir)Engine\Resources\Shaders $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders\
 
 copy /y $(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration) $(OutDir)
@@ -142,7 +142,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders
-copy /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
+xcopy /s /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
 copy /y $(SolutionDir)Engine\Resources\Shaders $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders\
 
 copy /y $(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration) $(OutDir)
@@ -176,7 +176,7 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders
-copy /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
+xcopy /s /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
 copy /y $(SolutionDir)Engine\Resources\Shaders $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders\
 
 copy /y $(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration) $(OutDir)
@@ -210,7 +210,7 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
     </Link>
     <PostBuildEvent>
       <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders
-copy /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
+xcopy /s /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources
 copy /y $(SolutionDir)Engine\Resources\Shaders $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders\
 
 copy /y $(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration) $(OutDir)
@@ -380,12 +380,14 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Engine\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Resources\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\VertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Engine\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Resources\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
