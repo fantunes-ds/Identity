@@ -41,7 +41,7 @@ std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChil
 
             if (ImGui::IsItemClicked())
                 m_currentlySelected = p_child->GetID();
-            else if (ImGui::IsMouseClicked(0) && !ImGui::IsAnyItemHovered() && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootWindow))
+            else if ((ImGui::IsMouseClicked(0) || ImGui::IsMouseClicked(1)) && !ImGui::IsAnyItemHovered() && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootWindow))
             {
                 m_currentlySelected = -1;
                 selection_mask = false;
@@ -68,17 +68,10 @@ std::shared_ptr<Engine::Scene::SceneNode> Engine::UI::Hierarchy::DisplayNextChil
 
         if (ImGui::IsItemClicked())
             m_currentlySelected = p_child->GetID();
-        else if (ImGui::IsMouseClicked(0) && !ImGui::IsAnyItemHovered() && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootWindow))
+        else if ((ImGui::IsMouseClicked(0) || ImGui::IsMouseClicked(1)) && !ImGui::IsAnyItemHovered() && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootWindow))
         {
             m_currentlySelected = -1;
             selection_mask = false;
-        }
-
-        if (test_drag_and_drop && ImGui::BeginDragDropSource())
-        {
-            ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
-            ImGui::Text("%s", p_child->GetName().c_str());
-            ImGui::EndDragDropSource();
         }
     }
     if (m_currentlySelected != -1)
@@ -109,6 +102,7 @@ void Engine::UI::Hierarchy::CreateHierarchy(Core::App& p_appRef)
 
 void Engine::UI::Hierarchy::ShowMenu()
 {
+
     if (m_currentlySelected > 0)
     {
         if (ImGui::BeginPopupContextWindow("Hierarchy Menu"))
@@ -191,9 +185,9 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
     }
 
     ImGui::InputText(" ", buf1, 64);
-    ImGui::SameLine();
 
-    gameObject->SetName(buf1);
+    if (ImGui::IsItemEdited())
+        gameObject->SetName(buf1);
 
     if (gameObject->GetSceneNode())
         gameObject->GetSceneNode()->SetName(buf1);
@@ -202,6 +196,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 
     bool active = gameObject->IsActive();
 
+    ImGui::SameLine();
     if (ImGui::Checkbox("Active", &active))
     {
         gameObject->SetActive(active);
@@ -220,9 +215,12 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
         float* pos[3] = { &transform->GetPosition().x, &transform->GetPosition().y, &transform->GetPosition().z };
         float* rot[3] = { &rotationEuler.x, &rotationEuler.y, &rotationEuler.z };
         float* scale[3] = { &transform->GetScale().x, &transform->GetScale().y, &transform->GetScale().z };
-        ImGui::DragFloat3("Position", *pos, 0.1f, 0, 0, "%0.2f");
-        ImGui::DragFloat3("Rotation", *rot, 0.1f, 0, 0, "%0.2f");
-        ImGui::DragFloat3("Scale", *scale, 0.1f, 0, 0, "%0.2f");
+        if (ImGui::DragFloat3("Position", *pos, 0.1f, 0, 0, "%0.2f"))
+            transform->needUpdate = true;
+        if (ImGui::DragFloat3("Rotation", *rot, 0.1f, 0, 0, "%0.2f"))
+            transform->needAxesUpdate = true;
+        if (ImGui::DragFloat3("Scale", *scale, 0.1f, 0, 0, "%0.2f"))
+            transform->needUpdate = true;
         ImGui::Dummy(ImVec2(0.0f, 5.0f));
     }
 
@@ -231,8 +229,6 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 
     rotationQuaternion.MakeFromEuler(rotationEuler);
 
-    transform->needUpdate = true;
-    transform->needAxesUpdate = true;
 
 
     for (auto component : gameObject->GetAllComponents())
@@ -276,7 +272,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                         if (ImGui::Button(model->GetName().c_str()))
                         {
                             modelComponent->SetModel(model->GetID());
-                            for (auto go : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
+                            for (auto& go : Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetRootSceneNodes())
                                 if (go.second->GetGameObject() == gameObject)
                                     go.second->SetModel(model);
 
@@ -354,7 +350,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                     ImGui::Dummy(ImVec2(0.0f, 2.0f));
                     ImGui::Text("Texture");
                     ImGui::Image(*mat->GetTexture()->GetTextureShaderResourceView().GetAddressOf(), ImVec2(100, 100));
-                    ImGui::Text(mat->GetTexture()->GetName().c_str());
+                    ImGui::Text("%s", mat->GetTexture()->GetName().c_str());
                     ImGui::Dummy(ImVec2(0.0f, 2.0f));
                 }
 
@@ -412,13 +408,13 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 float* offset[3] = { &boxCollider->GetOffset().x, &boxCollider->GetOffset().y, &boxCollider->GetOffset().z };
                 float* mass = { &boxCollider->GetMass() };
 
-                ImGui::DragFloat3("Dimensions", *dimensions, 0.1f, 0, 0, "%0.2f");
-                ImGui::DragFloat("Mass", mass, 0.1f, 0, 0, "%0.2f");
-                ImGui::DragFloat3("Offset", *offset, 0.1f, 0, 0, "%0.2f");
+                if (ImGui::DragFloat3("Dimensions", *dimensions, 0.1f, 0, 0, "%0.2f"))
+                    boxCollider->SetDimensions(boxCollider->GetDimensions());
+                if (ImGui::DragFloat("Mass", mass, 0.1f, 0, 0, "%0.2f"))
+                    boxCollider->SetMass(boxCollider->GetMass());
+                if (ImGui::DragFloat3("Offset", *offset, 0.1f, 0, 0, "%0.2f"))
+                    boxCollider->SetPositionOffset(boxCollider->GetOffset());
 
-                boxCollider->SetPositionOffset(boxCollider->GetOffset());
-                boxCollider->SetMass(boxCollider->GetMass());
-                boxCollider->SetDimensions(boxCollider->GetDimensions());
 
                 ImGui::Dummy(ImVec2(0.0f, 2.0f));
                 if (ImGui::Button("Remove Component##2"))
@@ -446,13 +442,13 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
                 float* offset[3] = { &sphereCollider->GetOffset().x, &sphereCollider->GetOffset().y, &sphereCollider->GetOffset().z };
                 float* mass = { &sphereCollider->GetMass() };
 
-                ImGui::DragFloat("Radius", radius, 0.1f, 0, 0, "%0.2f");
-                ImGui::DragFloat("Mass", mass, 0.1f, 0, 0, "%0.2f");
-                ImGui::DragFloat3("Offset", *offset, 0.1f, 0, 0, "%0.2f");
+                if (ImGui::DragFloat("Radius", radius, 0.1f, 0, 0, "%0.2f"))
+                    sphereCollider->SetRadius(sphereCollider->GetRadius());
+                if (ImGui::DragFloat("Mass", mass, 0.1f, 0, 0, "%0.2f"))
+                    sphereCollider->SetMass(sphereCollider->GetMass());
+                if (ImGui::DragFloat3("Offset", *offset, 0.1f, 0, 0, "%0.2f"))
+                    sphereCollider->SetPositionOffset(sphereCollider->GetOffset());
 
-                sphereCollider->SetPositionOffset(sphereCollider->GetOffset());
-                sphereCollider->SetMass(sphereCollider->GetMass());
-                sphereCollider->SetRadius(sphereCollider->GetRadius());
 
                 ImGui::Dummy(ImVec2(0.0f, 2.0f));
                 if (ImGui::Button("Remove Component##3"))
@@ -479,7 +475,8 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 
                 ImGui::SliderFloat("Camera FOV", &fov, 10.f, 180.f, "%0.f");
 
-                camera->SetFOV(fov);
+                if (ImGui::IsItemEdited())
+                    camera->SetFOV(fov);
 
                 ImGui::Dummy(ImVec2(0.0f, 2.0f));
                 if (ImGui::Button("Remove Component##4"))
@@ -630,7 +627,6 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
         {
             if (ImGui::Button(types[i].c_str(), ImVec2(200, 20)))
             {
-                auto gameObject = Managers::SceneManager::GetActiveScene()->GetSceneGraph().GetAllSceneNodes().find(p_id)->second->GetGameObject();
                 const Vector2F size(1920, 1080);
                 switch (i)
                 {
