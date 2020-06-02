@@ -114,6 +114,9 @@
 xcopy /s /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
 copy /y $(SolutionDir)Engine\Resources\Shaders $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders\
 
+mkdir $(OutDir)SaveFiles
+xcopy /s /y $(SolutionDir)Editor\SaveFiles $(OutDir)SaveFiles
+
 copy /y $(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration) $(OutDir)
 
 copy /y $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) 
@@ -144,6 +147,9 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
       <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders
 xcopy /s /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
 copy /y $(SolutionDir)Engine\Resources\Shaders $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders\
+
+mkdir $(OutDir)SaveFiles
+xcopy /s /y $(SolutionDir)Editor\SaveFiles $(OutDir)SaveFiles
 
 copy /y $(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration) $(OutDir)
 
@@ -179,6 +185,9 @@ copy /y $(SolutionDir)Dependencies\bullet\lib\$(Configuration) $(OutDir) </Comma
 xcopy /s /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\
 copy /y $(SolutionDir)Engine\Resources\Shaders $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders\
 
+mkdir $(OutDir)SaveFiles
+xcopy /s /y $(SolutionDir)Editor\SaveFiles $(OutDir)SaveFiles
+
 copy /y $(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration) $(OutDir)
 
 copy /y $(SolutionDir)Dependencies\irrKlang\$(Platform)\lib $(OutDir) 
@@ -212,6 +221,9 @@ copy /y $(SolutionDir)Dependencies\Assimp\$(Platform)\$(Configuration)\assimp-vc
       <Command>mkdir $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders
 xcopy /s /y $(SolutionDir)Engine\Resources $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources
 copy /y $(SolutionDir)Engine\Resources\Shaders $(SolutionDir)Bin\$(Configuration)\$(Platform)\Engine\Resources\Shaders\
+
+mkdir $(OutDir)SaveFiles
+xcopy /s /y $(SolutionDir)Editor\SaveFiles $(OutDir)SaveFiles
 
 copy /y $(SolutionDir)Dependencies\GPM\lib\$(Platform)\$(Configuration) $(OutDir)
 
