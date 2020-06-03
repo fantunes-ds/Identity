@@ -511,7 +511,7 @@ void Engine::UI::Hierarchy::CallInspector(int32_t p_id)
 
                 ImGui::ColorEdit3("Diffuse Light Color", *diffuse, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
                 ImGui::SetNextItemWidth(100);
-                ImGui::DragFloat4("Diffuse intensity", &lightData.diffuse.w, 0.1f, 0.0f, 25.00f, "%.3f");
+                ImGui::DragFloat("Diffuse intensity", &lightData.diffuse.w, 0.1f, 0.0f, 25.00f, "%.3f");
                 ImGui::Separator();
                 ImGui::ColorEdit3("Specular Light Color", *specular, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
                 ImGui::SetNextItemWidth(100);
